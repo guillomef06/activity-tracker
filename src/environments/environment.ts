@@ -1,12 +1,13 @@
 /**
- * Production environment configuration
- * Used when building with --configuration production
+ * Default environment configuration (Development)
+ * This file is used by default when running ng serve
+ * For production builds, it will be replaced by environment.production.ts
  */
 export const environment = {
-  production: true,
-  appVersion: '1.0.0',
-  apiUrl: '', // Will be configured when backend is ready (e.g., Supabase, Spring Boot)
-  enableDebug: false,
-  enableMockData: false,
-  storageKey: 'activity-tracker-prod'
+  production: false,
+  appVersion: '1.0.0-dev',
+  apiUrl: 'http://localhost:8080/api', // For local backend development
+  enableDebug: true,
+  enableMockData: true,
+  storageKey: 'activity-tracker-dev'
 };
