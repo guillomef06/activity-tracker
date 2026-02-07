@@ -1,28 +1,28 @@
 <div class="container">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Submit Activity</mat-card-title>
-      <mat-card-subtitle>Record your activity and earn points</mat-card-subtitle>
+      <mat-card-title>{{ 'activityInput.title' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'activityInput.subtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <form (ngSubmit)="onSubmit()" #activityForm="ngForm">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Your Name</mat-label>
+          <mat-label>{{ 'activityInput.yourName' | translate }}</mat-label>
           <input
             matInput
             type="text"
             name="userName"
             [(ngModel)]="userName"
-            placeholder="Enter your name"
+            [placeholder]="'activityInput.enterName' | translate"
             required
           />
           <mat-icon matPrefix>person</mat-icon>
-          <mat-error>Name is required</mat-error>
+          <mat-error>{{ 'activityInput.nameRequired' | translate }}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Activity Type</mat-label>
+          <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
           <mat-select
             name="activityType"
             [(ngModel)]="activityType"
@@ -31,30 +31,16 @@
           >
             @for (type of activityTypes; track type.value) {
               <mat-option [value]="type.value">
-                {{ type.label }} ({{ type.points }} points)
+                {{ type.label }} ({{ type.points }} {{ 'common.points' | translate }})
               </mat-option>
             }
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
-          <mat-error>Activity type is required</mat-error>
+          <mat-error>{{ 'activityInput.typeRequired' | translate }}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea
-            matInput
-            name="description"
-            [(ngModel)]="description"
-            placeholder="Briefly describe your activity"
-            rows="4"
-            required
-          ></textarea>
-          <mat-icon matPrefix>description</mat-icon>
-          <mat-error>Description is required</mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Points</mat-label>
+          <mat-label>{{ 'activityInput.points' | translate }}</mat-label>
           <input
             matInput
             type="number"
@@ -73,7 +59,7 @@
             [disabled]="!activityForm.valid || submitting()"
           >
             <mat-icon>{{ submitting() ? 'hourglass_empty' : 'send' }}</mat-icon>
-            {{ submitting() ? 'Submitting...' : 'Submit Activity' }}
+            {{ submitting() ? ('activityInput.submitting' | translate) : ('activityInput.submit' | translate) }}
           </button>
 
           <button
@@ -83,7 +69,7 @@
             (click)="viewDashboard()"
           >
             <mat-icon>dashboard</mat-icon>
-            View Dashboard
+            {{ 'activityInput.viewDashboard' | translate }}
           </button>
         </div>
       </form>

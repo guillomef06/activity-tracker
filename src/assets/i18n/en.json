@@ -1,0 +1,60 @@
+{
+  "app": {
+    "title": "Activity Tracker",
+    "subtitle": "Track activities and view rolling 6-week scores"
+  },
+  "activityInput": {
+    "title": "Submit Activity",
+    "subtitle": "Record your activity and earn points",
+    "yourName": "Your Name",
+    "enterName": "Enter your name",
+    "activityType": "Activity Type",
+    "description": "Description",
+    "descriptionPlaceholder": "Briefly describe your activity",
+    "points": "Points",
+    "submit": "Submit Activity",
+    "submitting": "Submitting...",
+    "viewDashboard": "View Dashboard",
+    "nameRequired": "Name is required",
+    "typeRequired": "Activity type is required",
+    "descriptionRequired": "Description is required",
+    "success": "Activity submitted successfully!",
+    "error": "Failed to submit activity"
+  },
+  "activityTypes": {
+    "development": "Development",
+    "codeReview": "Code Review",
+    "testing": "Testing",
+    "documentation": "Documentation",
+    "meeting": "Meeting",
+    "bugFix": "Bug Fix",
+    "research": "Research"
+  },
+  "dashboard": {
+    "title": "Management Dashboard",
+    "subtitle": "Rolling 6-week activity scores for all team members",
+    "refresh": "Refresh",
+    "addActivity": "Add Activity",
+    "loading": "Loading scores...",
+    "noActivities": "No activities recorded yet",
+    "submitFirst": "Submit First Activity",
+    "totalPoints": "total points",
+    "avgWeekly": "week avg",
+    "weeklyBreakdown": "Weekly Breakdown",
+    "pointsShort": "pts",
+    "week": "Week",
+    "currentWeek": "Current Week",
+    "lastWeek": "Last Week",
+    "weeksAgo": "weeks ago",
+    "weeklyRanking": "Weekly Ranking",
+    "weeklyRankingSubtitle": "Points evolution over the last 6 weeks",
+    "resetData": "Reset Data",
+    "resetConfirm": "Are you sure? This will reload the 5 users' mock data and erase your activities."
+  },
+  "common": {
+    "points": "points",
+    "activities": "activities",
+    "activity": "activity",
+    "close": "Close"
+  }
+}

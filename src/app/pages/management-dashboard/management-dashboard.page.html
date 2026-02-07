@@ -1,24 +1,28 @@
 <div class="container">
   <div class="header-actions">
-    <h2>Management Dashboard</h2>
+    <h2>{{ 'dashboard.title' | translate }}</h2>
     <div class="actions">
       <button mat-stroked-button (click)="refresh()">
         <mat-icon>refresh</mat-icon>
-        Refresh
+        {{ 'dashboard.refresh' | translate }}
+      </button>
+      <button mat-stroked-button color="warn" (click)="resetData()">
+        <mat-icon>restore</mat-icon>
+        {{ 'dashboard.resetData' | translate }}
       </button>
       <button mat-raised-button color="primary" (click)="goToActivityInput()">
         <mat-icon>add</mat-icon>
-        Add Activity
+        {{ 'dashboard.addActivity' | translate }}
       </button>
     </div>
   </div>
 
-  <p class="description">Rolling 6-week activity scores for all team members</p>
+  <p class="description">{{ 'dashboard.subtitle' | translate }}</p>
 
   @if (loading()) {
     <div class="loading">
       <mat-spinner diameter="50"></mat-spinner>
-      <p>Loading scores...</p>
+      <p>{{ 'dashboard.loading' | translate }}</p>
     </div>
   }
 
@@ -26,16 +30,19 @@
     <mat-card class="empty-state">
       <mat-card-content>
         <mat-icon class="empty-icon">inbox</mat-icon>
-        <p>No activities recorded yet</p>
+        <p>{{ 'dashboard.noActivities' | translate }}</p>
         <button mat-raised-button color="primary" (click)="goToActivityInput()">
           <mat-icon>add</mat-icon>
-          Submit First Activity
+          {{ 'dashboard.submitFirst' | translate }}
         </button>
       </mat-card-content>
     </mat-card>
   }
 
   @if (!loading() && userScores().length > 0) {
+    <!-- Ranking Chart -->
+    <app-ranking-chart [userScores]="userScores()"></app-ranking-chart>
+
     <div class="scores-container">
       @for (userScore of userScores(); track userScore.userId; let i = $index) {
         <mat-card class="score-card">
@@ -45,8 +52,8 @@
             </div>
             <mat-card-title>{{ userScore.userName }}</mat-card-title>
             <mat-card-subtitle>
-              <mat-chip>{{ userScore.sixWeekTotal }} total points</mat-chip>
-              <mat-chip>{{ userScore.averageWeekly | number:'1.0-1' }}/week avg</mat-chip>
+              <mat-chip>{{ userScore.sixWeekTotal }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
+              <mat-chip>{{ userScore.averageWeekly | number:'1.0-1' }}/{{ 'dashboard.avgWeekly' | translate }}</mat-chip>
             </mat-card-subtitle>
             <button mat-icon-button class="expand-button">
               <mat-icon>{{ selectedUserId() === userScore.userId ? 'expand_less' : 'expand_more' }}</mat-icon>
@@ -55,7 +62,7 @@
 
           @if (selectedUserId() === userScore.userId) {
             <mat-card-content class="score-details">
-              <h4>Weekly Breakdown</h4>
+              <h4>{{ 'dashboard.weeklyBreakdown' | translate }}</h4>
               <mat-accordion>
                 @for (week of userScore.weeklyScores; track weekIndex; let weekIndex = $index) {
                   <mat-expansion-panel>
@@ -65,7 +72,7 @@
                       </mat-panel-title>
                       <mat-panel-description>
                         {{ formatDate(week.weekStart) }} - {{ formatDate(week.weekEnd) }}
-                        <mat-chip class="points-chip">{{ week.totalPoints }} pts</mat-chip>
+                        <mat-chip class="points-chip">{{ week.totalPoints }} {{ 'dashboard.pointsShort' | translate }}</mat-chip>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
                     
@@ -75,12 +82,12 @@
                           <mat-chip-row>
                             <mat-icon matChipAvatar>task</mat-icon>
                             {{ activity.activityType }}
-                            <mat-chip-trailing-icon>{{ activity.points }} pts</mat-chip-trailing-icon>
+                            <mat-chip-trailing-icon>{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</mat-chip-trailing-icon>
                           </mat-chip-row>
                         }
                       </div>
                     } @else {
-                      <p class="no-activities">No activities this week</p>
+                      <p class="no-activities">{{ 'dashboard.noActivities' | translate }}</p>
                     }
                   </mat-expansion-panel>
                 }

@@ -1,0 +1,60 @@
+{
+  "app": {
+    "title": "Rastreador de Actividades",
+    "subtitle": "Rastrea actividades y visualiza puntuaciones de las últimas 6 semanas"
+  },
+  "activityInput": {
+    "title": "Enviar Actividad",
+    "subtitle": "Registra tu actividad y gana puntos",
+    "yourName": "Tu Nombre",
+    "enterName": "Introduce tu nombre",
+    "activityType": "Tipo de Actividad",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe brevemente tu actividad",
+    "points": "Puntos",
+    "submit": "Enviar Actividad",
+    "submitting": "Enviando...",
+    "viewDashboard": "Ver Panel",
+    "nameRequired": "El nombre es obligatorio",
+    "typeRequired": "El tipo de actividad es obligatorio",
+    "descriptionRequired": "La descripción es obligatoria",
+    "success": "¡Actividad enviada con éxito!",
+    "error": "Error al enviar la actividad"
+  },
+  "activityTypes": {
+    "development": "Desarrollo",
+    "codeReview": "Revisión de Código",
+    "testing": "Pruebas",
+    "documentation": "Documentación",
+    "meeting": "Reunión",
+    "bugFix": "Corrección de Errores",
+    "research": "Investigación"
+  },
+  "dashboard": {
+    "title": "Panel de Gestión",
+    "subtitle": "Puntuaciones de actividad de las últimas 6 semanas para todos los miembros del equipo",
+    "refresh": "Actualizar",
+    "addActivity": "Añadir Actividad",
+    "loading": "Cargando puntuaciones...",
+    "noActivities": "Aún no hay actividades registradas",
+    "submitFirst": "Enviar Primera Actividad",
+    "totalPoints": "puntos totales",
+    "avgWeekly": "promedio semanal",
+    "weeklyBreakdown": "Desglose Semanal",
+    "pointsShort": "pts",
+    "week": "Semana",
+    "currentWeek": "Semana Actual",
+    "lastWeek": "Semana Pasada",
+    "weeksAgo": "semanas atrás",
+    "weeklyRanking": "Clasificación Semanal",
+    "weeklyRankingSubtitle": "Evolución de puntos en las últimas 6 semanas",
+    "resetData": "Restablecer Datos",
+    "resetConfirm": "¿Estás seguro? Esto recargará los datos de demostración con 5 usuarios y borrará tus actividades."
+  },
+  "common": {
+    "points": "puntos",
+    "activities": "actividades",
+    "activity": "actividad",
+    "close": "Cerrar"
+  }
+}

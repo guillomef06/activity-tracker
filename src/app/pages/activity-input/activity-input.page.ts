@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
 
 @Component({
@@ -20,7 +21,8 @@ import { ActivityService } from '../../core/services/activity.service';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    TranslateModule
   ],
   templateUrl: './activity-input.page.html',
   styleUrl: './activity-input.page.scss',
@@ -31,22 +33,21 @@ export class ActivityInputPage implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private snackBar = inject(MatSnackBar);
+  private translate = inject(TranslateService);
   
   userName: string = '';
   activityType: string = '';
-  description: string = '';
   points: number = 0;
   submitting = signal<boolean>(false);
 
   activityTypes = [
-    { value: 'meeting', label: 'Team Meeting', points: 5 },
-    { value: 'training', label: 'Training Session', points: 10 },
-    { value: 'project', label: 'Project Contribution', points: 15 },
-    { value: 'presentation', label: 'Presentation', points: 20 },
-    { value: 'mentoring', label: 'Mentoring', points: 10 },
-    { value: 'documentation', label: 'Documentation', points: 8 },
-    { value: 'code-review', label: 'Code Review', points: 7 },
-    { value: 'other', label: 'Other', points: 5 }
+    { value: 'development', label: this.translate.instant('activityTypes.development'), points: 15 },
+    { value: 'code-review', label: this.translate.instant('activityTypes.codeReview'), points: 10 },
+    { value: 'testing', label: this.translate.instant('activityTypes.testing'), points: 8 },
+    { value: 'documentation', label: this.translate.instant('activityTypes.documentation'), points: 8 },
+    { value: 'meeting', label: this.translate.instant('activityTypes.meeting'), points: 5 },
+    { value: 'bug-fix', label: this.translate.instant('activityTypes.bugFix'), points: 12 },
+    { value: 'research', label: this.translate.instant('activityTypes.research'), points: 10 }
   ];
 
   ngOnInit(): void {
@@ -67,7 +68,7 @@ export class ActivityInputPage implements OnInit {
   }
 
   onSubmit(): void {
-    if (!this.userName.trim() || !this.activityType || !this.description.trim() || this.points <= 0) {
+    if (!this.userName.trim() || !this.activityType || this.points <= 0) {
       this.snackBar.open('Please fill in all fields', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -88,19 +89,17 @@ export class ActivityInputPage implements OnInit {
       userId,
       userName: this.userName,
       activityType: this.activityType,
-      description: this.description,
       points: this.points,
       date: new Date()
     });
 
     // Reset form
     this.activityType = '';
-    this.description = '';
     this.points = 0;
     this.submitting.set(false);
     this.cdr.markForCheck();
 
-    this.snackBar.open('Activity submitted successfully!', 'Close', {
+    this.snackBar.open(this.translate.instant('activityInput.success'), this.translate.instant('common.close'), {
       duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'top'

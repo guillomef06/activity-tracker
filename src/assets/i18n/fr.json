@@ -1,0 +1,60 @@
+{
+  "app": {
+    "title": "Suivi d'Activités",
+    "subtitle": "Suivez les activités et consultez les scores sur 6 semaines"
+  },
+  "activityInput": {
+    "title": "Soumettre une Activité",
+    "subtitle": "Enregistrez votre activité et gagnez des points",
+    "yourName": "Votre Nom",
+    "enterName": "Entrez votre nom",
+    "activityType": "Type d'Activité",
+    "description": "Description",
+    "descriptionPlaceholder": "Décrivez brièvement votre activité",
+    "points": "Points",
+    "submit": "Soumettre l'Activité",
+    "submitting": "Envoi en cours...",
+    "viewDashboard": "Voir le Tableau de Bord",
+    "nameRequired": "Le nom est requis",
+    "typeRequired": "Le type d'activité est requis",
+    "descriptionRequired": "La description est requise",
+    "success": "Activité soumise avec succès !",
+    "error": "Échec de la soumission de l'activité"
+  },
+  "activityTypes": {
+    "development": "Développement",
+    "codeReview": "Revue de Code",
+    "testing": "Tests",
+    "documentation": "Documentation",
+    "meeting": "Réunion",
+    "bugFix": "Correction de Bug",
+    "research": "Recherche"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord de Gestion",
+    "subtitle": "Scores d'activité sur 6 semaines glissantes pour tous les membres de l'équipe",
+    "refresh": "Actualiser",
+    "addActivity": "Ajouter une Activité",
+    "loading": "Chargement des scores...",
+    "noActivities": "Aucune activité enregistrée pour le moment",
+    "submitFirst": "Soumettre la Première Activité",
+    "totalPoints": "points totaux",
+    "avgWeekly": "moy. par semaine",
+    "weeklyBreakdown": "Détail Hebdomadaire",
+    "pointsShort": "pts",
+    "week": "Semaine",
+    "currentWeek": "Semaine en Cours",
+    "lastWeek": "Semaine Dernière",
+    "weeksAgo": "semaines passées",
+    "weeklyRanking": "Classement Hebdomadaire",
+    "weeklyRankingSubtitle": "Évolution des points sur les 6 dernières semaines",
+    "resetData": "Réinitialiser",
+    "resetConfirm": "Êtes-vous sûr ? Cela rechargera les données de démo avec 5 utilisateurs et effacera vos activités."
+  },
+  "common": {
+    "points": "points",
+    "activities": "activités",
+    "activity": "activité",
+    "close": "Fermer"
+  }
+}

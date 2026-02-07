@@ -9,8 +9,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
 import { UserScore } from '../../shared/models/activity.model';
+import { RankingChartComponent } from '../../shared/components/ranking-chart/ranking-chart.component';
 
 @Component({
   selector: 'app-management-dashboard-page',
@@ -24,7 +26,9 @@ import { UserScore } from '../../shared/models/activity.model';
     MatExpansionModule,
     MatChipsModule,
     MatBadgeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    TranslateModule,
+    RankingChartComponent
   ],
   templateUrl: './management-dashboard.page.html',
   styleUrl: './management-dashboard.page.scss',
@@ -34,6 +38,7 @@ export class ManagementDashboardPage implements OnInit {
   private activityService = inject(ActivityService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private translate = inject(TranslateService);
   
   userScores = signal<UserScore[]>([]);
   loading = signal<boolean>(true);
@@ -46,12 +51,21 @@ export class ManagementDashboardPage implements OnInit {
     this.loadScores();
   }
 
-  loadScores(): void {
+  async loadScores(): Promise<void> {
     this.loading.set(true);
+    await this.activityService.initialize();
     setTimeout(() => {
       this.userScores.set(this.activityService.getUserScores());
       this.loading.set(false);
     }, 500);
+  }
+
+  async resetData(): Promise<void> {
+    if (confirm(this.translate.instant('dashboard.resetConfirm'))) {
+      this.loading.set(true);
+      this.activityService.resetToInitialData();
+      await this.loadScores();
+    }
   }
 
   toggleUserDetails(userId: string): void {
@@ -59,8 +73,13 @@ export class ManagementDashboardPage implements OnInit {
   }
 
   getWeekLabel(weekIndex: number): string {
-    const labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'];
-    return labels[weekIndex] || `Week ${weekIndex + 1}`;
+    if (weekIndex === 0) {
+      return this.translate.instant('dashboard.currentWeek');
+    } else if (weekIndex === 1) {
+      return this.translate.instant('dashboard.lastWeek');
+    } else {
+      return `${weekIndex} ${this.translate.instant('dashboard.weeksAgo')}`;
+    }
   }
 
   formatDate(date: Date): string {

@@ -1,0 +1,60 @@
+{
+  "app": {
+    "title": "Tracker di Attività",
+    "subtitle": "Traccia le attività e visualizza i punteggi delle ultime 6 settimane"
+  },
+  "activityInput": {
+    "title": "Invia Attività",
+    "subtitle": "Registra la tua attività e guadagna punti",
+    "yourName": "Il Tuo Nome",
+    "enterName": "Inserisci il tuo nome",
+    "activityType": "Tipo di Attività",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Descrivi brevemente la tua attività",
+    "points": "Punti",
+    "submit": "Invia Attività",
+    "submitting": "Invio in corso...",
+    "viewDashboard": "Visualizza Dashboard",
+    "nameRequired": "Il nome è obbligatorio",
+    "typeRequired": "Il tipo di attività è obbligatorio",
+    "descriptionRequired": "La descrizione è obbligatoria",
+    "success": "Attività inviata con successo!",
+    "error": "Invio dell'attività non riuscito"
+  },
+  "activityTypes": {
+    "development": "Sviluppo",
+    "codeReview": "Revisione Codice",
+    "testing": "Test",
+    "documentation": "Documentazione",
+    "meeting": "Riunione",
+    "bugFix": "Correzione Bug",
+    "research": "Ricerca"
+  },
+  "dashboard": {
+    "title": "Dashboard di Gestione",
+    "subtitle": "Punteggi delle attività delle ultime 6 settimane per tutti i membri del team",
+    "refresh": "Aggiorna",
+    "addActivity": "Aggiungi Attività",
+    "loading": "Caricamento punteggi...",
+    "noActivities": "Nessuna attività registrata ancora",
+    "submitFirst": "Invia Prima Attività",
+    "totalPoints": "punti totali",
+    "avgWeekly": "media settimanale",
+    "weeklyBreakdown": "Dettaglio Settimanale",
+    "pointsShort": "pts",
+    "week": "Settimana",
+    "currentWeek": "Settimana Corrente",
+    "lastWeek": "Settimana Scorsa",
+    "weeksAgo": "settimane fa",
+    "weeklyRanking": "Classifica Settimanale",
+    "weeklyRankingSubtitle": "Evoluzione dei punti nelle ultime 6 settimane",
+    "resetData": "Ripristina Dati",
+    "resetConfirm": "Sei sicuro? Questo ricaricherà i dati di demo con 5 utenti e cancellerà le tue attività."
+  },
+  "common": {
+    "points": "punti",
+    "activities": "attività",
+    "activity": "attività",
+    "close": "Chiudi"
+  }
+}
