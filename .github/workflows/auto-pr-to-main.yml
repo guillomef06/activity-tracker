@@ -50,30 +50,36 @@ jobs:
           MERGED_PR_NUMBER="${{ github.event.pull_request.number }}"
           MERGED_PR_AUTHOR="${{ github.event.pull_request.user.login }}"
           
+          # Crée le corps de la PR avec un heredoc
+          PR_BODY=$(cat <<EOF
+          ## 📦 Release candidate from dev to main
+
+          ### Dernière PR mergée
+          - **PR #$MERGED_PR_NUMBER**: $MERGED_PR_TITLE
+          - **Auteur**: @$MERGED_PR_AUTHOR
+
+          ### ✅ Validations dev
+          - Tous les tests passent sur dev
+          - Build de production validé
+          - Linting OK
+
+          ### 📋 Checklist avant merge
+          - [ ] Vérifier que tous les tests passent
+          - [ ] Vérifier le build de production
+          - [ ] Vérifier qu'il n'y a pas de breaking changes
+          - [ ] Release notes à jour (si nécessaire)
+
+          ---
+          _Cette PR a été créée automatiquement suite au merge de #$MERGED_PR_NUMBER sur dev_
+          EOF
+          )
+          
           # Crée la PR de dev vers main
           gh pr create \
             --base main \
             --head dev \
             --title "🚀 Release: Merge dev to main" \
-            --body "## 📦 Release candidate from dev to main
-
-### Dernière PR mergée
-- **PR #$MERGED_PR_NUMBER**: $MERGED_PR_TITLE
-- **Auteur**: @$MERGED_PR_AUTHOR
-
-### ✅ Validations dev
-- Tous les tests passent sur dev
-- Build de production validé
-- Linting OK
-
-### 📋 Checklist avant merge
-- [ ] Vérifier que tous les tests passent
-- [ ] Vérifier le build de production
-- [ ] Vérifier qu'il n'y a pas de breaking changes
-- [ ] Release notes à jour (si nécessaire)
-
----
-_Cette PR a été créée automatiquement suite au merge de #$MERGED_PR_NUMBER sur dev_" \
+            --body "$PR_BODY" \
             --label "release" \
             --label "automated"
 
