@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -106,6 +106,7 @@ export class RankingChartComponent implements OnChanges, AfterViewInit {
     this.chart.update();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getDatasets(): any[] {
     const colors = [
       { border: 'rgb(75, 192, 192)', background: 'rgba(75, 192, 192, 0.2)' },

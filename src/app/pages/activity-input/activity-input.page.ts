@@ -35,9 +35,9 @@ export class ActivityInputPage implements OnInit {
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
   
-  userName: string = '';
-  activityType: string = '';
-  points: number = 0;
+  userName = '';
+  activityType = '';
+  points = 0;
   submitting = signal<boolean>(false);
 
   activityTypes = [
