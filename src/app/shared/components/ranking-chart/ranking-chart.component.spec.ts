@@ -28,7 +28,7 @@ describe('RankingChartComponent', () => {
 
   it('should initialize with empty user scores', () => {
     fixture.detectChanges();
-    expect(component.userScores).toEqual([]);
+    expect(component.userScores()).toEqual([]);
   });
 
   it('should accept user scores input', () => {
@@ -50,10 +50,11 @@ describe('RankingChartComponent', () => {
       }
     ];
 
-    component.userScores = mockScores;
+    // Use fixture.componentRef to set input signals
+    fixture.componentRef.setInput('userScores', mockScores);
     fixture.detectChanges();
     
-    expect(component.userScores.length).toBe(1);
-    expect(component.userScores[0].userName).toBe('Test User');
+    expect(component.userScores().length).toBe(1);
+    expect(component.userScores()[0].userName).toBe('Test User');
   });
 });

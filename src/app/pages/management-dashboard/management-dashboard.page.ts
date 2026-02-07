@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, signal, computed, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
 import { UserScore } from '../../shared/models/activity.model';
 import { RankingChartComponent } from '../../shared/components/ranking-chart/ranking-chart.component';
+import { getWeekLabel, formatShortDate } from '../../shared/utils/date.util';
 
 @Component({
   selector: 'app-management-dashboard-page',
@@ -37,15 +38,19 @@ import { RankingChartComponent } from '../../shared/components/ranking-chart/ran
 export class ManagementDashboardPage implements OnInit {
   private activityService = inject(ActivityService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
   private translate = inject(TranslateService);
   
   userScores = signal<UserScore[]>([]);
   loading = signal<boolean>(true);
   selectedUserId = signal<string | null>(null);
   
-  // Computed week labels
-  weekLabels = computed(() => ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6']);
+  // Utility functions exposed to template
+  readonly getWeekLabel = (weekIndex: number) => getWeekLabel(weekIndex, this.translate);
+  readonly formatDate = (date: Date) => formatShortDate(date);
+  
+  // TrackBy functions for performance
+  readonly trackByUserId = (_index: number, user: UserScore) => user.userId;
+  readonly trackByIndex = (index: number) => index;
 
   ngOnInit(): void {
     this.loadScores();
@@ -54,10 +59,8 @@ export class ManagementDashboardPage implements OnInit {
   async loadScores(): Promise<void> {
     this.loading.set(true);
     await this.activityService.initialize();
-    setTimeout(() => {
-      this.userScores.set(this.activityService.getUserScores());
-      this.loading.set(false);
-    }, 500);
+    this.userScores.set(this.activityService.getUserScores());
+    this.loading.set(false);
   }
 
   async resetData(): Promise<void> {
@@ -70,23 +73,6 @@ export class ManagementDashboardPage implements OnInit {
 
   toggleUserDetails(userId: string): void {
     this.selectedUserId.update(current => current === userId ? null : userId);
-  }
-
-  getWeekLabel(weekIndex: number): string {
-    if (weekIndex === 0) {
-      return this.translate.instant('dashboard.currentWeek');
-    } else if (weekIndex === 1) {
-      return this.translate.instant('dashboard.lastWeek');
-    } else {
-      return `${weekIndex} ${this.translate.instant('dashboard.weeksAgo')}`;
-    }
-  }
-
-  formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
   }
 
   goToActivityInput(): void {
