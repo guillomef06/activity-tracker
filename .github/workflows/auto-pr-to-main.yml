@@ -79,9 +79,7 @@ jobs:
             --base main \
             --head dev \
             --title "🚀 Release: Merge dev to main" \
-            --body "$PR_BODY" \
-            --label "release" \
-            --label "automated"
+            --body "$PR_BODY"
 
       - name: Comment on merged PR
         if: steps.check-pr.outputs.exists == 'false'
