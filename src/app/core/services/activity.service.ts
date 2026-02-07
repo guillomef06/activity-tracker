@@ -2,6 +2,9 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Activity, UserScore, WeeklyScore } from '../../shared/models/activity.model';
 import { firstValueFrom } from 'rxjs';
+import { StorageService } from './storage.service';
+import { APP_CONSTANTS } from '../../shared/constants/constants';
+import { generateId } from '../../shared/utils/id-generator.util';
 
 interface MockData {
   users: { id: string; name: string; email: string }[];
@@ -20,6 +23,7 @@ interface MockData {
 })
 export class ActivityService {
   private http = inject(HttpClient);
+  private storage = inject(StorageService);
   private activities = signal<Activity[]>([]);
   private isInitialized = false;
   
@@ -45,7 +49,7 @@ export class ActivityService {
   }
   
   resetToInitialData(): void {
-    localStorage.removeItem('activities');
+    this.storage.remove(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES);
     this.isInitialized = false;
     this.initialize();
   }
@@ -61,7 +65,7 @@ export class ActivityService {
         date.setDate(date.getDate() - item.daysAgo);
         
         return {
-          id: this.generateId(),
+          id: generateId(),
           userId: item.userId,
           userName: item.userName,
           activityType: item.activityType,
@@ -86,7 +90,7 @@ export class ActivityService {
   addActivity(activity: Omit<Activity, 'id' | 'timestamp'>): void {
     const newActivity: Activity = {
       ...activity,
-      id: this.generateId(),
+      id: generateId(),
       timestamp: Date.now()
     };
     
@@ -97,7 +101,7 @@ export class ActivityService {
   getUserScores(): UserScore[] {
     const activities = this.activities();
     const sixWeeksAgo = new Date();
-    sixWeeksAgo.setDate(sixWeeksAgo.getDate() - 42); // 6 weeks
+    sixWeeksAgo.setDate(sixWeeksAgo.getDate() - APP_CONSTANTS.SCORING.TOTAL_DAYS);
 
     // Filter activities from last 6 weeks
     const recentActivities = activities.filter(
@@ -118,7 +122,7 @@ export class ActivityService {
       const userName = activities[0]?.userName || 'Unknown';
       const weeklyScores = this.calculateWeeklyScores(activities);
       const sixWeekTotal = weeklyScores.reduce((sum, week) => sum + week.totalPoints, 0);
-      const averageWeekly = sixWeekTotal / 6;
+      const averageWeekly = sixWeekTotal / APP_CONSTANTS.SCORING.WEEKS_TO_TRACK;
 
       userScores.push({
         userId,
@@ -136,13 +140,13 @@ export class ActivityService {
     const weeks: WeeklyScore[] = [];
     const today = new Date();
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < APP_CONSTANTS.SCORING.WEEKS_TO_TRACK; i++) {
       const weekEnd = new Date(today);
-      weekEnd.setDate(today.getDate() - (i * 7));
+      weekEnd.setDate(today.getDate() - (i * APP_CONSTANTS.SCORING.DAYS_PER_WEEK));
       weekEnd.setHours(23, 59, 59, 999);
 
       const weekStart = new Date(weekEnd);
-      weekStart.setDate(weekEnd.getDate() - 6);
+      weekStart.setDate(weekEnd.getDate() - (APP_CONSTANTS.SCORING.DAYS_PER_WEEK - 1));
       weekStart.setHours(0, 0, 0, 0);
 
       const weekActivities = activities.filter(activity => {
@@ -163,16 +167,11 @@ export class ActivityService {
     return weeks;
   }
 
-  private generateId(): string {
-    return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-
   private loadActivities(): Activity[] {
-    const stored = localStorage.getItem('activities');
+    const stored = this.storage.get<Activity[]>(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES);
     if (stored) {
-      const parsed = JSON.parse(stored);
       // Convert date strings back to Date objects
-      return parsed.map((activity: Activity) => ({
+      return stored.map((activity: Activity) => ({
         ...activity,
         date: new Date(activity.date)
       }));
@@ -181,6 +180,6 @@ export class ActivityService {
   }
 
   private saveActivities(activities: Activity[]): void {
-    localStorage.setItem('activities', JSON.stringify(activities));
+    this.storage.set(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES, activities);
   }
 }

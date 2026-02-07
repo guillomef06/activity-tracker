@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, input, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserScore } from '../../../shared/models/activity.model';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { APP_CONSTANTS } from '../../constants/constants';
 
 Chart.register(...registerables);
 
@@ -15,27 +16,33 @@ Chart.register(...registerables);
   styleUrl: './ranking-chart.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RankingChartComponent implements OnChanges, AfterViewInit {
+export class RankingChartComponent implements AfterViewInit {
   @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
-  @Input() userScores: UserScore[] = [];
+  
+  // Modern signal-based input
+  userScores = input<UserScore[]>([]);
   
   private translate = inject(TranslateService);
   private chart: Chart | null = null;
   private viewInitialized = false;
+
+  constructor() {
+    // Use effect to react to userScores changes
+    effect(() => {
+      const scores = this.userScores();
+      if (this.viewInitialized && scores.length > 0) {
+        this.updateChart();
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.viewInitialized = true;
     this.createChart();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userScores'] && this.viewInitialized) {
-      this.updateChart();
-    }
-  }
-
   private createChart(): void {
-    if (!this.chartCanvas || this.userScores.length === 0) return;
+    if (!this.chartCanvas || this.userScores().length === 0) return;
 
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
@@ -108,15 +115,10 @@ export class RankingChartComponent implements OnChanges, AfterViewInit {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getDatasets(): any[] {
-    const colors = [
-      { border: 'rgb(75, 192, 192)', background: 'rgba(75, 192, 192, 0.2)' },
-      { border: 'rgb(255, 99, 132)', background: 'rgba(255, 99, 132, 0.2)' },
-      { border: 'rgb(54, 162, 235)', background: 'rgba(54, 162, 235, 0.2)' },
-      { border: 'rgb(255, 206, 86)', background: 'rgba(255, 206, 86, 0.2)' },
-      { border: 'rgb(153, 102, 255)', background: 'rgba(153, 102, 255, 0.2)' }
-    ];
+    // Use colors from constants
+    const colors = APP_CONSTANTS.CHART_COLORS;
 
-    return this.userScores.map((userScore, index) => {
+    return this.userScores().map((userScore, index) => {
       const color = colors[index % colors.length];
       return {
         label: userScore.userName,

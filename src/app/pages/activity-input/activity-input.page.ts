@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
+import { StorageService } from '../../core/services/storage.service';
+import { APP_CONSTANTS } from '../../shared/constants/constants';
+import { createUserIdFromName } from '../../shared/utils/id-generator.util';
 
 @Component({
   selector: 'app-activity-input-page',
@@ -31,7 +34,7 @@ import { ActivityService } from '../../core/services/activity.service';
 export class ActivityInputPage implements OnInit {
   private activityService = inject(ActivityService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
+  private storage = inject(StorageService);
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
   
@@ -40,26 +43,24 @@ export class ActivityInputPage implements OnInit {
   points = 0;
   submitting = signal<boolean>(false);
 
-  activityTypes = [
-    { value: 'development', label: this.translate.instant('activityTypes.development'), points: 15 },
-    { value: 'code-review', label: this.translate.instant('activityTypes.codeReview'), points: 10 },
-    { value: 'testing', label: this.translate.instant('activityTypes.testing'), points: 8 },
-    { value: 'documentation', label: this.translate.instant('activityTypes.documentation'), points: 8 },
-    { value: 'meeting', label: this.translate.instant('activityTypes.meeting'), points: 5 },
-    { value: 'bug-fix', label: this.translate.instant('activityTypes.bugFix'), points: 12 },
-    { value: 'research', label: this.translate.instant('activityTypes.research'), points: 10 }
-  ];
+  // Use computed signal for reactive translations
+  activityTypes = computed(() => 
+    APP_CONSTANTS.ACTIVITY_TYPES.map(type => ({
+      ...type,
+      label: this.translate.instant(type.labelKey)
+    }))
+  );
 
   ngOnInit(): void {
-    // Load saved user name from localStorage
-    const savedUserName = localStorage.getItem('userName');
+    // Load saved user name from storage
+    const savedUserName = this.storage.get<string>(APP_CONSTANTS.STORAGE_KEYS.USER_NAME);
     if (savedUserName) {
       this.userName = savedUserName;
     }
   }
 
   onActivityTypeChange(): void {
-    const selectedType = this.activityTypes.find(
+    const selectedType = this.activityTypes().find(
       type => type.value === this.activityType
     );
     if (selectedType) {
@@ -80,10 +81,10 @@ export class ActivityInputPage implements OnInit {
     this.submitting.set(true);
 
     // Save user name for future use
-    localStorage.setItem('userName', this.userName);
+    this.storage.set(APP_CONSTANTS.STORAGE_KEYS.USER_NAME, this.userName);
 
-    // Create user ID from name (simplified - in production use proper auth)
-    const userId = this.userName.toLowerCase().replace(/\s+/g, '-');
+    // Create user ID from name using utility function
+    const userId = createUserIdFromName(this.userName);
 
     this.activityService.addActivity({
       userId,
@@ -97,7 +98,6 @@ export class ActivityInputPage implements OnInit {
     this.activityType = '';
     this.points = 0;
     this.submitting.set(false);
-    this.cdr.markForCheck();
 
     this.snackBar.open(this.translate.instant('activityInput.success'), this.translate.instant('common.close'), {
       duration: 3000,
