@@ -6,9 +6,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:dev": "ng build --configuration development",
     "build:prod": "ng build --configuration production --base-href /activity-tracker/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadless --code-coverage",
+    "lint": "echo 'Linting not configured yet. Install ESLint with: ng add @angular-eslint/schematics'",
     "deploy": "ng deploy --base-href=/activity-tracker/"
   },
   "private": true,
