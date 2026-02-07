@@ -1,0 +1,100 @@
+name: Auto PR to Main
+
+# Se déclenche quand une PR est fermée sur dev
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - dev
+
+jobs:
+  create-pr-to-main:
+    # N'exécute que si la PR a été mergée (pas juste fermée)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout dev branch
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Check if PR already exists
+        id: check-pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Vérifie s'il existe déjà une PR ouverte de dev vers main
+          EXISTING_PR=$(gh pr list --base main --head dev --state open --json number --jq '.[0].number')
+          if [ -n "$EXISTING_PR" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "pr_number=$EXISTING_PR" >> $GITHUB_OUTPUT
+            echo "✅ PR #$EXISTING_PR existe déjà de dev vers main"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "❌ Aucune PR existante de dev vers main"
+          fi
+
+      - name: Create PR to main
+        if: steps.check-pr.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Récupère le titre et le corps de la PR qui vient d'être mergée
+          MERGED_PR_TITLE="${{ github.event.pull_request.title }}"
+          MERGED_PR_NUMBER="${{ github.event.pull_request.number }}"
+          MERGED_PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          
+          # Crée la PR de dev vers main
+          gh pr create \
+            --base main \
+            --head dev \
+            --title "🚀 Release: Merge dev to main" \
+            --body "## 📦 Release candidate from dev to main
+
+### Dernière PR mergée
+- **PR #$MERGED_PR_NUMBER**: $MERGED_PR_TITLE
+- **Auteur**: @$MERGED_PR_AUTHOR
+
+### ✅ Validations dev
+- Tous les tests passent sur dev
+- Build de production validé
+- Linting OK
+
+### 📋 Checklist avant merge
+- [ ] Vérifier que tous les tests passent
+- [ ] Vérifier le build de production
+- [ ] Vérifier qu'il n'y a pas de breaking changes
+- [ ] Release notes à jour (si nécessaire)
+
+---
+_Cette PR a été créée automatiquement suite au merge de #$MERGED_PR_NUMBER sur dev_" \
+            --label "release" \
+            --label "automated"
+
+      - name: Comment on merged PR
+        if: steps.check-pr.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "✅ Cette PR a été mergée sur \`dev\`<br>🚀 Une PR automatique de \`dev\` vers \`main\` a été créée pour déploiement en production."
+
+      - name: Update existing PR
+        if: steps.check-pr.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          MERGED_PR_TITLE="${{ github.event.pull_request.title }}"
+          MERGED_PR_NUMBER="${{ github.event.pull_request.number }}"
+          
+          gh pr comment ${{ steps.check-pr.outputs.pr_number }} \
+            --body "✅ Nouvelle PR mergée sur dev: #$MERGED_PR_NUMBER - $MERGED_PR_TITLE"
+          
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "✅ Cette PR a été mergée sur \`dev\`<br>ℹ️ La PR #${{ steps.check-pr.outputs.pr_number }} de \`dev\` vers \`main\` existe déjà et a été mise à jour."
