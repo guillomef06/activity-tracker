@@ -1,0 +1,125 @@
+/* Angular Material Core */
+@use '@angular/material' as mat;
+@use '../_theme-colors' as theme-colors;
+
+// Include Material core styles
+@include mat.core();
+
+// Define light theme
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: theme-colors.$primary-palette,
+    tertiary: theme-colors.$tertiary-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto, sans-serif',
+    plain-family: 'Roboto, sans-serif',
+    bold-weight: 700,
+    medium-weight: 500,
+    regular-weight: 400,
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+// Define dark theme
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: theme-colors.$primary-palette,
+    tertiary: theme-colors.$tertiary-palette,
+  ),
+));
+
+// Apply the theme to all components
+html {
+  // Enable automatic light/dark mode switching
+  color-scheme: light dark;
+  
+  // Apply light theme by default
+  @include mat.all-component-themes($light-theme);
+  
+  // M3 component customizations (shapes only)
+  .mat-mdc-card {
+    --mdc-elevated-card-container-shape: 16px;
+  }
+  
+  .mat-mdc-button {
+    --mdc-text-button-container-shape: 20px;
+  }
+  
+  .mat-mdc-raised-button {
+    --mdc-protected-button-container-shape: 20px;
+  }
+  
+  .mat-mdc-outlined-button {
+    --mdc-outlined-button-container-shape: 20px;
+  }
+  
+  .mat-expansion-panel {
+    --mat-expansion-container-shape: 12px;
+  }
+  
+  .mdc-chip {
+    --mdc-chip-container-shape-radius: 8px;
+  }
+}
+
+// Apply dark theme when browser/OS is in dark mode
+@media (prefers-color-scheme: dark) {
+  html {
+    @include mat.all-component-colors($dark-theme);
+  }
+}
+
+/* Global Styles */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+/* Container utility for pages */
+.container {
+  width: 100%;
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+@media (min-width: 600px) {
+  .container {
+    padding: 1.5rem;
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 960px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1200px;
+  }
+}
