@@ -1,18 +1,18 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Activity, UserScore, WeeklyScore } from '../../shared/models/activity.model';
 import { firstValueFrom } from 'rxjs';
 
 interface MockData {
-  users: Array<{ id: string; name: string; email: string }>;
-  activities: Array<{
+  users: { id: string; name: string; email: string }[];
+  activities: {
     userId: string;
     userName: string;
     activityType: string;
     points: number;
     weeksAgo: number;
     daysAgo: number;
-  }>;
+  }[];
 }
 
 @Injectable({
