@@ -22,6 +22,24 @@ Users can input activities and management can view scores on a rolling 6-week ba
 - Implement OnPush change detection strategy for performance
 - Use trackBy functions with `@for` loops
 
+### Component File Structure
+- **Always use separate files** for TypeScript, HTML, and SCSS (never inline templates/styles for production components)
+- Each component should have 3 files minimum:
+  - `component-name.component.ts` - Component logic
+  - `component-name.component.html` - Template
+  - `component-name.component.scss` - Styles
+- Optional: `component-name.component.spec.ts` for tests
+- Use `templateUrl` and `styleUrl` (or `styleUrls`) properties, not inline `template` or `styles`
+- Exception: Very simple utility components (< 3 lines of template) can use inline templates
+- Organize component files in dedicated folders:
+  ```
+  my-component/
+  ├── my-component.component.ts
+  ├── my-component.component.html
+  ├── my-component.component.scss
+  └── my-component.component.spec.ts
+  ```
+
 ### TypeScript Standards
 - Enable strict mode in tsconfig.json
 - Use explicit typing (avoid `any`)
