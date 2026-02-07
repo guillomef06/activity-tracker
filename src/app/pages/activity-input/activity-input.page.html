@@ -29,7 +29,7 @@
             (selectionChange)="onActivityTypeChange()"
             required
           >
-            @for (type of activityTypes; track type.value) {
+            @for (type of activityTypes(); track type.value) {
               <mat-option [value]="type.value">
                 {{ type.label }} ({{ type.points }} {{ 'common.points' | translate }})
               </mat-option>

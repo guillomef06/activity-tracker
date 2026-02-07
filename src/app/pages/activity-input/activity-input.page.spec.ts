@@ -41,7 +41,7 @@ describe('ActivityInputPage', () => {
   });
 
   it('should have activity types', () => {
-    expect(component.activityTypes.length).toBeGreaterThan(0);
+    expect(component.activityTypes().length).toBeGreaterThan(0);
   });
 
   it('should update points when activity type changes', () => {

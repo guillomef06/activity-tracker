@@ -64,7 +64,7 @@
             <mat-card-content class="score-details">
               <h4>{{ 'dashboard.weeklyBreakdown' | translate }}</h4>
               <mat-accordion>
-                @for (week of userScore.weeklyScores; track weekIndex; let weekIndex = $index) {
+                @for (week of userScore.weeklyScores; let weekIndex = $index; track weekIndex) {
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
@@ -78,7 +78,7 @@
                     
                     @if (week.activities.length > 0) {
                       <div class="week-activities">
-                        @for (activity of week.activities; track $index) {
+                        @for (activity of week.activities; track activity.id) {
                           <mat-chip-row>
                             <mat-icon matChipAvatar>task</mat-icon>
                             {{ activity.activityType }}
