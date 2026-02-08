@@ -8,26 +8,19 @@ Execute the SQL schema in your Supabase project:
 2. Copy and execute `schema.sql`
 3. Verify tables are created in Table Editor
 
-## 2. Activity Types (Optional)
+## 2. Activity Types
 
-If you want to store activity types in the database instead of constants:
+Activity types are defined directly in the `schema.sql` with default point values:
 
-1. Create a table `activity_types` via SQL Editor:
-```sql
-CREATE TABLE activity_types (
-  id SERIAL PRIMARY KEY,
-  value TEXT UNIQUE NOT NULL,
-  label_key TEXT NOT NULL,
-  points INTEGER NOT NULL,
-  is_active BOOLEAN DEFAULT TRUE
-);
-```
+- **kvk prep**: 15 points
+- **kvk cross border**: 10 points
+- **legion**: 8 points
+- **desolate desert**: 8 points
+- **golden expedition**: 5 points
 
-2. Import `activity_types.csv`:
-   - Go to Table Editor → activity_types → Insert → Import data from CSV
-   - Upload `activity_types.csv`
+These default values are used by the `calculate_activity_points()` function when no custom point rules are configured for an alliance.
 
-Alternatively, keep activity types as constants in the Angular app (simpler approach).
+Admins can override these defaults by creating custom point rules via the `activity_point_rules` table (configurable per alliance and per position range).
 
 ## 3. Get Your Supabase Credentials
 

@@ -12,8 +12,8 @@
   - Indexes for performance optimization
   - Auto-update triggers for `updated_at` timestamps
 
-- [supabase/activity_types.csv](supabase/activity_types.csv) - Activity types reference data
 - [supabase/README.md](supabase/README.md) - Setup instructions
+- Activity types are now integrated directly in schema.sql with default point values
 
 ### 2. Environment Configuration ✓
 - Updated [src/environments/environment.ts](src/environments/environment.ts)
@@ -232,9 +232,8 @@ Follow Phase 2 tasks above to create proper signup/login/join pages for producti
 
 ## 📋 File Changes Summary
 
-### Created Files (16):
-- `supabase/schema.sql`
-- `supabase/activity_types.csv`
+### Created Files (15):
+- `supabase/schema.sql` (includes activity types with default points)
 - `supabase/README.md`
 - `src/app/core/services/supabase.service.ts`
 - `src/app/core/services/auth.service.ts`

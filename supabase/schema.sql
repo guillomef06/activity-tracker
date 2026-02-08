@@ -411,15 +411,13 @@ BEGIN
   END IF;
   
   -- Fallback to default points from ACTIVITY_TYPES
-  -- These are hardcoded defaults, you may want to adjust them
+  -- Based on AOEM activities
   CASE p_activity_type
-    WHEN 'development' THEN v_default_points := 10;
-    WHEN 'codeReview' THEN v_default_points := 8;
-    WHEN 'testing' THEN v_default_points := 7;
-    WHEN 'documentation' THEN v_default_points := 5;
-    WHEN 'meeting' THEN v_default_points := 3;
-    WHEN 'bugFix' THEN v_default_points := 12;
-    WHEN 'research' THEN v_default_points := 6;
+    WHEN 'kvk prep' THEN v_default_points := 15;
+    WHEN 'kvk cross border' THEN v_default_points := 10;
+    WHEN 'legion' THEN v_default_points := 8;
+    WHEN 'desolate desert' THEN v_default_points := 8;
+    WHEN 'golden expedition' THEN v_default_points := 5;
     ELSE v_default_points := 5; -- Generic default
   END CASE;
   
@@ -427,19 +425,3 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- ============================================
--- 6. SAMPLE DATA (OPTIONAL - FOR DEVELOPMENT)
--- ============================================
-
--- You can uncomment this section to create sample data
--- Note: This requires manual user creation in Supabase Auth first
-
-/*
--- Insert sample alliance
-INSERT INTO alliances (id, name) VALUES
-  ('00000000-0000-0000-0000-000000000001', 'Demo Alliance');
-
--- Insert sample user profiles (requires auth.users to exist first)
--- INSERT INTO user_profiles (id, alliance_id, display_name, email, role) VALUES
---   ('user-uuid-from-auth', '00000000-0000-0000-0000-000000000001', 'Admin User', 'admin@example.com', 'admin');
-*/

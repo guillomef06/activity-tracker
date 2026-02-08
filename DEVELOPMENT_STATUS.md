@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 8 février 2026
+**Dernière mise à jour:** 8 février 2026 - 14:30
 
 ## 📋 Résumé
 
@@ -25,8 +25,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
   - **Admin:** Accès à sa propre alliance uniquement
   - **Member:** Accès en lecture à son alliance
 - **Fichiers:**
-  - `supabase/schema.sql` - Schema complet avec RLS et support super_admin
-  - `supabase/activity_types.csv` - Types d'activités
+  - `supabase/schema.sql` - Schema complet avec RLS, support super_admin, et types d'activités intégrés
   - `supabase/README.md` - Instructions de configuration
 
 ### 2. Configuration
@@ -102,6 +101,10 @@ Réorganisés par domaine avec pattern Request/Response:
 - ✅ TypeScript: Fix exports avec `export type` pour `isolatedModules`
 - ✅ **Authentification par username:** Suppression de l'email, génération auto interne
 - ✅ **Super Admin:** Ajout du rôle super_admin avec accès global
+- ✅ **Navigation active:** Ajout de routerLinkActive pour indicateur visuel de page active
+- ✅ **Styles globaux:** Suppression de ::ng-deep, migration vers styles.scss
+- ✅ **Fichiers i18n:** Alignement et formatage cohérent des 4 fichiers de langue (en, fr, es, it - 216 lignes chacun)
+- ✅ **Activity types:** Mise à jour avec activités de jeu (KvK, Legion, Desolate Desert, Golden Expedition)
 
 ---
 
@@ -141,6 +144,309 @@ Réorganisés par domaine avec pattern Request/Response:
    - Accès lecture seule aux données de l'alliance
    - Peut ajouter ses propres activités
    - Créé via invitation token
+
+---
+
+## 🔗 Système d'Invitations avec Tracking (NOUVEAU - À IMPLÉMENTER)
+
+### Fonctionnalité
+
+**Design actuel:**
+- Les tokens d'invitation sont **multi-usage** (un lien pour toute l'alliance)
+- Plusieurs personnes peuvent utiliser le même lien
+- Les tokens expirent après X jours (configurable)
+- L'admin peut révoquer un token manuellement
+
+**Amélioration à implémenter:**
+- **Tracking d'utilisation:** Savoir qui s'est inscrit avec quel token
+- **Statistiques:** Afficher le nombre d'utilisations par token
+- **Liste des membres:** Voir les membres inscrits via chaque lien d'invitation
+- **Révocation non-destructive:** Désactiver le lien sans supprimer les membres existants
+
+### Workflow Utilisateur
+
+**Création d'invitation:**
+1. Admin crée un token (durée: 1, 7, 30, ou 90 jours)
+2. Admin copie le lien `https://app.com/join/ABC123XYZ`
+3. Admin partage le lien (Discord, email, etc.)
+
+**Inscription via invitation:**
+1. Nouveau membre clique sur le lien
+2. Le système valide le token (non expiré, non révoqué)
+3. Affiche le nom de l'alliance
+4. Membre s'inscrit avec username, password, display name
+5. Le système enregistre `invitation_token_id` dans le profil utilisateur
+
+**Suivi des invitations (Admin):**
+1. Admin voit la liste des tokens créés
+2. Pour chaque token:
+   - Badge avec nombre d'utilisations (ex: "3 membres")
+   - Date d'expiration
+   - Boutons: Copier lien, Révoquer
+3. Clic sur un token → expansion affichant la liste des membres inscrits
+
+### Changements Base de Données
+
+#### 1. Modifier `user_profiles`
+```sql
+-- Ajouter colonne pour tracker le token utilisé lors de l'inscription
+ALTER TABLE user_profiles 
+ADD COLUMN invitation_token_id UUID REFERENCES invitation_tokens(id) ON DELETE SET NULL;
+
+-- Index pour performance
+CREATE INDEX idx_user_profiles_invitation_token 
+ON user_profiles(invitation_token_id) 
+WHERE invitation_token_id IS NOT NULL;
+```
+
+#### 2. Créer vue pour statistiques
+```sql
+-- Vue pour statistiques d'utilisation des tokens
+CREATE VIEW invitation_stats AS
+SELECT 
+  it.id,
+  it.token,
+  it.alliance_id,
+  it.expires_at,
+  it.created_at,
+  it.created_by,
+  COUNT(up.id) as usage_count,
+  ARRAY_AGG(up.display_name ORDER BY up.created_at) FILTER (WHERE up.id IS NOT NULL) as members_joined
+FROM invitation_tokens it
+LEFT JOIN user_profiles up ON up.invitation_token_id = it.id
+GROUP BY it.id, it.token, it.alliance_id, it.expires_at, it.created_at, it.created_by;
+
+-- Grant access pour RLS
+GRANT SELECT ON invitation_stats TO authenticated;
+```
+
+### Changements Modèles TypeScript
+
+**Mettre à jour `src/app/shared/models/user.model.ts`:**
+```typescript
+export interface UserProfile {
+  id: string;
+  username: string;
+  display_name: string;
+  role: 'super_admin' | 'admin' | 'member';
+  alliance_id: string | null;
+  invitation_token_id?: string | null; // NOUVEAU
+  created_at: string;
+  updated_at: string;
+}
+```
+
+**Mettre à jour `src/app/shared/models/invitation.model.ts`:**
+```typescript
+// Étendre InvitationToken avec statistiques
+export interface InvitationWithStats extends InvitationToken {
+  usage_count: number;
+  members_joined: string[]; // Liste des display names
+}
+```
+
+### Changements Services
+
+**Mettre à jour `AllianceService` (`src/app/core/services/alliance.service.ts`):**
+
+```typescript
+// Modifier loadInvitations pour utiliser la vue invitation_stats
+async loadInvitations(): Promise<{ error: Error | null }> {
+  const allianceId = this.getAllianceId();
+  if (!allianceId) return { error: new Error('No alliance ID') };
+
+  const { data, error } = await this.supabase
+    .from('invitation_stats')
+    .select('*')
+    .eq('alliance_id', allianceId)
+    .gte('expires_at', new Date().toISOString())
+    .order('created_at', { ascending: false });
+
+  if (error) return { error };
+  
+  this.invitationsSignal.set(data as InvitationWithStats[] || []);
+  return { error: null };
+}
+
+// Modifier revokeInvitation pour soft delete (expire immédiatement)
+async revokeInvitation(id: string): Promise<{ error: Error | null }> {
+  const { error } = await this.supabase
+    .from('invitation_tokens')
+    .update({ expires_at: new Date().toISOString() })
+    .eq('id', id);
+
+  if (!error) {
+    await this.loadInvitations();
+  }
+
+  return { error };
+}
+```
+
+**Mettre à jour `AuthService` (`src/app/core/services/auth.service.ts`):**
+
+```typescript
+// Modifier signUpMember pour enregistrer le token utilisé
+async signUpMember(request: MemberSignUpRequest): Promise<AuthResponse> {
+  try {
+    // ... validation token existante ...
+
+    // Créer user dans auth
+    const { data: authData, error: signUpError } = await this.supabase.auth.signUp({
+      email: `${request.username}@app.tracker`,
+      password: request.password,
+      options: {
+        data: { username: request.username }
+      }
+    });
+
+    if (signUpError || !authData.user) {
+      return { user: null, error: signUpError };
+    }
+
+    // Créer profil avec invitation_token_id
+    const { error: profileError } = await this.supabase
+      .from('user_profiles')
+      .insert({
+        id: authData.user.id,
+        username: request.username,
+        display_name: request.displayName,
+        role: 'member',
+        alliance_id: validationData.allianceId,
+        invitation_token_id: validationData.tokenId // NOUVEAU
+      });
+
+    // ... reste du code ...
+  } catch (error) {
+    return { user: null, error: error as Error };
+  }
+}
+```
+
+### Changements UI - Alliance Settings
+
+**Section Invitations avec expansion panels:**
+
+```html
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ 'alliance.settings.invitations' | translate }}</mat-card-title>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <!-- Formulaire création invitation -->
+    <form [formGroup]="invitationForm" (ngSubmit)="createInvitation()">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'alliance.settings.invitationDuration' | translate }}</mat-label>
+        <mat-select formControlName="duration">
+          <mat-option [value]="1">1 jour</mat-option>
+          <mat-option [value]="7">7 jours</mat-option>
+          <mat-option [value]="30">30 jours</mat-option>
+          <mat-option [value]="90">90 jours</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">
+        <mat-icon>add_link</mat-icon>
+        {{ 'alliance.settings.createInvitation' | translate }}
+      </button>
+    </form>
+
+    <!-- Liste des invitations avec expansion -->
+    <mat-accordion class="invitations-list">
+      <mat-expansion-panel *ngFor="let invitation of invitations()">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-chip [color]="invitation.usage_count > 0 ? 'primary' : 'default'">
+              {{ invitation.usage_count }} 
+              {{ invitation.usage_count === 1 ? 'membre' : 'membres' }}
+            </mat-chip>
+            <span class="expires-info">
+              Expire le {{ invitation.expires_at | date:'short' }}
+            </span>
+          </mat-panel-title>
+          <mat-panel-description>
+            <button mat-icon-button (click)="copyInvitationLink(invitation.token); $event.stopPropagation()">
+              <mat-icon>link</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="revokeInvitation(invitation.id); $event.stopPropagation()">
+              <mat-icon>block</mat-icon>
+            </button>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        
+        <!-- Liste des membres inscrits via ce token -->
+        <mat-list>
+          <mat-list-item *ngFor="let member of invitation.members_joined">
+            <mat-icon matListItemIcon>person</mat-icon>
+            <span matListItemTitle>{{ member }}</span>
+          </mat-list-item>
+          <mat-list-item *ngIf="invitation.usage_count === 0">
+            <span matListItemTitle class="muted-text">
+              {{ 'alliance.settings.noMembersYet' | translate }}
+            </span>
+          </mat-list-item>
+        </mat-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <p *ngIf="invitations().length === 0" class="no-invitations">
+      {{ 'alliance.settings.noInvitations' | translate }}
+    </p>
+  </mat-card-content>
+</mat-card>
+```
+
+### Traductions
+
+**Ajouter dans `src/assets/i18n/en.json`:**
+```json
+{
+  "alliance": {
+    "settings": {
+      "invitations": "Invitations",
+      "invitationDuration": "Duration",
+      "createInvitation": "Create Invitation",
+      "noInvitations": "No active invitations",
+      "noMembersYet": "No members joined with this link yet",
+      "invitationCopied": "Invitation link copied to clipboard",
+      "invitationRevoked": "Invitation revoked successfully"
+    }
+  }
+}
+```
+
+### Avantages de ce Design
+
+1. **Usage illimité:** Pas de limite d'inscriptions par token (jusqu'à expiration)
+2. **Tracking complet:** L'admin voit exactement qui s'est inscrit avec quel lien
+3. **Révocation non-destructive:** Désactiver un lien ne supprime pas les membres
+4. **Historique:** Les tokens révoqués restent en base (soft delete via `expires_at`)
+5. **Performance:** Vue pré-calculée avec statistiques (`invitation_stats`)
+6. **Sécurité:** RLS policies s'appliquent automatiquement à la vue
+
+### Tests à Effectuer
+
+1. **Test création et partage:**
+   - Admin crée un token (7 jours)
+   - Copie le lien et le partage
+   - Vérifier que le lien fonctionne
+
+2. **Test multi-usage:**
+   - 3 personnes s'inscrivent avec le même lien
+   - Vérifier que les 3 comptes sont créés
+   - Vérifier que l'admin voit "3 membres" sur le token
+   - Expansion affiche les 3 display names
+
+3. **Test révocation:**
+   - Admin révoque le token
+   - 4ème personne tente de s'inscrire → erreur "Token expiré"
+   - Les 3 membres existants restent actifs
+   - Le token n'apparaît plus dans la liste active
+
+4. **Test expiration automatique:**
+   - Après 7 jours, le token expire automatiquement
+   - Nouvelle inscription impossible
+   - Les membres existants restent actifs
 
 ---
 
@@ -791,117 +1097,241 @@ Activités sans position ?
 
 ## 🚧 En Cours / À Faire
 
-### Phase 1: Pages d'Authentification (PRIORITAIRE)
+> **Ordre chronologique d'implémentation recommandé**
 
-#### 1.1 Page Signup Admin (`/signup`)
+### 🔴 Phase 0: Configuration Initiale (CRITIQUE - 5-10 MIN)
+
+**Avant toute autre implémentation, configurer Supabase:**
+
+1. **Configuration Supabase** (5 min)
+   - Aller sur [Supabase Dashboard](https://supabase.com/dashboard)
+   - Créer un nouveau projet
+   - Aller dans SQL Editor
+   - Exécuter le contenu de `supabase/schema.sql`
+   - Vérifier que les 4 tables sont créées
+
+2. **Obtenir les Credentials** (2 min)
+   - Project Settings → API
+   - Copier **Project URL** et **anon key**
+   - Mettre à jour dans:
+     - `src/environments/environment.ts`
+     - `src/environments/environment.production.ts`
+
+3. **Activer l'Authentification Email** (3 min)
+   - Authentication → Providers
+   - Activer **Email**
+   - Désactiver la confirmation email (pour développement)
+
+---
+
+### 🟠 Phase 1: Système d'Invitations avec Tracking (1-2H)
+
+**Amélioration du système d'invitations existant**
+
+#### Objectif
+Permettre aux admins de voir qui s'est inscrit avec quel lien d'invitation.
+
+#### Implémentation
+
+1. **Mettre à jour le schéma SQL** (10 min)
+   - Ajouter colonne `invitation_token_id` dans `user_profiles`
+   - Créer vue `invitation_stats` avec compteurs et liste des membres
+   - Ajouter index pour performance
+
+2. **Mettre à jour les modèles TypeScript** (15 min)
+   - `user.model.ts`: Ajouter `invitation_token_id?: string | null`
+   - `invitation.model.ts`: Ajouter interface `InvitationWithStats`
+   - Exporter dans `index.ts`
+
+3. **Mettre à jour AllianceService** (20 min)
+   - `loadInvitations()`: Utiliser vue `invitation_stats`
+   - `revokeInvitation()`: Soft delete (expire immédiatement)
+
+4. **Mettre à jour AuthService** (15 min)
+   - `signUpMember()`: Enregistrer `invitation_token_id` lors de l'inscription
+
+5. **Mettre à jour Page Alliance Settings** (30 min)
+   - UI avec expansion panels
+   - Badge compteur d'utilisations
+   - Liste des membres par token
+
+6. **Ajouter traductions** (10 min)
+   - Clés pour invitations dans en.json, fr.json, es.json, it.json
+
+**Voir section détaillée "🔗 Système d'Invitations avec Tracking" pour code complet**
+
+---
+
+### 🟡 Phase 2: Système de Points Configurables (4-5H)
+
+**Permettre aux admins de configurer les points selon la position/classement**
+
+#### Objectif
+Au lieu de points fixes, calculer les points selon la position de l'utilisateur dans l'activité.
+
+#### Implémentation
+
+1. **Mettre à jour schema SQL** (10 min)
+   - Table `activity_point_rules` + RLS
+   - Colonne `position` dans `activities`
+
+2. **Créer modèles TypeScript** (15 min)
+   - `activity-point-rule.model.ts`
+   - Mettre à jour `activity.model.ts`
+
+3. **Créer PointRulesService** (60 min)
+   - CRUD des règles
+   - `calculatePoints()` avec fallback
+   - `validateNoOverlap()`
+
+4. **Modifier ActivityService** (20 min)
+   - Injection PointRulesService
+   - Calcul points dans `addActivity()`
+
+5. **Modifier Page Activity Input** (30 min)
+   - Champ `position`
+   - Preview points en temps réel
+
+6. **Section Alliance Settings - Point Rules** (90 min)
+   - Tableau des règles
+   - Formulaire CRUD
+   - Validation chevauchement
+
+7. **Ajouter traductions** (10 min)
+
+**Voir section détaillée "🎯 Système de Points Configurables" pour code complet**
+
+---
+
+### 🟢 Phase 3: Pages d'Authentification (2-3H)
+
+**Créer les pages de connexion et inscription - PRIORITAIRE POUR UX**
+
+#### 3.1 Page Signup Admin (`/signup`) - 30-45 min
+
 - Créer `src/app/pages/signup/`
   - `signup.page.ts`
   - `signup.page.html`
   - `signup.page.scss`
-- Formulaire:
-  - **Username** (pas d'email)
-  - Password, confirm password
+- Formulaire Material:
+  - **Username** (validation unicité)
+  - Password, confirm password (validation force + match)
   - Display name
   - Alliance name
-- Utiliser Material components (`mat-form-field`, `mat-input`, etc.)
-- Validation: username unique, password strength, passwords match
 - Appeler `authService.signUpAdmin()`
 - Redirection vers dashboard après succès
 
-#### 1.2 Page Login (`/login`)
+#### 3.2 Page Login (`/login`) - 20-30 min
+
 - Créer `src/app/pages/login/`
-  - `login.page.ts`
-  - `login.page.html`
-  - `login.page.scss`
-- Formulaire: **username**, password (pas d'email)
+- Formulaire: **username**, password
 - Lien vers `/signup`
 - Appeler `authService.signIn()`
-- Redirection vers dashboard après succès
+- Gestion erreurs avec messages traduits
 
-#### 1.3 Page Join (`/join/:token`)
+#### 3.3 Page Join (`/join/:token`) - 30-40 min
+
 - Créer `src/app/pages/join/`
-  - `join.page.ts`
-  - `join.page.html`
-  - `join.page.scss`
-- Valider le token au chargement via `allianceService.validateInvitation()`
-- Afficher le nom de l'alliance
-- Formulaire: **username**, password, confirm password, display name (pas d'email)
+- Valider token au chargement
+- Afficher nom de l'alliance
+- Formulaire: **username**, password, confirm password, display name
 - Appeler `authService.signUpMember()`
-- Redirection vers dashboard après succès
 
-### Phase 2: Gestion de l'Alliance
+#### 3.4 Page Super Admin Setup (`/super-admin-setup`) - 20 min
 
-#### 2.1 Page Alliance Settings (`/alliance-settings`)
-- Créer `src/app/pages/alliance-settings/`
-- Sections:
-  - Modifier le nom de l'alliance
-  - Liste des membres
-  - Gestion des invitations (créer, révoquer, copier lien)
+- Accessible une seule fois (vérifier si super admin existe)
+- Formulaire: username, password, display name
+- Appeler `authService.signUpSuperAdmin()`
+- Redirection + désactivation de la route
+
+---
+
+### 🔵 Phase 4: Page Alliance Settings (1-2H)
+
+**Interface de gestion pour les admins**
+
+#### Sections à implémenter
+
+1. **Informations Alliance** (20 min)
+   - Afficher nom actuel
+   - Formulaire modification nom
+   - Compteurs: membres totaux, invitations actives
+
+2. **Liste des Membres** (25 min)
+   - Tableau Material avec tri/filtre
+   - Colonnes: Display Name, Username, Role, Date d'adhésion
+   - Badge rôle (Admin/Member)
+
+3. **Gestion Invitations** (30 min)
+   - Formulaire création (sélection durée: 1, 7, 30, 90 jours)
+   - Liste avec expansion panels (si Phase 1 faite)
+   - Actions: Copier lien, Révoquer
+
+4. **Point Rules** (30 min - si Phase 2 faite)
+   - Tableau des règles configurées
+   - Formulaire CRUD
+   - Validation
+
+#### Assets
 - Protégé par `adminGuard`
+- Utiliser Material tabs pour les sections
+- Responsive mobile-first
 
-### Phase 2.5: Administration Globale (Super Admin)
+---
 
-#### 2.5.1 Page Super Admin Dashboard (`/super-admin`)
-- Créer `src/app/pages/super-admin-dashboard/`
-- Vue d'ensemble:
-  - Nombre total d'alliances
-  - Nombre total d'utilisateurs
-  - Statistiques globales
-- Protégé par `superAdminGuard`
+### 🟣 Phase 5: Pages Super Admin (2-3H)
 
-#### 2.5.2 Page Gestion Alliances (`/super-admin/alliances`)
-- Liste de toutes les alliances
+**Administration globale du système**
+
+#### 5.1 Super Admin Dashboard (`/super-admin`) - 45 min
+
+- Stats globales:
+  - Nombre total d'alliances (avec chart)
+  - Nombre total d'utilisateurs (avec répartition par rôle)
+  - Total activités (avec évolution)
+  - Invitations actives
+- Cards Material avec icônes
+- Actions rapides vers gestion alliances/users
+
+#### 5.2 Gestion Alliances (`/super-admin/alliances`) - 60 min
+
+- Table Material paginée, triable, filtrable
+- Colonnes: Nom, Admin, Nombre membres, Date création
 - Actions:
-  - Voir les détails d'une alliance
-  - Modifier le nom
-  - Supprimer une alliance
-  - Voir les membres
-- Protégé par `superAdminGuard`
+  - Éditer nom (inline ou dialog)
+  - Voir détails (expansion row)
+  - Supprimer (avec confirmation)
+- Dialog suppression avec warning cascade
 
-#### 2.5.3 Page Gestion Utilisateurs (`/super-admin/users`)
-- Liste de tous les utilisateurs (toutes alliances)
-- Filtres: par alliance, par rôle
+#### 5.3 Gestion Utilisateurs (`/super-admin/users`) - 60 min
+
+- Table avec filtres: par alliance, par rôle
+- Colonnes: Display Name, Username, Role, Alliance, Date création
 - Actions:
   - Promouvoir member → admin
   - Rétrograder admin → member
-  - Supprimer un utilisateur
-  - Réassigner à une autre alliance
+  - Réassigner à autre alliance
+  - Supprimer
+- Confirmations avec Material dialogs
+
+#### Assets
 - Protégé par `superAdminGuard`
+- Navigation breadcrumb
+- Snackbar pour feedback actions
 
-#### 2.5.4 Création du Premier Super Admin
-- Script ou page dédiée `/super-admin-setup` (accessible une seule fois)
-- Formulaire simple: username, password, display name
-- Appeler `authService.signUpSuperAdmin()`
-- Désactiver la route après la première utilisation
+---
 
-### Phase 3: Mise à Jour des Routes
+### 🟤 Phase 6: Mise à Jour Routes et Navigation (30-45 MIN)
 
-Fichier: `src/app/app.routes.ts`
+#### 6.1 Routes (`src/app/app.routes.ts`) - 15 min
 
 ```typescript
 export const routes: Routes = [
   // Routes publiques (guestGuard)
-  { 
-    path: 'signup', 
-    loadComponent: () => import('./pages/signup/signup.page').then(m => m.SignupPage),
-    canActivate: [guestGuard]
-  },
-  { 
-    path: 'login', 
-    loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage),
-    canActivate: [guestGuard]
-  },
-  { 
-    path: 'join/:token', 
-    loadComponent: () => import('./pages/join/join.page').then(m => m.JoinPage),
-    canActivate: [guestGuard]
-  },
-  
-  // Route setup super admin (à protéger après première utilisation)
-  {
-    path: 'super-admin-setup',
-    loadComponent: () => import('./pages/super-admin-setup/super-admin-setup.page').then(m => m.SuperAdminSetupPage)
-  },
+  { path: 'signup', loadComponent: ..., canActivate: [guestGuard] },
+  { path: 'login', loadComponent: ..., canActivate: [guestGuard] },
+  { path: 'join/:token', loadComponent: ..., canActivate: [guestGuard] },
+  { path: 'super-admin-setup', loadComponent: ... },
   
   // Routes authentifiées (authGuard)
   {
@@ -909,43 +1339,21 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'activity-input', pathMatch: 'full' },
-      { 
-        path: 'activity-input', 
-        loadComponent: () => import('./pages/activity-input/activity-input.page').then(m => m.ActivityInputPage)
-      },
-      { 
-        path: 'dashboard', 
-        loadComponent: () => import('./pages/management-dashboard/management-dashboard.page').then(m => m.ManagementDashboardPage)
-      },
-      { 
-        path: 'activities-details', 
-        loadComponent: () => import('./pages/activities-details/activities-details.page').then(m => m.ActivitiesDetailsPage)
-      },
+      { path: 'activity-input', loadComponent: ... },
+      { path: 'management-dashboard', loadComponent: ... },
+      { path: 'activities-details', loadComponent: ... },
       
-      // Routes admin (adminGuard)
-      { 
-        path: 'alliance-settings', 
-        loadComponent: () => import('./pages/alliance-settings/alliance-settings.page').then(m => m.AllianceSettingsPage),
-        canActivate: [adminGuard]
-      },
+      // Admin routes
+      { path: 'alliance-settings', loadComponent: ..., canActivate: [adminGuard] },
       
-      // Routes super admin (superAdminGuard)
+      // Super Admin routes
       {
         path: 'super-admin',
         canActivate: [superAdminGuard],
         children: [
-          { 
-            path: '', 
-            loadComponent: () => import('./pages/super-admin-dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage)
-          },
-          { 
-            path: 'alliances', 
-            loadComponent: () => import('./pages/super-admin-alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage)
-          },
-          { 
-            path: 'users', 
-            loadComponent: () => import('./pages/super-admin-users/super-admin-users.page').then(m => m.SuperAdminUsersPage)
-          }
+          { path: '', loadComponent: ... },
+          { path: 'alliances', loadComponent: ... },
+          { path: 'users', loadComponent: ... }
         ]
       }
     ]
@@ -953,75 +1361,139 @@ export const routes: Routes = [
 ];
 ```
 
-### Phase 4: Mise à Jour du Header
+#### 6.2 Header (`src/app/core/layout/app-header/`) - 20 min
 
-Fichier: `src/app/core/layout/app-header/app-header.component.ts`
+- Afficher **username** (pas email)
+- Badge "Super Admin" si applicable
+- Nom de l'alliance pour admin/member
+- Liens navigation:
+  - Super Admin Dashboard (si super_admin)
+  - Management Dashboard (si admin/super_admin)
+  - Alliance Settings (si admin)
+  - Activity Input (tous)
+  - Activities Details (tous)
+- Bouton logout
+- Utiliser signals: `authService.userProfile()`, `authService.isAdmin()`, etc.
 
-- Afficher le **username** (pas email)
-- Afficher le nom de l'alliance (ou "Super Admin" si super_admin)
-- Bouton de déconnexion
-- Lien vers alliance-settings (si admin)
-- Lien vers super-admin (si super_admin)
-- Utiliser `authService.userProfile()`, `authService.isAdmin()`, `authService.isSuperAdmin()`
+---
 
-### Phase 5: Traductions
+### ⚪ Phase 7: Traductions Complètes (15-20 MIN)
 
-Ajouter les clés dans `src/assets/i18n/*.json`:
+**Ajouter toutes les clés manquantes dans les 4 fichiers i18n**
 
-```json
-{
-  "auth": {
-    "signup": "Sign Up",
-    "login": "Login",
-    "logout": "Logout",
-    "username": "Username",
-    "displayName": "Display Name",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "allianceName": "Alliance Name",
-    "createAccount": "Create Account",
-    "alreadyHaveAccount": "Already have an account?",
-    "dontHaveAccount": "Don't have an account?",
-    "joinAlliance": "Join Alliance",
-    "invalidToken": "Invalid or expired invitation",
-    "errors": {
-      "usernameRequired": "Username is required",
-      "usernameTaken": "Username already taken",
-      "displayNameRequired": "Display name is required",
-      "passwordRequired": "Password is required",
-      "passwordTooShort": "Password must be at least 8 characters",
-      "passwordMismatch": "Passwords don't match",
-      "allianceNameRequired": "Alliance name is required"
-    }
-  },
-  "alliance": {
-    "settings": "Alliance Settings",
-    "members": "Members",
-    "invitations": "Invitations",
-    "createInvitation": "Create Invitation",
-    "copyLink": "Copy Link",
-    "revoke": "Revoke",
-    "admin": "Admin",
-    "member": "Member",
-    "superAdmin": "Super Admin",
-    "expiresAt": "Expires at",
-    "updateName": "Update Alliance Name"
-  },
-  "superAdmin": {
-    "dashboard": "Super Admin Dashboard",
-    "alliances": "Manage Alliances",
-    "users": "Manage Users",
-    "totalAlliances": "Total Alliances",
-    "totalUsers": "Total Users",
-    "createSuperAdmin": "Create Super Admin",
-    "promoteToAdmin": "Promote to Admin",
-    "demoteToMember": "Demote to Member",
-    "deleteUser": "Delete User",
-    "deleteAlliance": "Delete Alliance",
-    "reassignUser": "Reassign to Alliance"
-  }
-}
-```
+#### Clés à ajouter
+
+**auth:**
+- signup, login, logout
+- username, displayName, password, confirmPassword, allianceName
+- createAccount, alreadyHaveAccount, dontHaveAccount, joinAlliance
+- invalidToken
+- errors: usernameRequired, usernameTaken, displayNameRequired, passwordRequired, passwordTooShort, passwordMismatch, allianceNameRequired
+
+**alliance.settings:**
+- invitations, invitationDuration, createInvitation
+- noInvitations, noMembersYet
+- invitationCopied, invitationRevoked
+- pointRules (si Phase 2)
+- members, admin, member, superAdmin
+
+**superAdmin:**
+- dashboard, alliances, users
+- totalAlliances, totalUsers, createSuperAdmin
+- promoteToAdmin, demoteToMember, deleteUser, deleteAlliance, reassignUser
+
+#### Fichiers à mettre à jour
+- `src/assets/i18n/en.json`
+- `src/assets/i18n/fr.json`
+- `src/assets/i18n/es.json`
+- `src/assets/i18n/it.json`
+
+---
+
+### ⚫ Phase 8: Tests End-to-End (1H)
+
+**Vérifier le bon fonctionnement de bout en bout**
+
+#### Scénarios de test
+
+1. **Setup Initial** (10 min)
+   - Créer premier super admin
+   - Vérifier route `/super-admin-setup` désactivée après
+
+2. **Cycle Admin** (15 min)
+   - Signup admin → crée alliance
+   - Login → redirection dashboard
+   - Créer invitation
+   - Copier lien
+
+3. **Cycle Member** (15 min)
+   - Join avec token
+   - Vérifier affichage nom alliance
+   - Signup member
+   - Login
+   - Ajouter activité
+
+4. **Invitations avec Tracking** (10 min - si Phase 1)
+   - 3 membres s'inscrivent avec même lien
+   - Admin voit "3 membres" dans Alliance Settings
+   - Expansion affiche 3 noms
+   - Révoquer → 4ème inscription échoue
+
+5. **Points Configurables** (10 min - si Phase 2)
+   - Admin configure règles (ex: position 1 = 50pts, 2-5 = 30pts)
+   - Member saisit activité position 1 → voit 50pts
+   - Member saisit activité position 3 → voit 30pts
+   - Vérifier dans dashboard
+
+6. **Super Admin** (10 min)
+   - Voir toutes les alliances
+   - Voir tous les utilisateurs
+   - Promouvoir member → admin
+   - Vérifier accès changé
+
+---
+
+## 📊 Récapitulatif Chronologique
+
+| Phase | Tâche | Durée | Priorité | Dépendances |
+|-------|-------|-------|----------|-------------|
+| 0 | Configuration Supabase | 5-10 min | 🔴 CRITIQUE | Aucune |
+| 1 | Invitations avec Tracking | 1-2h | 🟠 Haute | Phase 0 |
+| 2 | Points Configurables | 4-5h | 🟡 Moyenne | Phase 0 |
+| 3 | Pages Authentification | 2-3h | 🟢 Haute | Phase 0 |
+| 4 | Page Alliance Settings | 1-2h | 🔵 Moyenne | Phase 0, 3 |
+| 5 | Pages Super Admin | 2-3h | 🟣 Moyenne | Phase 0, 3 |
+| 6 | Routes et Header | 30-45 min | 🟤 Haute | Phase 3, 4, 5 |
+| 7 | Traductions | 15-20 min | ⚪ Basse | Toutes |
+| 8 | Tests E2E | 1h | ⚫ Haute | Toutes |
+
+**Total estimé: 12-18 heures**
+
+---
+
+## 🚀 Ordre d'Implémentation RECOMMANDÉ
+
+Pour un développement efficace, suivre cet ordre :
+
+1. **JOUR 1 (3-4h):**
+   - Phase 0: Configuration Supabase (10 min)
+   - Phase 3: Pages Authentification (2-3h)
+   - Test: Signup → Login → Dashboard
+
+2. **JOUR 2 (3-4h):**
+   - Phase 4: Page Alliance Settings (1-2h)
+   - Phase 6: Routes et Header (45 min)
+   - Phase 1: Invitations Tracking (1-2h)
+   - Test: Création invitation → Join → Vérification tracking
+
+3. **JOUR 3 (4-5h):**
+   - Phase 2: Points Configurables (4-5h)
+   - Test: Configuration règles → Ajout activité → Vérification calcul
+
+4. **JOUR 4 (3-4h):**
+   - Phase 5: Pages Super Admin (2-3h)
+   - Phase 7: Traductions (20 min)
+   - Phase 8: Tests E2E complets (1h)
 
 ---
 
