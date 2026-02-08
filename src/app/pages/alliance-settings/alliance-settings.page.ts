@@ -79,6 +79,17 @@ export class AllianceSettingsPage implements OnInit {
   protected readonly invitationColumns: string[] = ['token', 'expiresAt', 'usedAt', 'actions'];
   protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
 
+  /**
+   * Get the base URL for invitation links
+   * Handles GitHub Pages deployment with base-href
+   */
+  private getBaseUrl(): string {
+    const base = document.querySelector('base')?.getAttribute('href') || '/';
+    // Remove trailing slash if present
+    const basePath = base.endsWith('/') ? base.slice(0, -1) : base;
+    return `${window.location.origin}${basePath}`;
+  }
+
   async ngOnInit(): Promise<void> {
     await this.loadData();
     
@@ -126,7 +137,7 @@ export class AllianceSettingsPage implements OnInit {
 
       if ('token' in response) {
         // Copy to clipboard
-        const inviteUrl = `${window.location.origin}/join?token=${response.token}`;
+        const inviteUrl = `${this.getBaseUrl()}/join?token=${response.token}`;
         this.clipboard.copy(inviteUrl);
         
         this.snackBar.open('Invitation created and link copied to clipboard!', 'Close', {
@@ -172,7 +183,7 @@ export class AllianceSettingsPage implements OnInit {
   }
 
   protected copyInvitationLink(token: string): void {
-    const inviteUrl = `${window.location.origin}/join?token=${token}`;
+    const inviteUrl = `${this.getBaseUrl()}/join?token=${token}`;
     this.clipboard.copy(inviteUrl);
     this.snackBar.open('Invitation link copied to clipboard!', 'Close', { duration: 3000 });
   }
