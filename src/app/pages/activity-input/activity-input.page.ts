@@ -68,7 +68,7 @@ export class ActivityInputPage implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (!this.userName.trim() || !this.activityType || this.points <= 0) {
       this.snackBar.open('Please fill in all fields', 'Close', {
         duration: 3000,
@@ -83,16 +83,27 @@ export class ActivityInputPage implements OnInit {
     // Save user name for future use
     this.storage.set(APP_CONSTANTS.STORAGE_KEYS.USER_NAME, this.userName);
 
-    // Create user ID from name using utility function
-    const userId = createUserIdFromName(this.userName);
-
-    this.activityService.addActivity({
-      userId,
-      userName: this.userName,
+    // Add activity (userId and userName handled by service)
+    const { error } = await this.activityService.addActivity({
       activityType: this.activityType,
       points: this.points,
       date: new Date()
     });
+
+    if (error) {
+      this.snackBar.open(
+        this.translate.instant('activityInput.error'),
+        this.translate.instant('common.close'),
+        {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        }
+      );
+      this.submitting.set(false);
+      return;
+    }
 
     // Reset form
     this.activityType = '';

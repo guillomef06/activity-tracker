@@ -1,10 +1,13 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Activity, UserScore, WeeklyScore } from '../../shared/models/activity.model';
+import { Activity, UserScore, WeeklyScore } from '../../shared/models';
 import { firstValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
+import { SupabaseService } from './supabase.service';
+import { AuthService } from './auth.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 import { generateId } from '../../shared/utils/id-generator.util';
+import { environment } from '../../../environments/environment';
 
 interface MockData {
   users: { id: string; name: string; email: string }[];
@@ -18,31 +21,49 @@ interface MockData {
   }[];
 }
 
+interface SupabaseActivity {
+  id: string;
+  user_id: string;
+  activity_type: string;
+  points: number;
+  date: string;
+  user_profiles: {
+    display_name: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ActivityService {
   private http = inject(HttpClient);
   private storage = inject(StorageService);
+  private supabase = inject(SupabaseService);
+  private authService = inject(AuthService);
+  
   private activities = signal<Activity[]>([]);
   private isInitialized = false;
   
-  // Public readonly signal for components to consume
   readonly activitiesSignal = this.activities.asReadonly();
+  
+  private get useSupabase(): boolean {
+    return !environment.enableMockData && this.authService.isAuthenticated();
+  }
   
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
     
-    const storedActivities = this.loadActivities();
-    
-    // Load initial data if no stored data OR if less than 2 users
-    const uniqueUsers = new Set(storedActivities.map(a => a.userId));
-    
-    if (storedActivities.length === 0 || uniqueUsers.size < 2) {
-      // Load initial mock data
-      await this.loadInitialData();
+    if (this.useSupabase) {
+      await this.loadFromSupabase();
     } else {
-      this.activities.set(storedActivities);
+      const storedActivities = this.loadFromLocalStorage();
+      const uniqueUsers = new Set(storedActivities.map((a: Activity) => a.userId));
+      
+      if (storedActivities.length === 0 || uniqueUsers.size < 2) {
+        await this.loadInitialData();
+      } else {
+        this.activities.set(storedActivities);
+      }
     }
     
     this.isInitialized = true;
@@ -52,6 +73,38 @@ export class ActivityService {
     this.storage.remove(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES);
     this.isInitialized = false;
     this.initialize();
+  }
+
+  private async loadFromSupabase(): Promise<void> {
+    try {
+      const allianceId = this.authService.getAllianceId();
+      if (!allianceId) {
+        this.activities.set([]);
+        return;
+      }
+
+      const { data, error} = await this.supabase
+        .from('activities')
+        .select('id, user_id, activity_type, points, date, user_profiles(display_name)')
+        .order('date', { ascending: false });
+
+      if (error) throw error;
+
+      const activities: Activity[] = (data as unknown as SupabaseActivity[]).map(dbActivity => ({
+        id: dbActivity.id,
+        userId: dbActivity.user_id,
+        userName: dbActivity.user_profiles.display_name,
+        activityType: dbActivity.activity_type,
+        points: dbActivity.points,
+        date: new Date(dbActivity.date),
+        timestamp: new Date(dbActivity.date).getTime()
+      }));
+
+      this.activities.set(activities);
+    } catch (error) {
+      console.error('Error loading activities from Supabase:', error);
+      this.activities.set([]);
+    }
   }
 
   private async loadInitialData(): Promise<void> {
@@ -76,7 +129,7 @@ export class ActivityService {
       });
       
       this.activities.set(initialActivities);
-      this.saveActivities(initialActivities);
+      this.saveToLocalStorage(initialActivities);
     } catch (error) {
       console.error('Failed to load initial data:', error);
       this.activities.set([]);
@@ -87,15 +140,74 @@ export class ActivityService {
     return this.activities();
   }
 
-  addActivity(activity: Omit<Activity, 'id' | 'timestamp'>): void {
+  async addActivity(activity: Omit<Activity, 'id' | 'timestamp' | 'userId' | 'userName'>): Promise<{ error: Error | null }> {
+    try {
+      if (this.useSupabase) {
+        return await this.addActivityToSupabase(activity);
+      } else {
+        this.addActivityToLocalStorage(activity);
+        return { error: null };
+      }
+    } catch (error) {
+      console.error('Error adding activity:', error);
+      return { error: error as Error };
+    }
+  }
+
+  private async addActivityToSupabase(
+    activity: Omit<Activity, 'id' | 'timestamp' | 'userId' | 'userName'>
+  ): Promise<{ error: Error | null }> {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      return { error: new Error('User not authenticated') };
+    }
+
+    try {
+      const { data, error } = await this.supabase
+        .from('activities')
+        .insert({
+          user_id: userId,
+          activity_type: activity.activityType,
+          points: activity.points,
+          date: activity.date.toISOString()
+        })
+        .select('id, user_id, activity_type, points, date, user_profiles(display_name)')
+        .single();
+
+      if (error) throw error;
+
+      const dbActivity = data as unknown as SupabaseActivity;
+      const newActivity: Activity = {
+        id: dbActivity.id,
+        userId: dbActivity.user_id,
+        userName: dbActivity.user_profiles.display_name,
+        activityType: dbActivity.activity_type,
+        points: dbActivity.points,
+        date: new Date(dbActivity.date),
+        timestamp: new Date(dbActivity.date).getTime()
+      };
+
+      this.activities.update(current => [newActivity, ...current]);
+      return { error: null };
+    } catch (error) {
+      console.error('Error adding activity to Supabase:', error);
+      return { error: error as Error };
+    }
+  }
+
+  private addActivityToLocalStorage(
+    activity: Omit<Activity, 'id' | 'timestamp' | 'userId' | 'userName'>
+  ): void {
     const newActivity: Activity = {
       ...activity,
       id: generateId(),
+      userId: 'local-user',
+      userName: 'Local User',
       timestamp: Date.now()
     };
     
     this.activities.update(current => [...current, newActivity]);
-    this.saveActivities(this.activities());
+    this.saveToLocalStorage(this.activities());
   }
 
   getUserScores(): UserScore[] {
@@ -103,12 +215,10 @@ export class ActivityService {
     const sixWeeksAgo = new Date();
     sixWeeksAgo.setDate(sixWeeksAgo.getDate() - APP_CONSTANTS.SCORING.TOTAL_DAYS);
 
-    // Filter activities from last 6 weeks
     const recentActivities = activities.filter(
       activity => new Date(activity.date) >= sixWeeksAgo
     );
 
-    // Group by user
     const userMap = new Map<string, Activity[]>();
     recentActivities.forEach(activity => {
       const userActivities = userMap.get(activity.userId) || [];
@@ -116,7 +226,6 @@ export class ActivityService {
       userMap.set(activity.userId, userActivities);
     });
 
-    // Calculate scores for each user
     const userScores: UserScore[] = [];
     userMap.forEach((activities, userId) => {
       const userName = activities[0]?.userName || 'Unknown';
@@ -167,10 +276,9 @@ export class ActivityService {
     return weeks;
   }
 
-  private loadActivities(): Activity[] {
+  private loadFromLocalStorage(): Activity[] {
     const stored = this.storage.get<Activity[]>(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES);
     if (stored) {
-      // Convert date strings back to Date objects
       return stored.map((activity: Activity) => ({
         ...activity,
         date: new Date(activity.date)
@@ -179,7 +287,7 @@ export class ActivityService {
     return [];
   }
 
-  private saveActivities(activities: Activity[]): void {
+  private saveToLocalStorage(activities: Activity[]): void {
     this.storage.set(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES, activities);
   }
 }

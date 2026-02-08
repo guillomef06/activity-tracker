@@ -1,0 +1,8 @@
+value,label_key,points
+development,activities.types.development,15
+code-review,activities.types.code-review,10
+testing,activities.types.testing,8
+documentation,activities.types.documentation,8
+meeting,activities.types.meeting,5
+bug-fix,activities.types.bug-fix,12
+research,activities.types.research,10
