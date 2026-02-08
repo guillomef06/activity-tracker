@@ -322,6 +322,7 @@ export class AuthService {
 
   /**
    * Member signup - Join existing alliance via invitation token
+   * Supports multi-use tokens with invitation_token_id tracking
    */
   async signUpMember(data: MemberSignUpRequest): Promise<{ error: AuthError | Error | null }> {
     try {
@@ -330,7 +331,6 @@ export class AuthService {
         .from('invitation_tokens')
         .select('*, alliances(*)')
         .eq('token', data.invitationToken)
-        .is('used_at', null)
         .single();
 
       if (tokenError || !tokenData) {
@@ -375,14 +375,8 @@ export class AuthService {
         return { error: profileError };
       }
 
-      // 4. Mark invitation token as used
-      await this.supabase
-        .from('invitation_tokens')
-        .update({
-          used_at: new Date().toISOString(),
-          used_by: authData.user.id
-        })
-        .eq('id', tokenData.id);
+      // Note: Token tracking is now handled via invitation_token_id in user_profiles
+      // No need to update used_at (multi-use tokens)
 
       // Load profile into state
       await this.loadUserProfile(authData.user.id);

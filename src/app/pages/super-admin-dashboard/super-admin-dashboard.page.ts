@@ -56,7 +56,6 @@ export class SuperAdminDashboardPage implements OnInit {
         this.supabase.client
           .from('invitation_tokens')
           .select('count', { count: 'exact', head: true })
-          .is('used_at', null)
           .gt('expires_at', new Date().toISOString()),
       ]);
 

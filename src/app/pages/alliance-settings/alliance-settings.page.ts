@@ -21,7 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { PointRulesService } from '@app/core/services/point-rules.service';
-import type { InvitationToken, InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
+import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
 import { APP_CONSTANTS } from '@app/shared/constants/constants';
 
 @Component({
@@ -223,10 +223,6 @@ export class AllianceSettingsPage implements OnInit {
     return new Date(expiresAt) < new Date();
   }
 
-  protected isInvitationUsed(usedAt: string | null): boolean {
-    return usedAt !== null;
-  }
-
   protected formatDate(date: string): string {
     return new Date(date).toLocaleDateString();
   }
@@ -242,20 +238,15 @@ export class AllianceSettingsPage implements OnInit {
     }
   }
 
-  protected getInvitationStatus(invitation: InvitationToken): string {
-    if (invitation.used_at) {
-      return 'Used';
-    }
+  protected getInvitationStatus(invitation: InvitationWithStats): string {
+    // Multi-use tokens: show Active or Expired (never "Used")
     if (this.isInvitationExpired(invitation.expires_at)) {
       return 'Expired';
     }
     return 'Active';
   }
 
-  protected getInvitationStatusClass(invitation: InvitationToken): string {
-    if (invitation.used_at) {
-      return 'status-used';
-    }
+  protected getInvitationStatusClass(invitation: InvitationWithStats): string {
     if (this.isInvitationExpired(invitation.expires_at)) {
       return 'status-expired';
     }
