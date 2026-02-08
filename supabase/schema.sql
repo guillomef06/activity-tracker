@@ -110,31 +110,24 @@ ALTER TABLE invitation_tokens ENABLE ROW LEVEL SECURITY;
 -- ============================================
 -- RLS POLICIES - ALLIANCES
 -- ============================================
+-- NOTE: Using helper functions (is_super_admin, get_user_alliance_id, is_user_admin)
+-- to avoid infinite recursion in policies
 
 -- Users can view their own alliance (super_admin can view all)
 CREATE POLICY "Users can view their own alliance"
   ON alliances FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid()
-    )
+    is_super_admin(auth.uid())
+    OR id = get_user_alliance_id(auth.uid())
+    OR owner_id = auth.uid() -- Allow viewing alliance if user is the owner
   );
 
 -- Admins can update their alliance (super_admin can update all)
 CREATE POLICY "Admins can update their alliance"
   ON alliances FOR UPDATE
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
-    )
+    is_super_admin(auth.uid())
+    OR (id = get_user_alliance_id(auth.uid()) AND is_user_admin(auth.uid()))
   );
 
 -- Anyone can insert alliances (during signup)
@@ -145,11 +138,7 @@ CREATE POLICY "Anyone can create alliance during signup"
 -- Super admins can delete any alliance
 CREATE POLICY "Super admins can delete alliances"
   ON alliances FOR DELETE
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-  );
+  USING (is_super_admin(auth.uid()));
 
 -- ============================================
 -- RLS POLICIES - USER PROFILES
@@ -159,22 +148,16 @@ CREATE POLICY "Super admins can delete alliances"
 CREATE POLICY "Users can view profiles in their alliance"
   ON user_profiles FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid()
-    )
+    is_super_admin(auth.uid())
+    OR alliance_id = get_user_alliance_id(auth.uid())
+    OR id = auth.uid()
   );
 
 -- Users can update their own profile (super_admin can update all)
 CREATE POLICY "Users can update their own profile"
   ON user_profiles FOR UPDATE
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
+    is_super_admin(auth.uid())
     OR id = auth.uid()
   );
 
@@ -186,11 +169,7 @@ CREATE POLICY "Users can create their own profile"
 -- Super admins can delete any user profile
 CREATE POLICY "Super admins can delete user profiles"
   ON user_profiles FOR DELETE
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-  );
+  USING (is_super_admin(auth.uid()));
 
 -- ============================================
 -- RLS POLICIES - ACTIVITIES
@@ -200,14 +179,11 @@ CREATE POLICY "Super admins can delete user profiles"
 CREATE POLICY "Users can view activities in their alliance"
   ON activities FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
+    is_super_admin(auth.uid())
     OR
     user_id IN (
-      SELECT id FROM user_profiles WHERE alliance_id IN (
-        SELECT alliance_id FROM user_profiles WHERE id = auth.uid()
-      )
+      SELECT id FROM user_profiles 
+      WHERE alliance_id = get_user_alliance_id(auth.uid())
     )
   );
 
@@ -234,13 +210,8 @@ CREATE POLICY "Users can delete their own activities"
 CREATE POLICY "Admins can view their alliance invitations"
   ON invitation_tokens FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
-    )
+    is_super_admin(auth.uid())
+    OR alliance_id = get_user_alliance_id(auth.uid())
     OR token IS NOT NULL -- Allow anyone to validate a token if they have it
   );
 
@@ -248,13 +219,8 @@ CREATE POLICY "Admins can view their alliance invitations"
 CREATE POLICY "Admins can create invitations"
   ON invitation_tokens FOR INSERT
   WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
-    )
+    is_super_admin(auth.uid())
+    OR (alliance_id = get_user_alliance_id(auth.uid()) AND is_user_admin(auth.uid()))
   );
 
 -- System can update invitation tokens when used
@@ -266,13 +232,8 @@ CREATE POLICY "Tokens can be marked as used"
 CREATE POLICY "Admins can delete their alliance invitations"
   ON invitation_tokens FOR DELETE
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
-    )
+    is_super_admin(auth.uid())
+    OR (alliance_id = get_user_alliance_id(auth.uid()) AND is_user_admin(auth.uid()))
   );
 
 -- ============================================
@@ -283,52 +244,32 @@ CREATE POLICY "Admins can delete their alliance invitations"
 CREATE POLICY "Users can view their alliance point rules"
   ON activity_point_rules FOR SELECT
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid()
-    )
+    is_super_admin(auth.uid())
+    OR alliance_id = get_user_alliance_id(auth.uid())
   );
 
 -- Admins can insert point rules for their alliance (super_admin can insert for any alliance)
 CREATE POLICY "Admins can create point rules"
   ON activity_point_rules FOR INSERT
   WITH CHECK (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
-    )
+    is_super_admin(auth.uid())
+    OR (alliance_id = get_user_alliance_id(auth.uid()) AND is_user_admin(auth.uid()))
   );
 
 -- Admins can update point rules for their alliance (super_admin can update all)
 CREATE POLICY "Admins can update point rules"
   ON activity_point_rules FOR UPDATE
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
-    )
+    is_super_admin(auth.uid())
+    OR (alliance_id = get_user_alliance_id(auth.uid()) AND is_user_admin(auth.uid()))
   );
 
 -- Admins can delete point rules for their alliance (super_admin can delete all)
 CREATE POLICY "Admins can delete point rules"
   ON activity_point_rules FOR DELETE
   USING (
-    EXISTS (
-      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
-    )
-    OR
-    alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
-    )
+    is_super_admin(auth.uid())
+    OR (alliance_id = get_user_alliance_id(auth.uid()) AND is_user_admin(auth.uid()))
   );
 
 -- ============================================

@@ -11,11 +11,17 @@
 
   @if (authService.isAuthenticated()) {
     <div class="user-section">
+      <!-- User display name -->
+      <div class="user-display-name">
+        <mat-icon>account_circle</mat-icon>
+        <span>{{ authService.userProfile()?.display_name }}</span>
+      </div>
+
       <!-- Alliance name for members and admins -->
-      @if (!authService.isSuperAdmin() && authService.userProfile()?.alliance_id) {
+      @if (!authService.isSuperAdmin() && allianceService.alliance()) {
         <div class="alliance-badge">
           <mat-icon>groups</mat-icon>
-          <span>{{ authService.userProfile()?.alliance_id }}</span>
+          <span>{{ allianceService.alliance()?.name }}</span>
         </div>
       }
 
