@@ -42,13 +42,11 @@ describe('ManagementDashboardPage', () => {
     expect(Array.isArray(component.userScores())).toBe(true);
   });
 
-  it('should toggle user details', () => {
-    const userId = 'test-user';
+  it('should navigate to activities details page', () => {
+    const navigateSpy = spyOn(component['router'], 'navigate');
     
-    component.toggleUserDetails(userId);
-    expect(component.selectedUserId()).toBe(userId);
+    component.viewAllDetails();
     
-    component.toggleUserDetails(userId);
-    expect(component.selectedUserId()).toBe(null);
+    expect(navigateSpy).toHaveBeenCalledWith(['/activities-details']);
   });
 });
