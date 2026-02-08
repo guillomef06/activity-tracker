@@ -6,6 +6,10 @@
         <mat-icon>refresh</mat-icon>
         {{ 'dashboard.refresh' | translate }}
       </button>
+      <button mat-stroked-button (click)="viewAllDetails()">
+        <mat-icon>view_list</mat-icon>
+        {{ 'dashboard.viewAllDetails' | translate }}
+      </button>
       <button mat-stroked-button color="warn" (click)="resetData()">
         <mat-icon>restore</mat-icon>
         {{ 'dashboard.resetData' | translate }}
@@ -42,60 +46,5 @@
   @if (!loading() && userScores().length > 0) {
     <!-- Ranking Chart -->
     <app-ranking-chart [userScores]="userScores()"></app-ranking-chart>
-
-    <div class="scores-container">
-      @for (userScore of userScores(); track userScore.userId; let i = $index) {
-        <mat-card class="score-card">
-          <mat-card-header class="score-header" (click)="toggleUserDetails(userScore.userId)">
-            <div class="rank-badge">
-              <mat-icon [matBadge]="i + 1" matBadgeColor="accent">emoji_events</mat-icon>
-            </div>
-            <mat-card-title>{{ userScore.userName }}</mat-card-title>
-            <mat-card-subtitle>
-              <mat-chip>{{ userScore.sixWeekTotal }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
-              <mat-chip>{{ userScore.averageWeekly | number:'1.0-1' }}/{{ 'dashboard.avgWeekly' | translate }}</mat-chip>
-            </mat-card-subtitle>
-            <button mat-icon-button class="expand-button">
-              <mat-icon>{{ selectedUserId() === userScore.userId ? 'expand_less' : 'expand_more' }}</mat-icon>
-            </button>
-          </mat-card-header>
-
-          @if (selectedUserId() === userScore.userId) {
-            <mat-card-content class="score-details">
-              <h4>{{ 'dashboard.weeklyBreakdown' | translate }}</h4>
-              <mat-accordion>
-                @for (week of userScore.weeklyScores; let weekIndex = $index; track weekIndex) {
-                  <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                      <mat-panel-title>
-                        {{ getWeekLabel(weekIndex) }}
-                      </mat-panel-title>
-                      <mat-panel-description>
-                        {{ formatDate(week.weekStart) }} - {{ formatDate(week.weekEnd) }}
-                        <mat-chip class="points-chip">{{ week.totalPoints }} {{ 'dashboard.pointsShort' | translate }}</mat-chip>
-                      </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    
-                    @if (week.activities.length > 0) {
-                      <div class="week-activities">
-                        @for (activity of week.activities; track activity.id) {
-                          <mat-chip-row>
-                            <mat-icon matChipAvatar>task</mat-icon>
-                            {{ activity.activityType }}
-                            <mat-chip-trailing-icon>{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</mat-chip-trailing-icon>
-                          </mat-chip-row>
-                        }
-                      </div>
-                    } @else {
-                      <p class="no-activities">{{ 'dashboard.noActivities' | translate }}</p>
-                    }
-                  </mat-expansion-panel>
-                }
-              </mat-accordion>
-            </mat-card-content>
-          }
-        </mat-card>
-      }
-    </div>
   }
 </div>

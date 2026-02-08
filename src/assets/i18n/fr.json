@@ -37,6 +37,7 @@
     "addActivity": "Ajouter une Activité",
     "loading": "Chargement des scores...",
     "noActivities": "Aucune activité enregistrée pour le moment",
+    "noActivitiesThisWeek": "Aucune activité cette semaine",
     "submitFirst": "Soumettre la Première Activité",
     "totalPoints": "points totaux",
     "avgWeekly": "moy. par semaine",
@@ -49,12 +50,18 @@
     "weeklyRanking": "Classement Hebdomadaire",
     "weeklyRankingSubtitle": "Évolution des points sur les 6 dernières semaines",
     "resetData": "Réinitialiser",
-    "resetConfirm": "Êtes-vous sûr ? Cela rechargera les données de démo avec 5 utilisateurs et effacera vos activités."
+    "resetConfirm": "Êtes-vous sûr ? Cela rechargera les données de démo avec 5 utilisateurs et effacera vos activités.",
+    "viewAllDetails": "Voir Détails"
+  },
+  "activitiesDetails": {
+    "title": "Détails des Activités",
+    "subtitle": "Détails hebdomadaires pour tous les utilisateurs"
   },
   "common": {
     "points": "points",
     "activities": "activités",
     "activity": "activité",
-    "close": "Fermer"
+    "close": "Fermer",
+    "back": "Retour"
   }
 }

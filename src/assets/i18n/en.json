@@ -37,6 +37,7 @@
     "addActivity": "Add Activity",
     "loading": "Loading scores...",
     "noActivities": "No activities recorded yet",
+    "noActivitiesThisWeek": "No activities this week",
     "submitFirst": "Submit First Activity",
     "totalPoints": "total points",
     "avgWeekly": "week avg",
@@ -49,12 +50,18 @@
     "weeklyRanking": "Weekly Ranking",
     "weeklyRankingSubtitle": "Points evolution over the last 6 weeks",
     "resetData": "Reset Data",
-    "resetConfirm": "Are you sure? This will reload the 5 users' mock data and erase your activities."
+    "resetConfirm": "Are you sure? This will reload the 5 users' mock data and erase your activities.",
+    "viewAllDetails": "View Details"
+  },
+  "activitiesDetails": {
+    "title": "Activities Details",
+    "subtitle": "Weekly breakdown for all users"
   },
   "common": {
     "points": "points",
     "activities": "activities",
     "activity": "activity",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back"
   }
 }
