@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, signal, computed, effect } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, signal, computed, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -10,8 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
+import { AuthService } from '../../core/services/auth.service';
 import { PointRulesService } from '../../core/services/point-rules.service';
-import { StorageService } from '../../core/services/storage.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 import { PointCalculationResult } from '../../shared/models';
 
@@ -32,20 +32,20 @@ import { PointCalculationResult } from '../../shared/models';
   styleUrl: './activity-input.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActivityInputPage implements OnInit {
+export class ActivityInputPage {
   private activityService = inject(ActivityService);
+  authService = inject(AuthService);
   private pointRulesService = inject(PointRulesService);
   private router = inject(Router);
-  private storage = inject(StorageService);
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
   
-  userName = '';
-  activityType = '';
-  position = 1;
-  points = 0;
+  activityType = signal<string>('');
+  position = signal<number>(1);
   submitting = signal<boolean>(false);
   calculatedPointsResult = signal<PointCalculationResult | null>(null);
+  
+  points = computed(() => this.calculatedPointsResult()?.points ?? 0);
 
   // Use computed signal for reactive translations
   activityTypes = computed(() => 
@@ -58,29 +58,24 @@ export class ActivityInputPage implements OnInit {
   constructor() {
     // Automatically calculate points when activity type or position changes
     effect(() => {
-      if (this.activityType && this.position > 0) {
-        const result = this.pointRulesService.calculatePoints(this.activityType, this.position);
+      const type = this.activityType();
+      const pos = this.position();
+      
+      if (type && pos > 0) {
+        const result = this.pointRulesService.calculatePoints(type, pos);
         this.calculatedPointsResult.set(result);
-        this.points = result.points;
+      } else {
+        this.calculatedPointsResult.set(null);
       }
     });
   }
 
-  ngOnInit(): void {
-    // Load saved user name from storage
-    const savedUserName = this.storage.get<string>(APP_CONSTANTS.STORAGE_KEYS.USER_NAME);
-    if (savedUserName) {
-      this.userName = savedUserName;
-    }
-  }
-
   onActivityTypeChange(): void {
-    // Points will be calculated automatically by the effect
-    // Just trigger change detection by updating the activity type
+    // Points will be calculated automatically by the effect - no action needed
   }
 
   async onSubmit(): Promise<void> {
-    if (!this.userName.trim() || !this.activityType || this.position <= 0) {
+    if (!this.activityType() || this.position() <= 0) {
       this.snackBar.open('Please fill in all fields', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -91,13 +86,10 @@ export class ActivityInputPage implements OnInit {
 
     this.submitting.set(true);
 
-    // Save user name for future use
-    this.storage.set(APP_CONSTANTS.STORAGE_KEYS.USER_NAME, this.userName);
-
     // Add activity with position
     const { error } = await this.activityService.addActivity({
-      activityType: this.activityType,
-      position: this.position,
+      activityType: this.activityType(),
+      position: this.position(),
       date: new Date()
     });
 
@@ -117,9 +109,8 @@ export class ActivityInputPage implements OnInit {
     }
 
     // Reset form
-    this.activityType = '';
-    this.position = 1;
-    this.points = 0;
+    this.activityType.set('');
+    this.position.set(1);
     this.calculatedPointsResult.set(null);
     this.submitting.set(false);
 
@@ -131,6 +122,6 @@ export class ActivityInputPage implements OnInit {
   }
 
   viewDashboard(): void {
-    this.router.navigate(['/management']);
+    this.router.navigate(['/management-dashboard']);
   }
 }

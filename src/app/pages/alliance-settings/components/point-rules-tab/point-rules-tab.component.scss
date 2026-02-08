@@ -1,0 +1,150 @@
+.tab-content {
+  margin: 1rem 0;
+}
+
+.section {
+  margin-bottom: 2rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 1rem;
+
+  mat-icon {
+    color: var(--md-sys-color-primary);
+  }
+}
+
+.point-rule-form {
+  .form-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .form-field {
+      flex: 1 1 200px;
+    }
+
+    .form-field-small {
+      flex: 0 0 140px;
+    }
+
+    .submit-button {
+      margin-top: 0.25rem;
+
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.7;
+    font-size: 1rem;
+  }
+
+  small {
+    margin-top: 0.5rem;
+    opacity: 0.5;
+    font-size: 0.875rem;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.point-rules-table {
+  width: 100%;
+
+  th {
+    font-weight: 600;
+    background-color: var(--md-sys-color-surface-variant);
+  }
+
+  td, th {
+    padding: 1rem;
+  }
+
+  .activity-chip {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+  }
+
+  .position-range {
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .points-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--md-sys-color-primary);
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .point-rule-form {
+    .form-row {
+      flex-direction: column;
+
+      .form-field,
+      .form-field-small {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+
+      .submit-button {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  .point-rules-table {
+    font-size: 0.875rem;
+
+    td, th {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+}

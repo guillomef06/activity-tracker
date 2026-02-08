@@ -109,8 +109,7 @@
     "description": "Descrizione",
     "descriptionPlaceholder": "Descrivi brevemente la tua attività",
     "points": "Punti",
-    "defaultRule": "Punti predefiniti (nessuna regola personalizzata)",
-    "customRule": "Regola personalizzata applicata",
+
     "submit": "Invia Attività",
     "submitting": "Invio in corso...",
     "viewDashboard": "Visualizza Dashboard",

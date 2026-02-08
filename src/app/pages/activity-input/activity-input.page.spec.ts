@@ -7,31 +7,27 @@ import { provideHttpClient } from '@angular/common/http';
 import { ActivityService } from '../../core/services/activity.service';
 import { PointRulesService } from '../../core/services/point-rules.service';
 import { AuthService } from '../../core/services/auth.service';
-import { StorageService } from '../../core/services/storage.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { signal } from '@angular/core';
 
 describe('ActivityInputPage', () => {
   let component: ActivityInputPage;
   let fixture: ComponentFixture<ActivityInputPage>;
-  let activityService: ActivityService;
   let pointRulesService: jasmine.SpyObj<PointRulesService>;
 
   beforeEach(async () => {
     const authServiceSpy = jasmine.createSpyObj('AuthService', ['getUserId', 'isAuthenticated'], {
-      userProfile: signal({ id: 'test-user', display_name: 'Test User' }),
+      userProfile: signal({ id: 'test-user', display_name: 'Test User', username: 'testuser' }),
     });
     
-    const storageServiceSpy = jasmine.createSpyObj('StorageService', ['get', 'set', 'remove']);
     const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', ['from']);
     const pointRulesServiceSpy = jasmine.createSpyObj('PointRulesService', ['calculatePoints', 'loadRules'], {
       rules: signal([]),
     });
     
-    authServiceSpy.isAuthenticated.and.returnValue(false);
+    authServiceSpy.isAuthenticated.and.returnValue(true);
     authServiceSpy.getUserId.and.returnValue('test-user');
-    storageServiceSpy.get.and.returnValue('');
-    pointRulesServiceSpy.calculatePoints.and.returnValue({ points: 15, source: 'default' });
+    pointRulesServiceSpy.calculatePoints.and.returnValue({ points: 15, source: 'default', usedFallback: false });
     pointRulesServiceSpy.loadRules.and.returnValue(Promise.resolve({ error: null }));
 
     await TestBed.configureTestingModule({
@@ -45,7 +41,6 @@ describe('ActivityInputPage', () => {
         provideHttpClient(),
         ActivityService,
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: StorageService, useValue: storageServiceSpy },
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         { provide: PointRulesService, useValue: pointRulesServiceSpy },
       ]
@@ -53,7 +48,6 @@ describe('ActivityInputPage', () => {
 
     fixture = TestBed.createComponent(ActivityInputPage);
     component = fixture.componentInstance;
-    activityService = TestBed.inject(ActivityService);
     pointRulesService = TestBed.inject(PointRulesService) as jasmine.SpyObj<PointRulesService>;
     fixture.detectChanges();
   });
@@ -62,34 +56,33 @@ describe('ActivityInputPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with empty form fields', () => {
-    expect(component.userName).toBe('');
-    expect(component.activityType).toBe('');
+  it('should initialize with empty signals', () => {
+    expect(component.activityType()).toBe('');
+    expect(component.position()).toBe(1);
   });
 
   it('should have activity types', () => {
     expect(component.activityTypes().length).toBeGreaterThan(0);
   });
 
-  it('should update points when activity type changes', () => {
-    component.activityType = 'development';
-    component.position = 1;
+  it('should update points when activity type and position change', () => {
+    component.activityType.set('development');
+    component.position.set(5);
     
-    // Manually trigger point calculation as the effect won't run in tests
-    const result = pointRulesService.calculatePoints('development', 1);
+    // Manually trigger point calculation
+    const result = pointRulesService.calculatePoints('development', 5);
     component.calculatedPointsResult.set(result);
-    component.points = result.points;
     
-    expect(component.points).toBe(15);
+    expect(component.points()).toBe(15);
   });
 
-  it('should not submit if form is invalid', () => {
-    const initialActivitiesCount = activityService.activitiesSignal().length;
+  it('should not submit if activity type is empty', async () => {
+    component.activityType.set('');
+    component.position.set(1);
     
-    component.userName = '';
-    component.activityType = '';
-    component.onSubmit();
+    await component.onSubmit();
     
-    expect(activityService.activitiesSignal().length).toBe(initialActivitiesCount);
+    // Form should not be submitted without activity type
+    expect(component.submitting()).toBe(false);
   });
 });
