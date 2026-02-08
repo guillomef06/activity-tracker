@@ -70,15 +70,35 @@ describe('AllianceSettingsPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have alliance name form', () => {
-    const form = component['allianceNameForm'];
-    expect(form).toBeDefined();
-    expect(form.get('name')).toBeDefined();
+  it('should load data on init', async () => {
+    await component.ngOnInit();
+    
+    expect(allianceService.loadAlliance).toHaveBeenCalled();
+    expect(allianceService.loadMembers).toHaveBeenCalled();
+    expect(allianceService.loadInvitations).toHaveBeenCalled();
+    expect(pointRulesService.loadRules).toHaveBeenCalled();
   });
 
-  it('should have invitation form', () => {
-    const form = component['invitationForm'];
-    expect(form).toBeDefined();
-    expect(form.get('durationDays')).toBeDefined();
+  it('should expose alliance signal from service', () => {
+    const alliance = component['alliance']();
+    expect(alliance).toBeNull(); // Initially null from spy
+  });
+
+  it('should handle alliance updated event', async () => {
+    await component['handleAllianceUpdated']();
+    
+    expect(allianceService.loadAlliance).toHaveBeenCalled();
+  });
+
+  it('should handle invitation created event', async () => {
+    await component['handleInvitationCreated']();
+    
+    expect(allianceService.loadInvitations).toHaveBeenCalled();
+  });
+
+  it('should handle rule created event', async () => {
+    await component['handleRuleCreated']();
+    
+    expect(pointRulesService.loadRules).toHaveBeenCalled();
   });
 });

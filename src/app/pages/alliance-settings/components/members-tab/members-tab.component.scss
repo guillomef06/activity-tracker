@@ -1,0 +1,87 @@
+.tab-content {
+  margin: 1rem 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: var(--md-sys-color-on-surface-variant);
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.members-table {
+  width: 100%;
+  margin-top: 1rem;
+
+  th {
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  td {
+    padding: 1rem 0.5rem;
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      color: var(--md-sys-color-primary);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  .username {
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: monospace;
+  }
+
+  mat-chip {
+    &.role-admin {
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    &.role-member {
+      background-color: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .members-table {
+    font-size: 0.875rem;
+
+    td, th {
+      padding: 0.75rem 0.25rem;
+    }
+  }
+}

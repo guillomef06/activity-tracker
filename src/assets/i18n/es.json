@@ -109,8 +109,7 @@
     "description": "Descripción",
     "descriptionPlaceholder": "Describe brevemente tu actividad",
     "points": "Puntos",
-    "defaultRule": "Puntos predeterminados (sin regla personalizada)",
-    "customRule": "Regla personalizada aplicada",
+
     "submit": "Enviar Actividad",
     "submitting": "Enviando...",
     "viewDashboard": "Ver Tablero",

@@ -109,8 +109,6 @@
     "description": "Description",
     "descriptionPlaceholder": "Briefly describe your activity",
     "points": "Points",
-    "defaultRule": "Default points (no custom rule)",
-    "customRule": "Custom rule applied",
     "submit": "Submit Activity",
     "submitting": "Submitting...",
     "viewDashboard": "View Dashboard",

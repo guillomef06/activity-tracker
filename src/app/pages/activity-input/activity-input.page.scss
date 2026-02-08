@@ -8,6 +8,26 @@ mat-card {
   margin-top: 1rem;
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  background-color: var(--md-sys-color-surface-variant);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--md-sys-color-on-surface-variant);
+
+  mat-icon {
+    color: var(--md-sys-color-primary);
+  }
+
+  span {
+    font-weight: 500;
+  }
+}
+
 .full-width {
   width: 100%;
   margin-bottom: 1rem;
@@ -29,10 +49,6 @@ mat-card {
     width: 32px;
     height: 32px;
     color: var(--md-sys-color-primary);
-
-    &.fallback {
-      color: var(--md-sys-color-tertiary);
-    }
   }
 
   .points-info {
@@ -41,19 +57,6 @@ mat-card {
     .points-value {
       font-size: 1.5rem;
       font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .fallback-indicator {
-      font-size: 0.85rem;
-      color: var(--md-sys-color-tertiary);
-      font-weight: 500;
-    }
-
-    .custom-rule-indicator {
-      font-size: 0.85rem;
-      color: var(--md-sys-color-primary);
-      font-weight: 500;
     }
   }
 }
