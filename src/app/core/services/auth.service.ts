@@ -29,11 +29,23 @@ export class AuthService {
   readonly currentUser = this.currentUserSignal.asReadonly();
   readonly userProfile = this.userProfileSignal.asReadonly();
   readonly isAuthenticated = computed(() => this.currentUserSignal() !== null);
-  readonly isAdmin = computed(() => this.userProfileSignal()?.role === 'admin');
+  readonly isAdmin = computed(() => {
+    const role = this.userProfileSignal()?.role;
+    return role === 'admin' || role === 'super_admin';
+  });
+  readonly isSuperAdmin = computed(() => this.userProfileSignal()?.role === 'super_admin');
   readonly isLoading = this.loadingSignal.asReadonly();
 
   constructor() {
     this.initializeAuth();
+  }
+
+  /**
+   * Generate internal email from username
+   * Supabase requires an email, so we use: username@app.local
+   */
+  private generateEmailFromUsername(username: string): string {
+    return `${username.toLowerCase()}@app.local`;
   }
 
   /**
@@ -90,10 +102,18 @@ export class AuthService {
    */
   async signUpAdmin(data: AdminSignUpRequest): Promise<{ error: AuthError | Error | null }> {
     try {
+      const email = this.generateEmailFromUsername(data.username);
+
       // 1. Create auth user
       const { data: authData, error: authError } = await this.supabase.auth.signUp({
-        email: data.email,
-        password: data.password
+        email,
+        password: data.password,
+        options: {
+          data: {
+            username: data.username,
+            display_name: data.displayName
+          }
+        }
       });
 
       if (authError) return { error: authError };
@@ -122,7 +142,7 @@ export class AuthService {
           id: authData.user.id,
           alliance_id: allianceData.id,
           display_name: data.displayName,
-          email: data.email,
+          username: data.username,
           role: 'admin'
         });
 
@@ -136,6 +156,55 @@ export class AuthService {
       return { error: null };
     } catch (error) {
       console.error('Error during admin signup:', error);
+      return { error: error as Error };
+    }
+  }
+
+  /**
+   * Super Admin signup - Create super admin account (no alliance)
+   * WARNING: This should only be used for initial setup!
+   */
+  async signUpSuperAdmin(username: string, password: string, displayName: string): Promise<{ error: AuthError | Error | null }> {
+    try {
+      const email = this.generateEmailFromUsername(username);
+
+      // 1. Create auth user
+      const { data: authData, error: authError } = await this.supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username,
+            display_name: displayName,
+            is_super_admin: true
+          }
+        }
+      });
+
+      if (authError) return { error: authError };
+      if (!authData.user) return { error: new Error('User creation failed') };
+
+      // 2. Create user profile with super_admin role (no alliance needed)
+      const { error: profileError } = await this.supabase
+        .from('user_profiles')
+        .insert({
+          id: authData.user.id,
+          alliance_id: null, // Super admin doesn't belong to any alliance
+          display_name: displayName,
+          username,
+          role: 'super_admin'
+        });
+
+      if (profileError) {
+        return { error: profileError };
+      }
+
+      // Load profile into state
+      await this.loadUserProfile(authData.user.id);
+
+      return { error: null };
+    } catch (error) {
+      console.error('Error during super admin signup:', error);
       return { error: error as Error };
     }
   }
@@ -162,10 +231,18 @@ export class AuthService {
         return { error: new Error('Invitation token has expired') };
       }
 
+      const email = this.generateEmailFromUsername(data.username);
+
       // 2. Create auth user
       const { data: authData, error: authError } = await this.supabase.auth.signUp({
-        email: data.email,
-        password: data.password
+        email,
+        password: data.password,
+        options: {
+          data: {
+            username: data.username,
+            display_name: data.displayName
+          }
+        }
       });
 
       if (authError) return { error: authError };
@@ -178,7 +255,7 @@ export class AuthService {
           id: authData.user.id,
           alliance_id: tokenData.alliance_id,
           display_name: data.displayName,
-          email: data.email,
+          username: data.username,
           role: 'member'
         });
 
@@ -206,11 +283,13 @@ export class AuthService {
   }
 
   /**
-   * Sign in with email and password
+   * Sign in with username and password
    */
   async signIn(data: SignInRequest): Promise<{ error: AuthError | null }> {
+    const email = this.generateEmailFromUsername(data.username);
+    
     const { error } = await this.supabase.auth.signInWithPassword({
-      email: data.email,
+      email,
       password: data.password
     });
 

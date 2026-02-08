@@ -7,7 +7,7 @@
  * Request to sign up as admin (creates alliance)
  */
 export interface AdminSignUpRequest {
-  email: string;
+  username: string;
   password: string;
   displayName: string;
   allianceName: string;
@@ -17,7 +17,7 @@ export interface AdminSignUpRequest {
  * Request to sign up as member (joins existing alliance)
  */
 export interface MemberSignUpRequest {
-  email: string;
+  username: string;
   password: string;
   displayName: string;
   invitationToken: string;
@@ -27,7 +27,7 @@ export interface MemberSignUpRequest {
  * Request to sign in
  */
 export interface SignInRequest {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -37,7 +37,7 @@ export interface SignInRequest {
 export interface AuthResponse {
   user: {
     id: string;
-    email: string;
+    username: string;
   };
   session: {
     access_token: string;

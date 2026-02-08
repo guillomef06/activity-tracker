@@ -18,10 +18,10 @@ export interface User {
  */
 export interface UserProfile {
   id: string;
-  alliance_id: string;
+  alliance_id: string | null; // null for super_admin
   display_name: string;
-  email: string;
-  role: 'admin' | 'member';
+  username: string;
+  role: 'super_admin' | 'admin' | 'member';
   created_at: string;
   updated_at: string;
 }
@@ -33,8 +33,8 @@ export interface CreateUserProfileRequest {
   id: string; // Supabase Auth user ID
   alliance_id: string;
   display_name: string;
-  email: string;
-  role: 'admin' | 'member';
+  username: string;
+  role: 'super_admin' | 'admin' | 'member';
 }
 
 /**
@@ -42,5 +42,5 @@ export interface CreateUserProfileRequest {
  */
 export interface UpdateUserProfileRequest {
   display_name?: string;
-  email?: string;
+  username?: string;
 }

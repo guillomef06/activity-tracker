@@ -72,3 +72,30 @@ export const guestGuard: CanActivateFn = async () => {
   // Redirect authenticated users to home
   return router.createUrlTree(['/activity-input']);
 };
+
+/**
+ * Super Admin Guard - Protects routes that require super admin role
+ * Redirects to home if user is not a super admin
+ */
+export const superAdminGuard: CanActivateFn = async (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  // Wait for auth initialization if still loading
+  while (authService.isLoading()) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  if (!authService.isAuthenticated()) {
+    return router.createUrlTree(['/login'], {
+      queryParams: { returnUrl: state.url }
+    });
+  }
+
+  if (authService.isSuperAdmin()) {
+    return true;
+  }
+
+  // Redirect to home if not super admin
+  return router.createUrlTree(['/activity-input']);
+};

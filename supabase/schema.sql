@@ -15,14 +15,17 @@ CREATE TABLE IF NOT EXISTS alliances (
 );
 
 -- User Profiles (extends Supabase Auth)
+-- Note: alliance_id can be NULL for super_admin users
 CREATE TABLE IF NOT EXISTS user_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   alliance_id UUID REFERENCES alliances(id) ON DELETE CASCADE,
   display_name TEXT NOT NULL,
-  email TEXT NOT NULL UNIQUE,
-  role TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('admin', 'member')),
+  username TEXT NOT NULL UNIQUE,
+  role TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('super_admin', 'admin', 'member')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT alliance_required_for_non_super_admin 
+    CHECK (role = 'super_admin' OR alliance_id IS NOT NULL)
 );
 
 -- Activities
@@ -72,21 +75,29 @@ ALTER TABLE invitation_tokens ENABLE ROW LEVEL SECURITY;
 -- RLS POLICIES - ALLIANCES
 -- ============================================
 
--- Users can view their own alliance
+-- Users can view their own alliance (super_admin can view all)
 CREATE POLICY "Users can view their own alliance"
   ON alliances FOR SELECT
   USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
+    )
+    OR
     id IN (
       SELECT alliance_id FROM user_profiles WHERE id = auth.uid()
     )
   );
 
--- Users can update their own alliance if they are admin
+-- Admins can update their alliance (super_admin can update all)
 CREATE POLICY "Admins can update their alliance"
   ON alliances FOR UPDATE
   USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
+    )
+    OR
     id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role = 'admin'
+      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
     )
   );
 
@@ -99,19 +110,28 @@ CREATE POLICY "Anyone can create alliance during signup"
 -- RLS POLICIES - USER PROFILES
 -- ============================================
 
--- Users can view profiles in their alliance
+-- Users can view profiles in their alliance (super_admin can view all)
 CREATE POLICY "Users can view profiles in their alliance"
   ON user_profiles FOR SELECT
   USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
+    )
+    OR
     alliance_id IN (
       SELECT alliance_id FROM user_profiles WHERE id = auth.uid()
     )
   );
 
--- Users can update their own profile
+-- Users can update their own profile (super_admin can update all)
 CREATE POLICY "Users can update their own profile"
   ON user_profiles FOR UPDATE
-  USING (id = auth.uid());
+  USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
+    )
+    OR id = auth.uid()
+  );
 
 -- Users can insert their own profile (during signup)
 CREATE POLICY "Users can create their own profile"
@@ -122,10 +142,14 @@ CREATE POLICY "Users can create their own profile"
 -- RLS POLICIES - ACTIVITIES
 -- ============================================
 
--- Users can view activities in their alliance
+-- Users can view activities in their alliance (super_admin can view all)
 CREATE POLICY "Users can view activities in their alliance"
   ON activities FOR SELECT
   USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
+    )
+    OR
     user_id IN (
       SELECT id FROM user_profiles WHERE alliance_id IN (
         SELECT alliance_id FROM user_profiles WHERE id = auth.uid()
@@ -152,22 +176,30 @@ CREATE POLICY "Users can delete their own activities"
 -- RLS POLICIES - INVITATION TOKENS
 -- ============================================
 
--- Admins can view invitations for their alliance
+-- Admins can view invitations for their alliance (super_admin can view all)
 CREATE POLICY "Admins can view their alliance invitations"
   ON invitation_tokens FOR SELECT
   USING (
+    EXISTS (
+      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
+    )
+    OR
     alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role = 'admin'
+      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
     )
     OR token IS NOT NULL -- Allow anyone to validate a token if they have it
   );
 
--- Admins can create invitations for their alliance
+-- Admins can create invitations for their alliance (super_admin can create for any alliance)
 CREATE POLICY "Admins can create invitations"
   ON invitation_tokens FOR INSERT
   WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM user_profiles WHERE id = auth.uid() AND role = 'super_admin'
+    )
+    OR
     alliance_id IN (
-      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role = 'admin'
+      SELECT alliance_id FROM user_profiles WHERE id = auth.uid() AND role IN ('admin', 'super_admin')
     )
   );
 
@@ -212,10 +244,16 @@ RETURNS UUID AS $$
   SELECT alliance_id FROM user_profiles WHERE id = user_uuid;
 $$ LANGUAGE sql SECURITY DEFINER;
 
--- Function to check if user is admin
+-- Function to check if user is admin or super_admin
 CREATE OR REPLACE FUNCTION is_user_admin(user_uuid UUID)
 RETURNS BOOLEAN AS $$
-  SELECT role = 'admin' FROM user_profiles WHERE id = user_uuid;
+  SELECT role IN ('admin', 'super_admin') FROM user_profiles WHERE id = user_uuid;
+$$ LANGUAGE sql SECURITY DEFINER;
+
+-- Function to check if user is super_admin
+CREATE OR REPLACE FUNCTION is_super_admin(user_uuid UUID)
+RETURNS BOOLEAN AS $$
+  SELECT role = 'super_admin' FROM user_profiles WHERE id = user_uuid;
 $$ LANGUAGE sql SECURITY DEFINER;
 
 -- ============================================

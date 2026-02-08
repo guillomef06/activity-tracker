@@ -4,7 +4,7 @@
 
 ## 📋 Résumé
 
-Application Angular de gestion d'activités avec backend Supabase et système multi-alliance. Le backend et les services sont complétés, les pages d'authentification restent à créer.
+Application Angular de gestion d'activités avec backend Supabase et système multi-alliance. Le backend et les services sont complétés avec support **Super Admin** et **authentification par username** (pas d'email requis).
 
 ---
 
@@ -14,12 +14,18 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 
 - **Base de données:** Schema PostgreSQL avec 4 tables
   - `alliances` - Équipes/organisations
-  - `user_profiles` - Profils utilisateurs (admin/member)
+  - `user_profiles` - Profils utilisateurs (**super_admin**/admin/member)
   - `activities` - Activités des utilisateurs avec points
   - `invitation_tokens` - Tokens d'invitation sécurisés
+- **Authentification:** Username + Password (pas d'email visible pour l'utilisateur)
+  - Email généré en interne: `username@app.local` pour la compatibilité Supabase Auth
+  - Username stocké dans `user_profiles.username` et `auth.users.user_metadata`
 - **Sécurité:** RLS (Row Level Security) configuré sur toutes les tables
+  - **Super Admin:** Accès complet à toutes les alliances et utilisateurs
+  - **Admin:** Accès à sa propre alliance uniquement
+  - **Member:** Accès en lecture à son alliance
 - **Fichiers:**
-  - `supabase/schema.sql` - Schema complet avec RLS
+  - `supabase/schema.sql` - Schema complet avec RLS et support super_admin
   - `supabase/activity_types.csv` - Types d'activités
   - `supabase/README.md` - Instructions de configuration
 
@@ -38,14 +44,18 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - Méthodes: `client`, `auth`, `from()`
 
 #### AuthService (`src/app/core/services/auth.service.ts`)
+- **Authentification par username** (pas d'email visible)
+- Génération auto d'email interne: `username@app.local`
 - Inscription admin (crée utilisateur + alliance)
+- Inscription super admin (accès global, pas d'alliance)
 - Inscription membre (via token d'invitation)
 - Connexion/déconnexion
-- État réactif: `currentUser`, `userProfile`, `isAuthenticated`, `isAdmin`
+- État réactif: `currentUser`, `userProfile`, `isAuthenticated`, `isAdmin`, `isSuperAdmin`
 - Méthodes:
-  - `signUpAdmin(AdminSignUpRequest)`
-  - `signUpMember(MemberSignUpRequest)`
-  - `signIn(SignInRequest)`
+  - `signUpAdmin(AdminSignUpRequest)` - Crée admin + alliance
+  - `signUpSuperAdmin(username, password, displayName)` - Crée super admin
+  - `signUpMember(MemberSignUpRequest)` - Rejoint via invitation
+  - `signIn(SignInRequest)` - Username + password
   - `signOut()`
 
 #### AllianceService (`src/app/core/services/alliance.service.ts`)
@@ -69,7 +79,8 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 
 Fichier: `src/app/core/guards/auth.guard.ts`
 - `authGuard` - Protège les routes authentifiées
-- `adminGuard` - Réservé aux admins
+- `adminGuard` - Réservé aux admins et super_admins
+- `superAdminGuard` - Réservé aux super_admins uniquement
 - `guestGuard` - Réservé aux non-authentifiés (login/signup)
 
 ### 5. Modèles TypeScript
@@ -77,9 +88,9 @@ Fichier: `src/app/core/guards/auth.guard.ts`
 Réorganisés par domaine avec pattern Request/Response:
 
 - **activity.model.ts:** Activity, ActivityRequest, ActivityResponse, ActivityWithUser, WeeklyScore, UserScore
-- **user.model.ts:** User, UserProfile, CreateUserProfileRequest, UpdateUserProfileRequest
+- **user.model.ts:** UserProfile (avec username, role: super_admin|admin|member), CreateUserProfileRequest, UpdateUserProfileRequest
 - **alliance.model.ts:** Alliance, CreateAllianceRequest, UpdateAllianceRequest, AllianceWithStats
-- **auth.model.ts:** AdminSignUpRequest, MemberSignUpRequest, SignInRequest, AuthResponse, AuthErrorResponse
+- **auth.model.ts:** AdminSignUpRequest (username, pas email), MemberSignUpRequest, SignInRequest (username, pas email), AuthResponse
 - **invitation.model.ts:** InvitationToken, CreateInvitationRequest/Response, ValidateInvitationRequest/Response, InvitationWithAlliance
 - **index.ts:** Barrel file avec `export type` pour TypeScript
 
@@ -89,6 +100,47 @@ Réorganisés par domaine avec pattern Request/Response:
 - ✅ LocalStorage: Fix parsing JSON pour valeurs legacy (plain strings)
 - ✅ Translation: Mise à jour `defaultLanguage` → `fallbackLang`
 - ✅ TypeScript: Fix exports avec `export type` pour `isolatedModules`
+- ✅ **Authentification par username:** Suppression de l'email, génération auto interne
+- ✅ **Super Admin:** Ajout du rôle super_admin avec accès global
+
+---
+
+## ⚙️ Architecture d'Authentification
+
+### Système Username (Sans Email Visible)
+
+**Fonctionnement:**
+1. L'utilisateur saisit un **username** (pas d'email)
+2. Le système génère un email interne: `{username}@app.local`
+3. Supabase Auth utilise cet email en backend
+4. L'utilisateur ne voit/utilise **que le username**
+
+**Avantages:**
+- Interface simplifiée (pas de validation email complexe)
+- Compatibilité avec Supabase Auth (requiert un email)
+- Username stocké dans `user_profiles.username` et `auth.users.user_metadata.username`
+
+### Hiérarchie des Rôles
+
+1. **Super Admin** (`super_admin`):
+   - Accès global à toutes les alliances
+   - Peut gérer tous les utilisateurs
+   - N'appartient à aucune alliance (alliance_id = NULL)
+   - Créé via `authService.signUpSuperAdmin()`
+   - Protégé par `superAdminGuard`
+
+2. **Admin** (`admin`):
+   - Propriétaire d'une alliance
+   - Peut gérer les membres de son alliance
+   - Peut créer des invitations
+   - Créé via signup classique ou promotion par super_admin
+   - Protégé par `adminGuard`
+
+3. **Member** (`member`):
+   - Membre d'une alliance
+   - Accès lecture seule aux données de l'alliance
+   - Peut ajouter ses propres activités
+   - Créé via invitation token
 
 ---
 
@@ -102,11 +154,12 @@ Réorganisés par domaine avec pattern Request/Response:
   - `signup.page.html`
   - `signup.page.scss`
 - Formulaire:
-  - Email, password, confirm password
+  - **Username** (pas d'email)
+  - Password, confirm password
+  - Display name
   - Alliance name
-  - Username
 - Utiliser Material components (`mat-form-field`, `mat-input`, etc.)
-- Validation: email format, password strength, passwords match
+- Validation: username unique, password strength, passwords match
 - Appeler `authService.signUpAdmin()`
 - Redirection vers dashboard après succès
 
@@ -115,7 +168,7 @@ Réorganisés par domaine avec pattern Request/Response:
   - `login.page.ts`
   - `login.page.html`
   - `login.page.scss`
-- Formulaire: email, password
+- Formulaire: **username**, password (pas d'email)
 - Lien vers `/signup`
 - Appeler `authService.signIn()`
 - Redirection vers dashboard après succès
@@ -127,7 +180,7 @@ Réorganisés par domaine avec pattern Request/Response:
   - `join.page.scss`
 - Valider le token au chargement via `allianceService.validateInvitation()`
 - Afficher le nom de l'alliance
-- Formulaire: email, password, confirm password, username
+- Formulaire: **username**, password, confirm password, display name (pas d'email)
 - Appeler `authService.signUpMember()`
 - Redirection vers dashboard après succès
 
@@ -140,6 +193,41 @@ Réorganisés par domaine avec pattern Request/Response:
   - Liste des membres
   - Gestion des invitations (créer, révoquer, copier lien)
 - Protégé par `adminGuard`
+
+### Phase 2.5: Administration Globale (Super Admin)
+
+#### 2.5.1 Page Super Admin Dashboard (`/super-admin`)
+- Créer `src/app/pages/super-admin-dashboard/`
+- Vue d'ensemble:
+  - Nombre total d'alliances
+  - Nombre total d'utilisateurs
+  - Statistiques globales
+- Protégé par `superAdminGuard`
+
+#### 2.5.2 Page Gestion Alliances (`/super-admin/alliances`)
+- Liste de toutes les alliances
+- Actions:
+  - Voir les détails d'une alliance
+  - Modifier le nom
+  - Supprimer une alliance
+  - Voir les membres
+- Protégé par `superAdminGuard`
+
+#### 2.5.3 Page Gestion Utilisateurs (`/super-admin/users`)
+- Liste de tous les utilisateurs (toutes alliances)
+- Filtres: par alliance, par rôle
+- Actions:
+  - Promouvoir member → admin
+  - Rétrograder admin → member
+  - Supprimer un utilisateur
+  - Réassigner à une autre alliance
+- Protégé par `superAdminGuard`
+
+#### 2.5.4 Création du Premier Super Admin
+- Script ou page dédiée `/super-admin-setup` (accessible une seule fois)
+- Formulaire simple: username, password, display name
+- Appeler `authService.signUpSuperAdmin()`
+- Désactiver la route après la première utilisation
 
 ### Phase 3: Mise à Jour des Routes
 
@@ -162,6 +250,12 @@ export const routes: Routes = [
     path: 'join/:token', 
     loadComponent: () => import('./pages/join/join.page').then(m => m.JoinPage),
     canActivate: [guestGuard]
+  },
+  
+  // Route setup super admin (à protéger après première utilisation)
+  {
+    path: 'super-admin-setup',
+    loadComponent: () => import('./pages/super-admin-setup/super-admin-setup.page').then(m => m.SuperAdminSetupPage)
   },
   
   // Routes authentifiées (authGuard)
@@ -188,6 +282,26 @@ export const routes: Routes = [
         path: 'alliance-settings', 
         loadComponent: () => import('./pages/alliance-settings/alliance-settings.page').then(m => m.AllianceSettingsPage),
         canActivate: [adminGuard]
+      },
+      
+      // Routes super admin (superAdminGuard)
+      {
+        path: 'super-admin',
+        canActivate: [superAdminGuard],
+        children: [
+          { 
+            path: '', 
+            loadComponent: () => import('./pages/super-admin-dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage)
+          },
+          { 
+            path: 'alliances', 
+            loadComponent: () => import('./pages/super-admin-alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage)
+          },
+          { 
+            path: 'users', 
+            loadComponent: () => import('./pages/super-admin-users/super-admin-users.page').then(m => m.SuperAdminUsersPage)
+          }
+        ]
       }
     ]
   }
@@ -198,11 +312,12 @@ export const routes: Routes = [
 
 Fichier: `src/app/core/layout/app-header/app-header.component.ts`
 
-- Afficher le nom de l'utilisateur
-- Afficher le nom de l'alliance
+- Afficher le **username** (pas email)
+- Afficher le nom de l'alliance (ou "Super Admin" si super_admin)
 - Bouton de déconnexion
 - Lien vers alliance-settings (si admin)
-- Utiliser `authService.currentUser()`, `authService.userProfile()`, `authService.isAdmin()`
+- Lien vers super-admin (si super_admin)
+- Utiliser `authService.userProfile()`, `authService.isAdmin()`, `authService.isSuperAdmin()`
 
 ### Phase 5: Traductions
 
@@ -214,10 +329,10 @@ Ajouter les clés dans `src/assets/i18n/*.json`:
     "signup": "Sign Up",
     "login": "Login",
     "logout": "Logout",
-    "email": "Email",
+    "username": "Username",
+    "displayName": "Display Name",
     "password": "Password",
     "confirmPassword": "Confirm Password",
-    "username": "Username",
     "allianceName": "Alliance Name",
     "createAccount": "Create Account",
     "alreadyHaveAccount": "Already have an account?",
@@ -225,11 +340,12 @@ Ajouter les clés dans `src/assets/i18n/*.json`:
     "joinAlliance": "Join Alliance",
     "invalidToken": "Invalid or expired invitation",
     "errors": {
-      "emailRequired": "Email is required",
-      "emailInvalid": "Invalid email format",
-      "passwordRequired": "Password is required",
-      "passwordMismatch": "Passwords don't match",
       "usernameRequired": "Username is required",
+      "usernameTaken": "Username already taken",
+      "displayNameRequired": "Display name is required",
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords don't match",
       "allianceNameRequired": "Alliance name is required"
     }
   },
@@ -242,8 +358,22 @@ Ajouter les clés dans `src/assets/i18n/*.json`:
     "revoke": "Revoke",
     "admin": "Admin",
     "member": "Member",
+    "superAdmin": "Super Admin",
     "expiresAt": "Expires at",
     "updateName": "Update Alliance Name"
+  },
+  "superAdmin": {
+    "dashboard": "Super Admin Dashboard",
+    "alliances": "Manage Alliances",
+    "users": "Manage Users",
+    "totalAlliances": "Total Alliances",
+    "totalUsers": "Total Users",
+    "createSuperAdmin": "Create Super Admin",
+    "promoteToAdmin": "Promote to Admin",
+    "demoteToMember": "Demote to Member",
+    "deleteUser": "Delete User",
+    "deleteAlliance": "Delete Alliance",
+    "reassignUser": "Reassign to Alliance"
   }
 }
 ```
@@ -290,9 +420,10 @@ Le `ActivityService` détecte automatiquement le mode approprié.
 ### Sécurité Row Level Security (RLS)
 
 Toutes les tables ont des policies RLS:
-- Les utilisateurs ne voient QUE les données de leur alliance
-- Les admins peuvent créer des invitations
-- Les tokens expirent après X jours (configurable)
+- **Super Admin:** Accès total à toutes les données (toutes alliances)
+- **Admin:** Accès complet à sa propre alliance
+- **Member:** Accès lecture à son alliance, écriture pour ses propres activités
+- Les tokens d'invitation expirent après X jours (configurable)
 
 ### Architecture des Composants
 
@@ -317,41 +448,52 @@ Les modèles suivent le pattern:
    - Exécuter schema.sql
    - Copier les credentials dans environment files
 
-2. **Créer page Signup** (30-45 min)
-   - Créer les fichiers
-   - Implémenter le formulaire avec Material
-   - Ajouter validations
-   - Connecter avec authService
+2. **Créer le premier Super Admin** (10 min)
+   - Créer page `/super-admin-setup`
+   - Formulaire: username, password, display name
+   - Appeler `authService.signUpSuperAdmin()`
+   - Protéger la route après première utilisation
 
-3. **Créer page Login** (20-30 min)
-   - Même structure que Signup
-   - Plus simple (email/password seulement)
+3. **Créer page Signup** (30-45 min)
+   - Formulaire: **username**, password, display name, alliance name
+   - Validation username unique
+   - Connecter avec authService.signUpAdmin()
 
-4. **Créer page Join** (30-40 min)
+4. **Créer page Login** (20-30 min)
+   - Formulaire: **username**, password (pas d'email)
+   - Connecter avec authService.signIn()
+
+5. **Créer page Join** (30-40 min)
    - Valider le token
-   - Afficher l'alliance
-   - Formulaire d'inscription
+   - Formulaire: **username**, password, display name
 
-5. **Mettre à jour les routes** (10 min)
-   - Ajouter les guards
-   - Configurer lazy loading
+6. **Mettre à jour les routes** (10 min)
+   - Ajouter routes super-admin avec superAdminGuard
+   - Routes auth/alliance avec guards
 
-6. **Mettre à jour le header** (20 min)
-   - Afficher user/alliance
-   - Bouton logout
-   - Lien settings (admin)
+7. **Mettre à jour le header** (20 min)
+   - Afficher **username** (pas email)
+   - Badge "Super Admin" si applicable
+   - Liens vers super-admin si super_admin
 
-7. **Ajouter les traductions** (10 min)
-   - Clés auth et alliance dans les 4 langues
+8. **Ajouter les traductions** (15 min)
+   - Clés auth (username, pas email)
+   - Clés superAdmin
 
-8. **Créer page Alliance Settings** (45-60 min)
-   - Gestion invitations
-   - Liste membres
-   - Modifier nom alliance
+9. **Créer pages Super Admin** (2-3h)
+   - Dashboard avec stats globales
+   - Gestion alliances
+   - Gestion utilisateurs
 
-9. **Tests end-to-end** (30 min)
-   - Signup → Login → Add Activity → Dashboard
-   - Create Invitation → Join → Verify access
+10. **Créer page Alliance Settings** (45-60 min)
+    - Gestion invitations
+    - Liste membres
+
+11. **Tests end-to-end** (45 min)
+    - Super admin setup
+    - Signup admin → Login → Activity
+    - Create Invitation → Join member
+    - Super admin access à toutes les alliances
 
 ---
 
@@ -372,10 +514,12 @@ Toutes les dépendances nécessaires sont déjà installées.
 
 1. **Environnement:** Ne pas commiter les vraies clés Supabase dans Git
 2. **RLS:** Toujours tester les policies RLS avant la mise en prod
-3. **Validation:** Valider côté client ET serveur (Supabase functions si besoin)
-4. **Mobile-first:** Tous les nouveaux composants doivent être responsive
-5. **Material:** Toujours utiliser les composants Material quand disponibles
-6. **Formulaires:** Toujours wrapper les inputs dans `<mat-form-field>`
+3. **Super Admin:** Sécuriser la route `/super-admin-setup` après création du premier super admin
+4. **Username:** Validation côté client ET serveur pour unicité
+5. **Email interne:** Ne jamais exposer l'email généré (`username@app.local`) à l'utilisateur
+6. **Mobile-first:** Tous les nouveaux composants doivent être responsive
+7. **Material:** Toujours utiliser les composants Material quand disponibles
+8. **Formulaires:** Toujours wrapper les inputs dans `<mat-form-field>`
 
 ---
 
@@ -392,7 +536,7 @@ Toutes les dépendances nécessaires sont déjà installées.
 - `src/app/core/services/activity.service.ts` - Activités (dual-mode)
 
 ### Guards
-- `src/app/core/guards/auth.guard.ts` - authGuard, adminGuard, guestGuard
+- `src/app/core/guards/auth.guard.ts` - authGuard, adminGuard, superAdminGuard, guestGuard
 
 ### Modèles
 - `src/app/shared/models/` - Tous les modèles TypeScript par domaine
