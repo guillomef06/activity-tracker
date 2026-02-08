@@ -3,7 +3,8 @@ import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { 
   Alliance, 
-  InvitationToken, 
+  InvitationToken,
+  InvitationWithStats,
   UserProfile,
   CreateInvitationResponse,
   ValidateInvitationResponse
@@ -22,7 +23,7 @@ export class AllianceService {
   
   private allianceSignal = signal<Alliance | null>(null);
   private membersSignal = signal<UserProfile[]>([]);
-  private invitationsSignal = signal<InvitationToken[]>([]);
+  private invitationsSignal = signal<InvitationWithStats[]>([]);
 
   readonly alliance = this.allianceSignal.asReadonly();
   readonly members = this.membersSignal.asReadonly();
@@ -194,7 +195,7 @@ export class AllianceService {
 
     try {
       const { data, error } = await this.supabase
-        .from('invitation_tokens')
+        .from('invitation_stats')
         .select('*')
         .eq('alliance_id', allianceId)
         .order('created_at', { ascending: false });
@@ -209,6 +210,7 @@ export class AllianceService {
 
   /**
    * Delete/revoke an invitation (admin only)
+   * Uses soft delete by setting expires_at to current timestamp
    */
   async revokeInvitation(invitationId: string): Promise<{ error: Error | null }> {
     if (!this.authService.isAdmin()) {
@@ -218,7 +220,7 @@ export class AllianceService {
     try {
       const { error } = await this.supabase
         .from('invitation_tokens')
-        .delete()
+        .update({ expires_at: new Date().toISOString() })
         .eq('id', invitationId);
 
       if (error) throw error;

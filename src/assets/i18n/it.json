@@ -66,10 +66,12 @@
       "noInvitations": "Nessun invito creato",
       "token": "Token",
       "expiresAt": "Scade",
+      "createdAt": "Creato",
       "status": "Stato",
       "actions": "Azioni",
       "copyLink": "Copia link invito",
       "revokeInvitation": "Revoca invito",
+      "membersJoined": "Membri che si sono iscritti tramite questo invito",
       "errors": {
         "nameRequired": "Il nome dell'alleanza è obbligatorio"
       },

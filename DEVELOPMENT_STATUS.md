@@ -148,306 +148,85 @@ Réorganisés par domaine avec pattern Request/Response:
 
 ---
 
-## 🔗 Système d'Invitations avec Tracking (NOUVEAU - À IMPLÉMENTER)
+## 🔗 Système d'Invitations avec Tracking ✅
 
-### Fonctionnalité
+### Fonctionnalité Complétée
 
-**Design actuel:**
-- Les tokens d'invitation sont **multi-usage** (un lien pour toute l'alliance)
-- Plusieurs personnes peuvent utiliser le même lien
-- Les tokens expirent après X jours (configurable)
-- L'admin peut révoquer un token manuellement
+**Design implémenté:**
+- ✅ Les tokens d'invitation sont **multi-usage** (un lien pour toute l'alliance)
+- ✅ **Tracking d'utilisation:** Savoir qui s'est inscrit avec quel token
+- ✅ **Statistiques en temps réel:** Afficher le nombre d'utilisations par token
+- ✅ **Liste des membres:** Voir les membres inscrits via chaque lien d'invitation (expansion panels)
+- ✅ **Soft delete:** Désactiver le lien sans supprimer les membres existants (expires_at)
+- ✅ **Vue PostgreSQL:** `invitation_stats` pour performance optimale
+- ✅ **UI Material Design:** Expansion panels avec badges de comptage
+- ✅ **i18n:** Traductions complètes (EN, FR, ES, IT)
 
-**Amélioration à implémenter:**
-- **Tracking d'utilisation:** Savoir qui s'est inscrit avec quel token
-- **Statistiques:** Afficher le nombre d'utilisations par token
-- **Liste des membres:** Voir les membres inscrits via chaque lien d'invitation
-- **Révocation non-destructive:** Désactiver le lien sans supprimer les membres existants
+### ⚠️ Migration Base de Données Requise
+
+**Fichier:** `supabase/add-invitation-tracking.sql`
+
+**Avant de tester, exécuter dans Supabase SQL Editor:**
+```sql
+-- 1. Ajouter colonne invitation_token_id
+ALTER TABLE user_profiles 
+ADD COLUMN IF NOT EXISTS invitation_token_id UUID 
+REFERENCES invitation_tokens(id) ON DELETE SET NULL;
+
+-- 2. Créer index
+CREATE INDEX IF NOT EXISTS idx_user_profiles_invitation_token_id 
+ON user_profiles(invitation_token_id);
+
+-- 3. Créer vue invitation_stats (voir fichier complet)
+```
+
+### Fichiers Modifiés
+
+**Base de données:**
+- `supabase/add-invitation-tracking.sql` - Migration SQL
+- `supabase/schema.sql` - Schema mis à jour
+
+**Models:**
+- `src/app/shared/models/user.model.ts` - Ajout `invitation_token_id`
+- `src/app/shared/models/invitation.model.ts` - Nouvelles interfaces `InvitationMember` et `InvitationWithStats`
+- `src/app/shared/models/index.ts` - Exports mis à jour
+
+**Services:**
+- `src/app/core/services/auth.service.ts` - Sauvegarde `invitation_token_id` lors de l'inscription membre
+- `src/app/core/services/alliance.service.ts` - Utilise vue `invitation_stats`, soft delete
+
+**UI:**
+- `src/app/pages/alliance-settings/alliance-settings.page.html` - Expansion panels avec badges
+- `src/app/pages/alliance-settings/alliance-settings.page.ts` - Signal `InvitationWithStats[]`
+- `src/app/pages/alliance-settings/alliance-settings.page.scss` - Styles pour accordion
+
+**i18n:**
+- `src/assets/i18n/en.json` - Clés `membersJoined`, `createdAt`
+- `src/assets/i18n/fr.json` - Traductions françaises
+- `src/assets/i18n/es.json` - Traductions espagnoles
+- `src/assets/i18n/it.json` - Traductions italiennes
+
+**Configuration:**
+- `angular.json` - Budget SCSS ajusté (6kB → 8kB)
 
 ### Workflow Utilisateur
 
-**Création d'invitation:**
-1. Admin crée un token (durée: 1, 7, 30, ou 90 jours)
-2. Admin copie le lien `https://app.com/join/ABC123XYZ`
-3. Admin partage le lien (Discord, email, etc.)
+**Admin crée invitation:**
+1. Va dans Alliance Settings → Onglet Invitations
+2. Sélectionne durée (1-365 jours)
+3. Clique "Create Invitation"
+4. Copie le lien généré
 
-**Inscription via invitation:**
-1. Nouveau membre clique sur le lien
-2. Le système valide le token (non expiré, non révoqué)
-3. Affiche le nom de l'alliance
-4. Membre s'inscrit avec username, password, display name
-5. Le système enregistre `invitation_token_id` dans le profil utilisateur
+**Membre s'inscrit:**
+1. Clique sur le lien d'invitation
+2. Le système affiche le nom de l'alliance
+3. Membre remplit le formulaire (username, password, display name)
+4. Le système enregistre `invitation_token_id` dans son profil
 
-**Suivi des invitations (Admin):**
-1. Admin voit la liste des tokens créés
-2. Pour chaque token:
-   - Badge avec nombre d'utilisations (ex: "3 membres")
-   - Date d'expiration
-   - Boutons: Copier lien, Révoquer
-3. Clic sur un token → expansion affichant la liste des membres inscrits
-
-### Changements Base de Données
-
-#### 1. Modifier `user_profiles`
-```sql
--- Ajouter colonne pour tracker le token utilisé lors de l'inscription
-ALTER TABLE user_profiles 
-ADD COLUMN invitation_token_id UUID REFERENCES invitation_tokens(id) ON DELETE SET NULL;
-
--- Index pour performance
-CREATE INDEX idx_user_profiles_invitation_token 
-ON user_profiles(invitation_token_id) 
-WHERE invitation_token_id IS NOT NULL;
-```
-
-#### 2. Créer vue pour statistiques
-```sql
--- Vue pour statistiques d'utilisation des tokens
-CREATE VIEW invitation_stats AS
-SELECT 
-  it.id,
-  it.token,
-  it.alliance_id,
-  it.expires_at,
-  it.created_at,
-  it.created_by,
-  COUNT(up.id) as usage_count,
-  ARRAY_AGG(up.display_name ORDER BY up.created_at) FILTER (WHERE up.id IS NOT NULL) as members_joined
-FROM invitation_tokens it
-LEFT JOIN user_profiles up ON up.invitation_token_id = it.id
-GROUP BY it.id, it.token, it.alliance_id, it.expires_at, it.created_at, it.created_by;
-
--- Grant access pour RLS
-GRANT SELECT ON invitation_stats TO authenticated;
-```
-
-### Changements Modèles TypeScript
-
-**Mettre à jour `src/app/shared/models/user.model.ts`:**
-```typescript
-export interface UserProfile {
-  id: string;
-  username: string;
-  display_name: string;
-  role: 'super_admin' | 'admin' | 'member';
-  alliance_id: string | null;
-  invitation_token_id?: string | null; // NOUVEAU
-  created_at: string;
-  updated_at: string;
-}
-```
-
-**Mettre à jour `src/app/shared/models/invitation.model.ts`:**
-```typescript
-// Étendre InvitationToken avec statistiques
-export interface InvitationWithStats extends InvitationToken {
-  usage_count: number;
-  members_joined: string[]; // Liste des display names
-}
-```
-
-### Changements Services
-
-**Mettre à jour `AllianceService` (`src/app/core/services/alliance.service.ts`):**
-
-```typescript
-// Modifier loadInvitations pour utiliser la vue invitation_stats
-async loadInvitations(): Promise<{ error: Error | null }> {
-  const allianceId = this.getAllianceId();
-  if (!allianceId) return { error: new Error('No alliance ID') };
-
-  const { data, error } = await this.supabase
-    .from('invitation_stats')
-    .select('*')
-    .eq('alliance_id', allianceId)
-    .gte('expires_at', new Date().toISOString())
-    .order('created_at', { ascending: false });
-
-  if (error) return { error };
-  
-  this.invitationsSignal.set(data as InvitationWithStats[] || []);
-  return { error: null };
-}
-
-// Modifier revokeInvitation pour soft delete (expire immédiatement)
-async revokeInvitation(id: string): Promise<{ error: Error | null }> {
-  const { error } = await this.supabase
-    .from('invitation_tokens')
-    .update({ expires_at: new Date().toISOString() })
-    .eq('id', id);
-
-  if (!error) {
-    await this.loadInvitations();
-  }
-
-  return { error };
-}
-```
-
-**Mettre à jour `AuthService` (`src/app/core/services/auth.service.ts`):**
-
-```typescript
-// Modifier signUpMember pour enregistrer le token utilisé
-async signUpMember(request: MemberSignUpRequest): Promise<AuthResponse> {
-  try {
-    // ... validation token existante ...
-
-    // Créer user dans auth
-    const { data: authData, error: signUpError } = await this.supabase.auth.signUp({
-      email: `${request.username}@app.tracker`,
-      password: request.password,
-      options: {
-        data: { username: request.username }
-      }
-    });
-
-    if (signUpError || !authData.user) {
-      return { user: null, error: signUpError };
-    }
-
-    // Créer profil avec invitation_token_id
-    const { error: profileError } = await this.supabase
-      .from('user_profiles')
-      .insert({
-        id: authData.user.id,
-        username: request.username,
-        display_name: request.displayName,
-        role: 'member',
-        alliance_id: validationData.allianceId,
-        invitation_token_id: validationData.tokenId // NOUVEAU
-      });
-
-    // ... reste du code ...
-  } catch (error) {
-    return { user: null, error: error as Error };
-  }
-}
-```
-
-### Changements UI - Alliance Settings
-
-**Section Invitations avec expansion panels:**
-
-```html
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>{{ 'alliance.settings.invitations' | translate }}</mat-card-title>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <!-- Formulaire création invitation -->
-    <form [formGroup]="invitationForm" (ngSubmit)="createInvitation()">
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'alliance.settings.invitationDuration' | translate }}</mat-label>
-        <mat-select formControlName="duration">
-          <mat-option [value]="1">1 jour</mat-option>
-          <mat-option [value]="7">7 jours</mat-option>
-          <mat-option [value]="30">30 jours</mat-option>
-          <mat-option [value]="90">90 jours</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit">
-        <mat-icon>add_link</mat-icon>
-        {{ 'alliance.settings.createInvitation' | translate }}
-      </button>
-    </form>
-
-    <!-- Liste des invitations avec expansion -->
-    <mat-accordion class="invitations-list">
-      <mat-expansion-panel *ngFor="let invitation of invitations()">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <mat-chip [color]="invitation.usage_count > 0 ? 'primary' : 'default'">
-              {{ invitation.usage_count }} 
-              {{ invitation.usage_count === 1 ? 'membre' : 'membres' }}
-            </mat-chip>
-            <span class="expires-info">
-              Expire le {{ invitation.expires_at | date:'short' }}
-            </span>
-          </mat-panel-title>
-          <mat-panel-description>
-            <button mat-icon-button (click)="copyInvitationLink(invitation.token); $event.stopPropagation()">
-              <mat-icon>link</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="revokeInvitation(invitation.id); $event.stopPropagation()">
-              <mat-icon>block</mat-icon>
-            </button>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-        
-        <!-- Liste des membres inscrits via ce token -->
-        <mat-list>
-          <mat-list-item *ngFor="let member of invitation.members_joined">
-            <mat-icon matListItemIcon>person</mat-icon>
-            <span matListItemTitle>{{ member }}</span>
-          </mat-list-item>
-          <mat-list-item *ngIf="invitation.usage_count === 0">
-            <span matListItemTitle class="muted-text">
-              {{ 'alliance.settings.noMembersYet' | translate }}
-            </span>
-          </mat-list-item>
-        </mat-list>
-      </mat-expansion-panel>
-    </mat-accordion>
-
-    <p *ngIf="invitations().length === 0" class="no-invitations">
-      {{ 'alliance.settings.noInvitations' | translate }}
-    </p>
-  </mat-card-content>
-</mat-card>
-```
-
-### Traductions
-
-**Ajouter dans `src/assets/i18n/en.json`:**
-```json
-{
-  "alliance": {
-    "settings": {
-      "invitations": "Invitations",
-      "invitationDuration": "Duration",
-      "createInvitation": "Create Invitation",
-      "noInvitations": "No active invitations",
-      "noMembersYet": "No members joined with this link yet",
-      "invitationCopied": "Invitation link copied to clipboard",
-      "invitationRevoked": "Invitation revoked successfully"
-    }
-  }
-}
-```
-
-### Avantages de ce Design
-
-1. **Usage illimité:** Pas de limite d'inscriptions par token (jusqu'à expiration)
-2. **Tracking complet:** L'admin voit exactement qui s'est inscrit avec quel lien
-3. **Révocation non-destructive:** Désactiver un lien ne supprime pas les membres
-4. **Historique:** Les tokens révoqués restent en base (soft delete via `expires_at`)
-5. **Performance:** Vue pré-calculée avec statistiques (`invitation_stats`)
-6. **Sécurité:** RLS policies s'appliquent automatiquement à la vue
-
-### Tests à Effectuer
-
-1. **Test création et partage:**
-   - Admin crée un token (7 jours)
-   - Copie le lien et le partage
-   - Vérifier que le lien fonctionne
-
-2. **Test multi-usage:**
-   - 3 personnes s'inscrivent avec le même lien
-   - Vérifier que les 3 comptes sont créés
-   - Vérifier que l'admin voit "3 membres" sur le token
-   - Expansion affiche les 3 display names
-
-3. **Test révocation:**
-   - Admin révoque le token
-   - 4ème personne tente de s'inscrire → erreur "Token expiré"
-   - Les 3 membres existants restent actifs
-   - Le token n'apparaît plus dans la liste active
-
-4. **Test expiration automatique:**
-   - Après 7 jours, le token expire automatiquement
-   - Nouvelle inscription impossible
-   - Les membres existants restent actifs
+**Admin voit les statistiques:**
+1. Panel avec badge "X membres"
+2. Clic pour expanded → Liste des membres avec usernames et dates d'inscription
+3. Bouton "Révoquer" pour soft delete (expire immédiatement)
 
 ---
 
@@ -1125,45 +904,11 @@ Activités sans position ?
 
 ---
 
-### 🟠 Phase 1: Système d'Invitations avec Tracking (1-2H)
-
-**Amélioration du système d'invitations existant**
-
-#### Objectif
-Permettre aux admins de voir qui s'est inscrit avec quel lien d'invitation.
-
-#### Implémentation
-
-1. **Mettre à jour le schéma SQL** (10 min)
-   - Ajouter colonne `invitation_token_id` dans `user_profiles`
-   - Créer vue `invitation_stats` avec compteurs et liste des membres
-   - Ajouter index pour performance
-
-2. **Mettre à jour les modèles TypeScript** (15 min)
-   - `user.model.ts`: Ajouter `invitation_token_id?: string | null`
-   - `invitation.model.ts`: Ajouter interface `InvitationWithStats`
-   - Exporter dans `index.ts`
-
-3. **Mettre à jour AllianceService** (20 min)
-   - `loadInvitations()`: Utiliser vue `invitation_stats`
-   - `revokeInvitation()`: Soft delete (expire immédiatement)
-
-4. **Mettre à jour AuthService** (15 min)
-   - `signUpMember()`: Enregistrer `invitation_token_id` lors de l'inscription
-
-5. **Mettre à jour Page Alliance Settings** (30 min)
-   - UI avec expansion panels
-   - Badge compteur d'utilisations
-   - Liste des membres par token
-
-6. **Ajouter traductions** (10 min)
-   - Clés pour invitations dans en.json, fr.json, es.json, it.json
-
-**Voir section détaillée "🔗 Système d'Invitations avec Tracking" pour code complet**
+### � Phase 1: Système de Points Configurables (4-5H)
 
 ---
 
-### 🟡 Phase 2: Système de Points Configurables (4-5H)
+### 🟡 Phase 1: Système de Points Configurables (4-5H)
 
 **Permettre aux admins de configurer les points selon la position/classement**
 

@@ -19,6 +19,7 @@ export interface User {
 export interface UserProfile {
   id: string;
   alliance_id: string | null; // null for super_admin
+  invitation_token_id: string | null; // The invitation token used to join (null for super_admin and admin)
   display_name: string;
   username: string;
   role: 'super_admin' | 'admin' | 'member';

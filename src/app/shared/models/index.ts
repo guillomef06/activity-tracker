@@ -40,7 +40,9 @@ export type {
   CreateInvitationResponse,
   ValidateInvitationRequest,
   ValidateInvitationResponse,
-  InvitationWithAlliance
+  InvitationWithAlliance,
+  InvitationMember,
+  InvitationWithStats
 } from './invitation.model';
 
 // Activity Point Rule models

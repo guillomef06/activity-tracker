@@ -58,3 +58,22 @@ export interface ValidateInvitationResponse {
 export interface InvitationWithAlliance extends InvitationToken {
   alliance: Alliance;
 }
+
+/**
+ * Member information for invitation stats
+ */
+export interface InvitationMember {
+  id: string;
+  display_name: string;
+  username: string;
+  created_at: string;
+}
+
+/**
+ * Invitation token with usage statistics
+ * Retrieved from invitation_stats view
+ */
+export interface InvitationWithStats extends InvitationToken {
+  usage_count: number;
+  members: InvitationMember[];
+}

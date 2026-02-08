@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS alliances (
 CREATE TABLE IF NOT EXISTS user_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   alliance_id UUID REFERENCES alliances(id) ON DELETE CASCADE,
+  invitation_token_id UUID REFERENCES invitation_tokens(id) ON DELETE SET NULL,
   display_name TEXT NOT NULL,
   username TEXT NOT NULL UNIQUE,
   role TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('super_admin', 'admin', 'member')),
@@ -88,6 +89,7 @@ CREATE TABLE IF NOT EXISTS invitation_tokens (
 -- ============================================
 
 CREATE INDEX IF NOT EXISTS idx_user_profiles_alliance_id ON user_profiles(alliance_id);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_invitation_token_id ON user_profiles(invitation_token_id);
 CREATE INDEX IF NOT EXISTS idx_activities_user_id ON activities(user_id);
 CREATE INDEX IF NOT EXISTS idx_activities_date ON activities(date DESC);
 CREATE INDEX IF NOT EXISTS idx_activities_position ON activities(position);
@@ -97,7 +99,40 @@ CREATE INDEX IF NOT EXISTS idx_activity_point_rules_alliance_id ON activity_poin
 CREATE INDEX IF NOT EXISTS idx_activity_point_rules_activity_type ON activity_point_rules(activity_type);
 
 -- ============================================
--- 3. ROW LEVEL SECURITY (RLS)
+-- 3. VIEWS
+-- ============================================
+
+-- Invitation Stats View
+-- Aggregates invitation usage data with member information
+CREATE OR REPLACE VIEW invitation_stats AS
+SELECT 
+  it.id,
+  it.alliance_id,
+  it.token,
+  it.expires_at,
+  it.used_at,
+  it.used_by,
+  it.created_by,
+  it.created_at,
+  COUNT(up.id) AS usage_count,
+  ARRAY_AGG(
+    CASE 
+      WHEN up.id IS NOT NULL THEN 
+        json_build_object(
+          'id', up.id,
+          'display_name', up.display_name,
+          'username', up.username,
+          'created_at', up.created_at
+        )
+      ELSE NULL
+    END
+  ) FILTER (WHERE up.id IS NOT NULL) AS members
+FROM invitation_tokens it
+LEFT JOIN user_profiles up ON up.invitation_token_id = it.id
+GROUP BY it.id, it.alliance_id, it.token, it.expires_at, it.used_at, it.used_by, it.created_by, it.created_at;
+
+-- ============================================
+-- 4. ROW LEVEL SECURITY (RLS)
 -- ============================================
 
 -- Enable RLS on all tables

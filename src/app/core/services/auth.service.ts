@@ -365,6 +365,7 @@ export class AuthService {
         .insert({
           id: authData.user.id,
           alliance_id: tokenData.alliance_id,
+          invitation_token_id: tokenData.id,
           display_name: data.displayName,
           username: data.username,
           role: 'member'

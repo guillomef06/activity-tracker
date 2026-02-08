@@ -66,10 +66,12 @@
       "noInvitations": "No invitations created yet",
       "token": "Token",
       "expiresAt": "Expires",
+      "createdAt": "Created",
       "status": "Status",
       "actions": "Actions",
       "copyLink": "Copy invitation link",
       "revokeInvitation": "Revoke invitation",
+      "membersJoined": "Members who joined via this invitation",
       "errors": {
         "nameRequired": "Alliance name is required"
       },

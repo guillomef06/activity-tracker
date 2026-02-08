@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
+import { AllianceService } from '@app/core/services/alliance.service';
 import type { MemberSignUpRequest } from '@app/shared/models';
 import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
@@ -34,6 +35,7 @@ import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/util
 })
 export class JoinPage implements OnInit {
   private readonly authService = inject(AuthService);
+  private readonly allianceService = inject(AllianceService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -91,10 +93,17 @@ export class JoinPage implements OnInit {
     this.errorMessage.set(null);
 
     try {
-      // TODO: Implement token validation in AuthService or AllianceService
-      // For now, we'll just store the token
-      this.invitationToken.set(tokenValue);
-      this.allianceName.set('Alliance Name'); // TODO: Get from API
+      const response = await this.allianceService.validateInvitation(tokenValue);
+      
+      if (response.valid && response.alliance) {
+        this.invitationToken.set(tokenValue);
+        this.allianceName.set(response.alliance.name);
+        this.errorMessage.set(null);
+      } else {
+        this.allianceName.set(null);
+        this.invitationToken.set(null);
+        this.errorMessage.set(response.error || 'auth.errors.invalidToken');
+      }
     } catch (error: unknown) {
       console.error('Token validation error:', error);
       this.errorMessage.set('auth.errors.invalidToken');
