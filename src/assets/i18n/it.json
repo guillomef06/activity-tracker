@@ -3,6 +3,40 @@
     "title": "Tracker di Attività",
     "subtitle": "Traccia le attività e visualizza i punteggi delle ultime 6 settimane"
   },
+  "auth": {
+    "superAdmin": "Super Amministratore",
+    "login": "Accedi",
+    "signup": "Registrati",
+    "logout": "Esci",
+    "username": "Nome utente",
+    "password": "Password",
+    "confirmPassword": "Conferma Password",
+    "displayName": "Nome visualizzato",
+    "allianceName": "Nome dell'alleanza",
+    "invitationToken": "Token di invito",
+    "errors": {
+      "required": "Questo campo è obbligatorio",
+      "minLength": "Lunghezza minima non raggiunta",
+      "maxLength": "Lunghezza massima superata",
+      "passwordMismatch": "Le password non corrispondono",
+      "usernameExists": "Il nome utente esiste già",
+      "invalidCredentials": "Nome utente o password non validi",
+      "userNotFound": "Utente non trovato",
+      "loginFailed": "Accesso non riuscito. Riprova.",
+      "signupFailed": "Registrazione non riuscita. Riprova.",
+      "joinFailed": "Adesione non riuscita. Riprova.",
+      "setupFailed": "Configurazione non riuscita. Riprova.",
+      "superAdminExists": "Il super amministratore esiste già",
+      "allianceCreationFailed": "Creazione dell'alleanza non riuscita",
+      "invalidToken": "Token di invito non valido o scaduto"
+    }
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "management": "Gestione",
+    "activities": "Attività",
+    "details": "Dettagli"
+  },
   "activityInput": {
     "title": "Invia Attività",
     "subtitle": "Registra la tua attività e guadagna punti",
@@ -63,5 +97,8 @@
     "activity": "attività",
     "close": "Chiudi",
     "back": "Indietro"
-  }
+  },
+  "super_admin": "Super Amministratore",
+  "admin": "Amministratore",
+  "member": "Membro"
 }

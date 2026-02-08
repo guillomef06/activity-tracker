@@ -3,6 +3,40 @@
     "title": "Activity Tracker",
     "subtitle": "Track activities and view rolling 6-week scores"
   },
+  "auth": {
+    "superAdmin": "Super Admin",
+    "login": "Sign In",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "displayName": "Display Name",
+    "allianceName": "Alliance Name",
+    "invitationToken": "Invitation Token",
+    "errors": {
+      "required": "This field is required",
+      "minLength": "Minimum length not met",
+      "maxLength": "Maximum length exceeded",
+      "passwordMismatch": "Passwords do not match",
+      "usernameExists": "Username already exists",
+      "invalidCredentials": "Invalid username or password",
+      "userNotFound": "User not found",
+      "loginFailed": "Login failed. Please try again.",
+      "signupFailed": "Signup failed. Please try again.",
+      "joinFailed": "Join failed. Please try again.",
+      "setupFailed": "Setup failed. Please try again.",
+      "superAdminExists": "Super admin already exists",
+      "allianceCreationFailed": "Failed to create alliance",
+      "invalidToken": "Invalid or expired invitation token"
+    }
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "management": "Management",
+    "activities": "Activities",
+    "details": "Details"
+  },
   "activityInput": {
     "title": "Submit Activity",
     "subtitle": "Record your activity and earn points",
@@ -63,5 +97,8 @@
     "activity": "activity",
     "close": "Close",
     "back": "Back"
-  }
+  },
+  "super_admin": "Super Admin",
+  "admin": "Admin",
+  "member": "Member"
 }

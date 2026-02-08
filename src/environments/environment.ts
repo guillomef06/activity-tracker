@@ -15,7 +15,7 @@ export const environment = {
   // Replace these values with your Supabase project credentials
   // Get them from: Supabase Dashboard → Project Settings → API
   supabase: {
-    url: 'YOUR_SUPABASE_URL', // e.g., 'https://xxxxx.supabase.co'
-    anonKey: 'YOUR_SUPABASE_ANON_KEY' // Public anon key (safe for client-side)
+    url: 'https://yeczvyyxchssftvnobdn.supabase.co', // e.g., 'https://xxxxx.supabase.co'
+    anonKey: 'sb_publishable_Y2bl2DFMSzaCa5Vk2Vk4Bw_9rnEzkmp' // Public anon key (safe for client-side)
   }
 };

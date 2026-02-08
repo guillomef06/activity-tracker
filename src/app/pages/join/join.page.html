@@ -1,0 +1,154 @@
+<div class="join-container">
+  <mat-card class="join-card">
+    <mat-card-header>
+      <mat-icon class="join-icon">group_add</mat-icon>
+      <mat-card-title>Join Alliance</mat-card-title>
+      <mat-card-subtitle>Use your invitation to join an alliance</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="joinForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Invitation Token</mat-label>
+          <input
+            matInput
+            formControlName="token"
+            type="text"
+            placeholder="Enter invitation token"
+            (blur)="validateToken()"
+          />
+          <mat-icon matPrefix>vpn_key</mat-icon>
+          @if (isValidatingToken()) {
+            <mat-spinner matSuffix diameter="20"></mat-spinner>
+          }
+          <mat-hint>Provided by your alliance administrator</mat-hint>
+          @if (joinForm.get('token')?.invalid && joinForm.get('token')?.touched) {
+            <mat-error>{{ getErrorMessage('token') }}</mat-error>
+          }
+        </mat-form-field>
+
+        @if (allianceName()) {
+          <div class="alliance-info">
+            <mat-icon>info</mat-icon>
+            <div>
+              <strong>Alliance:</strong>
+              <span>{{ allianceName() }}</span>
+            </div>
+          </div>
+        }
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            type="text"
+            autocomplete="username"
+            placeholder="Choose a unique username"
+          />
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-hint>3-30 characters, used for login</mat-hint>
+          @if (joinForm.get('username')?.invalid && joinForm.get('username')?.touched) {
+            <mat-error>{{ getErrorMessage('username') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Display Name</mat-label>
+          <input
+            matInput
+            formControlName="displayName"
+            type="text"
+            autocomplete="name"
+            placeholder="Enter your full name"
+          />
+          <mat-icon matPrefix>badge</mat-icon>
+          <mat-hint>Your name as it will appear to others</mat-hint>
+          @if (joinForm.get('displayName')?.invalid && joinForm.get('displayName')?.touched) {
+            <mat-error>{{ getErrorMessage('displayName') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hidePassword() ? 'password' : 'text'"
+            autocomplete="new-password"
+            placeholder="Create a secure password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Toggle password visibility'"
+            [attr.aria-pressed]="!hidePassword()"
+          >
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-hint>Minimum 8 characters</mat-hint>
+          @if (joinForm.get('password')?.invalid && joinForm.get('password')?.touched) {
+            <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input
+            matInput
+            formControlName="confirmPassword"
+            [type]="hideConfirmPassword() ? 'password' : 'text'"
+            autocomplete="new-password"
+            placeholder="Re-enter your password"
+          />
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="'Toggle password visibility'"
+            [attr.aria-pressed]="!hideConfirmPassword()"
+          >
+            <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (joinForm.get('confirmPassword')?.invalid && joinForm.get('confirmPassword')?.touched) {
+            <mat-error>{{ getErrorMessage('confirmPassword') }}</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage()) {
+          <div class="error-message">
+            <mat-icon>error</mat-icon>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <div class="actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="isLoading()"
+            class="submit-button"
+          >
+            @if (isLoading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Joining...</span>
+            } @else {
+              <span>Join Alliance</span>
+            }
+          </button>
+        </div>
+
+        <div class="footer-links">
+          <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+          <p>Want to create an alliance? <a routerLink="/signup">Sign Up</a></p>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

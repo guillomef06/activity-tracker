@@ -3,6 +3,40 @@
     "title": "Rastreador de Actividades",
     "subtitle": "Rastrea actividades y visualiza puntuaciones de las últimas 6 semanas"
   },
+  "auth": {
+    "superAdmin": "Super Administrador",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "displayName": "Nombre para mostrar",
+    "allianceName": "Nombre de la alianza",
+    "invitationToken": "Token de invitación",
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "minLength": "Longitud mínima no alcanzada",
+      "maxLength": "Longitud máxima excedida",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "usernameExists": "El nombre de usuario ya existe",
+      "invalidCredentials": "Nombre de usuario o contraseña no válidos",
+      "userNotFound": "Usuario no encontrado",
+      "loginFailed": "Error al iniciar sesión. Inténtalo de nuevo.",
+      "signupFailed": "Error al registrarse. Inténtalo de nuevo.",
+      "joinFailed": "Error al unirse. Inténtalo de nuevo.",
+      "setupFailed": "Error en la configuración. Inténtalo de nuevo.",
+      "superAdminExists": "El super administrador ya existe",
+      "allianceCreationFailed": "Error al crear la alianza",
+      "invalidToken": "Token de invitación inválido o expirado"
+    }
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "management": "Gestión",
+    "activities": "Actividades",
+    "details": "Detalles"
+  },
   "activityInput": {
     "title": "Enviar Actividad",
     "subtitle": "Registra tu actividad y gana puntos",
@@ -63,5 +97,8 @@
     "activity": "actividad",
     "close": "Cerrar",
     "back": "Volver"
-  }
+  },
+  "super_admin": "Super Administrador",
+  "admin": "Administrador",
+  "member": "Miembro"
 }

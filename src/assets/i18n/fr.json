@@ -3,6 +3,40 @@
     "title": "Suivi d'Activités",
     "subtitle": "Suivez les activités et consultez les scores sur 6 semaines"
   },
+  "auth": {
+    "superAdmin": "Super Administrateur",
+    "login": "Connexion",
+    "signup": "Inscription",
+    "logout": "Déconnexion",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "displayName": "Nom d'affichage",
+    "allianceName": "Nom de l'alliance",
+    "invitationToken": "Jeton d'invitation",
+    "errors": {
+      "required": "Ce champ est requis",
+      "minLength": "Longueur minimale non atteinte",
+      "maxLength": "Longueur maximale dépassée",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "usernameExists": "Ce nom d'utilisateur existe déjà",
+      "invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",
+      "userNotFound": "Utilisateur non trouvé",
+      "loginFailed": "Échec de la connexion. Veuillez réessayer.",
+      "signupFailed": "Échec de l'inscription. Veuillez réessayer.",
+      "joinFailed": "Échec de l'adhésion. Veuillez réessayer.",
+      "setupFailed": "Échec de la configuration. Veuillez réessayer.",
+      "superAdminExists": "Le super administrateur existe déjà",
+      "allianceCreationFailed": "Échec de la création de l'alliance",
+      "invalidToken": "Jeton d'invitation invalide ou expiré"
+    }
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "management": "Gestion",
+    "activities": "Activités",
+    "details": "Détails"
+  },
   "activityInput": {
     "title": "Soumettre une Activité",
     "subtitle": "Enregistrez votre activité et gagnez des points",
@@ -63,5 +97,8 @@
     "activity": "activité",
     "close": "Fermer",
     "back": "Retour"
-  }
+  },
+  "super_admin": "Super Administrateur",
+  "admin": "Administrateur",
+  "member": "Membre"
 }
