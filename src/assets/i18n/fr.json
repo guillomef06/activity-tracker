@@ -118,14 +118,14 @@
     "success": "Activité soumise avec succès !",
     "error": "Échec de la soumission de l'activité"
   },
-  "activityTypes": {
-    "development": "Développement",
-    "codeReview": "Revue de Code",
-    "testing": "Tests",
-    "documentation": "Documentation",
-    "meeting": "Réunion",
-    "bugFix": "Correction de Bug",
-    "research": "Recherche"
+  "activities": {
+    "types": {
+      "kvk-prep": "Préparation KvK",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Légion",
+      "desolate-desert": "Désert Désolé",
+      "golden-expedition": "Expédition Dorée"
+    }
   },
   "dashboard": {
     "title": "Tableau de Bord de Gestion",

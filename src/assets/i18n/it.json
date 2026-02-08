@@ -110,14 +110,14 @@
     "success": "Attività inviata con successo!",
     "error": "Invio dell'attività non riuscito"
   },
-  "activityTypes": {
-    "development": "Sviluppo",
-    "codeReview": "Revisione Codice",
-    "testing": "Test",
-    "documentation": "Documentazione",
-    "meeting": "Riunione",
-    "bugFix": "Correzione Bug",
-    "research": "Ricerca"
+  "activities": {
+    "types": {
+      "kvk-prep": "Preparazione KvK",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legione",
+      "desolate-desert": "Deserto Desolato",
+      "golden-expedition": "Spedizione Dorata"
+    }
   },
   "dashboard": {
     "title": "Dashboard di Gestione",

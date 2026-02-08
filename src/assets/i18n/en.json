@@ -118,14 +118,14 @@
     "success": "Activity submitted successfully!",
     "error": "Failed to submit activity"
   },
-  "activityTypes": {
-    "development": "Development",
-    "codeReview": "Code Review",
-    "testing": "Testing",
-    "documentation": "Documentation",
-    "meeting": "Meeting",
-    "bugFix": "Bug Fix",
-    "research": "Research"
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition"
+    }
   },
   "dashboard": {
     "title": "Management Dashboard",

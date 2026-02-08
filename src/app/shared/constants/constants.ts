@@ -16,13 +16,11 @@ export const APP_CONSTANTS = {
   },
   
   ACTIVITY_TYPES: [
-    { value: 'development', labelKey: 'activityTypes.development', points: 15 },
-    { value: 'code-review', labelKey: 'activityTypes.codeReview', points: 10 },
-    { value: 'testing', labelKey: 'activityTypes.testing', points: 8 },
-    { value: 'documentation', labelKey: 'activityTypes.documentation', points: 8 },
-    { value: 'meeting', labelKey: 'activityTypes.meeting', points: 5 },
-    { value: 'bug-fix', labelKey: 'activityTypes.bugFix', points: 12 },
-    { value: 'research', labelKey: 'activityTypes.research', points: 10 }
+    { value: 'kvk prep', labelKey: 'activities.types.kvk-prep', points: 15 },
+    { value: 'kvk cross border', labelKey: 'activities.types.kvk-cross-border', points: 10 },
+    { value: 'legion', labelKey: 'activities.types.legion', points: 8 },
+    { value: 'desolate desert', labelKey: 'activities.types.desolate-desert', points: 8 },
+    { value: 'golden expedition', labelKey: 'activities.types.golden-expedition', points: 5 }
   ] as const,
   
   CHART_COLORS: [

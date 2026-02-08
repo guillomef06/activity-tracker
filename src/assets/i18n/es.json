@@ -128,14 +128,14 @@
     "success": "¡Actividad enviada con éxito!",
     "error": "Error al enviar la actividad"
   },
-  "activityTypes": {
-    "development": "Desarrollo",
-    "codeReview": "Revisión de Código",
-    "testing": "Pruebas",
-    "documentation": "Documentación",
-    "meeting": "Reunión",
-    "bugFix": "Corrección de Errores",
-    "research": "Investigación"
+  "activities": {
+    "types": {
+      "kvk-prep": "Preparación KvK",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legión",
+      "desolate-desert": "Desierto Desolado",
+      "golden-expedition": "Expedición Dorada"
+    }
   },
   "dashboard": {
     "title": "Panel de Gestión",
