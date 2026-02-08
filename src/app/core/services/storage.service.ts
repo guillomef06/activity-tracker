@@ -15,7 +15,18 @@ export class StorageService {
   get<T>(key: string): T | null {
     try {
       const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
+      if (!item) return null;
+      
+      try {
+        return JSON.parse(item);
+      } catch {
+        // Handle legacy plain string values
+        console.warn(`Legacy plain value detected for [${key}], migrating to JSON format`);
+        // Return the plain string as-is and re-save it properly
+        const plainValue = item as T;
+        this.set(key, plainValue);
+        return plainValue;
+      }
     } catch (error) {
       console.error(`Error reading from localStorage [${key}]:`, error);
       return null;

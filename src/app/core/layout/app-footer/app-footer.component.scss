@@ -4,9 +4,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--mat-sys-surface-container);
   backdrop-filter: blur(10px);
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--mat-sys-outline-variant);
   padding: 8px 16px;
   z-index: 100;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
@@ -25,28 +25,28 @@
   justify-content: center;
   gap: 8px;
   font-size: 12px;
-  color: #666;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .version {
   font-weight: 500;
-  color: #333;
+  color: var(--mat-sys-on-surface);
 }
 
 .env-badge {
   padding: 2px 8px;
   border-radius: 12px;
-  color: white;
+  color: var(--mat-sys-on-primary);
   font-weight: 600;
   font-size: 10px;
   letter-spacing: 0.5px;
 }
 
 .separator {
-  color: #ccc;
+  color: var(--mat-sys-outline);
 }
 
 .year {
   font-size: 11px;
-  color: #999;
+  color: var(--mat-sys-outline);
 }
