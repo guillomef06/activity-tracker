@@ -34,8 +34,45 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "management": "Gestion",
+    "allianceSettings": "Paramètres Alliance",
     "activities": "Activités",
     "details": "Détails"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Paramètres de l'Alliance",
+      "tabs": {
+        "information": "Informations",
+        "members": "Membres",
+        "invitations": "Invitations"
+      },
+      "allianceInfo": "Informations de l'Alliance",
+      "allianceName": "Nom de l'Alliance",
+      "updateName": "Mettre à Jour",
+      "totalMembers": "Membres Totaux",
+      "totalInvitations": "Invitations Totales",
+      "memberList": "Liste des Membres",
+      "members": "membres",
+      "noMembers": "Aucun membre pour le moment",
+      "displayName": "Nom",
+      "username": "Nom d'utilisateur",
+      "role": "Rôle",
+      "joinedDate": "Rejoint le",
+      "invitationManagement": "Gestion des Invitations",
+      "invitationDuration": "Durée (jours)",
+      "durationHint": "Jours avant expiration de l'invitation",
+      "createInvitation": "Créer une Invitation",
+      "noInvitations": "Aucune invitation créée",
+      "token": "Jeton",
+      "expiresAt": "Expire le",
+      "status": "Statut",
+      "actions": "Actions",
+      "copyLink": "Copier le lien d'invitation",
+      "revokeInvitation": "Révoquer l'invitation",
+      "errors": {
+        "nameRequired": "Le nom de l'alliance est requis"
+      }
+    }
   },
   "activityInput": {
     "title": "Soumettre une Activité",
@@ -96,7 +133,8 @@
     "activities": "activités",
     "activity": "activité",
     "close": "Fermer",
-    "back": "Retour"
+    "back": "Retour",
+    "loading": "Chargement..."
   },
   "super_admin": "Super Administrateur",
   "admin": "Administrateur",

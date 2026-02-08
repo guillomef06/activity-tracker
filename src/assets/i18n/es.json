@@ -34,8 +34,45 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "management": "Gestión",
+    "allianceSettings": "Configuración Alianza",
     "activities": "Actividades",
     "details": "Detalles"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Configuración de la Alianza",
+      "tabs": {
+        "information": "Información",
+        "members": "Miembros",
+        "invitations": "Invitaciones"
+      },
+      "allianceInfo": "Información de la Alianza",
+      "allianceName": "Nombre de la Alianza",
+      "updateName": "Actualizar Nombre",
+      "totalMembers": "Miembros Totales",
+      "totalInvitations": "Invitaciones Totales",
+      "memberList": "Lista de Miembros",
+      "members": "miembros",
+      "noMembers": "Aún no hay miembros",
+      "displayName": "Nombre",
+      "username": "Usuario",
+      "role": "Rol",
+      "joinedDate": "Se unió",
+      "invitationManagement": "Gestión de Invitaciones",
+      "invitationDuration": "Duración (días)",
+      "durationHint": "Días hasta que expire la invitación",
+      "createInvitation": "Crear Invitación",
+      "noInvitations": "No hay invitaciones creadas",
+      "token": "Token",
+      "expiresAt": "Expira",
+      "status": "Estado",
+      "actions": "Acciones",
+      "copyLink": "Copiar enlace de invitación",
+      "revokeInvitation": "Revocar invitación",
+      "errors": {
+        "nameRequired": "El nombre de la alianza es obligatorio"
+      }
+    }
   },
   "activityInput": {
     "title": "Enviar Actividad",
@@ -96,7 +133,8 @@
     "activities": "actividades",
     "activity": "actividad",
     "close": "Cerrar",
-    "back": "Volver"
+    "back": "Volver",
+    "loading": "Cargando..."
   },
   "super_admin": "Super Administrador",
   "admin": "Administrador",

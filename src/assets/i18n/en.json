@@ -34,8 +34,45 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "management": "Management",
+    "allianceSettings": "Alliance Settings",
     "activities": "Activities",
     "details": "Details"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Alliance Settings",
+      "tabs": {
+        "information": "Information",
+        "members": "Members",
+        "invitations": "Invitations"
+      },
+      "allianceInfo": "Alliance Information",
+      "allianceName": "Alliance Name",
+      "updateName": "Update Name",
+      "totalMembers": "Total Members",
+      "totalInvitations": "Total Invitations",
+      "memberList": "Member List",
+      "members": "members",
+      "noMembers": "No members yet",
+      "displayName": "Name",
+      "username": "Username",
+      "role": "Role",
+      "joinedDate": "Joined",
+      "invitationManagement": "Invitation Management",
+      "invitationDuration": "Duration (days)",
+      "durationHint": "Days until invitation expires",
+      "createInvitation": "Create Invitation",
+      "noInvitations": "No invitations created yet",
+      "token": "Token",
+      "expiresAt": "Expires",
+      "status": "Status",
+      "actions": "Actions",
+      "copyLink": "Copy invitation link",
+      "revokeInvitation": "Revoke invitation",
+      "errors": {
+        "nameRequired": "Alliance name is required"
+      }
+    }
   },
   "activityInput": {
     "title": "Submit Activity",
@@ -96,7 +133,8 @@
     "activities": "activities",
     "activity": "activity",
     "close": "Close",
-    "back": "Back"
+    "back": "Back",
+    "loading": "Loading..."
   },
   "super_admin": "Super Admin",
   "admin": "Admin",

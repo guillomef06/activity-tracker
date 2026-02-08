@@ -34,8 +34,45 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "management": "Gestione",
+    "allianceSettings": "Impostazioni Alleanza",
     "activities": "Attività",
     "details": "Dettagli"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Impostazioni Alleanza",
+      "tabs": {
+        "information": "Informazioni",
+        "members": "Membri",
+        "invitations": "Inviti"
+      },
+      "allianceInfo": "Informazioni Alleanza",
+      "allianceName": "Nome Alleanza",
+      "updateName": "Aggiorna Nome",
+      "totalMembers": "Membri Totali",
+      "totalInvitations": "Inviti Totali",
+      "memberList": "Elenco Membri",
+      "members": "membri",
+      "noMembers": "Nessun membro ancora",
+      "displayName": "Nome",
+      "username": "Nome utente",
+      "role": "Ruolo",
+      "joinedDate": "Iscritto",
+      "invitationManagement": "Gestione Inviti",
+      "invitationDuration": "Durata (giorni)",
+      "durationHint": "Giorni prima della scadenza dell'invito",
+      "createInvitation": "Crea Invito",
+      "noInvitations": "Nessun invito creato",
+      "token": "Token",
+      "expiresAt": "Scade",
+      "status": "Stato",
+      "actions": "Azioni",
+      "copyLink": "Copia link invito",
+      "revokeInvitation": "Revoca invito",
+      "errors": {
+        "nameRequired": "Il nome dell'alleanza è obbligatorio"
+      }
+    }
   },
   "activityInput": {
     "title": "Invia Attività",
@@ -96,7 +133,8 @@
     "activities": "attività",
     "activity": "attività",
     "close": "Chiudi",
-    "back": "Indietro"
+    "back": "Indietro",
+    "loading": "Caricamento..."
   },
   "super_admin": "Super Amministratore",
   "admin": "Amministratore",

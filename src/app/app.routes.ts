@@ -51,6 +51,11 @@ export const routes: Routes = [
         canActivate: [adminGuard],
         loadComponent: () => import('./pages/management-dashboard/management-dashboard.page').then(m => m.ManagementDashboardPage)
       },
+      {
+        path: 'alliance-settings',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./pages/alliance-settings/alliance-settings.page').then(m => m.AllianceSettingsPage)
+      },
       // Super Admin routes (to be created later)
       {
         path: 'super-admin',
