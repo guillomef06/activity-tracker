@@ -48,7 +48,6 @@ export const routes: Routes = [
       // Admin routes
       {
         path: 'management-dashboard',
-        canActivate: [adminGuard],
         loadComponent: () => import('./pages/management-dashboard/management-dashboard.page').then(m => m.ManagementDashboardPage)
       },
       {

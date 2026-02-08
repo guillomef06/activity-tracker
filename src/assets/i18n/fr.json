@@ -109,8 +109,7 @@
     "description": "Description",
     "descriptionPlaceholder": "Décrivez brièvement votre activité",
     "points": "Points",
-    "defaultRule": "Points par défaut (aucune règle personnalisée)",
-    "customRule": "Règle personnalisée appliquée",
+
     "submit": "Soumettre l'Activité",
     "submitting": "Envoi en cours...",
     "viewDashboard": "Voir le Tableau de Bord",

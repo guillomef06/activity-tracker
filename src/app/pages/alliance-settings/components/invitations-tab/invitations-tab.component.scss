@@ -1,0 +1,181 @@
+.tab-content {
+  margin: 1rem 0;
+}
+
+.invitation-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  mat-form-field {
+    flex: 0 0 200px;
+  }
+
+  .create-invitation-btn {
+    margin-top: 0.25rem;
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.7;
+    font-size: 1rem;
+  }
+}
+
+.invitations-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  mat-expansion-panel {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+    &.mat-expanded {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .invitation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+
+    .invitation-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        opacity: 0.7;
+      }
+
+      .token-code {
+        font-family: 'Courier New', monospace;
+        background-color: var(--md-sys-color-surface-variant);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+    }
+
+    .invitation-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .invitation-details {
+    padding: 1rem;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+
+      .detail-label {
+        font-weight: 600;
+        opacity: 0.7;
+      }
+
+      .detail-value {
+        font-family: 'Courier New', monospace;
+      }
+    }
+
+    .members-section {
+      margin-top: 1.5rem;
+
+      h4 {
+        margin: 0 0 1rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--md-sys-color-primary);
+      }
+
+      mat-list {
+        padding: 0;
+      }
+
+      mat-list-item {
+        border-bottom: 1px solid var(--md-sys-color-outline-variant);
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+
+    .invitation-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        mat-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+mat-chip {
+  &.status-active {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+  }
+
+  &.status-expired {
+    background-color: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+  }
+}
+
+@media (max-width: 768px) {
+  .invitation-form {
+    flex-direction: column;
+    
+    mat-form-field {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+  }
+
+  .invitation-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+
+    .invitation-badges {
+      margin-top: 0.5rem;
+    }
+  }
+}
