@@ -1,11 +1,9 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -19,12 +17,10 @@ import { getWeekLabel, formatShortDate } from '../../shared/utils/date.util';
   selector: 'app-management-dashboard-page',
   standalone: true,
   imports: [
-    DecimalPipe,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatExpansionModule,
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
@@ -42,7 +38,6 @@ export class ManagementDashboardPage implements OnInit {
   
   userScores = signal<UserScore[]>([]);
   loading = signal<boolean>(true);
-  selectedUserId = signal<string | null>(null);
   
   // Utility functions exposed to template
   readonly getWeekLabel = (weekIndex: number) => getWeekLabel(weekIndex, this.translate);
@@ -71,8 +66,8 @@ export class ManagementDashboardPage implements OnInit {
     }
   }
 
-  toggleUserDetails(userId: string): void {
-    this.selectedUserId.update(current => current === userId ? null : userId);
+  viewAllDetails(): void {
+    this.router.navigate(['/activities-details']);
   }
 
   goToActivityInput(): void {
