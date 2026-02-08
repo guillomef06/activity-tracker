@@ -8,6 +8,8 @@ import {
   MemberSignUpRequest, 
   SignInRequest 
 } from '../../shared/models';
+import { environment } from '../../../environments/environment';
+import { validateMockCredentials, MOCK_USERS } from '../../shared/mock-data/mock-users';
 
 /**
  * Authentication Service
@@ -36,16 +38,117 @@ export class AuthService {
   readonly isSuperAdmin = computed(() => this.userProfileSignal()?.role === 'super_admin');
   readonly isLoading = this.loadingSignal.asReadonly();
 
+  private readonly MOCK_SESSION_KEY = 'mock-auth-session';
+
   constructor() {
     this.initializeAuth();
   }
 
   /**
+   * Check if mock mode is enabled
+   */
+  private get isMockMode(): boolean {
+    return environment.enableMockData === true;
+  }
+
+  /**
+   * Save mock session to localStorage
+   */
+  private saveMockSession(userId: string): void {
+    localStorage.setItem(this.MOCK_SESSION_KEY, userId);
+  }
+
+  /**
+   * Get mock session from localStorage
+   */
+  private getMockSession(): string | null {
+    return localStorage.getItem(this.MOCK_SESSION_KEY);
+  }
+
+  /**
+   * Clear mock session from localStorage
+   */
+  private clearMockSession(): void {
+    localStorage.removeItem(this.MOCK_SESSION_KEY);
+  }
+
+  /**
+   * Mock sign in - for development/testing only
+   */
+  private async mockSignIn(username: string, password: string): Promise<{ error: AuthError | Error | null }> {
+    const mockUser = validateMockCredentials(username, password);
+    
+    if (!mockUser) {
+      return { error: new Error('Invalid credentials') as AuthError };
+    }
+
+    // Simulate Supabase user object
+    const mockAuthUser: User = {
+      id: mockUser.id,
+      email: `${username}@app.tracker`,
+      aud: 'authenticated',
+      role: 'authenticated',
+      created_at: mockUser.profile.created_at,
+      app_metadata: {},
+      user_metadata: {
+        username: mockUser.username,
+        display_name: mockUser.profile.display_name
+      }
+    } as User;
+
+    // Update signals
+    this.currentUserSignal.set(mockAuthUser);
+    this.userProfileSignal.set(mockUser.profile);
+    
+    // Save session
+    this.saveMockSession(mockUser.id);
+
+    console.log('🔒 [MOCK MODE] Logged in as:', mockUser.profile.display_name, `(${mockUser.profile.role})`);
+    
+    return { error: null };
+  }
+
+  /**
+   * Restore mock session on app init
+   */
+  private async restoreMockSession(): Promise<boolean> {
+    const userId = this.getMockSession();
+    if (!userId) return false;
+
+    const mockUser = MOCK_USERS.find(u => u.id === userId);
+    if (!mockUser) {
+      this.clearMockSession();
+      return false;
+    }
+
+    // Simulate Supabase user object
+    const mockAuthUser: User = {
+      id: mockUser.id,
+      email: `${mockUser.username}@app.tracker`,
+      aud: 'authenticated',
+      role: 'authenticated',
+      created_at: mockUser.profile.created_at,
+      app_metadata: {},
+      user_metadata: {
+        username: mockUser.username,
+        display_name: mockUser.profile.display_name
+      }
+    } as User;
+
+    this.currentUserSignal.set(mockAuthUser);
+    this.userProfileSignal.set(mockUser.profile);
+
+    console.log('🔒 [MOCK MODE] Session restored:', mockUser.profile.display_name, `(${mockUser.profile.role})`);
+    
+    return true;
+  }
+
+  /**
    * Generate internal email from username
-   * Supabase requires an email, so we use: username@app.local
+   * Supabase requires an email, so we use: username@app.tracker
    */
   private generateEmailFromUsername(username: string): string {
-    return `${username.toLowerCase()}@app.local`;
+    return `${username.toLowerCase()}@app.tracker`;
   }
 
   /**
@@ -53,6 +156,14 @@ export class AuthService {
    */
   private async initializeAuth(): Promise<void> {
     try {
+      // MOCK MODE: Restore from localStorage
+      if (this.isMockMode) {
+        await this.restoreMockSession();
+        this.loadingSignal.set(false);
+        return;
+      }
+
+      // PRODUCTION MODE: Use Supabase
       // Get current session
       const { data: { session } } = await this.supabase.auth.getSession();
       
@@ -286,6 +397,13 @@ export class AuthService {
    * Sign in with username and password
    */
   async signIn(data: SignInRequest): Promise<{ error: AuthError | null }> {
+    // MOCK MODE: Use mock authentication
+    if (this.isMockMode) {
+      const result = await this.mockSignIn(data.username, data.password);
+      return { error: result.error as AuthError | null };
+    }
+
+    // PRODUCTION MODE: Use Supabase
     const email = this.generateEmailFromUsername(data.username);
     
     const { error } = await this.supabase.auth.signInWithPassword({
@@ -300,6 +418,17 @@ export class AuthService {
    * Sign out current user
    */
   async signOut(): Promise<void> {
+    // MOCK MODE: Clear mock session
+    if (this.isMockMode) {
+      this.clearMockSession();
+      this.currentUserSignal.set(null);
+      this.userProfileSignal.set(null);
+      console.log('🔒 [MOCK MODE] Logged out');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // PRODUCTION MODE: Use Supabase
     await this.supabase.auth.signOut();
     this.currentUserSignal.set(null);
     this.userProfileSignal.set(null);

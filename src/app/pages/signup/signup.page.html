@@ -19,8 +19,8 @@
           />
           <mat-icon matPrefix>person</mat-icon>
           <mat-hint>3-30 characters, used for login</mat-hint>
-          @if (signupForm.get('username')?.invalid && signupForm.get('username')?.touched) {
-            <mat-error>{{ getErrorMessage('username') }}</mat-error>
+          @if (usernameError()) {
+            <mat-error>{{ usernameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -35,8 +35,8 @@
           />
           <mat-icon matPrefix>badge</mat-icon>
           <mat-hint>Your name as it will appear to others</mat-hint>
-          @if (signupForm.get('displayName')?.invalid && signupForm.get('displayName')?.touched) {
-            <mat-error>{{ getErrorMessage('displayName') }}</mat-error>
+          @if (displayNameError()) {
+            <mat-error>{{ displayNameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -50,8 +50,8 @@
           />
           <mat-icon matPrefix>groups</mat-icon>
           <mat-hint>Choose a name for your new alliance</mat-hint>
-          @if (signupForm.get('allianceName')?.invalid && signupForm.get('allianceName')?.touched) {
-            <mat-error>{{ getErrorMessage('allianceName') }}</mat-error>
+          @if (allianceNameError()) {
+            <mat-error>{{ allianceNameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -76,8 +76,8 @@
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           <mat-hint>Minimum 8 characters</mat-hint>
-          @if (signupForm.get('password')?.invalid && signupForm.get('password')?.touched) {
-            <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          @if (passwordError()) {
+            <mat-error>{{ passwordError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -101,15 +101,15 @@
           >
             <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched) {
-            <mat-error>{{ getErrorMessage('confirmPassword') }}</mat-error>
+          @if (confirmPasswordError()) {
+            <mat-error>{{ confirmPasswordError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         @if (errorMessage()) {
           <div class="error-message">
             <mat-icon>error</mat-icon>
-            <span>{{ errorMessage() }}</span>
+            <span>{{ errorMessage() | translate }}</span>
           </div>
         }
 

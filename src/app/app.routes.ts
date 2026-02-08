@@ -56,7 +56,7 @@ export const routes: Routes = [
         canActivate: [adminGuard],
         loadComponent: () => import('./pages/alliance-settings/alliance-settings.page').then(m => m.AllianceSettingsPage)
       },
-      // Super Admin routes (to be created later)
+      // Super Admin routes
       {
         path: 'super-admin',
         canActivate: [superAdminGuard],
@@ -66,19 +66,18 @@ export const routes: Routes = [
             redirectTo: 'dashboard',
             pathMatch: 'full'
           },
-          // TODO: Create super admin pages
-          // {
-          //   path: 'dashboard',
-          //   loadComponent: () => import('./pages/super-admin-dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage)
-          // },
-          // {
-          //   path: 'alliances',
-          //   loadComponent: () => import('./pages/super-admin-alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage)
-          // },
-          // {
-          //   path: 'users',
-          //   loadComponent: () => import('./pages/super-admin-users/super-admin-users.page').then(m => m.SuperAdminUsersPage)
-          // }
+          {
+            path: 'dashboard',
+            loadComponent: () => import('./pages/super-admin-dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage)
+          },
+          {
+            path: 'alliances',
+            loadComponent: () => import('./pages/super-admin-alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage)
+          },
+          {
+            path: 'users',
+            loadComponent: () => import('./pages/super-admin-users/super-admin-users.page').then(m => m.SuperAdminUsersPage)
+          }
         ]
       }
     ]

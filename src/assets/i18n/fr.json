@@ -136,6 +136,52 @@
     "back": "Retour",
     "loading": "Chargement..."
   },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Tableau de Bord Super Admin",
+      "subtitle": "Vue d'ensemble et gestion globale du système",
+      "totalAlliances": "Total Alliances",
+      "totalUsers": "Total Utilisateurs",
+      "totalActivities": "Total Activités",
+      "activeInvitations": "Invitations Actives",
+      "quickActions": "Actions Rapides",
+      "manageAlliances": "Gérer les Alliances",
+      "manageAlliancesDesc": "Voir et gérer toutes les alliances",
+      "manageUsers": "Gérer les Utilisateurs",
+      "manageUsersDesc": "Voir et gérer tous les utilisateurs"
+    },
+    "alliances": {
+      "title": "Gestion des Alliances",
+      "subtitle": "Gérer toutes les alliances du système",
+      "noAlliances": "Aucune alliance créée pour le moment",
+      "name": "Nom de l'Alliance",
+      "admin": "Administrateur",
+      "members": "Membres",
+      "created": "Créée",
+      "actions": "Actions",
+      "edit": "Modifier",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette alliance ? Cela supprimera également tous les utilisateurs, activités et invitations associés. Cette action est irréversible."
+    },
+    "users": {
+      "title": "Gestion des Utilisateurs",
+      "subtitle": "Gérer tous les utilisateurs du système",
+      "noUsers": "Aucun utilisateur trouvé",
+      "displayName": "Nom d'Affichage",
+      "username": "Nom d'Utilisateur",
+      "role": "Rôle",
+      "alliance": "Alliance",
+      "noAlliance": "Aucune alliance",
+      "created": "Créé",
+      "actions": "Actions",
+      "edit": "Modifier",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer"
+    }
+  },
   "super_admin": "Super Administrateur",
   "admin": "Administrateur",
   "member": "Membre"

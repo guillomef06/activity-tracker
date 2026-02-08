@@ -1,0 +1,262 @@
+.super-admin-dashboard {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .header-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--md-sys-color-error);
+    }
+
+    .header-content {
+      flex: 1;
+
+      mat-card-title {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+      }
+
+      mat-card-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  gap: 1rem;
+
+  p {
+    margin: 0;
+    opacity: 0.7;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem !important;
+  }
+
+  .stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .stat-info {
+    flex: 1;
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  &.alliances-card {
+    .stat-icon {
+      background-color: var(--md-sys-color-primary-container);
+      mat-icon {
+        color: var(--md-sys-color-primary);
+      }
+    }
+    .stat-value {
+      color: var(--md-sys-color-primary);
+    }
+  }
+
+  &.users-card {
+    .stat-icon {
+      background-color: var(--md-sys-color-secondary-container);
+      mat-icon {
+        color: var(--md-sys-color-secondary);
+      }
+    }
+    .stat-value {
+      color: var(--md-sys-color-secondary);
+    }
+  }
+
+  &.activities-card {
+    .stat-icon {
+      background-color: var(--md-sys-color-tertiary-container);
+      mat-icon {
+        color: var(--md-sys-color-tertiary);
+      }
+    }
+    .stat-value {
+      color: var(--md-sys-color-tertiary);
+    }
+  }
+
+  &.invitations-card {
+    .stat-icon {
+      background-color: var(--md-sys-color-error-container);
+      mat-icon {
+        color: var(--md-sys-color-error);
+      }
+    }
+    .stat-value {
+      color: var(--md-sys-color-error);
+    }
+  }
+}
+
+.actions-section {
+  margin-top: 3rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: var(--md-sys-color-on-surface);
+  }
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.action-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  mat-card-content {
+    padding: 2rem !important;
+    text-align: center;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: var(--md-sys-color-primary);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin: 0 0 0.5rem 0;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    p {
+      margin: 0;
+      opacity: 0.7;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .super-admin-dashboard {
+    padding: 1rem;
+  }
+
+  .page-header {
+    margin-bottom: 1.5rem;
+
+    mat-card-header {
+      .header-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+      }
+
+      .header-content {
+        mat-card-title {
+          font-size: 1.5rem;
+        }
+
+        mat-card-subtitle {
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    mat-card-content {
+      padding: 1rem !important;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .stat-info {
+      .stat-value {
+        font-size: 2rem;
+      }
+    }
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+}

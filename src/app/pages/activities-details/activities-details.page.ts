@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -27,7 +27,8 @@ import { getWeekLabel, formatShortDate } from '../../shared/utils/date.util';
     TranslateModule
   ],
   templateUrl: './activities-details.page.html',
-  styleUrl: './activities-details.page.scss'
+  styleUrl: './activities-details.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivitiesDetailsPage implements OnInit {
   private readonly router = inject(Router);

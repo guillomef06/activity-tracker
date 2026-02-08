@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -8,8 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import type { AdminSignUpRequest } from '@app/shared/models';
+import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-signup',
@@ -24,9 +26,11 @@ import type { AdminSignUpRequest } from '@app/shared/models';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslateModule,
   ],
   templateUrl: './signup.page.html',
   styleUrl: './signup.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupPage {
   private readonly authService = inject(AuthService);
@@ -44,19 +48,7 @@ export class SignupPage {
     allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', [Validators.required]],
-  }, { validators: this.passwordMatchValidator });
-
-  private passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    
-    if (password !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-    
-    return null;
-  }
+  }, { validators: passwordMatchValidator });
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
@@ -66,31 +58,12 @@ export class SignupPage {
     this.hideConfirmPassword.update(value => !value);
   }
 
-  protected getErrorMessage(fieldName: string): string {
-    const field = this.signupForm.get(fieldName);
-    
-    if (!field || !field.errors || !field.touched) {
-      return '';
-    }
-
-    if (field.errors['required']) {
-      return 'auth.errors.required';
-    }
-    
-    if (field.errors['minlength']) {
-      return 'auth.errors.minLength';
-    }
-    
-    if (field.errors['maxlength']) {
-      return 'auth.errors.maxLength';
-    }
-    
-    if (fieldName === 'confirmPassword' && field.errors['passwordMismatch']) {
-      return 'auth.errors.passwordMismatch';
-    }
-
-    return '';
-  }
+  // Reactive error signals (automatically update when form state changes)
+  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username');
+  protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName');
+  protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName');
+  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password');
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword');
 
   protected async onSubmit(): Promise<void> {
     if (this.signupForm.invalid || this.isLoading()) {

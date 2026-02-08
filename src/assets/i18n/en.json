@@ -136,6 +136,52 @@
     "back": "Back",
     "loading": "Loading..."
   },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Super Admin Dashboard",
+      "subtitle": "Global system overview and management",
+      "totalAlliances": "Total Alliances",
+      "totalUsers": "Total Users",
+      "totalActivities": "Total Activities",
+      "activeInvitations": "Active Invitations",
+      "quickActions": "Quick Actions",
+      "manageAlliances": "Manage Alliances",
+      "manageAlliancesDesc": "View and manage all alliances",
+      "manageUsers": "Manage Users",
+      "manageUsersDesc": "View and manage all users"
+    },
+    "alliances": {
+      "title": "Alliances Management",
+      "subtitle": "Manage all alliances across the system",
+      "noAlliances": "No alliances created yet",
+      "name": "Alliance Name",
+      "admin": "Admin",
+      "members": "Members",
+      "created": "Created",
+      "actions": "Actions",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this alliance? This will also delete all associated users, activities, and invitations. This action cannot be undone."
+    },
+    "users": {
+      "title": "Users Management",
+      "subtitle": "Manage all users across the system",
+      "noUsers": "No users found",
+      "displayName": "Display Name",
+      "username": "Username",
+      "role": "Role",
+      "alliance": "Alliance",
+      "noAlliance": "No alliance",
+      "created": "Created",
+      "actions": "Actions",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    }
+  },
   "super_admin": "Super Admin",
   "admin": "Admin",
   "member": "Member"

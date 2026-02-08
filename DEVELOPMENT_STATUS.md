@@ -18,7 +18,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
   - `activities` - Activités des utilisateurs avec points
   - `invitation_tokens` - Tokens d'invitation sécurisés
 - **Authentification:** Username + Password (pas d'email visible pour l'utilisateur)
-  - Email généré en interne: `username@app.local` pour la compatibilité Supabase Auth
+  - Email généré en interne: `username@app.tracker` pour la compatibilité Supabase Auth
   - Username stocké dans `user_profiles.username` et `auth.users.user_metadata`
 - **Sécurité:** RLS (Row Level Security) configuré sur toutes les tables
   - **Super Admin:** Accès complet à toutes les alliances et utilisateurs
@@ -45,7 +45,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 
 #### AuthService (`src/app/core/services/auth.service.ts`)
 - **Authentification par username** (pas d'email visible)
-- Génération auto d'email interne: `username@app.local`
+- Génération auto d'email interne: `username@app.tracker`
 - Inscription admin (crée utilisateur + alliance)
 - Inscription super admin (accès global, pas d'alliance)
 - Inscription membre (via token d'invitation)
@@ -111,7 +111,7 @@ Réorganisés par domaine avec pattern Request/Response:
 
 **Fonctionnement:**
 1. L'utilisateur saisit un **username** (pas d'email)
-2. Le système génère un email interne: `{username}@app.local`
+2. Le système génère un email interne: `{username}@app.tracker`
 3. Supabase Auth utilise cet email en backend
 4. L'utilisateur ne voit/utilise **que le username**
 
@@ -1161,7 +1161,7 @@ Toutes les dépendances nécessaires sont déjà installées.
 2. **RLS:** Toujours tester les policies RLS avant la mise en prod
 3. **Super Admin:** Sécuriser la route `/super-admin-setup` après création du premier super admin
 4. **Username:** Validation côté client ET serveur pour unicité
-5. **Email interne:** Ne jamais exposer l'email généré (`username@app.local`) à l'utilisateur
+5. **Email interne:** Ne jamais exposer l'email généré (`username@app.tracker`) à l'utilisateur
 6. **Mobile-first:** Tous les nouveaux composants doivent être responsive
 7. **Material:** Toujours utiliser les composants Material quand disponibles
 8. **Formulaires:** Toujours wrapper les inputs dans `<mat-form-field>`

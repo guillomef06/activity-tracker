@@ -24,8 +24,8 @@
           />
           <mat-icon matPrefix>person</mat-icon>
           <mat-hint>3-30 characters, used for login</mat-hint>
-          @if (setupForm.get('username')?.invalid && setupForm.get('username')?.touched) {
-            <mat-error>{{ getErrorMessage('username') }}</mat-error>
+          @if (usernameError()) {
+            <mat-error>{{ usernameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -40,8 +40,8 @@
           />
           <mat-icon matPrefix>badge</mat-icon>
           <mat-hint>Your name as it will appear in the app</mat-hint>
-          @if (setupForm.get('displayName')?.invalid && setupForm.get('displayName')?.touched) {
-            <mat-error>{{ getErrorMessage('displayName') }}</mat-error>
+          @if (displayNameError()) {
+            <mat-error>{{ displayNameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -66,8 +66,8 @@
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           <mat-hint>Minimum 8 characters</mat-hint>
-          @if (setupForm.get('password')?.invalid && setupForm.get('password')?.touched) {
-            <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          @if (passwordError()) {
+            <mat-error>{{ passwordError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -91,15 +91,15 @@
           >
             <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (setupForm.get('confirmPassword')?.invalid && setupForm.get('confirmPassword')?.touched) {
-            <mat-error>{{ getErrorMessage('confirmPassword') }}</mat-error>
+          @if (confirmPasswordError()) {
+            <mat-error>{{ confirmPasswordError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         @if (errorMessage()) {
           <div class="error-message">
             <mat-icon>error</mat-icon>
-            <span>{{ errorMessage() }}</span>
+            <span>{{ errorMessage() | translate }}</span>
           </div>
         }
 

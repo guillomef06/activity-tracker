@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -8,8 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import type { MemberSignUpRequest } from '@app/shared/models';
+import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-join',
@@ -24,9 +26,11 @@ import type { MemberSignUpRequest } from '@app/shared/models';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslateModule,
   ],
   templateUrl: './join.page.html',
   styleUrl: './join.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JoinPage implements OnInit {
   private readonly authService = inject(AuthService);
@@ -48,7 +52,7 @@ export class JoinPage implements OnInit {
     displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', [Validators.required]],
-  }, { validators: this.passwordMatchValidator });
+  }, { validators: passwordMatchValidator });
 
   ngOnInit(): void {
     // Check if token is provided in query params
@@ -59,18 +63,6 @@ export class JoinPage implements OnInit {
     }
   }
 
-  private passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    
-    if (password !== confirmPassword) {
-      form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-    
-    return null;
-  }
-
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
   }
@@ -78,6 +70,13 @@ export class JoinPage implements OnInit {
   protected toggleConfirmPasswordVisibility(): void {
     this.hideConfirmPassword.update(value => !value);
   }
+
+  // Reactive error signals (automatically update when form state changes)
+  protected readonly tokenError = createFieldErrorSignal(this.joinForm, 'token');
+  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username');
+  protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName');
+  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password');
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword');
 
   protected async validateToken(token?: string): Promise<void> {
     const tokenValue = token || this.joinForm.get('token')?.value;
@@ -104,32 +103,6 @@ export class JoinPage implements OnInit {
     } finally {
       this.isValidatingToken.set(false);
     }
-  }
-
-  protected getErrorMessage(fieldName: string): string {
-    const field = this.joinForm.get(fieldName);
-    
-    if (!field || !field.errors || !field.touched) {
-      return '';
-    }
-
-    if (field.errors['required']) {
-      return 'auth.errors.required';
-    }
-    
-    if (field.errors['minlength']) {
-      return 'auth.errors.minLength';
-    }
-    
-    if (field.errors['maxlength']) {
-      return 'auth.errors.maxLength';
-    }
-    
-    if (fieldName === 'confirmPassword' && field.errors['passwordMismatch']) {
-      return 'auth.errors.passwordMismatch';
-    }
-
-    return '';
   }
 
   protected async onSubmit(): Promise<void> {

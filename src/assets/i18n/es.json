@@ -135,8 +135,52 @@
     "close": "Cerrar",
     "back": "Volver",
     "loading": "Cargando..."
-  },
-  "super_admin": "Super Administrador",
+  },  "superAdmin": {
+    "dashboard": {
+      "title": "Panel de Superadministrador",
+      "subtitle": "Vista general y gestión global del sistema",
+      "totalAlliances": "Total de Alianzas",
+      "totalUsers": "Total de Usuarios",
+      "totalActivities": "Total de Actividades",
+      "activeInvitations": "Invitaciones Activas",
+      "quickActions": "Acciones Rápidas",
+      "manageAlliances": "Gestionar Alianzas",
+      "manageAlliancesDesc": "Ver y gestionar todas las alianzas",
+      "manageUsers": "Gestionar Usuarios",
+      "manageUsersDesc": "Ver y gestionar todos los usuarios"
+    },
+    "alliances": {
+      "title": "Gestión de Alianzas",
+      "subtitle": "Administrar todas las alianzas del sistema",
+      "noAlliances": "No hay alianzas creadas aún",
+      "name": "Nombre de Alianza",
+      "admin": "Administrador",
+      "members": "Miembros",
+      "created": "Creada",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "deleteConfirm": "¿Está seguro de eliminar esta alianza? Esto también eliminará todos los usuarios, actividades e invitaciones asociados. Esta acción no se puede deshacer."
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "subtitle": "Administrar todos los usuarios del sistema",
+      "noUsers": "No se encontraron usuarios",
+      "displayName": "Nombre de Visualización",
+      "username": "Nombre de Usuario",
+      "role": "Rol",
+      "alliance": "Alianza",
+      "noAlliance": "Sin alianza",
+      "created": "Creado",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
+    }
+  },  "super_admin": "Super Administrador",
   "admin": "Administrador",
   "member": "Miembro"
 }

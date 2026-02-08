@@ -1,0 +1,94 @@
+<div class="super-admin-dashboard">
+  <mat-card class="page-header">
+    <mat-card-header>
+      <mat-icon class="header-icon">admin_panel_settings</mat-icon>
+      <div class="header-content">
+        <mat-card-title>{{ 'superAdmin.dashboard.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'superAdmin.dashboard.subtitle' | translate }}</mat-card-subtitle>
+      </div>
+      <button mat-icon-button (click)="refreshStats()" [disabled]="isLoading()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </mat-card-header>
+  </mat-card>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else {
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card alliances-card">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>groups</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats().totalAlliances }}</div>
+            <div class="stat-label">{{ 'superAdmin.dashboard.totalAlliances' | translate }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card users-card">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats().totalUsers }}</div>
+            <div class="stat-label">{{ 'superAdmin.dashboard.totalUsers' | translate }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card activities-card">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>assignment</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats().totalActivities }}</div>
+            <div class="stat-label">{{ 'superAdmin.dashboard.totalActivities' | translate }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card invitations-card">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>mail</mat-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats().activeInvitations }}</div>
+            <div class="stat-label">{{ 'superAdmin.dashboard.activeInvitations' | translate }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions-section">
+      <h2>{{ 'superAdmin.dashboard.quickActions' | translate }}</h2>
+      <div class="actions-grid">
+        <mat-card class="action-card" routerLink="/super-admin/alliances">
+          <mat-card-content>
+            <mat-icon>groups</mat-icon>
+            <h3>{{ 'superAdmin.dashboard.manageAlliances' | translate }}</h3>
+            <p>{{ 'superAdmin.dashboard.manageAlliancesDesc' | translate }}</p>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="action-card" routerLink="/super-admin/users">
+          <mat-card-content>
+            <mat-icon>people</mat-icon>
+            <h3>{{ 'superAdmin.dashboard.manageUsers' | translate }}</h3>
+            <p>{{ 'superAdmin.dashboard.manageUsersDesc' | translate }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+</div>

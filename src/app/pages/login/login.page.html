@@ -18,8 +18,8 @@
             placeholder="Enter your username"
           />
           <mat-icon matPrefix>person</mat-icon>
-          @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
-            <mat-error>{{ getErrorMessage('username') }}</mat-error>
+          @if (usernameError()) {
+            <mat-error>{{ usernameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -43,15 +43,15 @@
           >
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-            <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          @if (passwordError()) {
+            <mat-error>{{ passwordError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         @if (errorMessage()) {
           <div class="error-message">
             <mat-icon>error</mat-icon>
-            <span>{{ errorMessage() }}</span>
+            <span>{{ errorMessage() | translate }}</span>
           </div>
         }
 

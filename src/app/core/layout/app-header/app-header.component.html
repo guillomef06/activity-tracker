@@ -35,7 +35,7 @@
       <mat-menu #userMenu="matMenu">
         <div class="user-info">
           <div class="user-name">{{ authService.userProfile()?.display_name }}</div>
-          <div class="username">@{{ authService.userProfile()?.username }}</div>
+          <div class="username">{{ authService.userProfile()?.username }}</div>
           <div class="user-role">{{ authService.userProfile()?.role | translate }}</div>
         </div>
         

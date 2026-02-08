@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -8,8 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import type { SignInRequest } from '@app/shared/models';
+import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-login',
@@ -24,9 +26,11 @@ import type { SignInRequest } from '@app/shared/models';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslateModule,
   ],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginPage {
   private readonly authService = inject(AuthService);
@@ -42,22 +46,12 @@ export class LoginPage {
     password: ['', [Validators.required]],
   });
 
+  // Reactive error signals (automatically update when form state changes)
+  protected readonly usernameError = createFieldErrorSignal(this.loginForm, 'username');
+  protected readonly passwordError = createFieldErrorSignal(this.loginForm, 'password');
+
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
-  }
-
-  protected getErrorMessage(fieldName: string): string {
-    const field = this.loginForm.get(fieldName);
-    
-    if (!field || !field.errors || !field.touched) {
-      return '';
-    }
-
-    if (field.errors['required']) {
-      return 'auth.errors.required';
-    }
-
-    return '';
   }
 
   protected async onSubmit(): Promise<void> {

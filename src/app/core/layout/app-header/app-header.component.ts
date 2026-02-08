@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -23,7 +23,8 @@ import { AuthService } from '@app/core/services/auth.service';
     TranslateModule
   ],
   templateUrl: './app-header.component.html',
-  styleUrl: './app-header.component.scss'
+  styleUrl: './app-header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppHeaderComponent {
   protected readonly authService = inject(AuthService);

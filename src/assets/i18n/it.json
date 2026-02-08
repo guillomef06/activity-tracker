@@ -136,6 +136,52 @@
     "back": "Indietro",
     "loading": "Caricamento..."
   },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Dashboard Super Amministratore",
+      "subtitle": "Panoramica globale e gestione del sistema",
+      "totalAlliances": "Totale Alleanze",
+      "totalUsers": "Totale Utenti",
+      "totalActivities": "Totale Attività",
+      "activeInvitations": "Inviti Attivi",
+      "quickActions": "Azioni Rapide",
+      "manageAlliances": "Gestisci Alleanze",
+      "manageAlliancesDesc": "Visualizza e gestisci tutte le alleanze",
+      "manageUsers": "Gestisci Utenti",
+      "manageUsersDesc": "Visualizza e gestisci tutti gli utenti"
+    },
+    "alliances": {
+      "title": "Gestione Alleanze",
+      "subtitle": "Gestisci tutte le alleanze del sistema",
+      "noAlliances": "Nessuna alleanza creata ancora",
+      "name": "Nome Alleanza",
+      "admin": "Amministratore",
+      "members": "Membri",
+      "created": "Creata",
+      "actions": "Azioni",
+      "edit": "Modifica",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "delete": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare questa alleanza? Questo eliminerà anche tutti gli utenti, le attività e gli inviti associati. Questa azione non può essere annullata."
+    },
+    "users": {
+      "title": "Gestione Utenti",
+      "subtitle": "Gestisci tutti gli utenti del sistema",
+      "noUsers": "Nessun utente trovato",
+      "displayName": "Nome Visualizzato",
+      "username": "Nome Utente",
+      "role": "Ruolo",
+      "alliance": "Alleanza",
+      "noAlliance": "Nessuna alleanza",
+      "created": "Creato",
+      "actions": "Azioni",
+      "edit": "Modifica",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "delete": "Elimina"
+    }
+  },
   "super_admin": "Super Amministratore",
   "admin": "Amministratore",
   "member": "Membro"
