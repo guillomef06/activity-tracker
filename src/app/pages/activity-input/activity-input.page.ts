@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, signal, computed, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -10,9 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
+import { PointRulesService } from '../../core/services/point-rules.service';
 import { StorageService } from '../../core/services/storage.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
-import { createUserIdFromName } from '../../shared/utils/id-generator.util';
+import { PointCalculationResult } from '../../shared/models';
 
 @Component({
   selector: 'app-activity-input-page',
@@ -33,6 +34,7 @@ import { createUserIdFromName } from '../../shared/utils/id-generator.util';
 })
 export class ActivityInputPage implements OnInit {
   private activityService = inject(ActivityService);
+  private pointRulesService = inject(PointRulesService);
   private router = inject(Router);
   private storage = inject(StorageService);
   private snackBar = inject(MatSnackBar);
@@ -40,8 +42,10 @@ export class ActivityInputPage implements OnInit {
   
   userName = '';
   activityType = '';
+  position = 1;
   points = 0;
   submitting = signal<boolean>(false);
+  calculatedPointsResult = signal<PointCalculationResult | null>(null);
 
   // Use computed signal for reactive translations
   activityTypes = computed(() => 
@@ -50,6 +54,17 @@ export class ActivityInputPage implements OnInit {
       label: this.translate.instant(type.labelKey)
     }))
   );
+
+  constructor() {
+    // Automatically calculate points when activity type or position changes
+    effect(() => {
+      if (this.activityType && this.position > 0) {
+        const result = this.pointRulesService.calculatePoints(this.activityType, this.position);
+        this.calculatedPointsResult.set(result);
+        this.points = result.points;
+      }
+    });
+  }
 
   ngOnInit(): void {
     // Load saved user name from storage
@@ -60,16 +75,12 @@ export class ActivityInputPage implements OnInit {
   }
 
   onActivityTypeChange(): void {
-    const selectedType = this.activityTypes().find(
-      type => type.value === this.activityType
-    );
-    if (selectedType) {
-      this.points = selectedType.points;
-    }
+    // Points will be calculated automatically by the effect
+    // Just trigger change detection by updating the activity type
   }
 
-  onSubmit(): void {
-    if (!this.userName.trim() || !this.activityType || this.points <= 0) {
+  async onSubmit(): Promise<void> {
+    if (!this.userName.trim() || !this.activityType || this.position <= 0) {
       this.snackBar.open('Please fill in all fields', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -83,20 +94,33 @@ export class ActivityInputPage implements OnInit {
     // Save user name for future use
     this.storage.set(APP_CONSTANTS.STORAGE_KEYS.USER_NAME, this.userName);
 
-    // Create user ID from name using utility function
-    const userId = createUserIdFromName(this.userName);
-
-    this.activityService.addActivity({
-      userId,
-      userName: this.userName,
+    // Add activity with position
+    const { error } = await this.activityService.addActivity({
       activityType: this.activityType,
-      points: this.points,
+      position: this.position,
       date: new Date()
     });
 
+    if (error) {
+      this.snackBar.open(
+        this.translate.instant('activityInput.error'),
+        this.translate.instant('common.close'),
+        {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['error-snackbar']
+        }
+      );
+      this.submitting.set(false);
+      return;
+    }
+
     // Reset form
     this.activityType = '';
+    this.position = 1;
     this.points = 0;
+    this.calculatedPointsResult.set(null);
     this.submitting.set(false);
 
     this.snackBar.open(this.translate.instant('activityInput.success'), this.translate.instant('common.close'), {

@@ -3,32 +3,129 @@
     "title": "Rastreador de Actividades",
     "subtitle": "Rastrea actividades y visualiza puntuaciones de las últimas 6 semanas"
   },
+  "auth": {
+    "superAdmin": "Super Administrador",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "displayName": "Nombre para mostrar",
+    "allianceName": "Nombre de la alianza",
+    "invitationToken": "Token de invitación",
+    "errors": {
+      "required": "Este campo es obligatorio",
+      "minLength": "Longitud mínima no alcanzada",
+      "maxLength": "Longitud máxima excedida",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "usernameExists": "El nombre de usuario ya existe",
+      "invalidCredentials": "Nombre de usuario o contraseña no válidos",
+      "userNotFound": "Usuario no encontrado",
+      "loginFailed": "Error al iniciar sesión. Inténtalo de nuevo.",
+      "signupFailed": "Error al registrarse. Inténtalo de nuevo.",
+      "joinFailed": "Error al unirse. Inténtalo de nuevo.",
+      "setupFailed": "Error en la configuración. Inténtalo de nuevo.",
+      "superAdminExists": "El super administrador ya existe",
+      "allianceCreationFailed": "Error al crear la alianza",
+      "invalidToken": "Token de invitación inválido o expirado"
+    }
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "management": "Gestión",
+    "allianceSettings": "Configuración Alianza",
+    "activities": "Actividades",
+    "details": "Detalles"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Configuración de la Alianza",
+      "tabs": {
+        "information": "Información",
+        "members": "Miembros",
+        "invitations": "Invitaciones",
+        "pointRules": "Reglas de puntos"
+      },
+      "allianceInfo": "Información de la Alianza",
+      "allianceName": "Nombre de la Alianza",
+      "updateName": "Actualizar Nombre",
+      "totalMembers": "Miembros Totales",
+      "totalInvitations": "Invitaciones Totales",
+      "memberList": "Lista de Miembros",
+      "members": "miembros",
+      "noMembers": "Aún no hay miembros",
+      "displayName": "Nombre",
+      "username": "Usuario",
+      "role": "Rol",
+      "joinedDate": "Se unió",
+      "invitationManagement": "Gestión de Invitaciones",
+      "invitationDuration": "Duración (días)",
+      "durationHint": "Días hasta que expire la invitación",
+      "createInvitation": "Crear Invitación",
+      "noInvitations": "No hay invitaciones creadas",
+      "token": "Token",
+      "expiresAt": "Expira",
+      "status": "Estado",
+      "actions": "Acciones",
+      "copyLink": "Copiar enlace de invitación",
+      "revokeInvitation": "Revocar invitación",
+      "errors": {
+        "nameRequired": "El nombre de la alianza es obligatorio"
+      },
+      "pointRules": {
+        "title": "Configuración de reglas de puntos",
+        "subtitle": "Configure reglas personalizadas de cálculo de puntos basadas en la posición/clasificación",
+        "addRule": "Agregar nueva regla",
+        "currentRules": "Reglas actuales",
+        "activityType": "Tipo de actividad",
+        "positionMin": "Posición mín",
+        "positionMax": "Posición máx",
+        "positionRange": "Rango de posiciones",
+        "points": "Puntos",
+        "create": "Crear regla",
+        "noRules": "No hay reglas de puntos configuradas",
+        "noRulesHint": "Cree reglas para calcular puntos según la posición/clasificación. Sin reglas, se utilizarán los puntos predeterminados.",
+        "errors": {
+          "typeRequired": "El tipo de actividad es requerido",
+          "positionRequired": "La posición es requerida",
+          "pointsRequired": "El valor de puntos es requerido"
+        }
+      }
+    }
+  },
   "activityInput": {
     "title": "Enviar Actividad",
     "subtitle": "Registra tu actividad y gana puntos",
     "yourName": "Tu Nombre",
     "enterName": "Introduce tu nombre",
     "activityType": "Tipo de Actividad",
+    "position": "Posición/Clasificación",
+    "positionPlaceholder": "ej: 1, 5, 10...",
+    "positionHint": "Ingresa tu posición o clasificación (1 para 1er lugar, 2 para 2do, etc.)",
+    "positionRequired": "La posición es requerida",
     "description": "Descripción",
     "descriptionPlaceholder": "Describe brevemente tu actividad",
     "points": "Puntos",
+    "defaultRule": "Puntos predeterminados (sin regla personalizada)",
+    "customRule": "Regla personalizada aplicada",
     "submit": "Enviar Actividad",
     "submitting": "Enviando...",
-    "viewDashboard": "Ver Panel",
+    "viewDashboard": "Ver Tablero",
     "nameRequired": "El nombre es obligatorio",
     "typeRequired": "El tipo de actividad es obligatorio",
     "descriptionRequired": "La descripción es obligatoria",
-    "success": "¡Actividad enviada con éxito!",
+    "success": "¡Actividad enviada correctamente!",
     "error": "Error al enviar la actividad"
   },
-  "activityTypes": {
-    "development": "Desarrollo",
-    "codeReview": "Revisión de Código",
-    "testing": "Pruebas",
-    "documentation": "Documentación",
-    "meeting": "Reunión",
-    "bugFix": "Corrección de Errores",
-    "research": "Investigación"
+  "activities": {
+    "types": {
+      "kvk-prep": "Preparación KvK",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legión",
+      "desolate-desert": "Desierto Desolado",
+      "golden-expedition": "Expedición Dorada"
+    }
   },
   "dashboard": {
     "title": "Panel de Gestión",
@@ -62,6 +159,58 @@
     "activities": "actividades",
     "activity": "actividad",
     "close": "Cerrar",
-    "back": "Volver"
-  }
+    "back": "Volver",
+    "loading": "Cargando...",
+    "actions": "Acciones",
+    "delete": "Eliminar"
+  },  "superAdmin": {
+    "dashboard": {
+      "title": "Panel de Superadministrador",
+      "subtitle": "Vista general y gestión global del sistema",
+      "totalAlliances": "Total de Alianzas",
+      "totalUsers": "Total de Usuarios",
+      "totalActivities": "Total de Actividades",
+      "activeInvitations": "Invitaciones Activas",
+      "quickActions": "Acciones Rápidas",
+      "manageAlliances": "Gestionar Alianzas",
+      "manageAlliancesDesc": "Ver y gestionar todas las alianzas",
+      "manageUsers": "Gestionar Usuarios",
+      "manageUsersDesc": "Ver y gestionar todos los usuarios"
+    },
+    "alliances": {
+      "title": "Gestión de Alianzas",
+      "subtitle": "Administrar todas las alianzas del sistema",
+      "noAlliances": "No hay alianzas creadas aún",
+      "name": "Nombre de Alianza",
+      "admin": "Administrador",
+      "members": "Miembros",
+      "created": "Creada",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "deleteConfirm": "¿Está seguro de eliminar esta alianza? Esto también eliminará todos los usuarios, actividades e invitaciones asociados. Esta acción no se puede deshacer."
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "subtitle": "Administrar todos los usuarios del sistema",
+      "noUsers": "No se encontraron usuarios",
+      "displayName": "Nombre de Visualización",
+      "username": "Nombre de Usuario",
+      "role": "Rol",
+      "alliance": "Alianza",
+      "noAlliance": "Sin alianza",
+      "created": "Creado",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
+    }
+  },
+  "super_admin": "Super Administrador",
+  "admin": "Administrador",
+  "member": "Miembro"
 }
+

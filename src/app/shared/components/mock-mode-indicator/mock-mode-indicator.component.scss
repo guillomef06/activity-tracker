@@ -1,0 +1,19 @@
+.mock-chip {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: help;
+  
+  mat-icon {
+    color: white !important;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  span {
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+  }
+}

@@ -31,13 +31,44 @@
           >
             @for (type of activityTypes(); track type.value) {
               <mat-option [value]="type.value">
-                {{ type.label }} ({{ type.points }} {{ 'common.points' | translate }})
+                {{ type.label }}
               </mat-option>
             }
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
           <mat-error>{{ 'activityInput.typeRequired' | translate }}</mat-error>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'activityInput.position' | translate }}</mat-label>
+          <input
+            matInput
+            type="number"
+            name="position"
+            [(ngModel)]="position"
+            [placeholder]="'activityInput.positionPlaceholder' | translate"
+            min="1"
+            max="999"
+            required
+          />
+          <mat-icon matPrefix>emoji_events</mat-icon>
+          <mat-hint>{{ 'activityInput.positionHint' | translate }}</mat-hint>
+          <mat-error>{{ 'activityInput.positionRequired' | translate }}</mat-error>
+        </mat-form-field>
+
+        @if (calculatedPointsResult()) {
+          <div class="points-preview">
+            <mat-icon [class.fallback]="calculatedPointsResult()!.usedFallback">stars</mat-icon>
+            <div class="points-info">
+              <div class="points-value">{{ points }} {{ 'common.points' | translate }}</div>
+              @if (calculatedPointsResult()!.usedFallback) {
+                <div class="fallback-indicator">{{ 'activityInput.defaultRule' | translate }}</div>
+              } @else {
+                <div class="custom-rule-indicator">{{ 'activityInput.customRule' | translate }}</div>
+              }
+            </div>
+          </div>
+        }
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'activityInput.points' | translate }}</mat-label>

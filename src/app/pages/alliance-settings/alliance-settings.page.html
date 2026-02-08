@@ -1,0 +1,403 @@
+<div class="alliance-settings-container">
+  <mat-card class="page-header">
+    <mat-card-header>
+      <mat-icon class="header-icon">settings</mat-icon>
+      <div class="header-content">
+        <mat-card-title>{{ 'alliance.settings.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ alliance()?.name }}</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  } @else {
+    <mat-tab-group class="settings-tabs">
+      <!-- Alliance Information Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">info</mat-icon>
+          {{ 'alliance.settings.tabs.information' | translate }}
+        </ng-template>
+        
+        <mat-card class="tab-content">
+          <mat-card-header>
+            <mat-card-title>{{ 'alliance.settings.allianceInfo' | translate }}</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="allianceNameForm" (ngSubmit)="updateAllianceName()">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'alliance.settings.allianceName' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="name"
+                  type="text"
+                  placeholder="Enter alliance name"
+                />
+                <mat-icon matPrefix>groups</mat-icon>
+                @if (allianceNameForm.get('name')?.invalid && allianceNameForm.get('name')?.touched) {
+                  <mat-error>{{ 'alliance.settings.errors.nameRequired' | translate }}</mat-error>
+                }
+              </mat-form-field>
+
+              <div class="form-actions">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="allianceNameForm.invalid || isLoading()"
+                >
+                  <mat-icon>save</mat-icon>
+                  {{ 'alliance.settings.updateName' | translate }}
+                </button>
+              </div>
+            </form>
+
+            <div class="alliance-stats">
+              <div class="stat-card">
+                <mat-icon>people</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-value">{{ members().length }}</span>
+                  <span class="stat-label">{{ 'alliance.settings.totalMembers' | translate }}</span>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <mat-icon>mail</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-value">{{ invitations().length }}</span>
+                  <span class="stat-label">{{ 'alliance.settings.totalInvitations' | translate }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <!-- Members Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">people</mat-icon>
+          {{ 'alliance.settings.tabs.members' | translate }}
+        </ng-template>
+        
+        <mat-card class="tab-content">
+          <mat-card-header>
+            <mat-card-title>{{ 'alliance.settings.memberList' | translate }}</mat-card-title>
+            <mat-card-subtitle>{{ members().length }} {{ 'alliance.settings.members' | translate }}</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            @if (members().length === 0) {
+              <div class="empty-state">
+                <mat-icon>person_add</mat-icon>
+                <p>{{ 'alliance.settings.noMembers' | translate }}</p>
+              </div>
+            } @else {
+              <div class="table-container">
+                <table mat-table [dataSource]="members()" class="members-table">
+                  <!-- Display Name Column -->
+                  <ng-container matColumnDef="displayName">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.displayName' | translate }}</th>
+                    <td mat-cell *matCellDef="let member">
+                      <div class="member-info">
+                        <mat-icon>person</mat-icon>
+                        <span>{{ member.display_name }}</span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Username Column -->
+                  <ng-container matColumnDef="username">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.username' | translate }}</th>
+                    <td mat-cell *matCellDef="let member">
+                      <span class="username">{{ '@' + member.username }}</span>
+                    </td>
+                  </ng-container>
+
+                  <!-- Role Column -->
+                  <ng-container matColumnDef="role">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.role' | translate }}</th>
+                    <td mat-cell *matCellDef="let member">
+                      <mat-chip [class]="getRoleBadgeClass(member.role)">
+                        {{ member.role | translate }}
+                      </mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <!-- Created At Column -->
+                  <ng-container matColumnDef="createdAt">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.joinedDate' | translate }}</th>
+                    <td mat-cell *matCellDef="let member">
+                      {{ formatDate(member.created_at) }}
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="memberColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: memberColumns;"></tr>
+                </table>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <!-- Invitations Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">mail</mat-icon>
+          {{ 'alliance.settings.tabs.invitations' | translate }}
+        </ng-template>
+        
+        <mat-card class="tab-content">
+          <mat-card-header>
+            <mat-card-title>{{ 'alliance.settings.invitationManagement' | translate }}</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <!-- Create Invitation Form -->
+            <form [formGroup]="invitationForm" (ngSubmit)="createInvitation()" class="invitation-form">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'alliance.settings.invitationDuration' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="durationDays"
+                  type="number"
+                  min="1"
+                  max="365"
+                />
+                <mat-icon matPrefix>schedule</mat-icon>
+                <mat-hint>{{ 'alliance.settings.durationHint' | translate }}</mat-hint>
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="invitationForm.invalid || isLoading()"
+                class="create-invitation-btn"
+              >
+                <mat-icon>add</mat-icon>
+                {{ 'alliance.settings.createInvitation' | translate }}
+              </button>
+            </form>
+
+            <!-- Invitations List -->
+            @if (invitations().length === 0) {
+              <div class="empty-state">
+                <mat-icon>mail_outline</mat-icon>
+                <p>{{ 'alliance.settings.noInvitations' | translate }}</p>
+              </div>
+            } @else {
+              <div class="table-container">
+                <table mat-table [dataSource]="invitations()" class="invitations-table">
+                  <!-- Token Column -->
+                  <ng-container matColumnDef="token">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.token' | translate }}</th>
+                    <td mat-cell *matCellDef="let invitation">
+                      <div class="token-cell">
+                        <code class="token-code">{{ invitation.token.substring(0, 12) }}...</code>
+                        <button
+                          mat-icon-button
+                          (click)="copyInvitationLink(invitation.token)"
+                          [matTooltip]="'alliance.settings.copyLink' | translate"
+                        >
+                          <mat-icon>content_copy</mat-icon>
+                        </button>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <!-- Expires At Column -->
+                  <ng-container matColumnDef="expiresAt">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.expiresAt' | translate }}</th>
+                    <td mat-cell *matCellDef="let invitation">
+                      {{ formatDate(invitation.expires_at) }}
+                    </td>
+                  </ng-container>
+
+                  <!-- Status Column -->
+                  <ng-container matColumnDef="usedAt">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.status' | translate }}</th>
+                    <td mat-cell *matCellDef="let invitation">
+                      <mat-chip [class]="getInvitationStatusClass(invitation)">
+                        {{ getInvitationStatus(invitation) }}
+                      </mat-chip>
+                    </td>
+                  </ng-container>
+
+                  <!-- Actions Column -->
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.actions' | translate }}</th>
+                    <td mat-cell *matCellDef="let invitation">
+                      @if (!isInvitationUsed(invitation.used_at) && !isInvitationExpired(invitation.expires_at)) {
+                        <button
+                          mat-icon-button
+                          color="warn"
+                          (click)="revokeInvitation(invitation.id)"
+                          [matTooltip]="'alliance.settings.revokeInvitation' | translate"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      }
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="invitationColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: invitationColumns;"></tr>
+                </table>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+
+      <!-- Point Rules Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">rule</mat-icon>
+          {{ 'alliance.settings.tabs.pointRules' | translate }}
+        </ng-template>
+        
+        <mat-card class="tab-content">
+          <mat-card-header>
+            <mat-card-title>{{ 'alliance.settings.pointRules.title' | translate }}</mat-card-title>
+            <mat-card-subtitle>{{ 'alliance.settings.pointRules.subtitle' | translate }}</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <!-- Add Point Rule Form -->
+            <div class="section">
+              <h3 class="section-title">
+                <mat-icon>add</mat-icon>
+                {{ 'alliance.settings.pointRules.addRule' | translate }}
+              </h3>
+              
+              <form [formGroup]="pointRuleForm" (ngSubmit)="createPointRule()" class="point-rule-form">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>{{ 'alliance.settings.pointRules.activityType' | translate }}</mat-label>
+                    <mat-select formControlName="activity_type">
+                      @for (type of activityTypes; track type.value) {
+                        <mat-option [value]="type.value">
+                          {{ type.labelKey | translate }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                    <mat-icon matPrefix>category</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.typeRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field-small">
+                    <mat-label>{{ 'alliance.settings.pointRules.positionMin' | translate }}</mat-label>
+                    <input matInput type="number" formControlName="position_min" min="1" />
+                    <mat-icon matPrefix>looks_one</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.positionRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field-small">
+                    <mat-label>{{ 'alliance.settings.pointRules.positionMax' | translate }}</mat-label>
+                    <input matInput type="number" formControlName="position_max" min="1" />
+                    <mat-icon matPrefix>looks_two</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.positionRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field-small">
+                    <mat-label>{{ 'alliance.settings.pointRules.points' | translate }}</mat-label>
+                    <input matInput type="number" formControlName="points" min="0" />
+                    <mat-icon matPrefix>star</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.pointsRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="submit"
+                    [disabled]="pointRuleForm.invalid || isLoading()"
+                    class="submit-button"
+                  >
+                    <mat-icon>add</mat-icon>
+                    {{ 'alliance.settings.pointRules.create' | translate }}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Point Rules Table -->
+            <div class="section">
+              <h3 class="section-title">
+                <mat-icon>list</mat-icon>
+                {{ 'alliance.settings.pointRules.currentRules' | translate }}
+              </h3>
+
+              @if (pointRules().length === 0) {
+                <div class="empty-state">
+                  <mat-icon>info</mat-icon>
+                  <p>{{ 'alliance.settings.pointRules.noRules' | translate }}</p>
+                  <small>{{ 'alliance.settings.pointRules.noRulesHint' | translate }}</small>
+                </div>
+              } @else {
+                <div class="table-container">
+                  <table mat-table [dataSource]="pointRules()" class="point-rules-table">
+                    <!-- Activity Type Column -->
+                    <ng-container matColumnDef="activityType">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.pointRules.activityType' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <mat-chip class="activity-chip">
+                          {{ getActivityTypeLabel(rule.activity_type) | translate }}
+                        </mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <!-- Position Range Column -->
+                    <ng-container matColumnDef="positionRange">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.pointRules.positionRange' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <span class="position-range">
+                          {{ formatPositionRange(rule.position_min, rule.position_max) }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <!-- Points Column -->
+                    <ng-container matColumnDef="points">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.pointRules.points' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <span class="points-value">
+                          <mat-icon>star</mat-icon>
+                          {{ rule.points }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <button
+                          mat-icon-button
+                          color="warn"
+                          (click)="deletePointRule(rule.id)"
+                          [disabled]="isLoading()"
+                          [matTooltip]="'common.delete' | translate"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="pointRuleColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: pointRuleColumns;"></tr>
+                  </table>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+  </mat-tab-group>
+  }

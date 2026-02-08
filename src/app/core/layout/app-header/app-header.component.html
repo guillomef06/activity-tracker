@@ -1,7 +1,82 @@
 <mat-toolbar class="app-header">
-  <mat-icon>assessment</mat-icon>
-  <div class="header-content">
-    <h1>{{ 'app.title' | translate }}</h1>
-    <p class="subtitle">{{ 'app.subtitle' | translate }}</p>
+  <div class="app-branding">
+    <mat-icon>assessment</mat-icon>
+    <div class="header-content">
+      <h1>{{ 'app.title' | translate }}</h1>
+      <p class="subtitle">{{ 'app.subtitle' | translate }}</p>
+    </div>
   </div>
+
+  <span class="spacer"></span>
+
+  @if (authService.isAuthenticated()) {
+    <div class="user-section">
+      <!-- Alliance name for members and admins -->
+      @if (!authService.isSuperAdmin() && authService.userProfile()?.alliance_id) {
+        <div class="alliance-badge">
+          <mat-icon>groups</mat-icon>
+          <span>{{ authService.userProfile()?.alliance_id }}</span>
+        </div>
+      }
+
+      <!-- Super Admin badge -->
+      @if (authService.isSuperAdmin()) {
+        <div class="super-admin-badge">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>{{ 'auth.superAdmin' | translate }}</span>
+        </div>
+      }
+
+      <!-- User menu -->
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      
+      <mat-menu #userMenu="matMenu">
+        <div class="user-info">
+          <div class="user-name">{{ authService.userProfile()?.display_name }}</div>
+          <div class="username">{{ authService.userProfile()?.username }}</div>
+          <div class="user-role">{{ authService.userProfile()?.role | translate }}</div>
+        </div>
+        
+        <mat-divider></mat-divider>
+        
+        <!-- Navigation based on role -->
+        @if (authService.isSuperAdmin()) {
+          <button mat-menu-item routerLink="/super-admin" routerLinkActive="active">
+            <mat-icon>dashboard</mat-icon>
+            <span>{{ 'nav.superAdminDashboard' | translate }}</span>
+          </button>
+        }
+        
+        @if (authService.isAdmin()) {
+          <button mat-menu-item routerLink="/management-dashboard" routerLinkActive="active">
+            <mat-icon>manage_accounts</mat-icon>
+            <span>{{ 'nav.management' | translate }}</span>
+          </button>
+          <button mat-menu-item routerLink="/alliance-settings" routerLinkActive="active">
+            <mat-icon>settings</mat-icon>
+            <span>{{ 'nav.allianceSettings' | translate }}</span>
+          </button>
+        }
+        
+        <button mat-menu-item routerLink="/activity-input" routerLinkActive="active">
+          <mat-icon>add_task</mat-icon>
+          <span>{{ 'nav.activities' | translate }}</span>
+        </button>
+        
+        <button mat-menu-item routerLink="/activities-details" routerLinkActive="active">
+          <mat-icon>list_alt</mat-icon>
+          <span>{{ 'nav.details' | translate }}</span>
+        </button>
+        
+        <mat-divider></mat-divider>
+        
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>{{ 'auth.logout' | translate }}</span>
+        </button>
+      </mat-menu>
+    </div>
+  }
 </mat-toolbar>
