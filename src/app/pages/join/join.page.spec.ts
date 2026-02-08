@@ -36,7 +36,7 @@ describe('JoinPage', () => {
     expect(component['joinForm'].valid).toBeFalse();
     
     component['joinForm'].patchValue({
-      invitationToken: 'abc123',
+      token: 'abc123',
       username: 'newmember',
       password: 'SecurePassword123!',
       confirmPassword: 'SecurePassword123!',
@@ -48,7 +48,7 @@ describe('JoinPage', () => {
 
   it('should validate password match', () => {
     component['joinForm'].patchValue({
-      invitationToken: 'abc123',
+      token: 'abc123',
       username: 'member',
       password: 'Password123!',
       confirmPassword: 'Different123!',

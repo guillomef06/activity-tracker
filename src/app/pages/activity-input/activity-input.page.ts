@@ -13,7 +13,6 @@ import { ActivityService } from '../../core/services/activity.service';
 import { PointRulesService } from '../../core/services/point-rules.service';
 import { StorageService } from '../../core/services/storage.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
-import { createUserIdFromName } from '../../shared/utils/id-generator.util';
 import { PointCalculationResult } from '../../shared/models';
 
 @Component({

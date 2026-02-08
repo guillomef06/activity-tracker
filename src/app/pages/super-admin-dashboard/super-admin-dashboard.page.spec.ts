@@ -9,18 +9,25 @@ import { TranslateModule } from '@ngx-translate/core';
 describe('SuperAdminDashboardPage', () => {
   let component: SuperAdminDashboardPage;
   let fixture: ComponentFixture<SuperAdminDashboardPage>;
-  let supabaseService: jasmine.SpyObj<SupabaseService>;
 
   beforeEach(async () => {
+    // Create a chainable mock for Supabase client
+    interface MockQueryBuilder {
+      select: jasmine.Spy;
+      is: jasmine.Spy;
+      gt: jasmine.Spy;
+      then: (resolve: (value: { data: null; count: number; error: null }) => void) => void;
+    }
+    
+    const mockQueryBuilder = {} as MockQueryBuilder;
+    mockQueryBuilder.select = jasmine.createSpy('select').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.is = jasmine.createSpy('is').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.gt = jasmine.createSpy('gt').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.then = (resolve) => { resolve({ data: null, count: 0, error: null }); };
+
     const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', [], {
       client: {
-        from: jasmine.createSpy('from').and.returnValue({
-          select: jasmine.createSpy('select').and.returnValue({
-            count: jasmine.createSpy('count').and.returnValue(
-              Promise.resolve({ data: null, count: 0, error: null })
-            ),
-          }),
-        }),
+        from: jasmine.createSpy('from').and.returnValue(mockQueryBuilder),
       },
     });
 
@@ -36,7 +43,6 @@ describe('SuperAdminDashboardPage', () => {
 
     fixture = TestBed.createComponent(SuperAdminDashboardPage);
     component = fixture.componentInstance;
-    supabaseService = TestBed.inject(SupabaseService) as jasmine.SpyObj<SupabaseService>;
     fixture.detectChanges();
   });
 

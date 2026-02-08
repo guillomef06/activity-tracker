@@ -9,26 +9,33 @@ import { TranslateModule } from '@ngx-translate/core';
 describe('SuperAdminAlliancesPage', () => {
   let component: SuperAdminAlliancesPage;
   let fixture: ComponentFixture<SuperAdminAlliancesPage>;
-  let supabaseService: jasmine.SpyObj<SupabaseService>;
 
   beforeEach(async () => {
+    // Create a chainable mock for Supabase client
+    interface MockQueryBuilder {
+      select: jasmine.Spy;
+      order: jasmine.Spy;
+      eq: jasmine.Spy;
+      limit: jasmine.Spy;
+      single: jasmine.Spy;
+      update: jasmine.Spy;
+      delete: jasmine.Spy;
+      then: (resolve: (value: { data: unknown[]; count: number; error: null }) => void) => void;
+    }
+    
+    const mockQueryBuilder = {} as MockQueryBuilder;
+    mockQueryBuilder.select = jasmine.createSpy('select').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.order = jasmine.createSpy('order').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.eq = jasmine.createSpy('eq').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.limit = jasmine.createSpy('limit').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.single = jasmine.createSpy('single').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.update = jasmine.createSpy('update').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.delete = jasmine.createSpy('delete').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.then = (resolve) => { resolve({ data: [], count: 0, error: null }); };
+
     const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', [], {
       client: {
-        from: jasmine.createSpy('from').and.returnValue({
-          select: jasmine.createSpy('select').and.returnValue(
-            Promise.resolve({ data: [], error: null })
-          ),
-          update: jasmine.createSpy('update').and.returnValue({
-            eq: jasmine.createSpy('eq').and.returnValue(
-              Promise.resolve({ error: null })
-            ),
-          }),
-          delete: jasmine.createSpy('delete').and.returnValue({
-            eq: jasmine.createSpy('eq').and.returnValue(
-              Promise.resolve({ error: null })
-            ),
-          }),
-        }),
+        from: jasmine.createSpy('from').and.returnValue(mockQueryBuilder),
       },
     });
 
@@ -44,7 +51,6 @@ describe('SuperAdminAlliancesPage', () => {
 
     fixture = TestBed.createComponent(SuperAdminAlliancesPage);
     component = fixture.componentInstance;
-    supabaseService = TestBed.inject(SupabaseService) as jasmine.SpyObj<SupabaseService>;
     fixture.detectChanges();
   });
 

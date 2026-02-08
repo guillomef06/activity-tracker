@@ -9,7 +9,6 @@ import { TranslateModule } from '@ngx-translate/core';
 describe('SuperAdminUsersPage', () => {
   let component: SuperAdminUsersPage;
   let fixture: ComponentFixture<SuperAdminUsersPage>;
-  let supabaseService: jasmine.SpyObj<SupabaseService>;
 
   beforeEach(async () => {
     const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', [], {
@@ -48,7 +47,6 @@ describe('SuperAdminUsersPage', () => {
 
     fixture = TestBed.createComponent(SuperAdminUsersPage);
     component = fixture.componentInstance;
-    supabaseService = TestBed.inject(SupabaseService) as jasmine.SpyObj<SupabaseService>;
     fixture.detectChanges();
   });
 
