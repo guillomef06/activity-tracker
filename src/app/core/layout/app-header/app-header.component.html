@@ -43,29 +43,29 @@
         
         <!-- Navigation based on role -->
         @if (authService.isSuperAdmin()) {
-          <button mat-menu-item routerLink="/super-admin">
+          <button mat-menu-item routerLink="/super-admin" routerLinkActive="active">
             <mat-icon>dashboard</mat-icon>
             <span>{{ 'nav.superAdminDashboard' | translate }}</span>
           </button>
         }
         
         @if (authService.isAdmin()) {
-          <button mat-menu-item routerLink="/management-dashboard">
+          <button mat-menu-item routerLink="/management-dashboard" routerLinkActive="active">
             <mat-icon>manage_accounts</mat-icon>
             <span>{{ 'nav.management' | translate }}</span>
           </button>
-          <button mat-menu-item routerLink="/alliance-settings">
+          <button mat-menu-item routerLink="/alliance-settings" routerLinkActive="active">
             <mat-icon>settings</mat-icon>
             <span>{{ 'nav.allianceSettings' | translate }}</span>
           </button>
         }
         
-        <button mat-menu-item routerLink="/activity-input">
+        <button mat-menu-item routerLink="/activity-input" routerLinkActive="active">
           <mat-icon>add_task</mat-icon>
           <span>{{ 'nav.activities' | translate }}</span>
         </button>
         
-        <button mat-menu-item routerLink="/activities-details">
+        <button mat-menu-item routerLink="/activities-details" routerLinkActive="active">
           <mat-icon>list_alt</mat-icon>
           <span>{{ 'nav.details' | translate }}</span>
         </button>
