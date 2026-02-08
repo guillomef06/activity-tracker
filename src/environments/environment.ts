@@ -9,5 +9,13 @@ export const environment = {
   apiUrl: 'http://localhost:8080/api', // For local backend development
   enableDebug: true,
   enableMockData: true,
-  storageKey: 'activity-tracker-dev'
+  storageKey: 'activity-tracker-dev',
+  
+  // Supabase Configuration
+  // Replace these values with your Supabase project credentials
+  // Get them from: Supabase Dashboard → Project Settings → API
+  supabase: {
+    url: 'https://yeczvyyxchssftvnobdn.supabase.co', // e.g., 'https://xxxxx.supabase.co'
+    anonKey: 'sb_publishable_Y2bl2DFMSzaCa5Vk2Vk4Bw_9rnEzkmp' // Public anon key (safe for client-side)
+  }
 };

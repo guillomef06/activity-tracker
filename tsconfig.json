@@ -22,6 +22,7 @@
       "dom"
     ],
     "paths": {
+      "@app/*": ["./src/app/*"],
       "@core/*": ["./src/app/core/*"],
       "@shared/*": ["./src/app/shared/*"],
       "@pages/*": ["./src/app/pages/*"]

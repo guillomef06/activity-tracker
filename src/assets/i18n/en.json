@@ -3,15 +3,112 @@
     "title": "Activity Tracker",
     "subtitle": "Track activities and view rolling 6-week scores"
   },
+  "auth": {
+    "superAdmin": "Super Admin",
+    "login": "Sign In",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "displayName": "Display Name",
+    "allianceName": "Alliance Name",
+    "invitationToken": "Invitation Token",
+    "errors": {
+      "required": "This field is required",
+      "minLength": "Minimum length not met",
+      "maxLength": "Maximum length exceeded",
+      "passwordMismatch": "Passwords do not match",
+      "usernameExists": "Username already exists",
+      "invalidCredentials": "Invalid username or password",
+      "userNotFound": "User not found",
+      "loginFailed": "Login failed. Please try again.",
+      "signupFailed": "Signup failed. Please try again.",
+      "joinFailed": "Join failed. Please try again.",
+      "setupFailed": "Setup failed. Please try again.",
+      "superAdminExists": "Super admin already exists",
+      "allianceCreationFailed": "Failed to create alliance",
+      "invalidToken": "Invalid or expired invitation token"
+    }
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "management": "Management",
+    "allianceSettings": "Alliance Settings",
+    "activities": "Activities",
+    "details": "Details"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Alliance Settings",
+      "tabs": {
+        "information": "Information",
+        "members": "Members",
+        "invitations": "Invitations",
+        "pointRules": "Point Rules"
+      },
+      "allianceInfo": "Alliance Information",
+      "allianceName": "Alliance Name",
+      "updateName": "Update Name",
+      "totalMembers": "Total Members",
+      "totalInvitations": "Total Invitations",
+      "memberList": "Member List",
+      "members": "members",
+      "noMembers": "No members yet",
+      "displayName": "Name",
+      "username": "Username",
+      "role": "Role",
+      "joinedDate": "Joined",
+      "invitationManagement": "Invitation Management",
+      "invitationDuration": "Duration (days)",
+      "durationHint": "Days until invitation expires",
+      "createInvitation": "Create Invitation",
+      "noInvitations": "No invitations created yet",
+      "token": "Token",
+      "expiresAt": "Expires",
+      "status": "Status",
+      "actions": "Actions",
+      "copyLink": "Copy invitation link",
+      "revokeInvitation": "Revoke invitation",
+      "errors": {
+        "nameRequired": "Alliance name is required"
+      },
+      "pointRules": {
+        "title": "Point Rules Configuration",
+        "subtitle": "Configure custom point calculation rules based on position/rank",
+        "addRule": "Add New Rule",
+        "currentRules": "Current Rules",
+        "activityType": "Activity Type",
+        "positionMin": "Min Position",
+        "positionMax": "Max Position",
+        "positionRange": "Position Range",
+        "points": "Points",
+        "create": "Create Rule",
+        "noRules": "No point rules configured yet",
+        "noRulesHint": "Create rules to calculate points based on position/rank. Without rules, default points will be used.",
+        "errors": {
+          "typeRequired": "Activity type is required",
+          "positionRequired": "Position is required",
+          "pointsRequired": "Points value is required"
+        }
+      }
+    }
+  },
   "activityInput": {
     "title": "Submit Activity",
     "subtitle": "Record your activity and earn points",
     "yourName": "Your Name",
     "enterName": "Enter your name",
     "activityType": "Activity Type",
+    "position": "Position/Rank",
+    "positionPlaceholder": "e.g., 1, 5, 10...",
+    "positionHint": "Enter your position or rank (1 for 1st place, 2 for 2nd, etc.)",
+    "positionRequired": "Position is required",
     "description": "Description",
     "descriptionPlaceholder": "Briefly describe your activity",
     "points": "Points",
+    "defaultRule": "Default points (no custom rule)",
+    "customRule": "Custom rule applied",
     "submit": "Submit Activity",
     "submitting": "Submitting...",
     "viewDashboard": "View Dashboard",
@@ -21,14 +118,14 @@
     "success": "Activity submitted successfully!",
     "error": "Failed to submit activity"
   },
-  "activityTypes": {
-    "development": "Development",
-    "codeReview": "Code Review",
-    "testing": "Testing",
-    "documentation": "Documentation",
-    "meeting": "Meeting",
-    "bugFix": "Bug Fix",
-    "research": "Research"
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition"
+    }
   },
   "dashboard": {
     "title": "Management Dashboard",
@@ -62,6 +159,58 @@
     "activities": "activities",
     "activity": "activity",
     "close": "Close",
-    "back": "Back"
-  }
+    "back": "Back",
+    "loading": "Loading...",
+    "actions": "Actions",
+    "delete": "Delete"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Super Admin Dashboard",
+      "subtitle": "Global system overview and management",
+      "totalAlliances": "Total Alliances",
+      "totalUsers": "Total Users",
+      "totalActivities": "Total Activities",
+      "activeInvitations": "Active Invitations",
+      "quickActions": "Quick Actions",
+      "manageAlliances": "Manage Alliances",
+      "manageAlliancesDesc": "View and manage all alliances",
+      "manageUsers": "Manage Users",
+      "manageUsersDesc": "View and manage all users"
+    },
+    "alliances": {
+      "title": "Alliances Management",
+      "subtitle": "Manage all alliances across the system",
+      "noAlliances": "No alliances created yet",
+      "name": "Alliance Name",
+      "admin": "Admin",
+      "members": "Members",
+      "created": "Created",
+      "actions": "Actions",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this alliance? This will also delete all associated users, activities, and invitations. This action cannot be undone."
+    },
+    "users": {
+      "title": "Users Management",
+      "subtitle": "Manage all users across the system",
+      "noUsers": "No users found",
+      "displayName": "Display Name",
+      "username": "Username",
+      "role": "Role",
+      "alliance": "Alliance",
+      "noAlliance": "No alliance",
+      "created": "Created",
+      "actions": "Actions",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    }
+  },
+  "super_admin": "Super Admin",
+  "admin": "Admin",
+  "member": "Member"
 }

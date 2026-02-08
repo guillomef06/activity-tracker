@@ -123,3 +123,16 @@ body {
     max-width: 1200px;
   }
 }
+
+/* Active route indicator in navigation menu */
+.mat-mdc-menu-panel {
+  button.mat-mdc-menu-item.active {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-weight: 500;
+
+    mat-icon {
+      color: var(--md-sys-color-primary);
+    }
+  }
+}

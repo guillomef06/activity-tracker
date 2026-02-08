@@ -1,12 +1,20 @@
 .app-header {
   padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-mat-icon {
-  margin-right: 1rem;
-  font-size: 32px;
-  width: 32px;
-  height: 32px;
+.app-branding {
+  display: flex;
+  align-items: center;
+  
+  mat-icon {
+    margin-right: 1rem;
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .header-content h1 {
@@ -21,6 +29,99 @@ mat-icon {
   opacity: 0.9;
   margin: 0;
   line-height: 1;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.alliance-badge,
+.super-admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.alliance-badge {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+  }
+}
+
+.super-admin-badge {
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+  }
+}
+
+.user-info {
+  padding: 1rem;
+  min-width: 200px;
+
+  .user-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .username {
+    font-size: 0.875rem;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 0.25rem;
+  }
+
+  .user-role {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--md-sys-color-primary);
+    font-weight: 500;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 0.5rem;
+  }
+
+  .header-content h1 {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+  }
+
+  .alliance-badge,
+  .super-admin-badge {
+    span {
+      display: none;
+    }
+
+    padding: 0.5rem;
+  }
 }
 
 @media (min-width: 768px) {

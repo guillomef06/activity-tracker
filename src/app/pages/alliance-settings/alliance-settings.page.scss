@@ -1,0 +1,307 @@
+.alliance-settings-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .header-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: var(--md-sys-color-primary);
+    }
+
+    .header-content {
+      mat-card-title {
+        font-size: 1.75rem;
+        margin-bottom: 0.25rem;
+      }
+
+      mat-card-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+
+  p {
+    margin: 0;
+    opacity: 0.7;
+  }
+}
+
+.settings-tabs {
+  ::ng-deep .mat-mdc-tab-label {
+    min-width: 160px;
+  }
+
+  .tab-icon {
+    margin-right: 0.5rem;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.tab-content {
+  margin-top: 1rem;
+
+  mat-card-header {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.alliance-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: var(--md-sys-color-surface-variant);
+    border-radius: 12px;
+
+    mat-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: var(--md-sys-color-primary);
+    }
+
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--md-sys-color-primary);
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        opacity: 0.7;
+        margin-top: 0.25rem;
+      }
+    }
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.members-table,
+.invitations-table {
+  width: 100%;
+
+  th {
+    font-weight: 600;
+    background-color: var(--md-sys-color-surface-variant);
+  }
+
+  td, th {
+    padding: 1rem;
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+    }
+  }
+
+  .username {
+    font-family: 'Courier New', monospace;
+    color: var(--md-sys-color-primary);
+  }
+
+  .token-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .token-code {
+      font-family: 'Courier New', monospace;
+      background-color: var(--md-sys-color-surface-variant);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.role-admin {
+  background-color: var(--md-sys-color-primary-container) !important;
+  color: var(--md-sys-color-on-primary-container) !important;
+}
+
+.role-member {
+  background-color: var(--md-sys-color-secondary-container) !important;
+  color: var(--md-sys-color-on-secondary-container) !important;
+}
+
+.status-active {
+  background-color: var(--md-sys-color-tertiary-container) !important;
+  color: var(--md-sys-color-on-tertiary-container) !important;
+}
+
+.status-used {
+  background-color: var(--md-sys-color-surface-variant) !important;
+  color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.status-expired {
+  background-color: var(--md-sys-color-error-container) !important;
+  color: var(--md-sys-color-on-error-container) !important;
+}
+
+.invitation-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  mat-form-field {
+    flex: 0 0 200px;
+  }
+
+  .create-invitation-btn {
+    margin-top: 0.25rem;
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.7;
+    font-size: 1rem;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .alliance-settings-container {
+    padding: 1rem;
+  }
+
+  .page-header {
+    mat-card-header {
+      .header-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .header-content {
+        mat-card-title {
+          font-size: 1.5rem;
+        }
+
+        mat-card-subtitle {
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+
+  .alliance-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .invitation-form {
+    flex-direction: column;
+
+    mat-form-field {
+      flex: unset;
+      width: 100%;
+    }
+
+    .create-invitation-btn {
+      width: 100%;
+    }
+  }
+
+  .table-container {
+    font-size: 0.875rem;
+
+    td, th {
+      padding: 0.5rem;
+    }
+  }
+
+  .settings-tabs {
+    ::ng-deep .mat-mdc-tab-label {
+      min-width: auto;
+      padding: 0 0.75rem;
+    }
+
+    .tab-icon {
+      margin-right: 0.25rem;
+    }
+  }
+}
