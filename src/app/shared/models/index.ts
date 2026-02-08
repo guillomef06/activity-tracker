@@ -43,3 +43,12 @@ export type {
   InvitationWithAlliance
 } from './invitation.model';
 
+// Activity Point Rule models
+export type {
+  ActivityPointRule,
+  CreatePointRuleRequest,
+  UpdatePointRuleRequest,
+  PointCalculationResult
+} from './activity-point-rule.model';
+
+

@@ -12,11 +12,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { TranslateModule } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { AuthService } from '@app/core/services/auth.service';
-import type { InvitationToken, UserProfile } from '@app/shared/models';
+import { PointRulesService } from '@app/core/services/point-rules.service';
+import type { InvitationToken, UserProfile, ActivityPointRule } from '@app/shared/models';
+import { APP_CONSTANTS } from '@app/shared/constants/constants';
 
 @Component({
   selector: 'app-alliance-settings',
@@ -35,6 +38,7 @@ import type { InvitationToken, UserProfile } from '@app/shared/models';
     MatSnackBarModule,
     MatTabsModule,
     MatTooltipModule,
+    MatSelectModule,
     TranslateModule,
   ],
   templateUrl: './alliance-settings.page.html',
@@ -44,6 +48,7 @@ import type { InvitationToken, UserProfile } from '@app/shared/models';
 export class AllianceSettingsPage implements OnInit {
   private readonly allianceService = inject(AllianceService);
   private readonly authService = inject(AuthService);
+  private readonly pointRulesService = inject(PointRulesService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
   private readonly clipboard = inject(Clipboard);
@@ -51,7 +56,9 @@ export class AllianceSettingsPage implements OnInit {
   protected readonly isLoading = signal(false);
   protected readonly members = signal<UserProfile[]>([]);
   protected readonly invitations = signal<InvitationToken[]>([]);
+  protected readonly pointRules = signal<ActivityPointRule[]>([]);
   protected readonly alliance = computed(() => this.allianceService.alliance());
+  protected readonly activityTypes = APP_CONSTANTS.ACTIVITY_TYPES;
 
   protected readonly invitationForm: FormGroup = this.fb.group({
     durationDays: [7, [Validators.required, Validators.min(1), Validators.max(365)]],
@@ -61,8 +68,16 @@ export class AllianceSettingsPage implements OnInit {
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
   });
 
+  protected readonly pointRuleForm: FormGroup = this.fb.group({
+    activity_type: ['', Validators.required],
+    position_min: [1, [Validators.required, Validators.min(1)]],
+    position_max: [1, [Validators.required, Validators.min(1)]],
+    points: [10, [Validators.required, Validators.min(0)]],
+  });
+
   protected readonly memberColumns: string[] = ['displayName', 'username', 'role', 'createdAt'];
   protected readonly invitationColumns: string[] = ['token', 'expiresAt', 'usedAt', 'actions'];
+  protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
 
   async ngOnInit(): Promise<void> {
     await this.loadData();
@@ -81,10 +96,12 @@ export class AllianceSettingsPage implements OnInit {
         this.allianceService.loadAlliance(),
         this.allianceService.loadMembers(),
         this.allianceService.loadInvitations(),
+        this.pointRulesService.loadRules(),
       ]);
       
       this.members.set(this.allianceService.members());
       this.invitations.set(this.allianceService.invitations());
+      this.pointRules.set(this.pointRulesService.rules());
     } catch (error) {
       console.error('Error loading alliance data:', error);
       this.snackBar.open('Failed to load alliance data', 'Close', { duration: 3000 });
@@ -227,5 +244,86 @@ export class AllianceSettingsPage implements OnInit {
       return 'status-expired';
     }
     return 'status-active';
+  }
+
+  // Point Rules Management
+  protected async createPointRule(): Promise<void> {
+    if (this.pointRuleForm.invalid) {
+      return;
+    }
+
+    const formValue = this.pointRuleForm.value;
+    
+    // Validate position range
+    if (formValue.position_min > formValue.position_max) {
+      this.snackBar.open('Minimum position cannot be greater than maximum position', 'Close', { duration: 3000 });
+      return;
+    }
+
+    this.isLoading.set(true);
+    try {
+      const { error } = await this.pointRulesService.createRule({
+        activity_type: formValue.activity_type,
+        position_min: formValue.position_min,
+        position_max: formValue.position_max,
+        points: formValue.points,
+      });
+      
+      if (error) {
+        throw error;
+      }
+
+      this.snackBar.open('Point rule created successfully', 'Close', { duration: 3000 });
+      this.pointRules.set(this.pointRulesService.rules());
+      
+      // Reset form
+      this.pointRuleForm.reset({
+        activity_type: '',
+        position_min: 1,
+        position_max: 1,
+        points: 10,
+      });
+    } catch (error) {
+      console.error('Error creating point rule:', error);
+      this.snackBar.open(
+        error instanceof Error ? error.message : 'Failed to create point rule',
+        'Close',
+        { duration: 5000 }
+      );
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  protected async deletePointRule(id: string): Promise<void> {
+    if (!confirm('Are you sure you want to delete this rule?')) {
+      return;
+    }
+
+    this.isLoading.set(true);
+    try {
+      const { error } = await this.pointRulesService.deleteRule(id);
+      
+      if (error) {
+        throw error;
+      }
+
+      this.snackBar.open('Point rule deleted successfully', 'Close', { duration: 3000 });
+      this.pointRules.set(this.pointRulesService.rules());
+    } catch (error) {
+      console.error('Error deleting point rule:', error);
+      this.snackBar.open('Failed to delete point rule', 'Close', { duration: 3000 });
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  protected getActivityTypeLabel(value: string): string {
+    const activityType = this.activityTypes.find(type => type.value === value);
+    return activityType?.labelKey || value;
+  }
+
+  protected formatPositionRange(min: number, max: number): string {
+    return min === max ? `${min}` : `${min}-${max}`;
   }
 }

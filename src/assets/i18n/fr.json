@@ -44,7 +44,8 @@
       "tabs": {
         "information": "Informations",
         "members": "Membres",
-        "invitations": "Invitations"
+        "invitations": "Invitations",
+        "pointRules": "Règles de points"
       },
       "allianceInfo": "Informations de l'Alliance",
       "allianceName": "Nom de l'Alliance",
@@ -71,6 +72,25 @@
       "revokeInvitation": "Révoquer l'invitation",
       "errors": {
         "nameRequired": "Le nom de l'alliance est requis"
+      },
+      "pointRules": {
+        "title": "Configuration des règles de points",
+        "subtitle": "Configurez des règles de calcul de points personnalisées basées sur la position/classement",
+        "addRule": "Ajouter une nouvelle règle",
+        "currentRules": "Règles actuelles",
+        "activityType": "Type d'activité",
+        "positionMin": "Position min",
+        "positionMax": "Position max",
+        "positionRange": "Plage de positions",
+        "points": "Points",
+        "create": "Créer la règle",
+        "noRules": "Aucune règle de points configurée",
+        "noRulesHint": "Créez des règles pour calculer les points selon la position/classement. Sans règles, les points par défaut seront utilisés.",
+        "errors": {
+          "typeRequired": "Le type d'activité est requis",
+          "positionRequired": "La position est requise",
+          "pointsRequired": "La valeur de points est requise"
+        }
       }
     }
   },
@@ -80,9 +100,15 @@
     "yourName": "Votre Nom",
     "enterName": "Entrez votre nom",
     "activityType": "Type d'Activité",
+    "position": "Position/Classement",
+    "positionPlaceholder": "ex: 1, 5, 10...",
+    "positionHint": "Entrez votre position ou classement (1 pour 1ère place, 2 pour 2ème, etc.)",
+    "positionRequired": "La position est requise",
     "description": "Description",
     "descriptionPlaceholder": "Décrivez brièvement votre activité",
     "points": "Points",
+    "defaultRule": "Points par défaut (aucune règle personnalisée)",
+    "customRule": "Règle personnalisée appliquée",
     "submit": "Soumettre l'Activité",
     "submitting": "Envoi en cours...",
     "viewDashboard": "Voir le Tableau de Bord",
@@ -134,7 +160,9 @@
     "activity": "activité",
     "close": "Fermer",
     "back": "Retour",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "actions": "Actions",
+    "delete": "Supprimer"
   },
   "superAdmin": {
     "dashboard": {

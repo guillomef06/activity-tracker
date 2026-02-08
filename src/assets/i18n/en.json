@@ -44,7 +44,8 @@
       "tabs": {
         "information": "Information",
         "members": "Members",
-        "invitations": "Invitations"
+        "invitations": "Invitations",
+        "pointRules": "Point Rules"
       },
       "allianceInfo": "Alliance Information",
       "allianceName": "Alliance Name",
@@ -71,6 +72,25 @@
       "revokeInvitation": "Revoke invitation",
       "errors": {
         "nameRequired": "Alliance name is required"
+      },
+      "pointRules": {
+        "title": "Point Rules Configuration",
+        "subtitle": "Configure custom point calculation rules based on position/rank",
+        "addRule": "Add New Rule",
+        "currentRules": "Current Rules",
+        "activityType": "Activity Type",
+        "positionMin": "Min Position",
+        "positionMax": "Max Position",
+        "positionRange": "Position Range",
+        "points": "Points",
+        "create": "Create Rule",
+        "noRules": "No point rules configured yet",
+        "noRulesHint": "Create rules to calculate points based on position/rank. Without rules, default points will be used.",
+        "errors": {
+          "typeRequired": "Activity type is required",
+          "positionRequired": "Position is required",
+          "pointsRequired": "Points value is required"
+        }
       }
     }
   },
@@ -80,9 +100,15 @@
     "yourName": "Your Name",
     "enterName": "Enter your name",
     "activityType": "Activity Type",
+    "position": "Position/Rank",
+    "positionPlaceholder": "e.g., 1, 5, 10...",
+    "positionHint": "Enter your position or rank (1 for 1st place, 2 for 2nd, etc.)",
+    "positionRequired": "Position is required",
     "description": "Description",
     "descriptionPlaceholder": "Briefly describe your activity",
     "points": "Points",
+    "defaultRule": "Default points (no custom rule)",
+    "customRule": "Custom rule applied",
     "submit": "Submit Activity",
     "submitting": "Submitting...",
     "viewDashboard": "View Dashboard",
@@ -134,7 +160,9 @@
     "activity": "activity",
     "close": "Close",
     "back": "Back",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "actions": "Actions",
+    "delete": "Delete"
   },
   "superAdmin": {
     "dashboard": {

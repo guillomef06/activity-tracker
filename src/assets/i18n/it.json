@@ -44,7 +44,8 @@
       "tabs": {
         "information": "Informazioni",
         "members": "Membri",
-        "invitations": "Inviti"
+        "invitations": "Inviti",
+        "pointRules": "Regole punti"
       },
       "allianceInfo": "Informazioni Alleanza",
       "allianceName": "Nome Alleanza",
@@ -70,8 +71,25 @@
       "copyLink": "Copia link invito",
       "revokeInvitation": "Revoca invito",
       "errors": {
-        "nameRequired": "Il nome dell'alleanza è obbligatorio"
-      }
+        "nameRequired": "Il nome dell'alleanza è obbligatorio"      },
+      "pointRules": {
+        "title": "Configurazione regole punti",
+        "subtitle": "Configura regole personalizzate per il calcolo dei punti basate sulla posizione/classifica",
+        "addRule": "Aggiungi nuova regola",
+        "currentRules": "Regole attuali",
+        "activityType": "Tipo di attività",
+        "positionMin": "Posizione min",
+        "positionMax": "Posizione max",
+        "positionRange": "Intervallo posizioni",
+        "points": "Punti",
+        "create": "Crea regola",
+        "noRules": "Nessuna regola punti configurata",
+        "noRulesHint": "Crea regole per calcolare i punti in base alla posizione/classifica. Senza regole, verranno utilizzati i punti predefiniti.",
+        "errors": {
+          "typeRequired": "Il tipo di attività è richiesto",
+          "positionRequired": "La posizione è richiesta",
+          "pointsRequired": "Il valore punti è richiesto"
+        }      }
     }
   },
   "activityInput": {
@@ -134,7 +152,9 @@
     "activity": "attività",
     "close": "Chiudi",
     "back": "Indietro",
-    "loading": "Caricamento..."
+    "loading": "Caricamento...",
+    "actions": "Azioni",
+    "delete": "Elimina"
   },
   "superAdmin": {
     "dashboard": {

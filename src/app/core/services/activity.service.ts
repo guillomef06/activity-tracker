@@ -1,10 +1,11 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Activity, UserScore, WeeklyScore } from '../../shared/models';
+import { Activity, ActivityRequest, UserScore, WeeklyScore } from '../../shared/models';
 import { firstValueFrom } from 'rxjs';
 import { StorageService } from './storage.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
+import { PointRulesService } from './point-rules.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 import { generateId } from '../../shared/utils/id-generator.util';
 import { environment } from '../../../environments/environment';
@@ -25,6 +26,7 @@ interface SupabaseActivity {
   id: string;
   user_id: string;
   activity_type: string;
+  position: number;
   points: number;
   date: string;
   user_profiles: {
@@ -40,6 +42,7 @@ export class ActivityService {
   private storage = inject(StorageService);
   private supabase = inject(SupabaseService);
   private authService = inject(AuthService);
+  private pointRulesService = inject(PointRulesService);
   
   private activities = signal<Activity[]>([]);
   private isInitialized = false;
@@ -54,6 +57,7 @@ export class ActivityService {
     if (this.isInitialized) return;
     
     if (this.useSupabase) {
+      await this.pointRulesService.loadRules();
       await this.loadFromSupabase();
     } else {
       const storedActivities = this.loadFromLocalStorage();
@@ -85,7 +89,7 @@ export class ActivityService {
 
       const { data, error} = await this.supabase
         .from('activities')
-        .select('id, user_id, activity_type, points, date, user_profiles(display_name)')
+        .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
         .order('date', { ascending: false });
 
       if (error) throw error;
@@ -95,6 +99,7 @@ export class ActivityService {
         userId: dbActivity.user_id,
         userName: dbActivity.user_profiles.display_name,
         activityType: dbActivity.activity_type,
+        position: dbActivity.position,
         points: dbActivity.points,
         date: new Date(dbActivity.date),
         timestamp: new Date(dbActivity.date).getTime()
@@ -122,6 +127,7 @@ export class ActivityService {
           userId: item.userId,
           userName: item.userName,
           activityType: item.activityType,
+          position: 1, // Default position for legacy data
           points: item.points,
           date: date,
           timestamp: date.getTime()
@@ -140,12 +146,12 @@ export class ActivityService {
     return this.activities();
   }
 
-  async addActivity(activity: Omit<Activity, 'id' | 'timestamp' | 'userId' | 'userName'>): Promise<{ error: Error | null }> {
+  async addActivity(request: ActivityRequest): Promise<{ error: Error | null }> {
     try {
       if (this.useSupabase) {
-        return await this.addActivityToSupabase(activity);
+        return await this.addActivityToSupabase(request);
       } else {
-        this.addActivityToLocalStorage(activity);
+        this.addActivityToLocalStorage(request);
         return { error: null };
       }
     } catch (error) {
@@ -155,23 +161,30 @@ export class ActivityService {
   }
 
   private async addActivityToSupabase(
-    activity: Omit<Activity, 'id' | 'timestamp' | 'userId' | 'userName'>
+    request: ActivityRequest
   ): Promise<{ error: Error | null }> {
     const userId = this.authService.getUserId();
     if (!userId) {
       return { error: new Error('User not authenticated') };
     }
 
+    // Calculate points based on position
+    const pointsResult = this.pointRulesService.calculatePoints(
+      request.activityType,
+      request.position
+    );
+
     try {
       const { data, error } = await this.supabase
         .from('activities')
         .insert({
           user_id: userId,
-          activity_type: activity.activityType,
-          points: activity.points,
-          date: activity.date.toISOString()
+          activity_type: request.activityType,
+          position: request.position,
+          points: pointsResult.points,
+          date: request.date.toISOString()
         })
-        .select('id, user_id, activity_type, points, date, user_profiles(display_name)')
+        .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
         .single();
 
       if (error) throw error;
@@ -182,6 +195,7 @@ export class ActivityService {
         userId: dbActivity.user_id,
         userName: dbActivity.user_profiles.display_name,
         activityType: dbActivity.activity_type,
+        position: dbActivity.position,
         points: dbActivity.points,
         date: new Date(dbActivity.date),
         timestamp: new Date(dbActivity.date).getTime()
@@ -196,13 +210,23 @@ export class ActivityService {
   }
 
   private addActivityToLocalStorage(
-    activity: Omit<Activity, 'id' | 'timestamp' | 'userId' | 'userName'>
+    request: ActivityRequest
   ): void {
+    // Calculate points based on position
+    const pointsResult = this.pointRulesService.calculatePoints(
+      request.activityType,
+      request.position
+    );
+
+    const profile = this.authService.userProfile();
     const newActivity: Activity = {
-      ...activity,
       id: generateId(),
-      userId: 'local-user',
-      userName: 'Local User',
+      userId: profile?.id || 'local-user',
+      userName: profile?.display_name || 'Local User',
+      activityType: request.activityType,
+      position: request.position,
+      points: pointsResult.points,
+      date: request.date,
       timestamp: Date.now()
     };
     

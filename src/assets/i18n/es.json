@@ -44,7 +44,8 @@
       "tabs": {
         "information": "Información",
         "members": "Miembros",
-        "invitations": "Invitaciones"
+        "invitations": "Invitaciones",
+        "pointRules": "Reglas de puntos"
       },
       "allianceInfo": "Información de la Alianza",
       "allianceName": "Nombre de la Alianza",
@@ -70,8 +71,25 @@
       "copyLink": "Copiar enlace de invitación",
       "revokeInvitation": "Revocar invitación",
       "errors": {
-        "nameRequired": "El nombre de la alianza es obligatorio"
-      }
+        "nameRequired": "El nombre de la alianza es obligatorio"      },
+      "pointRules": {
+        "title": "Configuración de reglas de puntos",
+        "subtitle": "Configure reglas personalizadas de cálculo de puntos basadas en la posición/clasificación",
+        "addRule": "Agregar nueva regla",
+        "currentRules": "Reglas actuales",
+        "activityType": "Tipo de actividad",
+        "positionMin": "Posición mín",
+        "positionMax": "Posición máx",
+        "positionRange": "Rango de posiciones",
+        "points": "Puntos",
+        "create": "Crear regla",
+        "noRules": "No hay reglas de puntos configuradas",
+        "noRulesHint": "Cree reglas para calcular puntos según la posición/clasificación. Sin reglas, se utilizarán los puntos predeterminados.",
+        "errors": {
+          "typeRequired": "El tipo de actividad es requerido",
+          "positionRequired": "La posición es requerida",
+          "pointsRequired": "El valor de puntos es requerido"
+        }      }
     }
   },
   "activityInput": {
@@ -80,6 +98,24 @@
     "yourName": "Tu Nombre",
     "enterName": "Introduce tu nombre",
     "activityType": "Tipo de Actividad",
+    "position": "Posición/Clasificación",
+    "positionPlaceholder": "ej: 1, 5, 10...",
+    "positionHint": "Ingresa tu posición o clasificación (1 para 1er lugar, 2 para 2do, etc.)",
+    "positionRequired": "La posición es requerida",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe brevemente tu actividad",
+    "points": "Puntos",
+    "defaultRule": "Puntos predeterminados (sin regla personalizada)",
+    "customRule": "Regla personalizada aplicada",
+    "submit": "Enviar Actividad",
+    "submitting": "Enviando...",
+    "viewDashboard": "Ver Tablero",
+    "nameRequired": "El nombre es obligatorio",
+    "typeRequired": "El tipo de actividad es obligatorio",
+    "descriptionRequired": "La descripción es obligatoria",
+    "success": "¡Actividad enviada correctamente!",
+    "error": "Error al enviar la actividad"
+  },
     "description": "Descripción",
     "descriptionPlaceholder": "Describe brevemente tu actividad",
     "points": "Puntos",
@@ -134,7 +170,9 @@
     "activity": "actividad",
     "close": "Cerrar",
     "back": "Volver",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "actions": "Acciones",
+    "delete": "Eliminar"
   },  "superAdmin": {
     "dashboard": {
       "title": "Panel de Superadministrador",

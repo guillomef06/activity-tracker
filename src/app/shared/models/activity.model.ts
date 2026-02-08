@@ -11,6 +11,7 @@ export interface Activity {
   userId: string;
   userName: string;
   activityType: string;
+  position: number; // Position/rank used to calculate points
   points: number;
   date: Date;
   timestamp: number;
@@ -21,8 +22,9 @@ export interface Activity {
  */
 export interface ActivityRequest {
   activityType: string;
-  points: number;
+  position: number; // Position/rank entered by user
   date: Date;
+  // points will be calculated server-side based on position
 }
 
 /**
@@ -32,6 +34,7 @@ export interface ActivityResponse {
   id: string;
   user_id: string;
   activity_type: string;
+  position: number; // Position/rank from database
   points: number;
   date: string; // ISO timestamp from database
   created_at: string;

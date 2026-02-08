@@ -255,6 +255,149 @@
           </mat-card-content>
         </mat-card>
       </mat-tab>
-    </mat-tab-group>
-    }
-</div>
+
+      <!-- Point Rules Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">rule</mat-icon>
+          {{ 'alliance.settings.tabs.pointRules' | translate }}
+        </ng-template>
+        
+        <mat-card class="tab-content">
+          <mat-card-header>
+            <mat-card-title>{{ 'alliance.settings.pointRules.title' | translate }}</mat-card-title>
+            <mat-card-subtitle>{{ 'alliance.settings.pointRules.subtitle' | translate }}</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <!-- Add Point Rule Form -->
+            <div class="section">
+              <h3 class="section-title">
+                <mat-icon>add</mat-icon>
+                {{ 'alliance.settings.pointRules.addRule' | translate }}
+              </h3>
+              
+              <form [formGroup]="pointRuleForm" (ngSubmit)="createPointRule()" class="point-rule-form">
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>{{ 'alliance.settings.pointRules.activityType' | translate }}</mat-label>
+                    <mat-select formControlName="activity_type">
+                      @for (type of activityTypes; track type.value) {
+                        <mat-option [value]="type.value">
+                          {{ type.labelKey | translate }}
+                        </mat-option>
+                      }
+                    </mat-select>
+                    <mat-icon matPrefix>category</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.typeRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field-small">
+                    <mat-label>{{ 'alliance.settings.pointRules.positionMin' | translate }}</mat-label>
+                    <input matInput type="number" formControlName="position_min" min="1" />
+                    <mat-icon matPrefix>looks_one</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.positionRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field-small">
+                    <mat-label>{{ 'alliance.settings.pointRules.positionMax' | translate }}</mat-label>
+                    <input matInput type="number" formControlName="position_max" min="1" />
+                    <mat-icon matPrefix>looks_two</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.positionRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field-small">
+                    <mat-label>{{ 'alliance.settings.pointRules.points' | translate }}</mat-label>
+                    <input matInput type="number" formControlName="points" min="0" />
+                    <mat-icon matPrefix>star</mat-icon>
+                    <mat-error>{{ 'alliance.settings.pointRules.errors.pointsRequired' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="submit"
+                    [disabled]="pointRuleForm.invalid || isLoading()"
+                    class="submit-button"
+                  >
+                    <mat-icon>add</mat-icon>
+                    {{ 'alliance.settings.pointRules.create' | translate }}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Point Rules Table -->
+            <div class="section">
+              <h3 class="section-title">
+                <mat-icon>list</mat-icon>
+                {{ 'alliance.settings.pointRules.currentRules' | translate }}
+              </h3>
+
+              @if (pointRules().length === 0) {
+                <div class="empty-state">
+                  <mat-icon>info</mat-icon>
+                  <p>{{ 'alliance.settings.pointRules.noRules' | translate }}</p>
+                  <small>{{ 'alliance.settings.pointRules.noRulesHint' | translate }}</small>
+                </div>
+              } @else {
+                <div class="table-container">
+                  <table mat-table [dataSource]="pointRules()" class="point-rules-table">
+                    <!-- Activity Type Column -->
+                    <ng-container matColumnDef="activityType">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.pointRules.activityType' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <mat-chip class="activity-chip">
+                          {{ getActivityTypeLabel(rule.activity_type) | translate }}
+                        </mat-chip>
+                      </td>
+                    </ng-container>
+
+                    <!-- Position Range Column -->
+                    <ng-container matColumnDef="positionRange">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.pointRules.positionRange' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <span class="position-range">
+                          {{ formatPositionRange(rule.position_min, rule.position_max) }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <!-- Points Column -->
+                    <ng-container matColumnDef="points">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.pointRules.points' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <span class="points-value">
+                          <mat-icon>star</mat-icon>
+                          {{ rule.points }}
+                        </span>
+                      </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                      <td mat-cell *matCellDef="let rule">
+                        <button
+                          mat-icon-button
+                          color="warn"
+                          (click)="deletePointRule(rule.id)"
+                          [disabled]="isLoading()"
+                          [matTooltip]="'common.delete' | translate"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="pointRuleColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: pointRuleColumns;"></tr>
+                  </table>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+  </mat-tab-group>
+  }
