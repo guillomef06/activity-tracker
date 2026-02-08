@@ -253,7 +253,7 @@
 
                       <!-- Actions -->
                       <div class="invitation-actions">
-                        @if (!isInvitationUsed(invitation.used_at) && !isInvitationExpired(invitation.expires_at)) {
+                        @if (!isInvitationExpired(invitation.expires_at)) {
                           <button
                             mat-raised-button
                             color="warn"
