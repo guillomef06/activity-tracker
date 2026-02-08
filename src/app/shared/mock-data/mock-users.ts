@@ -28,6 +28,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Super Administrator',
       role: 'super_admin',
       alliance_id: null,
+      invitation_token_id: null,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     }
@@ -44,6 +45,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Phoenix Admin',
       role: 'admin',
       alliance_id: 'mock-alliance-001',
+      invitation_token_id: null,
       created_at: '2024-01-10T00:00:00Z',
       updated_at: '2024-01-10T00:00:00Z',
     }
@@ -60,6 +62,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Dragon Admin',
       role: 'admin',
       alliance_id: 'mock-alliance-002',
+      invitation_token_id: null,
       created_at: '2024-01-15T00:00:00Z',
       updated_at: '2024-01-15T00:00:00Z',
     }
@@ -76,6 +79,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Alice Johnson',
       role: 'member',
       alliance_id: 'mock-alliance-001',
+      invitation_token_id: null,
       created_at: '2024-01-20T00:00:00Z',
       updated_at: '2024-01-20T00:00:00Z',
     }
@@ -90,6 +94,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Bob Smith',
       role: 'member',
       alliance_id: 'mock-alliance-001',
+      invitation_token_id: null,
       created_at: '2024-01-21T00:00:00Z',
       updated_at: '2024-01-21T00:00:00Z',
     }
@@ -104,6 +109,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Charlie Brown',
       role: 'member',
       alliance_id: 'mock-alliance-001',
+      invitation_token_id: null,
       created_at: '2024-01-22T00:00:00Z',
       updated_at: '2024-01-22T00:00:00Z',
     }
@@ -120,6 +126,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Diana Prince',
       role: 'member',
       alliance_id: 'mock-alliance-002',
+      invitation_token_id: null,
       created_at: '2024-01-25T00:00:00Z',
       updated_at: '2024-01-25T00:00:00Z',
     }
@@ -134,6 +141,7 @@ export const MOCK_USERS: MockUser[] = [
       display_name: 'Ethan Hunt',
       role: 'member',
       alliance_id: 'mock-alliance-002',
+      invitation_token_id: null,
       created_at: '2024-01-26T00:00:00Z',
       updated_at: '2024-01-26T00:00:00Z',
     }

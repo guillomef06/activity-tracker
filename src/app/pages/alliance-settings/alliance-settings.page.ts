@@ -7,6 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatListModule } from '@angular/material/list';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -18,7 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { PointRulesService } from '@app/core/services/point-rules.service';
-import type { InvitationToken, UserProfile, ActivityPointRule } from '@app/shared/models';
+import type { InvitationToken, InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
 import { APP_CONSTANTS } from '@app/shared/constants/constants';
 
 @Component({
@@ -33,6 +36,9 @@ import { APP_CONSTANTS } from '@app/shared/constants/constants';
     MatButtonModule,
     MatIconModule,
     MatTableModule,
+    MatExpansionModule,
+    MatListModule,
+    MatBadgeModule,
     MatChipsModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
@@ -55,7 +61,7 @@ export class AllianceSettingsPage implements OnInit {
 
   protected readonly isLoading = signal(false);
   protected readonly members = signal<UserProfile[]>([]);
-  protected readonly invitations = signal<InvitationToken[]>([]);
+  protected readonly invitations = signal<InvitationWithStats[]>([]);
   protected readonly pointRules = signal<ActivityPointRule[]>([]);
   protected readonly alliance = computed(() => this.allianceService.alliance());
   protected readonly activityTypes = APP_CONSTANTS.ACTIVITY_TYPES;
@@ -76,7 +82,6 @@ export class AllianceSettingsPage implements OnInit {
   });
 
   protected readonly memberColumns: string[] = ['displayName', 'username', 'role', 'createdAt'];
-  protected readonly invitationColumns: string[] = ['token', 'expiresAt', 'usedAt', 'actions'];
   protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
 
   /**

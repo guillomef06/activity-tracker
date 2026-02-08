@@ -243,6 +243,119 @@
   }
 }
 
+// Invitations Accordion
+.invitations-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  mat-expansion-panel {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+    &.mat-expanded {
+      margin: 0.5rem 0;
+    }
+  }
+
+  .invitation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+
+    .invitation-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        opacity: 0.7;
+      }
+
+      .token-code {
+        font-family: 'Courier New', monospace;
+        background-color: var(--md-sys-color-surface-variant);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+    }
+
+    .invitation-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .invitation-details {
+    padding: 1rem;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+
+      .detail-label {
+        font-weight: 600;
+        opacity: 0.7;
+      }
+
+      .detail-value {
+        font-family: 'Courier New', monospace;
+      }
+    }
+
+    .members-section {
+      margin-top: 1.5rem;
+
+      h4 {
+        margin: 0 0 1rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--md-sys-color-primary);
+      }
+
+      mat-list {
+        padding: 0;
+      }
+
+      mat-list-item {
+        border-bottom: 1px solid var(--md-sys-color-outline-variant);
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+    }
+
+    .invitation-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        mat-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+.token-code {
+  font-family: 'Courier New', monospace;
+  background-color: var(--md-sys-color-surface-variant);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
 // Mobile responsiveness
 @media (max-width: 768px) {
   .alliance-settings-container {
