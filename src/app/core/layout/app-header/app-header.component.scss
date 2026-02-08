@@ -41,6 +41,22 @@
   gap: 1rem;
 }
 
+.user-display-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
+}
+
 .alliance-badge,
 .super-admin-badge {
   display: flex;
@@ -112,6 +128,12 @@
 
   .subtitle {
     font-size: 0.75rem;
+  }
+
+  .user-display-name {
+    span {
+      display: none;
+    }
   }
 
   .alliance-badge,
