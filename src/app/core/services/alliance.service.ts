@@ -113,9 +113,15 @@ export class AllianceService {
 
       if (error) throw error;
 
-      // Generate invitation URL
-      const baseUrl = window.location.origin;
-      const invitationUrl = `${baseUrl}/join/${token}`;
+      // Generate invitation URL with proper base-href support
+      const base = typeof document !== 'undefined' 
+        ? (document.querySelector('base')?.getAttribute('href') || '/')
+        : '/';
+      const basePath = base.endsWith('/') ? base.slice(0, -1) : base;
+      const baseUrl = typeof window !== 'undefined' 
+        ? `${window.location.origin}${basePath}`
+        : '';
+      const invitationUrl = `${baseUrl}/join?token=${token}`;
 
       // Reload invitations
       await this.loadInvitations();
