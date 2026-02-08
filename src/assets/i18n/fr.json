@@ -66,10 +66,12 @@
       "noInvitations": "Aucune invitation créée",
       "token": "Jeton",
       "expiresAt": "Expire le",
+      "createdAt": "Créé le",
       "status": "Statut",
       "actions": "Actions",
       "copyLink": "Copier le lien d'invitation",
       "revokeInvitation": "Révoquer l'invitation",
+      "membersJoined": "Membres ayant rejoint via cette invitation",
       "errors": {
         "nameRequired": "Le nom de l'alliance est requis"
       },
