@@ -105,6 +105,7 @@ Réorganisés par domaine avec pattern Request/Response:
 - ✅ **Styles globaux:** Suppression de ::ng-deep, migration vers styles.scss
 - ✅ **Fichiers i18n:** Alignement et formatage cohérent des 4 fichiers de langue (en, fr, es, it - 216 lignes chacun)
 - ✅ **Activity types:** Mise à jour avec activités de jeu (KvK, Legion, Desolate Desert, Golden Expedition)
+- ✅ **Build budgets:** Ajustement des limites de taille (initial: 700kB, component styles: 6kB) pour Angular Material et pages complexes
 
 ---
 
@@ -450,7 +451,7 @@ async signUpMember(request: MemberSignUpRequest): Promise<AuthResponse> {
 
 ---
 
-## 🎯 Système de Points Configurables (NOUVEAU - À IMPLÉMENTER)
+## 🎯 Système de Points Configurables
 
 ### Besoin Fonctionnel
 
