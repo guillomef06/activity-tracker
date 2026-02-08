@@ -2,8 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { 
-  Alliance, 
-  InvitationToken,
+  Alliance,
   InvitationWithStats,
   UserProfile,
   CreateInvitationResponse,
@@ -140,6 +139,7 @@ export class AllianceService {
 
   /**
    * Validate invitation token
+   * Supports multi-use tokens (no used_at check)
    */
   async validateInvitation(token: string): Promise<ValidateInvitationResponse> {
     try {
@@ -147,10 +147,10 @@ export class AllianceService {
         .from('invitation_tokens')
         .select('*, alliances(*)')
         .eq('token', token)
-        .is('used_at', null)
         .single();
 
       if (error || !data) {
+        console.error('Token validation error:', error);
         return { 
           valid: false, 
           alliance: null, 
