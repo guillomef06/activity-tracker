@@ -71,7 +71,8 @@
       "copyLink": "Copiar enlace de invitación",
       "revokeInvitation": "Revocar invitación",
       "errors": {
-        "nameRequired": "El nombre de la alianza es obligatorio"      },
+        "nameRequired": "El nombre de la alianza es obligatorio"
+      },
       "pointRules": {
         "title": "Configuración de reglas de puntos",
         "subtitle": "Configure reglas personalizadas de cálculo de puntos basadas en la posición/clasificación",
@@ -89,7 +90,8 @@
           "typeRequired": "El tipo de actividad es requerido",
           "positionRequired": "La posición es requerida",
           "pointsRequired": "El valor de puntos es requerido"
-        }      }
+        }
+      }
     }
   },
   "activityInput": {
@@ -114,18 +116,6 @@
     "typeRequired": "El tipo de actividad es obligatorio",
     "descriptionRequired": "La descripción es obligatoria",
     "success": "¡Actividad enviada correctamente!",
-    "error": "Error al enviar la actividad"
-  },
-    "description": "Descripción",
-    "descriptionPlaceholder": "Describe brevemente tu actividad",
-    "points": "Puntos",
-    "submit": "Enviar Actividad",
-    "submitting": "Enviando...",
-    "viewDashboard": "Ver Panel",
-    "nameRequired": "El nombre es obligatorio",
-    "typeRequired": "El tipo de actividad es obligatorio",
-    "descriptionRequired": "La descripción es obligatoria",
-    "success": "¡Actividad enviada con éxito!",
     "error": "Error al enviar la actividad"
   },
   "activities": {
@@ -218,7 +208,9 @@
       "cancel": "Cancelar",
       "delete": "Eliminar"
     }
-  },  "super_admin": "Super Administrador",
+  },
+  "super_admin": "Super Administrador",
   "admin": "Administrador",
   "member": "Miembro"
 }
+
