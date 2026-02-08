@@ -242,12 +242,16 @@ CREATE POLICY "Users can delete their own activities"
 -- ============================================
 
 -- Admins can view invitations for their alliance (super_admin can view all)
+-- Public can validate tokens (needed for signup)
 CREATE POLICY "Admins can view their alliance invitations"
   ON invitation_tokens FOR SELECT
   USING (
-    is_super_admin(auth.uid())
+    -- Allow unauthenticated users to validate tokens (for signup)
+    auth.uid() IS NULL
+    -- Allow super admins to view all
+    OR is_super_admin(auth.uid())
+    -- Allow admins/members to view their alliance invitations
     OR alliance_id = get_user_alliance_id(auth.uid())
-    OR token IS NOT NULL -- Allow anyone to validate a token if they have it
   );
 
 -- Admins can create invitations for their alliance (super_admin can create for any alliance)
