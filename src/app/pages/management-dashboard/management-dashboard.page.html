@@ -35,7 +35,7 @@
           @for (activity of availableActivitiesThisWeek(); track activity.value) {
             <mat-chip>
               <mat-icon matChipAvatar>check_circle</mat-icon>
-              {{ activity.label }}
+              {{ activity.labelKey | translate }}
             </mat-chip>
           }
         </div>

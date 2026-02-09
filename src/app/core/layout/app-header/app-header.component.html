@@ -78,6 +78,20 @@
         
         <mat-divider></mat-divider>
         
+        <!-- Language selector -->
+        @for (lang of languageService.availableLanguages; track lang.code) {
+          <button mat-menu-item (click)="changeLanguage(lang.code)"
+                  [class.active]="languageService.currentLanguage() === lang.code">
+            <span class="language-flag">{{ lang.flag }}</span>
+            <span>{{ lang.name }}</span>
+            @if (languageService.currentLanguage() === lang.code) {
+              <mat-icon class="check-icon">check</mat-icon>
+            }
+          </button>
+        }
+        
+        <mat-divider></mat-divider>
+        
         <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>
           <span>{{ 'auth.logout' | translate }}</span>

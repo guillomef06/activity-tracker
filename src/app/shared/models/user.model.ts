@@ -13,6 +13,19 @@ export interface User {
 }
 
 /**
+ * User Preferences model
+ * Stored as JSONB in user_profiles.preferences column
+ */
+export interface UserPreferences {
+  language?: 'en' | 'fr' | 'es' | 'it';
+  theme?: 'light' | 'dark';
+  notifications?: {
+    email?: boolean;
+    push?: boolean;
+  };
+}
+
+/**
  * User Profile model (from Supabase database)
  * Extends Supabase Auth User with application-specific data
  */
@@ -23,6 +36,7 @@ export interface UserProfile {
   display_name: string;
   username: string;
   role: 'super_admin' | 'admin' | 'member';
+  preferences?: UserPreferences;
   created_at: string;
   updated_at: string;
 }
