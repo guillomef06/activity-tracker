@@ -70,8 +70,7 @@
       "status": "Stato",
       "actions": "Azioni",
       "copyLink": "Copia link invito",
-      "revokeInvitation": "Revoca invito",
-      "membersJoined": "Membri che si sono iscritti tramite questo invito",
+      "revokeInvitation": "Revoca invito",      "revokeConfirm": "Sei sicuro di voler revocare questo invito?",      "membersJoined": "Membri che si sono iscritti tramite questo invito",
       "errors": {
         "nameRequired": "Il nome dell'alleanza è obbligatorio"
       },
@@ -188,7 +187,10 @@
     "back": "Indietro",
     "loading": "Caricamento...",
     "actions": "Azioni",
-    "delete": "Elimina"
+    "delete": "Elimina",
+    "confirm": "Conferma",
+    "cancel": "Annulla",
+    "warning": "Attenzione"
   },
   "superAdmin": {
     "dashboard": {
@@ -217,7 +219,7 @@
       "save": "Salva",
       "cancel": "Annulla",
       "delete": "Elimina",
-      "deleteConfirm": "Sei sicuro di voler eliminare questa alleanza? Questo eliminerà anche tutti gli utenti, le attività e gli inviti associati. Questa azione non può essere annullata."
+      "deleteConfirm": "Sei sicuro di voler eliminare l'alleanza \"{{name}}\"? Questo eliminerà anche tutti gli utenti, le attività e gli inviti associati."
     },
     "users": {
       "title": "Gestione Utenti",
@@ -233,7 +235,8 @@
       "edit": "Modifica",
       "save": "Salva",
       "cancel": "Annulla",
-      "delete": "Elimina"
+      "delete": "Elimina",
+      "deleteConfirm": "Sei sicuro di voler eliminare l'utente \"{{name}}\"? Questa azione non può essere annullata."
     }
   },
   "super_admin": "Super Amministratore",

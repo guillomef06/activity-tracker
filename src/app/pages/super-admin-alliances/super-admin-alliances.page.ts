@@ -11,7 +11,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import type { Alliance } from '@app/shared/models';
 
@@ -47,6 +48,7 @@ export class SuperAdminAlliancesPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
+  private readonly translate = inject(TranslateService);
 
   protected readonly isLoading = signal(false);
   protected readonly alliances = signal<AllianceWithStats[]>([]);
@@ -153,9 +155,12 @@ export class SuperAdminAlliancesPage implements OnInit {
   }
 
   protected async deleteAlliance(alliance: Alliance): Promise<void> {
-    const confirmed = confirm(
-      `Are you sure you want to delete alliance "${alliance.name}"? This will also delete all associated users, activities, and invitations.`
-    );
+    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: this.translate.instant('superAdmin.alliances.deleteConfirm', { name: alliance.name }),
+        confirmColor: 'warn'
+      }
+    }).afterClosed().toPromise();
 
     if (!confirmed) {
       return;
