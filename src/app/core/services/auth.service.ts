@@ -191,20 +191,33 @@ export class AuthService {
 
   /**
    * Load user profile from database
+   * Retries up to 3 times with delay to handle timing issues with newly created profiles
    */
-  private async loadUserProfile(userId: string): Promise<void> {
-    try {
-      const { data, error } = await this.supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+  private async loadUserProfile(userId: string, retries = 3): Promise<void> {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const { data, error } = await this.supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
 
-      if (error) throw error;
-      this.userProfileSignal.set(data);
-    } catch (error) {
-      console.error('Error loading user profile:', error);
-      this.userProfileSignal.set(null);
+        if (error) throw error;
+        this.userProfileSignal.set(data);
+        return; // Success - exit
+      } catch (error) {
+        console.error(`Error loading user profile (attempt ${attempt}/${retries}):`, error);
+        
+        // If this is not the last retry, wait before retrying
+        if (attempt < retries) {
+          await new Promise(resolve => setTimeout(resolve, 500 * attempt)); // Exponential backoff
+        } else {
+          // On final failure, only set to null if we don't already have a profile
+          if (!this.userProfileSignal()) {
+            this.userProfileSignal.set(null);
+          }
+        }
+      }
     }
   }
 
@@ -247,22 +260,29 @@ export class AuthService {
       }
 
       // 3. Create user profile
+      const now = new Date().toISOString();
+      const newProfile: UserProfile = {
+        id: authData.user.id,
+        alliance_id: allianceData.id,
+        invitation_token_id: null,
+        display_name: data.displayName,
+        username: data.username,
+        role: 'admin',
+        created_at: now,
+        updated_at: now
+      };
+
       const { error: profileError } = await this.supabase
         .from('user_profiles')
-        .insert({
-          id: authData.user.id,
-          alliance_id: allianceData.id,
-          display_name: data.displayName,
-          username: data.username,
-          role: 'admin'
-        });
+        .insert(newProfile);
 
       if (profileError) {
         return { error: profileError };
       }
 
-      // Load profile into state
-      await this.loadUserProfile(authData.user.id);
+      // Set profile directly in state instead of loading from DB
+      // This avoids RLS policy issues immediately after creation
+      this.userProfileSignal.set(newProfile);
 
       return { error: null };
     } catch (error) {
@@ -296,22 +316,29 @@ export class AuthService {
       if (!authData.user) return { error: new Error('User creation failed') };
 
       // 2. Create user profile with super_admin role (no alliance needed)
+      const now = new Date().toISOString();
+      const newProfile: UserProfile = {
+        id: authData.user.id,
+        alliance_id: null,
+        invitation_token_id: null,
+        display_name: displayName,
+        username,
+        role: 'super_admin',
+        created_at: now,
+        updated_at: now
+      };
+
       const { error: profileError } = await this.supabase
         .from('user_profiles')
-        .insert({
-          id: authData.user.id,
-          alliance_id: null, // Super admin doesn't belong to any alliance
-          display_name: displayName,
-          username,
-          role: 'super_admin'
-        });
+        .insert(newProfile);
 
       if (profileError) {
         return { error: profileError };
       }
 
-      // Load profile into state
-      await this.loadUserProfile(authData.user.id);
+      // Set profile directly in state instead of loading from DB
+      // This avoids RLS policy issues immediately after creation
+      this.userProfileSignal.set(newProfile);
 
       return { error: null };
     } catch (error) {
@@ -360,16 +387,21 @@ export class AuthService {
       if (!authData.user) return { error: new Error('User creation failed') };
 
       // 3. Create user profile
+      const now = new Date().toISOString();
+      const newProfile: UserProfile = {
+        id: authData.user.id,
+        alliance_id: tokenData.alliance_id,
+        invitation_token_id: tokenData.id,
+        display_name: data.displayName,
+        username: data.username,
+        role: 'member',
+        created_at: now,
+        updated_at: now
+      };
+
       const { error: profileError } = await this.supabase
         .from('user_profiles')
-        .insert({
-          id: authData.user.id,
-          alliance_id: tokenData.alliance_id,
-          invitation_token_id: tokenData.id,
-          display_name: data.displayName,
-          username: data.username,
-          role: 'member'
-        });
+        .insert(newProfile);
 
       if (profileError) {
         return { error: profileError };
@@ -378,8 +410,9 @@ export class AuthService {
       // Note: Token tracking is now handled via invitation_token_id in user_profiles
       // No need to update used_at (multi-use tokens)
 
-      // Load profile into state
-      await this.loadUserProfile(authData.user.id);
+      // Set profile directly in state instead of loading from DB
+      // This avoids RLS policy issues immediately after creation
+      this.userProfileSignal.set(newProfile);
 
       return { error: null };
     } catch (error) {
