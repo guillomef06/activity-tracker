@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { PointRulesService } from './point-rules.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 import { generateId } from '../../shared/utils/id-generator.util';
+
 import { environment } from '../../../environments/environment';
 
 interface MockData {
@@ -160,6 +161,34 @@ export class ActivityService {
     }
   }
 
+  /**
+   * Admin-only method to add activity for another alliance member
+   * @param userId - The ID of the member for whom the activity is being added
+   * @param request - The activity details
+   */
+  async addActivityForMember(
+    userId: string,
+    request: ActivityRequest
+  ): Promise<{ error: Error | null }> {
+    try {
+      // Verify admin permissions
+      const currentProfile = this.authService.userProfile();
+      if (!currentProfile || (currentProfile.role !== 'admin' && currentProfile.role !== 'super_admin')) {
+        return { error: new Error('Unauthorized: Only admins can add activities for other members') };
+      }
+
+      if (this.useSupabase) {
+        return await this.addActivityForMemberToSupabase(userId, request);
+      } else {
+        // For mock mode, not implemented
+        return { error: new Error('Feature not available in mock mode') };
+      }
+    } catch (error) {
+      console.error('Error adding activity for member:', error);
+      return { error: error as Error };
+    }
+  }
+
   private async addActivityToSupabase(
     request: ActivityRequest
   ): Promise<{ error: Error | null }> {
@@ -205,6 +234,52 @@ export class ActivityService {
       return { error: null };
     } catch (error) {
       console.error('Error adding activity to Supabase:', error);
+      return { error: error as Error };
+    }
+  }
+
+  private async addActivityForMemberToSupabase(
+    userId: string,
+    request: ActivityRequest
+  ): Promise<{ error: Error | null }> {
+    // Calculate points based on position
+    const pointsResult = this.pointRulesService.calculatePoints(
+      request.activityType,
+      request.position
+    );
+
+    try {
+      const { data, error } = await this.supabase
+        .from('activities')
+        .insert({
+          user_id: userId,
+          activity_type: request.activityType,
+          position: request.position,
+          points: pointsResult.points,
+          date: request.date.toISOString()
+        })
+        .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
+        .single();
+
+      if (error) throw error;
+
+      const dbActivity = data as unknown as SupabaseActivity;
+      const newActivity: Activity = {
+        id: dbActivity.id,
+        userId: dbActivity.user_id,
+        userName: dbActivity.user_profiles.display_name,
+        activityType: dbActivity.activity_type,
+        position: dbActivity.position,
+        points: dbActivity.points,
+        date: new Date(dbActivity.date),
+        timestamp: new Date(dbActivity.date).getTime()
+      };
+
+      // Add to activities list
+      this.activities.update(current => [newActivity, ...current]);
+      return { error: null };
+    } catch (error) {
+      console.error('Error adding activity for member to Supabase:', error);
       return { error: error as Error };
     }
   }

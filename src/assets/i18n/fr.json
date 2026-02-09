@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "Suivi d'Activités",
+
     "subtitle": "Suivez les activités et consultez les scores sur 6 semaines"
   },
   "auth": {
@@ -33,7 +33,7 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "management": "Gestion",
+    "dashboard": "Tableau de Bord",
     "allianceSettings": "Paramètres Alliance",
     "activities": "Activités",
     "details": "Détails"
@@ -45,7 +45,8 @@
         "information": "Informations",
         "members": "Membres",
         "invitations": "Invitations",
-        "pointRules": "Règles de points"
+        "pointRules": "Règles de Points",
+        "retroactive": "Activités Rétroactives"
       },
       "allianceInfo": "Informations de l'Alliance",
       "allianceName": "Nom de l'Alliance",
@@ -94,6 +95,29 @@
           "pointsRequired": "La valeur de points est requise"
         }
       }
+    },
+    "retroactive": {
+      "title": "Ajouter une activité rétroactive",
+      "description": "En tant qu'admin, vous pouvez ajouter des activités pour les membres de l'alliance pour les 6 dernières semaines. Sélectionnez un membre, choisissez une semaine et entrez les détails de l'activité.",
+      "selectMember": "Sélectionner un membre",
+      "memberHint": "Choisissez le membre de l'alliance pour lequel vous souhaitez ajouter une activité",
+      "memberRequired": "Veuillez sélectionner un membre",
+      "selectWeek": "Sélectionner la semaine",
+      "weekHint": "Choisissez la semaine où l'activité a eu lieu",
+      "currentWeek": "Semaine actuelle",
+      "weeksAgo": "Il y a {{count}} semaine(s)",
+      "selectActivity": "Type d'activité",
+      "activityHint": "Seules les activités disponibles pour la semaine sélectionnée sont affichées",
+      "activityRequired": "Veuillez sélectionner un type d'activité",
+      "position": "Position",
+      "positionHint": "Entrez la position ou le classement du membre (1 pour la 1ère place, 2 pour la 2ème, etc.)",
+      "positionRequired": "La position est requise",
+      "pointsPreview": "Points à attribuer",
+      "submit": "Ajouter l'activité",
+      "submitting": "Ajout en cours...",
+      "reset": "Réinitialiser le formulaire",
+      "success": "Activité ajoutée avec succès !",
+      "error": "Échec de l'ajout de l'activité. Veuillez réessayer."
     }
   },
   "activityInput": {
@@ -135,7 +159,8 @@
     "addActivity": "Ajouter une Activité",
     "loading": "Chargement des scores...",
     "noActivities": "Aucune activité enregistrée pour le moment",
-    "noActivitiesThisWeek": "Aucune activité cette semaine",
+    "noActivitiesThisWeek": "Aucune activité disponible cette semaine",
+    "availableThisWeek": "Activités Disponibles Cette Semaine",
     "submitFirst": "Soumettre la Première Activité",
     "totalPoints": "points totaux",
     "avgWeekly": "moy. par semaine",

@@ -23,6 +23,31 @@
 
   <p class="description">{{ 'dashboard.subtitle' | translate }}</p>
 
+  <!-- Available Activities This Week Card -->
+  <mat-card class="available-activities-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>event_available</mat-icon>
+      <mat-card-title>{{ 'dashboard.availableThisWeek' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (availableActivitiesThisWeek().length > 0) {
+        <div class="activity-chips">
+          @for (activity of availableActivitiesThisWeek(); track activity.value) {
+            <mat-chip>
+              <mat-icon matChipAvatar>check_circle</mat-icon>
+              {{ activity.label }}
+            </mat-chip>
+          }
+        </div>
+      } @else {
+        <p class="no-activities">
+          <mat-icon>info</mat-icon>
+          {{ 'dashboard.noActivitiesThisWeek' | translate }}
+        </p>
+      }
+    </mat-card-content>
+  </mat-card>
+
   @if (loading()) {
     <div class="loading">
       <mat-spinner diameter="50"></mat-spinner>
