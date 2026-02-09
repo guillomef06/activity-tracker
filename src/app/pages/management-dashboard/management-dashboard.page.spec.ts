@@ -37,9 +37,9 @@ describe('ManagementDashboardPage', () => {
     expect(component.loading()).toBeDefined();
   });
 
-  it('should have user scores signal', () => {
-    expect(component.userScores()).toBeDefined();
-    expect(Array.isArray(component.userScores())).toBe(true);
+  it('should have hasData signal', () => {
+    expect(component.hasData()).toBeDefined();
+    expect(typeof component.hasData()).toBe('boolean');
   });
 
   it('should navigate to activities details page', () => {

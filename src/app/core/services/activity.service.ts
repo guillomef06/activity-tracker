@@ -289,7 +289,7 @@ export class ActivityService {
 
       const totalPoints = weekActivities.reduce((sum, activity) => sum + activity.points, 0);
 
-      weeks.unshift({
+      weeks.push({
         weekStart,
         weekEnd,
         totalPoints,
