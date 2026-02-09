@@ -71,6 +71,7 @@
       "actions": "Acciones",
       "copyLink": "Copiar enlace de invitación",
       "revokeInvitation": "Revocar invitación",
+      "revokeConfirm": "¿Está seguro de que desea revocar esta invitación?",
       "membersJoined": "Miembros que se unieron a través de esta invitación",
       "errors": {
         "nameRequired": "El nombre de la alianza es obligatorio"
@@ -186,7 +187,10 @@
     "back": "Volver",
     "loading": "Cargando...",
     "actions": "Acciones",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "warning": "Advertencia"
   },  "superAdmin": {
     "dashboard": {
       "title": "Panel de Superadministrador",
@@ -214,7 +218,7 @@
       "save": "Guardar",
       "cancel": "Cancelar",
       "delete": "Eliminar",
-      "deleteConfirm": "¿Está seguro de eliminar esta alianza? Esto también eliminará todos los usuarios, actividades e invitaciones asociados. Esta acción no se puede deshacer."
+      "deleteConfirm": "¿Está seguro de que desea eliminar la alianza \"{{name}}\"? Esto también eliminará todos los usuarios, actividades e invitaciones asociados."
     },
     "users": {
       "title": "Gestión de Usuarios",
@@ -230,7 +234,8 @@
       "edit": "Editar",
       "save": "Guardar",
       "cancel": "Cancelar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "deleteConfirm": "¿Está seguro de que desea eliminar al usuario \"{{name}}\"? Esta acción no se puede deshacer."
     }
   },
   "super_admin": "Super Administrador",

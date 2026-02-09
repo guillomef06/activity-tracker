@@ -55,6 +55,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - ✅ **Super Admin - User Deletion:** Ajout fonction RPC delete_user_complete() avec SECURITY DEFINER (bypass auth.admin limitations)
 - ✅ **Super Admin - RLS Policies:** Correction permissions activities/tokens pour modération multi-alliance (is_super_admin() checks)
 - ✅ **Activités Rétroactives - RLS Policies:** Ajout policies permettant aux admins de créer des activités pour les membres de leur alliance et aux super admins pour tous les utilisateurs (migration 07)
+- ✅ **ConfirmDialog Component:** Remplacement de tous les confirm() natifs par un composant Material réutilisable avec i18n (4 langues)
 
 ---
 
@@ -77,6 +78,15 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - UI Material: expansion panels avec badges de comptage
 - Soft delete (expires_at) sans suppression membres
 - Migration: `supabase/03-add-invitation-tracking.sql`
+
+---
+
+## 🔔 Composant ConfirmDialog Réutilisable ✅
+- Remplacement de tous les `confirm()` natifs par un dialog Material cohérent
+- Composant standalone: `src/app/shared/components/confirm-dialog/`
+- i18n complète dans 4 langues (EN, FR, ES, IT)
+- Couleurs configurables (primary/warn), icônes dynamiques
+- Utilisé dans 5 composants: invitations, point-rules, super-admin users/alliances, dashboard
 
 ---
 

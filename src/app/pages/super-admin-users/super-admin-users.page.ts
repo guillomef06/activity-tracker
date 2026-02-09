@@ -11,7 +11,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { TranslateModule } from '@ngx-translate/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import type { UserProfile } from '@app/shared/models';
 
@@ -35,6 +37,7 @@ interface UserWithAlliance extends UserProfile {
     MatChipsModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatDialogModule,
     TranslateModule,
   ],
   templateUrl: './super-admin-users.page.html',
@@ -45,6 +48,8 @@ export class SuperAdminUsersPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
+  private readonly translate = inject(TranslateService);
 
   protected readonly isLoading = signal(false);
   protected readonly users = signal<UserWithAlliance[]>([]);
@@ -133,9 +138,12 @@ export class SuperAdminUsersPage implements OnInit {
   }
 
   protected async deleteUser(user: UserProfile): Promise<void> {
-    const confirmed = confirm(
-      `Are you sure you want to delete user "${user.display_name}"? This action cannot be undone.`
-    );
+    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: this.translate.instant('superAdmin.users.deleteConfirm', { name: user.display_name }),
+        confirmColor: 'warn'
+      }
+    }).afterClosed().toPromise();
 
     if (!confirmed) {
       return;
