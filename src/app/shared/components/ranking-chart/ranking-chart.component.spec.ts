@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RankingChartComponent } from './ranking-chart.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { ActivityService } from '../../../core/services/activity.service';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('RankingChartComponent', () => {
   let component: RankingChartComponent;
@@ -14,7 +16,9 @@ describe('RankingChartComponent', () => {
         TranslateModule.forRoot()
       ],
       providers: [
-        provideAnimations()
+        provideAnimations(),
+        provideHttpClient(),
+        ActivityService
       ]
     }).compileComponents();
 
@@ -26,35 +30,18 @@ describe('RankingChartComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with empty user scores', () => {
+  it('should initialize with user scores from service', () => {
     fixture.detectChanges();
-    expect(component.userScores()).toEqual([]);
+    expect(component.userScores()).toBeDefined();
+    expect(Array.isArray(component.userScores())).toBe(true);
   });
 
-  it('should accept user scores input', () => {
-    const now = new Date();
-    const mockScores = [
-      {
-        userId: 'user1',
-        userName: 'Test User',
-        sixWeekTotal: 100,
-        averageWeekly: 16.7,
-        weeklyScores: [
-          { weekStart: now, weekEnd: now, totalPoints: 20, activities: [] },
-          { weekStart: now, weekEnd: now, totalPoints: 30, activities: [] },
-          { weekStart: now, weekEnd: now, totalPoints: 25, activities: [] },
-          { weekStart: now, weekEnd: now, totalPoints: 25, activities: [] },
-          { weekStart: now, weekEnd: now, totalPoints: 0, activities: [] },
-          { weekStart: now, weekEnd: now, totalPoints: 0, activities: [] }
-        ]
-      }
-    ];
-
-    // Use fixture.componentRef to set input signals
-    fixture.componentRef.setInput('userScores', mockScores);
-    fixture.detectChanges();
+  it('should emit hasData output', (done) => {
+    component.hasData.subscribe((hasData: boolean) => {
+      expect(typeof hasData).toBe('boolean');
+      done();
+    });
     
-    expect(component.userScores().length).toBe(1);
-    expect(component.userScores()[0].userName).toBe('Test User');
+    fixture.detectChanges();
   });
 });

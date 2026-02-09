@@ -45,11 +45,11 @@
                   @if (week.activities.length > 0) {
                     <div class="week-activities">
                       @for (activity of week.activities; track activity.id) {
-                        <mat-chip-row>
-                          <mat-icon matChipAvatar>task</mat-icon>
-                          {{ activity.activityType }}
-                          <mat-chip-trailing-icon>{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</mat-chip-trailing-icon>
-                        </mat-chip-row>
+                        <div class="activity-chip">
+                          <mat-icon class="activity-icon">check_circle</mat-icon>
+                          <span class="activity-name">{{ activity.activityType }}</span>
+                          <span class="activity-points">{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</span>
+                        </div>
                       }
                     </div>
                   } @else {
