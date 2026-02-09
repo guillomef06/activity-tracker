@@ -143,16 +143,23 @@ export class SuperAdminUsersPage implements OnInit {
 
     this.isLoading.set(true);
     try {
-      // Delete from auth.users (which should cascade to user_profiles)
-      const { error } = await this.supabase.client.auth.admin.deleteUser(user.id);
+      // Use RPC function to delete user completely (user_profiles + auth.users)
+      // This function has SECURITY DEFINER to bypass RLS for auth.users deletion
+      const { data, error } = await this.supabase.client
+        .rpc('delete_user_complete', { user_id: user.id });
 
       if (error) throw error;
+      
+      if (!data) {
+        throw new Error('Delete function returned false');
+      }
 
       this.snackBar.open('User deleted successfully', 'Close', { duration: 3000 });
       await this.loadUsers();
     } catch (error) {
       console.error('Error deleting user:', error);
-      this.snackBar.open('Failed to delete user. Note: Admin API may not be available.', 'Close', { 
+      const errorMessage = (error as { message?: string })?.message || 'Failed to delete user';
+      this.snackBar.open(errorMessage, 'Close', { 
         duration: 5000 
       });
     } finally {
