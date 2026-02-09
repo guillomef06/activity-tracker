@@ -108,6 +108,7 @@
       "selectActivity": "Activity Type",
       "activityHint": "Only activities available for the selected week are shown",
       "activityRequired": "Please select an activity type",
+      "noActivities": "No activities available for this week",
       "position": "Position",
       "positionHint": "Enter the member's position or rank (1 for 1st place, 2 for 2nd, etc.)",
       "positionRequired": "Position is required",

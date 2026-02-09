@@ -16,30 +16,7 @@ Les migrations sont numérotées de `01` à `06` pour indiquer l'ordre chronolog
 | **04** | `04-fix-unauthenticated-token-validation.sql` | Fix | Permet validation token avant authentification (workflow signup) | 01, 02 |
 | **05** | `05-add-super-admin-delete-user-rpc.sql` | Feature | Fonction RPC delete_user_complete() pour super admin | 01, 02 |
 | **06** | `06-fix-super-admin-activity-token-permissions.sql` | Fix | Permissions modération multi-alliance (activities + tokens) | 01, 02 |
-
-## 🚀 Setup Nouveau Projet
-
-### Méthode 1: Via psql (ligne de commande)
-
-```bash
-cd supabase
-
-# Exécuter dans l'ordre
-psql $DATABASE_URL -f 01-initial-schema.sql
-psql $DATABASE_URL -f 02-fix-rls-infinite-recursion.sql
-psql $DATABASE_URL -f 03-add-invitation-tracking.sql
-psql $DATABASE_URL -f 04-fix-unauthenticated-token-validation.sql
-psql $DATABASE_URL -f 05-add-super-admin-delete-user-rpc.sql
-psql $DATABASE_URL -f 06-fix-super-admin-activity-token-permissions.sql
-```
-
-### Méthode 2: Via Supabase SQL Editor (interface web)
-
-1. Se connecter au dashboard Supabase
-2. Naviguer vers **SQL Editor** (icône </>)
-3. Copier-coller le contenu de chaque fichier **dans l'ordre** (01 → 06)
-4. Cliquer **Run** après chaque migration
-5. Vérifier l'absence d'erreurs avant de passer à la suivante
+| **07** | `07-allow-admin-add-activities-for-members.sql` | Feature | Permet aux admins d'ajouter des activités pour les membres de leur alliance | 01, 02 |
 
 ## 📊 Graphe de Dépendances
 
@@ -50,7 +27,8 @@ psql $DATABASE_URL -f 06-fix-super-admin-activity-token-permissions.sql
     ↓
     ├─→ 03-add-invitation-tracking.sql (FEATURE)
     ├─→ 04-fix-unauthenticated-token-validation.sql (AUTH FIX)
-    ├─→ 05-add-super-admin-delete-user-rpc.sql (ADMIN FEATURE)
+    ├─→ 06-fix-super-admin-activity-token-permissions.sql (ADMIN PERMISSIONS)
+    └─→ 07-allow-admin-add-activities-for-members.sql (RETROACTIVE ACTIVITIE
     └─→ 06-fix-super-admin-activity-token-permissions.sql (ADMIN PERMISSIONS)
 ```
 
@@ -201,6 +179,10 @@ ORDER BY tablename, policyname;
 ### Erreur 403 sur activities (super admin)
 **Cause:** Migration 06 non exécutée  
 **Solution:** Exécuter `06-fix-super-admin-activity-token-permissions.sql`
+
+### Erreur 42501 "row-level security policy" sur ajout activité pour membre
+**Cause:** Migration 07 non exécutée  
+**Solution:** Exécuter `07-allow-admin-add-activities-for-members.sql` pour permettre aux admins d'ajouter des activités pour les membres de leur alliance
 
 ## 📚 Documentation Complémentaire
 

@@ -57,7 +57,13 @@
             name="activity"
             [ngModel]="selectedActivity()"
             (ngModelChange)="selectedActivity.set($event)"
+            [disabled]="availableActivities().length === 0"
             required>
+            @if (availableActivities().length === 0) {
+              <mat-option disabled>
+                {{ 'alliance.retroactive.noActivities' | translate }}
+              </mat-option>
+            }
             @for (activity of availableActivities(); track activity.value) {
               <mat-option [value]="activity.value">
                 {{ activity.label }}
