@@ -254,9 +254,11 @@ export class AuthService {
         .single();
 
       if (allianceError) {
-        // Rollback: delete auth user if alliance creation fails
-        await this.supabase.auth.admin.deleteUser(authData.user.id);
-        return { error: allianceError };
+        // Note: Cannot rollback auth user with anon key (would get 401)
+        // auth.admin.deleteUser requires service_role key
+        // User will be created in auth but without profile - they can't login
+        console.error('Failed to create alliance after user creation:', allianceError);
+        return { error: new Error('Failed to create alliance. Please contact support.') };
       }
 
       // 3. Create user profile
