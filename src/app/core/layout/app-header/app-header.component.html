@@ -2,7 +2,7 @@
   <div class="app-branding">
     <mat-icon>assessment</mat-icon>
     <div class="header-content">
-      <h1>{{ 'app.title' | translate }}</h1>
+      <h1>Activity Tracker</h1>
       <p class="subtitle">{{ 'app.subtitle' | translate }}</p>
     </div>
   </div>
@@ -57,8 +57,8 @@
         
         @if (authService.isAdmin()) {
           <button mat-menu-item routerLink="/management-dashboard" routerLinkActive="active">
-            <mat-icon>manage_accounts</mat-icon>
-            <span>{{ 'nav.management' | translate }}</span>
+            <mat-icon>dashboard</mat-icon>
+            <span>{{ 'nav.dashboard' | translate }}</span>
           </button>
           <button mat-menu-item routerLink="/alliance-settings" routerLinkActive="active">
             <mat-icon>settings</mat-icon>
