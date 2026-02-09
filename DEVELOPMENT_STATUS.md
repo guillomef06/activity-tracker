@@ -106,6 +106,13 @@ Réorganisés par domaine avec pattern Request/Response:
 - ✅ **Fichiers i18n:** Alignement et formatage cohérent des 4 fichiers de langue (en, fr, es, it - 216 lignes chacun)
 - ✅ **Activity types:** Mise à jour avec activités de jeu (KvK, Legion, Desolate Desert, Golden Expedition)
 - ✅ **Build budgets:** Ajustement des limites de taille (initial: 700kB, component styles: 6kB) pour Angular Material et pages complexes
+- ✅ **CI/CD Workflows:** Suppression du workflow dev-checks.yml redondant (tests unifiés dans pr-checks.yml)
+- ✅ **Activity Details - Week Labels:** Correction ordre chronologique des semaines (weeks.push() au lieu de unshift())
+- ✅ **Activity Details - Chip Layout:** Remplacement mat-chip-row par div custom avec flexbox (évite overflow et warnings Material)
+- ✅ **Ranking Chart:** Refactorisation en composant autonome avec injection ActivityService standalone
+- ✅ **Join Workflow:** Correction state management - userProfile.set() directement au lieu de loadUserProfile() après signup
+- ✅ **Super Admin - User Deletion:** Ajout fonction RPC delete_user_complete() avec SECURITY DEFINER (bypass auth.admin limitations)
+- ✅ **Super Admin - RLS Policies:** Correction permissions activities/tokens pour modération multi-alliance (is_super_admin() checks)
 
 ---
 
@@ -164,7 +171,9 @@ Réorganisés par domaine avec pattern Request/Response:
 
 ### ⚠️ Migration Base de Données Requise
 
-**Fichier:** `supabase/add-invitation-tracking.sql`
+**Fichier:** `supabase/03-add-invitation-tracking.sql`
+
+**Pour un setup complet, voir:** `supabase/MIGRATIONS.md` pour l'ordre d'exécution des 6 migrations SQL.
 
 **Avant de tester, exécuter dans Supabase SQL Editor:**
 ```sql
@@ -242,20 +251,6 @@ ON user_profiles(invitation_token_id);
 - L'utilisateur saisit sa **position/classement** (ex: "1" = 1ère place, "5" = 5ème)
 - L'**admin configure les règles** de points pour chaque alliance
 - Les **points sont calculés automatiquement** selon la position saisie
-
-**Exemples de règles configurables par l'admin :**
-```
-Development:
-  - Position 1       → 50 points
-  - Positions 2-5    → 30 points
-  - Positions 6-10   → 20 points
-  - Positions 11+    → 10 points
-
-Code Review:
-  - Position 1       → 40 points
-  - Positions 2-3    → 25 points
-  - Positions 4-10   → 15 points
-```
 
 ### Changements Nécessaires
 
