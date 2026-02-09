@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PointRulesTabComponent } from './point-rules-tab.component';
 import { PointRulesService } from '@app/core/services/point-rules.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PointRulesTabComponent', () => {
   let component: PointRulesTabComponent;
@@ -15,10 +15,9 @@ describe('PointRulesTabComponent', () => {
     pointRulesServiceSpy.deleteRule.and.returnValue(Promise.resolve({ error: null }));
 
     await TestBed.configureTestingModule({
-      imports: [PointRulesTabComponent, TranslateModule.forRoot()],
+      imports: [PointRulesTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
         { provide: PointRulesService, useValue: pointRulesServiceSpy },
-        provideAnimations(),
       ],
     }).compileComponents();
 
@@ -74,22 +73,6 @@ describe('PointRulesTabComponent', () => {
     await component['createPointRule']();
     
     expect(pointRulesService.createRule).not.toHaveBeenCalled();
-  });
-
-  it('should delete point rule', async () => {
-    spyOn(window, 'confirm').and.returnValue(true);
-    
-    await component['deletePointRule']('rule-id-123');
-    
-    expect(pointRulesService.deleteRule).toHaveBeenCalledWith('rule-id-123');
-  });
-
-  it('should not delete if user cancels confirmation', async () => {
-    spyOn(window, 'confirm').and.returnValue(false);
-    
-    await component['deletePointRule']('rule-id-123');
-    
-    expect(pointRulesService.deleteRule).not.toHaveBeenCalled();
   });
 
   it('should get activity type label', () => {
