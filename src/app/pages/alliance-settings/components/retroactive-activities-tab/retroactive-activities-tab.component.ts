@@ -47,7 +47,7 @@ export class RetroactiveActivitiesTabComponent {
   // Inputs
   members = input.required<UserProfile[]>();
 
-  // Form state
+  // Form state - Initialize selectedWeeksAgo to 0 to ensure activities load immediately
   selectedMember = signal<string>('');
   selectedWeeksAgo = signal<number>(0);
   selectedActivity = signal<string>('');
