@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 8 février 2026 - 14:30
+**Dernière mise à jour:** 9 février 2026 - 04:45
 
 ## 📋 Résumé
 
@@ -54,6 +54,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - ✅ **Join Workflow:** Correction state management - userProfile.set() directement au lieu de loadUserProfile() après signup
 - ✅ **Super Admin - User Deletion:** Ajout fonction RPC delete_user_complete() avec SECURITY DEFINER (bypass auth.admin limitations)
 - ✅ **Super Admin - RLS Policies:** Correction permissions activities/tokens pour modération multi-alliance (is_super_admin() checks)
+- ✅ **Activités Rétroactives - RLS Policies:** Ajout policies permettant aux admins de créer des activités pour les membres de leur alliance et aux super admins pour tous les utilisateurs (migration 07)
 
 ---
 

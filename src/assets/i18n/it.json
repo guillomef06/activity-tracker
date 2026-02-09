@@ -108,6 +108,7 @@
       "selectActivity": "Tipo di attività",
       "activityHint": "Vengono mostrate solo le attività disponibili per la settimana selezionata",
       "activityRequired": "Seleziona un tipo di attività",
+      "noActivities": "Nessuna attività disponibile per questa settimana",
       "position": "Posizione",
       "positionHint": "Inserisci la posizione o classifica del membro (1 per il 1° posto, 2 per il 2°, ecc.)",
       "positionRequired": "La posizione è richiesta",
