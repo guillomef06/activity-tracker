@@ -23,13 +23,14 @@
             (ngModelChange)="activityType.set($event)"
             required
           >
-            @for (type of activityTypes(); track type.value) {
+            @for (type of availableActivities(); track type.value) {
               <mat-option [value]="type.value">
                 {{ type.label }}
               </mat-option>
             }
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
+          <mat-hint>{{ 'activityInput.positionHint' | translate }}</mat-hint>
           <mat-error>{{ 'activityInput.typeRequired' | translate }}</mat-error>
         </mat-form-field>
 

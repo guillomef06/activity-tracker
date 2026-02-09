@@ -14,6 +14,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { PointRulesService } from '../../core/services/point-rules.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 import { PointCalculationResult } from '../../shared/models';
+import { getCurrentWeekNumber } from '../../shared/utils/date.util';
 
 @Component({
   selector: 'app-activity-input-page',
@@ -47,13 +48,16 @@ export class ActivityInputPage {
   
   points = computed(() => this.calculatedPointsResult()?.points ?? 0);
 
-  // Use computed signal for reactive translations
-  activityTypes = computed(() => 
-    APP_CONSTANTS.ACTIVITY_TYPES.map(type => ({
-      ...type,
-      label: this.translate.instant(type.labelKey)
-    }))
-  );
+  // Filter activity types based on current week only
+  availableActivities = computed(() => {
+    const currentWeek = getCurrentWeekNumber();
+    return APP_CONSTANTS.ACTIVITY_TYPES
+      .filter(type => type.availableWeeks.includes(currentWeek))
+      .map(type => ({
+        ...type,
+        label: this.translate.instant(type.labelKey)
+      }));
+  });
 
   constructor() {
     // Automatically calculate points when activity type or position changes

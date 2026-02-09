@@ -14,6 +14,7 @@ import { AllianceInfoTabComponent } from './components/alliance-info-tab/allianc
 import { MembersTabComponent } from './components/members-tab/members-tab.component';
 import { InvitationsTabComponent } from './components/invitations-tab/invitations-tab.component';
 import { PointRulesTabComponent } from './components/point-rules-tab/point-rules-tab.component';
+import { RetroactiveActivitiesTabComponent } from './components/retroactive-activities-tab/retroactive-activities-tab.component';
 
 @Component({
   selector: 'app-alliance-settings',
@@ -29,6 +30,7 @@ import { PointRulesTabComponent } from './components/point-rules-tab/point-rules
     MembersTabComponent,
     InvitationsTabComponent,
     PointRulesTabComponent,
+    RetroactiveActivitiesTabComponent,
   ],
   templateUrl: './alliance-settings.page.html',
   styleUrl: './alliance-settings.page.scss',

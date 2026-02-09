@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
 import { UserScore } from '../../shared/models/activity.model';
 import { RankingChartComponent } from '../../shared/components/ranking-chart/ranking-chart.component';
-import { getWeekLabel, formatShortDate } from '../../shared/utils/date.util';
+import { getWeekLabel, formatShortDate, getCurrentWeekNumber } from '../../shared/utils/date.util';
+import { APP_CONSTANTS } from '../../shared/constants/constants';
 
 @Component({
   selector: 'app-management-dashboard-page',
@@ -38,6 +39,17 @@ export class ManagementDashboardPage implements OnInit {
   
   hasData = signal<boolean>(false);
   loading = signal<boolean>(true);
+  
+  // Available activities for current week
+  availableActivitiesThisWeek = computed(() => {
+    const currentWeek = getCurrentWeekNumber();
+    return APP_CONSTANTS.ACTIVITY_TYPES
+      .filter(type => type.availableWeeks.includes(currentWeek))
+      .map(type => ({
+        ...type,
+        label: this.translate.instant(type.labelKey)
+      }));
+  });
   
   // Utility functions exposed to template
   readonly getWeekLabel = (weekIndex: number) => getWeekLabel(weekIndex, this.translate);

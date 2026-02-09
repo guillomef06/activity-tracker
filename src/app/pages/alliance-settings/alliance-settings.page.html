@@ -73,6 +73,18 @@
           (ruleDeleted)="handleRuleDeleted()"
         />
       </mat-tab>
+
+      <!-- Retroactive Activities Tab -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">history</mat-icon>
+          {{ 'alliance.settings.tabs.retroactive' | translate }}
+        </ng-template>
+        
+        <app-retroactive-activities-tab
+          [members]="members()"
+        />
+      </mat-tab>
     </mat-tab-group>
   }
 </div>

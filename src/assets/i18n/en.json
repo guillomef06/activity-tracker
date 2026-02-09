@@ -1,6 +1,5 @@
 {
   "app": {
-    "title": "Activity Tracker",
     "subtitle": "Track activities and view rolling 6-week scores"
   },
   "auth": {
@@ -33,7 +32,7 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "management": "Management",
+    "dashboard": "Dashboard",
     "allianceSettings": "Alliance Settings",
     "activities": "Activities",
     "details": "Details"
@@ -45,7 +44,8 @@
         "information": "Information",
         "members": "Members",
         "invitations": "Invitations",
-        "pointRules": "Point Rules"
+        "pointRules": "Point Rules",
+        "retroactive": "Retroactive Activities"
       },
       "allianceInfo": "Alliance Information",
       "allianceName": "Alliance Name",
@@ -94,6 +94,29 @@
           "pointsRequired": "Points value is required"
         }
       }
+    },
+    "retroactive": {
+      "title": "Add Retroactive Activity",
+      "description": "As an admin, you can add activities for alliance members for the past 6 weeks. Select a member, choose a week, and enter their activity details.",
+      "selectMember": "Select Member",
+      "memberHint": "Choose the alliance member for whom you want to add an activity",
+      "memberRequired": "Please select a member",
+      "selectWeek": "Select Week",
+      "weekHint": "Choose the week when the activity took place",
+      "currentWeek": "Current Week",
+      "weeksAgo": "{{count}} week(s) ago",
+      "selectActivity": "Activity Type",
+      "activityHint": "Only activities available for the selected week are shown",
+      "activityRequired": "Please select an activity type",
+      "position": "Position",
+      "positionHint": "Enter the member's position or rank (1 for 1st place, 2 for 2nd, etc.)",
+      "positionRequired": "Position is required",
+      "pointsPreview": "Points to be awarded",
+      "submit": "Add Activity",
+      "submitting": "Adding activity...",
+      "reset": "Reset Form",
+      "success": "Activity added successfully!",
+      "error": "Failed to add activity. Please try again."
     }
   },
   "activityInput": {
@@ -134,7 +157,8 @@
     "addActivity": "Add Activity",
     "loading": "Loading scores...",
     "noActivities": "No activities recorded yet",
-    "noActivitiesThisWeek": "No activities this week",
+    "noActivitiesThisWeek": "No activities available this week",
+    "availableThisWeek": "Available Activities This Week",
     "submitFirst": "Submit First Activity",
     "totalPoints": "total points",
     "avgWeekly": "week avg",

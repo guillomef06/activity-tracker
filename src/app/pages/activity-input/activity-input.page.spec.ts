@@ -61,8 +61,8 @@ describe('ActivityInputPage', () => {
     expect(component.position()).toBe(1);
   });
 
-  it('should have activity types', () => {
-    expect(component.activityTypes().length).toBeGreaterThan(0);
+  it('should have available activity types for current week', () => {
+    expect(component.availableActivities().length).toBeGreaterThan(0);
   });
 
   it('should update points when activity type and position change', () => {

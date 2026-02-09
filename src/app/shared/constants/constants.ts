@@ -3,6 +3,13 @@
  * Single source of truth for all magic numbers and configuration values
  */
 
+export interface ActivityType {
+  value: string;
+  labelKey: string;
+  points: number;
+  availableWeeks: number[];
+}
+
 export const APP_CONSTANTS = {
   SCORING: {
     WEEKS_TO_TRACK: 6,
@@ -16,12 +23,12 @@ export const APP_CONSTANTS = {
   },
   
   ACTIVITY_TYPES: [
-    { value: 'kvk prep', labelKey: 'activities.types.kvk-prep', points: 15 },
-    { value: 'kvk cross border', labelKey: 'activities.types.kvk-cross-border', points: 10 },
-    { value: 'legion', labelKey: 'activities.types.legion', points: 8 },
-    { value: 'desolate desert', labelKey: 'activities.types.desolate-desert', points: 8 },
-    { value: 'golden expedition', labelKey: 'activities.types.golden-expedition', points: 5 }
-  ] as const,
+    { value: 'kvk prep', labelKey: 'activities.types.kvk-prep', points: 15, availableWeeks: [2, 4] },
+    { value: 'kvk cross border', labelKey: 'activities.types.kvk-cross-border', points: 10, availableWeeks: [2, 4] },
+    { value: 'legion', labelKey: 'activities.types.legion', points: 8, availableWeeks: [1, 2, 3, 4, 5, 6] },
+    { value: 'desolate desert', labelKey: 'activities.types.desolate-desert', points: 8, availableWeeks: [5] },
+    { value: 'golden expedition', labelKey: 'activities.types.golden-expedition', points: 5, availableWeeks: [1, 3] }
+  ] as ActivityType[],
   
   CHART_COLORS: [
     { border: 'rgb(75, 192, 192)', background: 'rgba(75, 192, 192, 0.2)' },   // Turquoise
