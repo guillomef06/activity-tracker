@@ -1,10 +1,11 @@
-import { Component, input, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy, inject, effect } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy, inject, signal, effect, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserScore } from '../../../shared/models/activity.model';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { APP_CONSTANTS } from '../../constants/constants';
+import { ActivityService } from '../../../core/services/activity.service';
 
 Chart.register(...registerables);
 
@@ -19,17 +20,26 @@ Chart.register(...registerables);
 export class RankingChartComponent implements AfterViewInit {
   @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
   
-  // Modern signal-based input
-  userScores = input<UserScore[]>([]);
-  
+  private activityService = inject(ActivityService);
   private translate = inject(TranslateService);
   private chart: Chart | null = null;
   private viewInitialized = false;
 
+  userScores = signal<UserScore[]>([]);
+  
+  // Output to notify parent if data exists
+  hasData = output<boolean>();
+
   constructor() {
-    // Use effect to react to userScores changes
+    // Load scores with reversed weekly data for chronological chart display
     effect(() => {
-      const scores = this.userScores();
+      const scores = this.activityService.getUserScores().map(userScore => ({
+        ...userScore,
+        weeklyScores: [...userScore.weeklyScores].reverse()
+      }));
+      this.userScores.set(scores);
+      this.hasData.emit(scores.length > 0);
+      
       if (this.viewInitialized && scores.length > 0) {
         this.updateChart();
       }
