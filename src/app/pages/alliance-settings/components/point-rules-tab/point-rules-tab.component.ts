@@ -11,7 +11,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { TranslateModule } from '@ngx-translate/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { PointRulesService } from '@app/core/services/point-rules.service';
 import type { ActivityPointRule } from '@app/shared/models';
 import { APP_CONSTANTS } from '@app/shared/constants/constants';
@@ -32,6 +34,7 @@ import { APP_CONSTANTS } from '@app/shared/constants/constants';
     MatChipsModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatDialogModule,
     TranslateModule,
   ],
   templateUrl: './point-rules-tab.component.html',
@@ -42,6 +45,8 @@ export class PointRulesTabComponent {
   private readonly pointRulesService = inject(PointRulesService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
+  private readonly translate = inject(TranslateService);
 
   // Inputs
   pointRules = input.required<ActivityPointRule[]>();
@@ -114,7 +119,14 @@ export class PointRulesTabComponent {
   }
 
   protected async deletePointRule(id: string): Promise<void> {
-    if (!confirm('Are you sure you want to delete this rule?')) {
+    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: this.translate.instant('alliance.settings.pointRules.deleteConfirm'),
+        confirmColor: 'warn'
+      }
+    }).afterClosed().toPromise();
+
+    if (!confirmed) {
       return;
     }
 

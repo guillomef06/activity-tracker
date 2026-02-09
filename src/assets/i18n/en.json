@@ -71,6 +71,7 @@
       "actions": "Actions",
       "copyLink": "Copy invitation link",
       "revokeInvitation": "Revoke invitation",
+      "revokeConfirm": "Are you sure you want to revoke this invitation?",
       "membersJoined": "Members who joined via this invitation",
       "errors": {
         "nameRequired": "Alliance name is required"
@@ -92,7 +93,8 @@
           "typeRequired": "Activity type is required",
           "positionRequired": "Position is required",
           "pointsRequired": "Points value is required"
-        }
+        },
+        "deleteConfirm": "Are you sure you want to delete this rule?"
       }
     },
     "retroactive": {
@@ -187,7 +189,10 @@
     "back": "Back",
     "loading": "Loading...",
     "actions": "Actions",
-    "delete": "Delete"
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "warning": "Warning"
   },
   "superAdmin": {
     "dashboard": {
@@ -216,7 +221,7 @@
       "save": "Save",
       "cancel": "Cancel",
       "delete": "Delete",
-      "deleteConfirm": "Are you sure you want to delete this alliance? This will also delete all associated users, activities, and invitations. This action cannot be undone."
+      "deleteConfirm": "Are you sure you want to delete alliance \"{{name}}\"? This will also delete all associated users, activities, and invitations."
     },
     "users": {
       "title": "Users Management",
@@ -232,7 +237,8 @@
       "edit": "Edit",
       "save": "Save",
       "cancel": "Cancel",
-      "delete": "Delete"
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete user \"{{name}}\"? This action cannot be undone."
     }
   },
   "super_admin": "Super Admin",

@@ -7,7 +7,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ActivityService } from '../../core/services/activity.service';
 import { UserScore } from '../../shared/models/activity.model';
 import { RankingChartComponent } from '../../shared/components/ranking-chart/ranking-chart.component';
@@ -25,6 +27,7 @@ import { APP_CONSTANTS } from '../../shared/constants/constants';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
+    MatDialogModule,
     TranslateModule,
     RankingChartComponent
   ],
@@ -36,6 +39,7 @@ export class ManagementDashboardPage implements OnInit {
   private activityService = inject(ActivityService);
   private router = inject(Router);
   private translate = inject(TranslateService);
+  private dialog = inject(MatDialog);
   
   hasData = signal<boolean>(false);
   loading = signal<boolean>(true);
@@ -70,7 +74,14 @@ export class ManagementDashboardPage implements OnInit {
   }
 
   async resetData(): Promise<void> {
-    if (confirm(this.translate.instant('dashboard.resetConfirm'))) {
+    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: this.translate.instant('dashboard.resetConfirm'),
+        confirmColor: 'warn'
+      }
+    }).afterClosed().toPromise();
+
+    if (confirmed) {
       this.loading.set(true);
       this.activityService.resetToInitialData();
       await this.initialize();

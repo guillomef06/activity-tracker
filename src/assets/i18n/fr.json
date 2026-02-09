@@ -72,6 +72,7 @@
       "actions": "Actions",
       "copyLink": "Copier le lien d'invitation",
       "revokeInvitation": "Révoquer l'invitation",
+      "revokeConfirm": "Êtes-vous sûr de vouloir révoquer cette invitation ?",
       "membersJoined": "Membres ayant rejoint via cette invitation",
       "errors": {
         "nameRequired": "Le nom de l'alliance est requis"
@@ -93,7 +94,8 @@
           "typeRequired": "Le type d'activité est requis",
           "positionRequired": "La position est requise",
           "pointsRequired": "La valeur de points est requise"
-        }
+        },
+        "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette règle ?"
       }
     },
     "retroactive": {
@@ -189,7 +191,10 @@
     "back": "Retour",
     "loading": "Chargement...",
     "actions": "Actions",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "warning": "Attention"
   },
   "superAdmin": {
     "dashboard": {
@@ -218,7 +223,7 @@
       "save": "Enregistrer",
       "cancel": "Annuler",
       "delete": "Supprimer",
-      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette alliance ? Cela supprimera également tous les utilisateurs, activités et invitations associés. Cette action est irréversible."
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'alliance \"{{name}}\" ? Cela supprimera également tous les utilisateurs, activités et invitations associés."
     },
     "users": {
       "title": "Gestion des Utilisateurs",
@@ -234,7 +239,8 @@
       "edit": "Modifier",
       "save": "Enregistrer",
       "cancel": "Annuler",
-      "delete": "Supprimer"
+      "delete": "Supprimer",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'utilisateur \"{{name}}\" ? Cette action ne peut pas être annulée."
     }
   },
   "super_admin": "Super Administrateur",

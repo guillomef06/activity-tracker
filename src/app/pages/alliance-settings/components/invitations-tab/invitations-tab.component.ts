@@ -11,8 +11,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { AllianceService } from '@app/core/services/alliance.service';
 import type { InvitationWithStats } from '@app/shared/models';
 
@@ -32,6 +34,7 @@ import type { InvitationWithStats } from '@app/shared/models';
     MatBadgeModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatDialogModule,
     TranslateModule,
   ],
   templateUrl: './invitations-tab.component.html',
@@ -42,7 +45,9 @@ export class InvitationsTabComponent {
   private readonly allianceService = inject(AllianceService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
   private readonly clipboard = inject(Clipboard);
+  private readonly translate = inject(TranslateService);
 
   // Inputs
   invitations = input.required<InvitationWithStats[]>();
@@ -108,7 +113,14 @@ export class InvitationsTabComponent {
   }
 
   protected async revokeInvitation(id: string): Promise<void> {
-    if (!confirm('Are you sure you want to revoke this invitation?')) {
+    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: this.translate.instant('alliance.settings.revokeConfirm'),
+        confirmColor: 'warn'
+      }
+    }).afterClosed().toPromise();
+
+    if (!confirmed) {
       return;
     }
 

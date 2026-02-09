@@ -117,7 +117,13 @@
 }
 
 // Mobile responsiveness
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .subtitle {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
   .app-header {
     padding: 0 0.5rem;
   }
@@ -126,23 +132,10 @@
     font-size: 1.25rem;
   }
 
-  .subtitle {
-    display: none;
-  }
-
-  .user-display-name {
-    span {
-      display: none;
-    }
-  }
-
   .alliance-badge,
+  .user-display-name,
   .super-admin-badge {
-    span {
-      display: none;
-    }
-
-    padding: 0.5rem;
+    display: none;
   }
 }
 
