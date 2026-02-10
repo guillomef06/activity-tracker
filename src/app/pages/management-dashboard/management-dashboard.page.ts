@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -11,6 +10,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ActivityService } from '../../core/services/activity.service';
+import { ProgressBarService } from '../../core/services/progress-bar.service';
 import { UserScore } from '../../shared/models/activity.model';
 import { RankingChartComponent } from '../../shared/components/ranking-chart/ranking-chart.component';
 import { getWeekLabel, formatShortDate, getCurrentWeekNumber } from '../../shared/utils/date.util';
@@ -23,7 +23,6 @@ import { APP_CONSTANTS } from '../../shared/constants/constants';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
@@ -37,12 +36,12 @@ import { APP_CONSTANTS } from '../../shared/constants/constants';
 })
 export class ManagementDashboardPage implements OnInit {
   private activityService = inject(ActivityService);
+  private progressBarService = inject(ProgressBarService);
   private router = inject(Router);
   private translate = inject(TranslateService);
   private dialog = inject(MatDialog);
   
   hasData = signal<boolean>(false);
-  loading = signal<boolean>(true);
   
   // Available activities for current week
   availableActivitiesThisWeek = computed(() => {
@@ -64,9 +63,9 @@ export class ManagementDashboardPage implements OnInit {
   }
 
   async initialize(): Promise<void> {
-    this.loading.set(true);
-    await this.activityService.initialize();
-    this.loading.set(false);
+    await this.progressBarService.withProgress(async () => {
+      await this.activityService.initialize();
+    });
   }
 
   async resetData(): Promise<void> {
@@ -78,9 +77,10 @@ export class ManagementDashboardPage implements OnInit {
     }).afterClosed().toPromise();
 
     if (confirmed) {
-      this.loading.set(true);
-      this.activityService.resetToInitialData();
-      await this.initialize();
+      await this.progressBarService.withProgress(async () => {
+        this.activityService.resetToInitialData();
+        await this.initialize();
+      });
     }
   }
 

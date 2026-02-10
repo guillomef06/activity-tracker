@@ -114,20 +114,13 @@
         }
 
         <div class="actions">
-          <button
-            mat-raised-button
-            color="primary"
+          <app-loading-button
             type="submit"
-            [disabled]="isLoading()"
-            class="submit-button"
-          >
-            @if (isLoading()) {
-              <mat-spinner diameter="20"></mat-spinner>
-              <span>Creating Alliance...</span>
-            } @else {
-              <span>Sign Up</span>
-            }
-          </button>
+            text="Sign Up"
+            loadingText="Creating Alliance..."
+            [loading]="isLoading()"
+            buttonClass="submit-button"
+          />
         </div>
 
         <div class="footer-links">

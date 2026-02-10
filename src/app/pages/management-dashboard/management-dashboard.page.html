@@ -48,28 +48,19 @@
     </mat-card-content>
   </mat-card>
 
-  @if (loading()) {
-    <div class="loading">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>{{ 'dashboard.loading' | translate }}</p>
-    </div>
+  @if (!hasData()) {
+    <mat-card class="empty-state">
+      <mat-card-content>
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <p>{{ 'dashboard.noActivities' | translate }}</p>
+        <button mat-raised-button color="primary" (click)="goToActivityInput()">
+          <mat-icon>add</mat-icon>
+          {{ 'dashboard.submitFirst' | translate }}
+        </button>
+      </mat-card-content>
+    </mat-card>
   }
 
-  @if (!loading()) {
-    @if (!hasData()) {
-      <mat-card class="empty-state">
-        <mat-card-content>
-          <mat-icon class="empty-icon">inbox</mat-icon>
-          <p>{{ 'dashboard.noActivities' | translate }}</p>
-          <button mat-raised-button color="primary" (click)="goToActivityInput()">
-            <mat-icon>add</mat-icon>
-            {{ 'dashboard.submitFirst' | translate }}
-          </button>
-        </mat-card-content>
-      </mat-card>
-    }
-
-    <!-- Ranking Chart - always rendered to emit hasData, hides itself when no data -->
-    <app-ranking-chart (hasData)="onDataLoaded($event)"></app-ranking-chart>
-  }
+  <!-- Ranking Chart - always rendered to emit hasData, hides itself when no data -->
+  <app-ranking-chart (hasData)="onDataLoaded($event)"></app-ranking-chart>
 </div>

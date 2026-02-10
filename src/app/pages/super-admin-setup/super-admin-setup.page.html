@@ -104,20 +104,13 @@
         }
 
         <div class="actions">
-          <button
-            mat-raised-button
-            color="primary"
+          <app-loading-button
             type="submit"
-            [disabled]="isLoading()"
-            class="submit-button"
-          >
-            @if (isLoading()) {
-              <mat-spinner diameter="20"></mat-spinner>
-              <span>Creating...</span>
-            } @else {
-              <span>Create Super Admin</span>
-            }
-          </button>
+            text="Create Super Admin"
+            loadingText="Creating..."
+            [loading]="isLoading()"
+            buttonClass="submit-button"
+          />
         </div>
       </form>
     </mat-card-content>

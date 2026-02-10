@@ -18,9 +18,6 @@
             (blur)="validateToken()"
           />
           <mat-icon matPrefix>vpn_key</mat-icon>
-          @if (isValidatingToken()) {
-            <mat-spinner matSuffix diameter="20"></mat-spinner>
-          }
           <mat-hint>Provided by your alliance administrator</mat-hint>
           @if (tokenError()) {
             <mat-error>{{ tokenError() | translate }}</mat-error>
@@ -128,20 +125,13 @@
         }
 
         <div class="actions">
-          <button
-            mat-raised-button
-            color="primary"
+          <app-loading-button
             type="submit"
-            [disabled]="isLoading()"
-            class="submit-button"
-          >
-            @if (isLoading()) {
-              <mat-spinner diameter="20"></mat-spinner>
-              <span>Joining...</span>
-            } @else {
-              <span>Join Alliance</span>
-            }
-          </button>
+            text="Join Alliance"
+            loadingText="Joining..."
+            [loading]="isLoading()"
+            buttonClass="submit-button"
+          />
         </div>
 
         <div class="footer-links">
