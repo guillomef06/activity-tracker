@@ -100,3 +100,8 @@
     </div>
   }
 </mat-toolbar>
+
+<!-- Global progress bar -->
+@if (progressBarService.isLoading()) {
+  <mat-progress-bar mode="indeterminate" class="global-progress-bar"></mat-progress-bar>
+}

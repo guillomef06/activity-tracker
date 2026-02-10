@@ -7,10 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { AllianceService } from '@app/core/services/alliance.service';
+import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { MemberSignUpRequest } from '@app/shared/models';
 import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
@@ -26,8 +26,8 @@ import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/util
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     TranslateModule,
+    LoadingButtonComponent,
   ],
   templateUrl: './join.page.html',
   styleUrl: './join.page.scss',

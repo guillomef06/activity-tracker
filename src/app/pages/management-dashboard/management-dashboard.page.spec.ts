@@ -33,10 +33,6 @@ describe('ManagementDashboardPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with loading state', () => {
-    expect(component.loading()).toBeDefined();
-  });
-
   it('should have hasData signal', () => {
     expect(component.hasData()).toBeDefined();
     expect(typeof component.hasData()).toBe('boolean');

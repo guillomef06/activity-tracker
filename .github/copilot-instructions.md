@@ -24,13 +24,12 @@ Users can input activities and management can view scores on a rolling 6-week ba
 
 ### Component File Structure
 - **Always use separate files** for TypeScript, HTML, and SCSS (never inline templates/styles for production components)
-- Each component should have 3 files minimum:
+- Each component must have 3 files minimum:
   - `component-name.component.ts` - Component logic
   - `component-name.component.html` - Template
   - `component-name.component.scss` - Styles
 - Optional: `component-name.component.spec.ts` for tests
 - Use `templateUrl` and `styleUrl` (or `styleUrls`) properties, not inline `template` or `styles`
-- Exception: Very simple utility components (< 3 lines of template) can use inline templates
 - Organize component files in dedicated folders:
   ```
   my-component/
@@ -39,6 +38,10 @@ Users can input activities and management can view scores on a rolling 6-week ba
   ├── my-component.component.scss
   └── my-component.component.spec.ts
   ```
+
+### Template & Style Restrictions
+- **Never use `::ng-deep`** in component styles. Prefer proper Angular encapsulation and global styles when needed.
+- **Never use functions in templates** (e.g. `{{ myFunction() }}` or `[prop]="myFunction()"`). Use signals, variables, or getters for performance and maintainability.
 
 ### TypeScript Standards
 - Enable strict mode in tsconfig.json

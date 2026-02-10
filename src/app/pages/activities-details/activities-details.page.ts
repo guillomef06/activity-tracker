@@ -9,6 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
+import { ProgressBarService } from '../../core/services/progress-bar.service';
 import { UserScore } from '../../shared/models/activity.model';
 import { getWeekLabel, formatShortDate } from '../../shared/utils/date.util';
 import { ActivityLabelPipe } from '../../shared/pipes/activity-label.pipe';
@@ -35,6 +36,7 @@ import { ActivityLabelPipe } from '../../shared/pipes/activity-label.pipe';
 export class ActivitiesDetailsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly activityService = inject(ActivityService);
+  private readonly progressBarService = inject(ProgressBarService);
   private readonly translate = inject(TranslateService);
 
   protected readonly userScores = signal<UserScore[]>([]);
@@ -49,7 +51,14 @@ export class ActivitiesDetailsPage implements OnInit {
   protected readonly trackByIndex = (index: number) => index;
 
   ngOnInit(): void {
-    this.loadScores();
+    this.initialize();
+  }
+
+  private async initialize(): Promise<void> {
+    await this.progressBarService.withProgress(async () => {
+      await this.activityService.initialize();
+      this.loadScores();
+    });
   }
 
   private loadScores(): void {
