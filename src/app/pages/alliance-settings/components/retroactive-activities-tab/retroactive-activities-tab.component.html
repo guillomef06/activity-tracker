@@ -66,7 +66,7 @@
             }
             @for (activity of availableActivities(); track activity.value) {
               <mat-option [value]="activity.value">
-                {{ activity.label }}
+                {{ activity.labelKey | translate }}
               </mat-option>
             }
           </mat-select>

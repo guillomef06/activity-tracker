@@ -79,11 +79,7 @@ export class RetroactiveActivitiesTabComponent {
   availableActivities = computed(() => {
     const weekNumber = getWeekNumberForWeeksAgo(this.selectedWeeksAgo());
     return APP_CONSTANTS.ACTIVITY_TYPES
-      .filter((type: ActivityType) => type.availableWeeks.includes(weekNumber))
-      .map((type: ActivityType) => ({
-        ...type,
-        label: this.translate.instant(type.labelKey)
-      }));
+      .filter((type: ActivityType) => type.availableWeeks.includes(weekNumber));
   });
 
   calculatedPoints = computed(() => {

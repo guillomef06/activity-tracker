@@ -135,4 +135,16 @@ body {
       color: var(--md-sys-color-primary);
     }
   }
+
+  /* Language selector menu styles */
+  .language-flag {
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+    line-height: 1;
+  }
+
+  .check-icon {
+    margin-left: auto;
+    color: var(--md-sys-color-primary);
+  }
 }

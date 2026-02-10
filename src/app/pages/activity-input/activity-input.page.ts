@@ -52,11 +52,7 @@ export class ActivityInputPage {
   availableActivities = computed(() => {
     const currentWeek = getCurrentWeekNumber();
     return APP_CONSTANTS.ACTIVITY_TYPES
-      .filter(type => type.availableWeeks.includes(currentWeek))
-      .map(type => ({
-        ...type,
-        label: this.translate.instant(type.labelKey)
-      }));
+      .filter(type => type.availableWeeks.includes(currentWeek));
   });
 
   constructor() {
