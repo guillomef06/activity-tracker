@@ -4,7 +4,6 @@ import { ActivityService } from '@app/core/services';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { signal } from '@angular/core';
 
 describe('RetroactiveActivitiesTabComponent', () => {
   let component: RetroactiveActivitiesTabComponent;

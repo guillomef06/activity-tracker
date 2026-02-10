@@ -90,6 +90,17 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 
 ---
 
+## 🌍 Système de Préférences Linguistiques ✅
+- **Persistance DB:** Colonne JSONB `preferences` dans `user_profiles` (migration 08)
+- **LanguageService:** Gestion centralisée avec priorité (DB → Browser → Fallback)
+- **UI:** Sélecteur de langue intégré dans le menu utilisateur avec drapeaux emoji
+- **4 langues:** 🇬🇧 English, 🇫🇷 Français, 🇪🇸 Español, 🇮🇹 Italiano
+- **Réactivité:** Pipe `ActivityLabelPipe` pour traduction dynamique des activités
+- **Corrections i18n:** Suppression de `translate.instant()` au profit du pipe `translate` pour mise à jour temps réel
+- **Architecture extensible:** Structure JSON permet ajout futur de thème, notifications, etc.
+
+---
+
 ## 🎯 Système de Points Configurables ✅
 
 ### Fonctionnalité

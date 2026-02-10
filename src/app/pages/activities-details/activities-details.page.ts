@@ -11,6 +11,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivityService } from '../../core/services/activity.service';
 import { UserScore } from '../../shared/models/activity.model';
 import { getWeekLabel, formatShortDate } from '../../shared/utils/date.util';
+import { ActivityLabelPipe } from '../../shared/pipes/activity-label.pipe';
 
 @Component({
   selector: 'app-activities-details',
@@ -24,7 +25,8 @@ import { getWeekLabel, formatShortDate } from '../../shared/utils/date.util';
     MatExpansionModule,
     MatChipsModule,
     MatBadgeModule,
-    TranslateModule
+    TranslateModule,
+    ActivityLabelPipe
   ],
   templateUrl: './activities-details.page.html',
   styleUrl: './activities-details.page.scss',

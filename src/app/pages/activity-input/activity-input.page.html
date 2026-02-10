@@ -25,7 +25,7 @@
           >
             @for (type of availableActivities(); track type.value) {
               <mat-option [value]="type.value">
-                {{ type.label }}
+                {{ type.labelKey | translate }}
               </mat-option>
             }
           </mat-select>
