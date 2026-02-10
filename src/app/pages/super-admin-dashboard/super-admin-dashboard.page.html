@@ -6,20 +6,14 @@
         <mat-card-title>{{ 'superAdmin.dashboard.title' | translate }}</mat-card-title>
         <mat-card-subtitle>{{ 'superAdmin.dashboard.subtitle' | translate }}</mat-card-subtitle>
       </div>
-      <button mat-icon-button (click)="refreshStats()" [disabled]="isLoading()">
+      <button mat-icon-button (click)="refreshStats()" [disabled]="progressBarService.isLoading()">
         <mat-icon>refresh</mat-icon>
       </button>
     </mat-card-header>
   </mat-card>
 
-  @if (isLoading()) {
-    <div class="loading-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>{{ 'common.loading' | translate }}</p>
-    </div>
-  } @else {
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
       <mat-card class="stat-card alliances-card">
         <mat-card-content>
           <div class="stat-icon">
@@ -90,5 +84,4 @@
         </mat-card>
       </div>
     </div>
-  }
 </div>

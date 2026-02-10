@@ -2,11 +2,11 @@ import { Component, inject, signal, OnInit, computed, ChangeDetectionStrategy } 
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { PointRulesService } from '@app/core/services/point-rules.service';
+import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
 
 // Child components
@@ -23,7 +23,6 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
     CommonModule,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     MatTabsModule,
     TranslateModule,
     AllianceInfoTabComponent,
@@ -39,8 +38,8 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
 export class AllianceSettingsPage implements OnInit {
   private readonly allianceService = inject(AllianceService);
   private readonly pointRulesService = inject(PointRulesService);
+  protected readonly progressBarService = inject(ProgressBarService);
 
-  protected readonly isLoading = signal(false);
   protected readonly members = signal<UserProfile[]>([]);
   protected readonly invitations = signal<InvitationWithStats[]>([]);
   protected readonly pointRules = signal<ActivityPointRule[]>([]);
@@ -51,19 +50,18 @@ export class AllianceSettingsPage implements OnInit {
   }
 
   private async loadData(): Promise<void> {
-    this.isLoading.set(true);
-    try {
-      await Promise.all([
-        this.allianceService.loadAlliance(),
-        this.loadMembers(),
-        this.loadInvitations(),
-        this.loadPointRules(),
-      ]);
-    } catch (error) {
-      console.error('Error loading alliance data:', error);
-    } finally {
-      this.isLoading.set(false);
-    }
+    await this.progressBarService.withProgress(async () => {
+      try {
+        await Promise.all([
+          this.allianceService.loadAlliance(),
+          this.loadMembers(),
+          this.loadInvitations(),
+          this.loadPointRules(),
+        ]);
+      } catch (error) {
+        console.error('Error loading alliance data:', error);
+      }
+    });
   }
 
   protected async loadMembers(): Promise<void> {

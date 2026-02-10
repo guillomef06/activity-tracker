@@ -8,12 +8,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
+import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type { Alliance } from '@app/shared/models';
 
 interface AllianceWithStats extends Alliance {
@@ -34,7 +34,6 @@ interface AllianceWithStats extends Alliance {
     MatIconModule,
     MatTableModule,
     MatChipsModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
@@ -49,8 +48,8 @@ export class SuperAdminAlliancesPage implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
+  protected readonly progressBarService = inject(ProgressBarService);
 
-  protected readonly isLoading = signal(false);
   protected readonly alliances = signal<AllianceWithStats[]>([]);
   protected readonly displayedColumns: string[] = ['name', 'admin', 'members', 'createdAt', 'actions'];
 
@@ -66,51 +65,50 @@ export class SuperAdminAlliancesPage implements OnInit {
   }
 
   protected async loadAlliances(): Promise<void> {
-    this.isLoading.set(true);
-    try {
-      // Load alliances with member count and admin info
-      const { data: alliancesData, error: alliancesError } = await this.supabase.client
-        .from('alliances')
-        .select('*')
-        .order('created_at', { ascending: false });
+    await this.progressBarService.withProgress(async () => {
+      try {
+        // Load alliances with member count and admin info
+        const { data: alliancesData, error: alliancesError } = await this.supabase.client
+          .from('alliances')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (alliancesError) throw alliancesError;
+        if (alliancesError) throw alliancesError;
 
-      if (alliancesData) {
-        // For each alliance, get member count and admin name
-        const alliancesWithStats = await Promise.all(
-          alliancesData.map(async (alliance) => {
-            // Get member count
-            const { count } = await this.supabase.client
-              .from('user_profiles')
-              .select('count', { count: 'exact', head: true })
-              .eq('alliance_id', alliance.id);
+        if (alliancesData) {
+          // For each alliance, get member count and admin name
+          const alliancesWithStats = await Promise.all(
+            alliancesData.map(async (alliance) => {
+              // Get member count
+              const { count } = await this.supabase.client
+                .from('user_profiles')
+                .select('count', { count: 'exact', head: true })
+                .eq('alliance_id', alliance.id);
 
-            // Get admin name
-            const { data: adminData } = await this.supabase.client
-              .from('user_profiles')
-              .select('display_name')
-              .eq('alliance_id', alliance.id)
-              .eq('role', 'admin')
-              .limit(1)
-              .single();
+              // Get admin name
+              const { data: adminData } = await this.supabase.client
+                .from('user_profiles')
+                .select('display_name')
+                .eq('alliance_id', alliance.id)
+                .eq('role', 'admin')
+                .limit(1)
+                .single();
 
-            return {
-              ...alliance,
-              member_count: count || 0,
-              admin_name: adminData?.display_name || 'N/A',
-            };
-          })
-        );
+              return {
+                ...alliance,
+                member_count: count || 0,
+                admin_name: adminData?.display_name || 'N/A',
+              };
+            })
+          );
 
-        this.alliances.set(alliancesWithStats);
+          this.alliances.set(alliancesWithStats);
+        }
+      } catch (error) {
+        console.error('Error loading alliances:', error);
+        this.snackBar.open('Failed to load alliances', 'Close', { duration: 3000 });
       }
-    } catch (error) {
-      console.error('Error loading alliances:', error);
-      this.snackBar.open('Failed to load alliances', 'Close', { duration: 3000 });
-    } finally {
-      this.isLoading.set(false);
-    }
+    });
   }
 
   protected startEdit(alliance: Alliance): void {
@@ -131,27 +129,26 @@ export class SuperAdminAlliancesPage implements OnInit {
       return;
     }
 
-    this.isLoading.set(true);
-    try {
-      const { id, name } = this.editForm.value;
+    await this.progressBarService.withProgress(async () => {
+      try {
+        const { id, name } = this.editForm.value;
 
-      const { error } = await this.supabase.client
-        .from('alliances')
-        .update({ name })
-        .eq('id', id);
+        const { error } = await this.supabase.client
+          .from('alliances')
+          .update({ name })
+          .eq('id', id);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      this.snackBar.open('Alliance updated successfully', 'Close', { duration: 3000 });
-      this.editingId.set(null);
-      this.editForm.reset();
-      await this.loadAlliances();
-    } catch (error) {
-      console.error('Error updating alliance:', error);
-      this.snackBar.open('Failed to update alliance', 'Close', { duration: 3000 });
-    } finally {
-      this.isLoading.set(false);
-    }
+        this.snackBar.open('Alliance updated successfully', 'Close', { duration: 3000 });
+        this.editingId.set(null);
+        this.editForm.reset();
+        await this.loadAlliances();
+      } catch (error) {
+        console.error('Error updating alliance:', error);
+        this.snackBar.open('Failed to update alliance', 'Close', { duration: 3000 });
+      }
+    });
   }
 
   protected async deleteAlliance(alliance: Alliance): Promise<void> {
@@ -166,24 +163,23 @@ export class SuperAdminAlliancesPage implements OnInit {
       return;
     }
 
-    this.isLoading.set(true);
-    try {
-      // Delete alliance (cascade will handle related records)
-      const { error } = await this.supabase.client
-        .from('alliances')
-        .delete()
-        .eq('id', alliance.id);
+    await this.progressBarService.withProgress(async () => {
+      try {
+        // Delete alliance (cascade will handle related records)
+        const { error } = await this.supabase.client
+          .from('alliances')
+          .delete()
+          .eq('id', alliance.id);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      this.snackBar.open('Alliance deleted successfully', 'Close', { duration: 3000 });
-      await this.loadAlliances();
-    } catch (error) {
-      console.error('Error deleting alliance:', error);
-      this.snackBar.open('Failed to delete alliance', 'Close', { duration: 3000 });
-    } finally {
-      this.isLoading.set(false);
-    }
+        this.snackBar.open('Alliance deleted successfully', 'Close', { duration: 3000 });
+        await this.loadAlliances();
+      } catch (error) {
+        console.error('Error deleting alliance:', error);
+        this.snackBar.open('Failed to delete alliance', 'Close', { duration: 3000 });
+      }
+    });
   }
 
   protected formatDate(date: string): string {

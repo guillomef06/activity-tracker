@@ -9,12 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
+import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type { UserProfile } from '@app/shared/models';
 
 interface UserWithAlliance extends UserProfile {
@@ -35,7 +35,6 @@ interface UserWithAlliance extends UserProfile {
     MatIconModule,
     MatTableModule,
     MatChipsModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
@@ -50,8 +49,8 @@ export class SuperAdminUsersPage implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
+  protected readonly progressBarService = inject(ProgressBarService);
 
-  protected readonly isLoading = signal(false);
   protected readonly users = signal<UserWithAlliance[]>([]);
   protected readonly displayedColumns: string[] = ['displayName', 'username', 'role', 'alliance', 'createdAt', 'actions'];
 
@@ -69,30 +68,29 @@ export class SuperAdminUsersPage implements OnInit {
   }
 
   protected async loadUsers(): Promise<void> {
-    this.isLoading.set(true);
-    try {
-      // Load users with alliance names
-      const { data: usersData, error: usersError } = await this.supabase.client
-        .from('user_profiles')
-        .select('*, alliances(name)')
-        .order('created_at', { ascending: false });
+    await this.progressBarService.withProgress(async () => {
+      try {
+        // Load users with alliance names
+        const { data: usersData, error: usersError } = await this.supabase.client
+          .from('user_profiles')
+          .select('*, alliances(name)')
+          .order('created_at', { ascending: false });
 
-      if (usersError) throw usersError;
+        if (usersError) throw usersError;
 
-      if (usersData) {
-        const usersWithAlliance: UserWithAlliance[] = usersData.map((user: { alliances?: { name: string } | null } & UserProfile) => ({
-          ...user,
-          alliance_name: user.alliances?.name || null,
-        }));
+        if (usersData) {
+          const usersWithAlliance: UserWithAlliance[] = usersData.map((user: { alliances?: { name: string } | null } & UserProfile) => ({
+            ...user,
+            alliance_name: user.alliances?.name || null,
+          }));
 
-        this.users.set(usersWithAlliance);
+          this.users.set(usersWithAlliance);
+        }
+      } catch (error) {
+        console.error('Error loading users:', error);
+        this.snackBar.open('Failed to load users', 'Close', { duration: 3000 });
       }
-    } catch (error) {
-      console.error('Error loading users:', error);
-      this.snackBar.open('Failed to load users', 'Close', { duration: 3000 });
-    } finally {
-      this.isLoading.set(false);
-    }
+    });
   }
 
   protected startEdit(user: UserProfile): void {
@@ -114,27 +112,26 @@ export class SuperAdminUsersPage implements OnInit {
       return;
     }
 
-    this.isLoading.set(true);
-    try {
-      const { id, display_name, role } = this.editForm.value;
+    await this.progressBarService.withProgress(async () => {
+      try {
+        const { id, display_name, role } = this.editForm.value;
 
-      const { error } = await this.supabase.client
-        .from('user_profiles')
-        .update({ display_name, role })
-        .eq('id', id);
+        const { error } = await this.supabase.client
+          .from('user_profiles')
+          .update({ display_name, role })
+          .eq('id', id);
 
-      if (error) throw error;
+        if (error) throw error;
 
-      this.snackBar.open('User updated successfully', 'Close', { duration: 3000 });
-      this.editingId.set(null);
-      this.editForm.reset();
-      await this.loadUsers();
-    } catch (error) {
-      console.error('Error updating user:', error);
-      this.snackBar.open('Failed to update user', 'Close', { duration: 3000 });
-    } finally {
-      this.isLoading.set(false);
-    }
+        this.snackBar.open('User updated successfully', 'Close', { duration: 3000 });
+        this.editingId.set(null);
+        this.editForm.reset();
+        await this.loadUsers();
+      } catch (error) {
+        console.error('Error updating user:', error);
+        this.snackBar.open('Failed to update user', 'Close', { duration: 3000 });
+      }
+    });
   }
 
   protected async deleteUser(user: UserProfile): Promise<void> {
@@ -149,30 +146,29 @@ export class SuperAdminUsersPage implements OnInit {
       return;
     }
 
-    this.isLoading.set(true);
-    try {
-      // Use RPC function to delete user completely (user_profiles + auth.users)
-      // This function has SECURITY DEFINER to bypass RLS for auth.users deletion
-      const { data, error } = await this.supabase.client
-        .rpc('delete_user_complete', { user_id: user.id });
+    await this.progressBarService.withProgress(async () => {
+      try {
+        // Use RPC function to delete user completely (user_profiles + auth.users)
+        // This function has SECURITY DEFINER to bypass RLS for auth.users deletion
+        const { data, error } = await this.supabase.client
+          .rpc('delete_user_complete', { user_id: user.id });
 
-      if (error) throw error;
-      
-      if (!data) {
-        throw new Error('Delete function returned false');
+        if (error) throw error;
+        
+        if (!data) {
+          throw new Error('Delete function returned false');
+        }
+
+        this.snackBar.open('User deleted successfully', 'Close', { duration: 3000 });
+        await this.loadUsers();
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        const errorMessage = (error as { message?: string })?.message || 'Failed to delete user';
+        this.snackBar.open(errorMessage, 'Close', { 
+          duration: 5000 
+        });
       }
-
-      this.snackBar.open('User deleted successfully', 'Close', { duration: 3000 });
-      await this.loadUsers();
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      const errorMessage = (error as { message?: string })?.message || 'Failed to delete user';
-      this.snackBar.open(errorMessage, 'Close', { 
-        duration: 5000 
-      });
-    } finally {
-      this.isLoading.set(false);
-    }
+    });
   }
 
   protected formatDate(date: string): string {

@@ -6,10 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { LanguageService, type SupportedLanguage } from '@app/core/services/language.service';
+import { ProgressBarService } from '@app/core/services/progress-bar.service';
 
 @Component({
   selector: 'app-header',
@@ -23,6 +25,7 @@ import { LanguageService, type SupportedLanguage } from '@app/core/services/lang
     MatButtonModule,
     MatMenuModule,
     MatDividerModule,
+    MatProgressBarModule,
     TranslateModule
   ],
   templateUrl: './app-header.component.html',
@@ -33,6 +36,7 @@ export class AppHeaderComponent {
   protected readonly authService = inject(AuthService);
   protected readonly allianceService = inject(AllianceService);
   protected readonly languageService = inject(LanguageService);
+  protected readonly progressBarService = inject(ProgressBarService);
 
   constructor() {
     // Reactive loading: automatically load alliance when user profile changes

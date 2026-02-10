@@ -6,19 +6,13 @@
         <mat-card-title>{{ 'superAdmin.users.title' | translate }}</mat-card-title>
         <mat-card-subtitle>{{ 'superAdmin.users.subtitle' | translate }}</mat-card-subtitle>
       </div>
-      <button mat-icon-button (click)="loadUsers()" [disabled]="isLoading()">
+      <button mat-icon-button (click)="loadUsers()" [disabled]="progressBarService.isLoading()">
         <mat-icon>refresh</mat-icon>
       </button>
     </mat-card-header>
   </mat-card>
 
-  @if (isLoading()) {
-    <div class="loading-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>{{ 'common.loading' | translate }}</p>
-    </div>
-  } @else {
-    <mat-card class="content-card">
+  <mat-card class="content-card">
       @if (users().length === 0) {
         <div class="empty-state">
           <mat-icon>people</mat-icon>
@@ -138,5 +132,4 @@
         </div>
       }
     </mat-card>
-  }
 </div>

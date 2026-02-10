@@ -7,9 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
+import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
 @Component({
@@ -23,8 +23,8 @@ import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/util
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
     TranslateModule,
+    LoadingButtonComponent,
   ],
   templateUrl: './super-admin-setup.page.html',
   styleUrl: './super-admin-setup.page.scss',

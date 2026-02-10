@@ -9,13 +9,7 @@
     </mat-card-header>
   </mat-card>
 
-  @if (isLoading()) {
-    <div class="loading-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>{{ 'common.loading' | translate }}</p>
-    </div>
-  } @else {
-    <mat-tab-group class="settings-tabs">
+  <mat-tab-group class="settings-tabs">
       <!-- Alliance Information Tab -->
       <mat-tab>
         <ng-template mat-tab-label>
@@ -40,7 +34,7 @@
         
         <app-members-tab
           [members]="members()"
-          [isLoading]="isLoading()"
+          [isLoading]="progressBarService.isLoading()"
         />
       </mat-tab>
 
@@ -53,7 +47,7 @@
         
         <app-invitations-tab
           [invitations]="invitations()"
-          [isLoading]="isLoading()"
+          [isLoading]="progressBarService.isLoading()"
           (invitationCreated)="handleInvitationCreated()"
           (invitationRevoked)="handleInvitationRevoked()"
         />
@@ -68,7 +62,7 @@
         
         <app-point-rules-tab
           [pointRules]="pointRules()"
-          [isLoading]="isLoading()"
+          [isLoading]="progressBarService.isLoading()"
           (ruleCreated)="handleRuleCreated()"
           (ruleDeleted)="handleRuleDeleted()"
         />
@@ -86,5 +80,4 @@
         />
       </mat-tab>
     </mat-tab-group>
-  }
 </div>

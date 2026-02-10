@@ -52,6 +52,5 @@ describe('SuperAdminDashboardPage', () => {
 
   it('should have statistics signals', () => {
     expect(component['stats']).toBeDefined();
-    expect(component['isLoading']).toBeDefined();
   });
 });
