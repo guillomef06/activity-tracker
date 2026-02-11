@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { Component, inject, effect, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -38,7 +39,10 @@ export class AppHeaderComponent {
   protected readonly languageService = inject(LanguageService);
   protected readonly progressBarService = inject(ProgressBarService);
 
+  protected imageBaseUrl: string;
+
   constructor() {
+    this.imageBaseUrl = environment.production ? "/activity-tracker/assets/favicon.png" : "/assets/favicon.png";
     // Reactive loading: automatically load alliance when user profile changes
     effect(() => {
       const profile = this.authService.userProfile();
