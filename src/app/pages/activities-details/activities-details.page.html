@@ -19,7 +19,7 @@
           <mat-card-title>{{ userScore.userName }}</mat-card-title>
           <mat-card-subtitle>
             <mat-chip>{{ userScore.sixWeekTotal }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
-            <mat-chip>{{ userScore.averageWeekly | number:'1.0-1' }}/{{ 'dashboard.avgWeekly' | translate }}</mat-chip>
+            <mat-chip class="avg-pts">{{ userScore.averageWeekly | number:'1.0-1' }}/{{ 'dashboard.avgWeekly' | translate }}</mat-chip>
           </mat-card-subtitle>
           <button mat-icon-button class="expand-button">
             <mat-icon>{{ selectedUserId() === userScore.userId ? 'expand_less' : 'expand_more' }}</mat-icon>

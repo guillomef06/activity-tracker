@@ -2,10 +2,6 @@
   padding: 1.5rem;
   max-width: 800px;
   margin: 0 auto;
-
-  @media (max-width: 600px) {
-    padding: 1rem;
-  }
 }
 
 .info-card {
@@ -23,10 +19,6 @@
 .form-card {
   mat-card-content {
     padding: 1.5rem;
-
-    @media (max-width: 600px) {
-      padding: 1rem;
-    }
   }
 }
 
@@ -74,10 +66,6 @@ form {
   button {
     flex: 1;
     min-width: 150px;
-
-    @media (max-width: 600px) {
-      min-width: 100%;
-    }
   }
 }
 
@@ -86,6 +74,25 @@ mat-form-field {
   ::ng-deep {
     .mat-mdc-form-field-icon-prefix {
       margin-right: 0.5rem;
+    }
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 600px) {
+  .retroactive-tab-container {
+    padding: 1rem;
+  }
+
+  .form-actions {
+    button {
+      width: 100%;
+    }
+  }
+
+  .form-card {
+    mat-card-content {
+      padding: 1rem;
     }
   }
 }
