@@ -74,9 +74,7 @@ export function getCurrentWeekNumber(): number {
   const diffInMs = currentWeekStart.getTime() - referenceWeekStart.getTime();
   const weeksElapsed = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
   
-  const cyclePosition = (weeksElapsed % 6) + 1;
-  
-  return cyclePosition;
+  return (weeksElapsed % 6) + 1;
 }
 
 /**
@@ -93,9 +91,7 @@ export function getWeekNumberForWeeksAgo(weeksAgo: number): number {
   const diffInMs = targetWeekStart.getTime() - referenceWeekStart.getTime();
   const weeksElapsed = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
   
-  const cyclePosition = (weeksElapsed % 6) + 1;
-  
-  return cyclePosition;
+  return ((weeksElapsed % 6) + 6) % 6 + 1;   
 }
 
 /**

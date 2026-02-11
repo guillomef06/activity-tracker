@@ -14,13 +14,33 @@
       }
 
       <form (ngSubmit)="onSubmit()" #activityForm="ngForm">
+        <!-- Week Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
+          <mat-select
+            name="week"
+            [ngModel]="selectedWeeksAgo()"
+            (ngModelChange)="selectedWeeksAgo.set($event)"
+            required
+          >
+            @for (week of weekOptions(); track week.value) {
+              <mat-option [value]="week.value">
+                {{ week.label }} - {{ week.dateRange }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix>calendar_today</mat-icon>
+          <mat-hint>{{ 'alliance.retroactive.weekHint' | translate }}</mat-hint>
+        </mat-form-field>
 
+        <!-- Activity Type Selection (Filtered by Week) -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
           <mat-select
             name="activityType"
             [ngModel]="activityType()"
             (ngModelChange)="activityType.set($event)"
+            [disabled]="availableActivities().length === 0"
             required
           >
             @for (type of availableActivities(); track type.value) {
@@ -30,10 +50,11 @@
             }
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
-          <mat-hint>{{ 'activityInput.positionHint' | translate }}</mat-hint>
+          <mat-hint>{{ 'activityInput.typeHint' | translate }}</mat-hint>
           <mat-error>{{ 'activityInput.typeRequired' | translate }}</mat-error>
         </mat-form-field>
 
+        <!-- Position Input -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'activityInput.position' | translate }}</mat-label>
           <input
@@ -52,11 +73,12 @@
           <mat-error>{{ 'activityInput.positionRequired' | translate }}</mat-error>
         </mat-form-field>
 
+        <!-- Points Preview -->
         @if (calculatedPointsResult()) {
           <div class="points-preview">
             <mat-icon>stars</mat-icon>
             <div class="points-info">
-              <div class="points-value">{{ points() }} {{ 'common.points' | translate }}</div>
+              <div class="points-value">{{ calculatedPointsResult()?.points }} {{ 'common.points' | translate }}</div>
             </div>
           </div>
         }

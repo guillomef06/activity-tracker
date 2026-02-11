@@ -14,7 +14,17 @@ import { AuthService } from '../../core/services/auth.service';
 import { PointRulesService } from '../../core/services/point-rules.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 import { PointCalculationResult } from '../../shared/models';
-import { getCurrentWeekNumber } from '../../shared/utils/date.util';
+import {
+  getWeekNumberForWeeksAgo,
+  getWeekLabel as getWeekLabelUtil,
+  getWeekStart, getDateForWeeksAgo, getWeekEnd
+} from '../../shared/utils/date.util';
+
+interface WeekOption {
+  value: number;
+  label: string;
+  dateRange: string;
+}
 
 @Component({
   selector: 'app-activity-input-page',
@@ -41,26 +51,50 @@ export class ActivityInputPage {
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
   
+  calculatedPointsResult = signal<PointCalculationResult | null>(null);
+  points = computed(() => this.calculatedPointsResult()?.points ?? 0);
+  selectedWeeksAgo = signal<number>(0); // 0 = current week, 1 = last week, ...
   activityType = signal<string>('');
   position = signal<number>(1);
   submitting = signal<boolean>(false);
-  calculatedPointsResult = signal<PointCalculationResult | null>(null);
-  
-  points = computed(() => this.calculatedPointsResult()?.points ?? 0);
+  weekOptions = computed<WeekOption[]>(() => {
+      const options: WeekOption[] = [];
+      const currentWeekLabel = this.translate.instant('alliance.retroactive.currentWeek');
+      const weeksAgoLabel = this.translate.instant('alliance.retroactive.weeksAgo');
+      
+      for (let i = 0; i <= 5; i++) {
+        const date = getDateForWeeksAgo(i);
+        const weekStart = getWeekStart(date);
+        const weekEnd = getWeekEnd(date);
+        const dateRange = `${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()}`;
+        
+        options.push({
+          value: i,
+          label: i === 0 ? currentWeekLabel : weeksAgoLabel.replace('{{count}}', i.toString()),
+          dateRange
+        });
+      }
+      
+      return options;
+    });
+
+  weekLabels = computed(() =>
+    this.weekOptions().map(week => getWeekLabelUtil(week.value, this.translate))
+  );
 
   // Filter activity types based on current week only
   availableActivities = computed(() => {
-    const currentWeek = getCurrentWeekNumber();
+    const selectedWeekNumber = getWeekNumberForWeeksAgo(this.selectedWeeksAgo());
     return APP_CONSTANTS.ACTIVITY_TYPES
-      .filter(type => type.availableWeeks.includes(currentWeek));
+      .filter(type => type.availableWeeks.includes(selectedWeekNumber));
   });
-
+  
   constructor() {
-    // Automatically calculate points when activity type or position changes
+    // Automatically calculate points when activity type, position, or week changes
     effect(() => {
       const type = this.activityType();
       const pos = this.position();
-      
+      // week is not needed, removed unused variable
       if (type && pos > 0) {
         const result = this.pointRulesService.calculatePoints(type, pos);
         this.calculatedPointsResult.set(result);
@@ -68,10 +102,14 @@ export class ActivityInputPage {
         this.calculatedPointsResult.set(null);
       }
     });
-  }
 
-  onActivityTypeChange(): void {
-    // Points will be calculated automatically by the effect - no action needed
+    // Clear points, activity and position when week changes
+    effect(() => {
+      this.selectedWeeksAgo();
+      this.calculatedPointsResult.set(null);
+      this.activityType.set('');
+      this.position.set(1);
+    });
   }
 
   async onSubmit(): Promise<void> {
@@ -86,11 +124,16 @@ export class ActivityInputPage {
 
     this.submitting.set(true);
 
-    // Add activity with position
+    // Calculate the date for the selected week (start of week)
+    const currentWeekStart = getWeekStart(new Date());
+    const activityDate = new Date(currentWeekStart);
+    activityDate.setDate(currentWeekStart.getDate() - (this.selectedWeeksAgo() * 7));
+
+    // Add activity with position and selected week date
     const { error } = await this.activityService.addActivity({
       activityType: this.activityType(),
       position: this.position(),
-      date: new Date()
+      date: activityDate
     });
 
     if (error) {
