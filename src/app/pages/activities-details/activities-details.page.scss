@@ -51,6 +51,7 @@
   padding: 1rem;
 
   .rank-badge {
+    margin-left: auto;
     flex-shrink: 0;
   }
 
@@ -62,10 +63,6 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
-  }
-
-  .expand-button {
-    margin-left: auto;
   }
 }
 
@@ -144,5 +141,16 @@
 
   .header-content h2 {
     font-size: 2rem;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 600px) {
+  mat-panel-description {
+    display: none;
+  }
+
+  .avg-pts {
+    display: none;
   }
 }

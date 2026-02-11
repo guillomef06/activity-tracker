@@ -4,16 +4,12 @@
   margin: 0 auto;
 }
 
-mat-card {
-  margin-top: 1rem;
-}
-
 .user-info {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  margin-bottom: 1.5rem;
   background-color: var(--md-sys-color-surface-variant);
   border-radius: 8px;
   font-size: 1rem;
@@ -37,7 +33,7 @@ mat-card {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0 1rem;
   margin-bottom: 1rem;
   border-radius: 8px;
   background: linear-gradient(135deg, var(--md-sys-color-primary-container) 0%, var(--md-sys-color-tertiary-container) 100%);
@@ -64,7 +60,6 @@ mat-card {
 .button-group {
   display: flex;
   gap: 1rem;
-  margin-top: 1.5rem;
   flex-wrap: wrap;
 
   button {
@@ -75,6 +70,14 @@ mat-card {
 
 // Mobile-first
 @media (max-width: 599px) {
+  mat-card-subtitle {
+    display: none;
+  }
+
+  .full-width {
+    margin-bottom: 2rem;
+  }
+
   .button-group {
     flex-direction: column;
     
