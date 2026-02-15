@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,20 +40,20 @@ export class ManagementDashboardPage implements OnInit {
   private router = inject(Router);
   private translate = inject(TranslateService);
   private dialog = inject(MatDialog);
-  
-  hasData = signal<boolean>(false);
-  
+
+  userScores = computed(() => this.activityService.getUserScores());
+
   // Available activities for current week
   availableActivitiesThisWeek = computed(() => {
     const currentWeek = getCurrentWeekNumber();
     return APP_CONSTANTS.ACTIVITY_TYPES
       .filter(type => type.availableWeeks.includes(currentWeek));
   });
-  
+
   // Utility functions exposed to template
   readonly getWeekLabel = (weekIndex: number) => getWeekLabel(weekIndex, this.translate);
   readonly formatDate = (date: Date) => formatShortDate(date);
-  
+
   // TrackBy functions for performance
   readonly trackByUserId = (_index: number, user: UserScore) => user.userId;
   readonly trackByIndex = (index: number) => index;
@@ -94,9 +94,5 @@ export class ManagementDashboardPage implements OnInit {
 
   refresh(): void {
     this.initialize();
-  }
-
-  onDataLoaded(hasData: boolean): void {
-    this.hasData.set(hasData);
   }
 }

@@ -18,7 +18,6 @@ export const APP_CONSTANTS = {
   },
   
   STORAGE_KEYS: {
-    ACTIVITIES: 'activities',
     USER_NAME: 'userName'
   },
   

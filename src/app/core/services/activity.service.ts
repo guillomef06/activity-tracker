@@ -2,7 +2,6 @@ import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Activity, ActivityRequest, UserScore, WeeklyScore } from '../../shared/models';
 import { firstValueFrom } from 'rxjs';
-import { StorageService } from './storage.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { PointRulesService } from './point-rules.service';
@@ -40,7 +39,6 @@ interface SupabaseActivity {
 })
 export class ActivityService {
   private http = inject(HttpClient);
-  private storage = inject(StorageService);
   private supabase = inject(SupabaseService);
   private authService = inject(AuthService);
   private pointRulesService = inject(PointRulesService);
@@ -61,21 +59,13 @@ export class ActivityService {
       await this.pointRulesService.loadRules();
       await this.loadFromSupabase();
     } else {
-      const storedActivities = this.loadFromLocalStorage();
-      const uniqueUsers = new Set(storedActivities.map((a: Activity) => a.userId));
-      
-      if (storedActivities.length === 0 || uniqueUsers.size < 2) {
-        await this.loadInitialData();
-      } else {
-        this.activities.set(storedActivities);
-      }
+      await this.loadInitialData();
     }
     
     this.isInitialized = true;
   }
   
   resetToInitialData(): void {
-    this.storage.remove(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES);
     this.isInitialized = false;
     this.initialize();
   }
@@ -136,7 +126,6 @@ export class ActivityService {
       });
       
       this.activities.set(initialActivities);
-      this.saveToLocalStorage(initialActivities);
     } catch (error) {
       console.error('Failed to load initial data:', error);
       this.activities.set([]);
@@ -152,7 +141,24 @@ export class ActivityService {
       if (this.useSupabase) {
         return await this.addActivityToSupabase(request);
       } else {
-        this.addActivityToLocalStorage(request);
+        // Mode mock : ajoute l'activité localement
+        const userId = this.authService.getUserId() ?? 'unknown-user';
+        const userProfile = this.authService.userProfile?.() ?? { id: userId, display_name: 'Unknown' };
+        const pointsResult = this.pointRulesService.calculatePoints(
+          request.activityType,
+          request.position
+        );
+        const newActivity = {
+          id: generateId(),
+          userId,
+          userName: userProfile.display_name,
+          activityType: request.activityType,
+          position: request.position,
+          points: pointsResult.points,
+          date: request.date,
+          timestamp: request.date.getTime()
+        };
+        this.activities.update(current => [newActivity, ...current]);
         return { error: null };
       }
     } catch (error) {
@@ -206,13 +212,15 @@ export class ActivityService {
     try {
       const { data, error } = await this.supabase
         .from('activities')
-        .insert({
-          user_id: userId,
-          activity_type: request.activityType,
-          position: request.position,
-          points: pointsResult.points,
-          date: request.date.toISOString()
-        })
+        .upsert([
+          {
+            user_id: userId,
+            activity_type: request.activityType,
+            position: request.position,
+            points: pointsResult.points,
+            date: request.date.toISOString()
+          }
+        ], { onConflict: 'user_id,activity_type,date' })
         .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
         .single();
 
@@ -230,10 +238,18 @@ export class ActivityService {
         timestamp: new Date(dbActivity.date).getTime()
       };
 
-      this.activities.update(current => [newActivity, ...current]);
+      this.activities.update(current => {
+        // Remplace l'activité existante si elle existe, sinon ajoute
+        const filtered = current.filter(a =>
+          !(a.userId === newActivity.userId &&
+            a.activityType === newActivity.activityType &&
+            a.date.toISOString() === newActivity.date.toISOString())
+        );
+        return [newActivity, ...filtered];
+      });
       return { error: null };
     } catch (error) {
-      console.error('Error adding activity to Supabase:', error);
+      console.error('Error upserting activity to Supabase:', error);
       return { error: error as Error };
     }
   }
@@ -251,13 +267,15 @@ export class ActivityService {
     try {
       const { data, error } = await this.supabase
         .from('activities')
-        .insert({
-          user_id: userId,
-          activity_type: request.activityType,
-          position: request.position,
-          points: pointsResult.points,
-          date: request.date.toISOString()
-        })
+        .upsert([
+          {
+            user_id: userId,
+            activity_type: request.activityType,
+            position: request.position,
+            points: pointsResult.points,
+            date: request.date.toISOString()
+          }
+        ], { onConflict: 'user_id,activity_type,date' })
         .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
         .single();
 
@@ -275,39 +293,22 @@ export class ActivityService {
         timestamp: new Date(dbActivity.date).getTime()
       };
 
-      // Add to activities list
-      this.activities.update(current => [newActivity, ...current]);
+      this.activities.update(current => {
+        // Remplace l'activité existante si elle existe, sinon ajoute
+        const filtered = current.filter(a =>
+          !(a.userId === newActivity.userId &&
+            a.activityType === newActivity.activityType &&
+            a.date.toISOString() === newActivity.date.toISOString())
+        );
+        return [newActivity, ...filtered];
+      });
       return { error: null };
     } catch (error) {
-      console.error('Error adding activity for member to Supabase:', error);
+      console.error('Error upserting activity for member to Supabase:', error);
       return { error: error as Error };
     }
   }
 
-  private addActivityToLocalStorage(
-    request: ActivityRequest
-  ): void {
-    // Calculate points based on position
-    const pointsResult = this.pointRulesService.calculatePoints(
-      request.activityType,
-      request.position
-    );
-
-    const profile = this.authService.userProfile();
-    const newActivity: Activity = {
-      id: generateId(),
-      userId: profile?.id || 'local-user',
-      userName: profile?.display_name || 'Local User',
-      activityType: request.activityType,
-      position: request.position,
-      points: pointsResult.points,
-      date: request.date,
-      timestamp: Date.now()
-    };
-    
-    this.activities.update(current => [...current, newActivity]);
-    this.saveToLocalStorage(this.activities());
-  }
 
   getUserScores(): UserScore[] {
     const activities = this.activities();
@@ -368,25 +369,12 @@ export class ActivityService {
         weekStart,
         weekEnd,
         totalPoints,
-        activities: weekActivities
+        activities: weekActivities,
+        conflictingPositions: undefined
       });
     }
 
-    return weeks;
+    return weeks.reverse();
   }
 
-  private loadFromLocalStorage(): Activity[] {
-    const stored = this.storage.get<Activity[]>(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES);
-    if (stored) {
-      return stored.map((activity: Activity) => ({
-        ...activity,
-        date: new Date(activity.date)
-      }));
-    }
-    return [];
-  }
-
-  private saveToLocalStorage(activities: Activity[]): void {
-    this.storage.set(APP_CONSTANTS.STORAGE_KEYS.ACTIVITIES, activities);
-  }
 }
