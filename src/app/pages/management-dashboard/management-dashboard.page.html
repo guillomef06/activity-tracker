@@ -46,7 +46,7 @@
     </mat-card-content>
   </mat-card>
 
-  @if (!hasData()) {
+  @if (this.userScores().length === 0) {
     <mat-card class="empty-state">
       <mat-card-content>
         <mat-icon class="empty-icon">inbox</mat-icon>
@@ -57,8 +57,8 @@
         </button>
       </mat-card-content>
     </mat-card>
+  } @else {
+    <!-- Weekly Ranking Chart -->
+    <app-ranking-chart [userScores]="userScores()"></app-ranking-chart>
   }
-
-  <!-- Ranking Chart - always rendered to emit hasData, hides itself when no data -->
-  <app-ranking-chart (hasData)="onDataLoaded($event)"></app-ranking-chart>
 </div>
