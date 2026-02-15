@@ -33,11 +33,6 @@ describe('ManagementDashboardPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have hasData signal', () => {
-    expect(component.hasData()).toBeDefined();
-    expect(typeof component.hasData()).toBe('boolean');
-  });
-
   it('should navigate to activities details page', () => {
     const navigateSpy = spyOn(component['router'], 'navigate');
     

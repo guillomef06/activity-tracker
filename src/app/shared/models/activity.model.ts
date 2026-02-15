@@ -58,6 +58,7 @@ export interface WeeklyScore {
   weekEnd: Date;
   totalPoints: number;
   activities: Activity[];
+  conflictingPositions?: Set<string>;
 }
 
 /**
