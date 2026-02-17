@@ -2,57 +2,57 @@
   <mat-card class="setup-card">
     <mat-card-header>
       <mat-icon class="setup-icon">admin_panel_settings</mat-icon>
-      <mat-card-title>Super Admin Setup</mat-card-title>
-      <mat-card-subtitle>Create the first super administrator account</mat-card-subtitle>
+      <mat-card-title>{{ 'auth.setupTitle' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'auth.setupSubtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <div class="warning-banner">
         <mat-icon>warning</mat-icon>
-        <p>This is a one-time setup. The super admin has complete access to manage all alliances and users.</p>
+        <p>{{ 'auth.setupWarning' | translate }}</p>
       </div>
 
       <form [formGroup]="setupForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Username</mat-label>
+          <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
             formControlName="username"
             type="text"
             autocomplete="username"
-            placeholder="Enter unique username"
+            [placeholder]="'auth.usernamePlaceholder' | translate"
           />
           <mat-icon matPrefix>person</mat-icon>
-          <mat-hint>3-30 characters, used for login</mat-hint>
+          <mat-hint>{{ 'auth.usernameHint' | translate }}</mat-hint>
           @if (usernameError()) {
             <mat-error>{{ usernameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Display Name</mat-label>
+          <mat-label>{{ 'auth.displayName' | translate }}</mat-label>
           <input
             matInput
             formControlName="displayName"
             type="text"
             autocomplete="name"
-            placeholder="Enter full name"
+            [placeholder]="'auth.displayNamePlaceholder' | translate"
           />
           <mat-icon matPrefix>badge</mat-icon>
-          <mat-hint>Your name as it will appear in the app</mat-hint>
+          <mat-hint>{{ 'auth.displayNameHint' | translate }}</mat-hint>
           @if (displayNameError()) {
             <mat-error>{{ displayNameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
+          <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
             formControlName="password"
             [type]="hidePassword() ? 'password' : 'text'"
             autocomplete="new-password"
-            placeholder="Enter secure password"
+            [placeholder]="'auth.passwordPlaceholder' | translate"
           />
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -65,20 +65,20 @@
           >
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          <mat-hint>Minimum 8 characters</mat-hint>
+          <mat-hint>{{ 'auth.passwordHint' | translate }}</mat-hint>
           @if (passwordError()) {
             <mat-error>{{ passwordError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Confirm Password</mat-label>
+          <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
           <input
             matInput
             formControlName="confirmPassword"
             [type]="hideConfirmPassword() ? 'password' : 'text'"
             autocomplete="new-password"
-            placeholder="Re-enter password"
+            [placeholder]="'auth.confirmPasswordPlaceholder' | translate"
           />
           <mat-icon matPrefix>lock_outline</mat-icon>
           <button
@@ -106,8 +106,8 @@
         <div class="actions">
           <app-loading-button
             type="submit"
-            text="Create Super Admin"
-            loadingText="Creating..."
+            [text]="'auth.createSuperAdmin' | translate"
+            [loadingText]="'auth.creating' | translate"
             [loading]="isLoading()"
             buttonClass="submit-button"
           />

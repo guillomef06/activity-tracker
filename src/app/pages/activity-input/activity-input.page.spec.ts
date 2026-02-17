@@ -56,9 +56,9 @@ describe('ActivityInputPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with empty signals', () => {
-    expect(component.activityType()).toBe('');
-    expect(component.position()).toBe(1);
+  it('should initialize with empty form values', () => {
+    expect(component['activityForm'].get('activityType')?.value).toBe('');
+    expect(component['activityForm'].get('position')?.value).toBe(1);
   });
 
   it('should have available activity types for current week', () => {
@@ -66,22 +66,20 @@ describe('ActivityInputPage', () => {
   });
 
   it('should update points when activity type and position change', () => {
-    component.activityType.set('development');
-    component.position.set(5);
-    
+    component['activityForm'].patchValue({ activityType: 'development', position: 5 });
+
     // Manually trigger point calculation
     const result = pointRulesService.calculatePoints('development', 5);
     component.calculatedPointsResult.set(result);
-    
+
     expect(component.points()).toBe(15);
   });
 
   it('should not submit if activity type is empty', async () => {
-    component.activityType.set('');
-    component.position.set(1);
-    
+    component['activityForm'].patchValue({ activityType: '', position: 1 });
+
     await component.onSubmit();
-    
+
     // Form should not be submitted without activity type
     expect(component.submitting()).toBe(false);
   });

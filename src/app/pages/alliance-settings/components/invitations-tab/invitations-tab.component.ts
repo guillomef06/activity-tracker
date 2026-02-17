@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +16,9 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { AllianceService } from '@app/core/services/alliance.service';
+import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { InvitationStatusPipe } from '@app/shared/pipes/invitation-status.pipe';
+import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import type { InvitationWithStats } from '@app/shared/models';
 
 @Component({
@@ -36,6 +39,8 @@ import type { InvitationWithStats } from '@app/shared/models';
     MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
+    InvitationStatusPipe,
+    LocalDatePipe,
   ],
   templateUrl: './invitations-tab.component.html',
   styleUrl: './invitations-tab.component.scss',
@@ -48,6 +53,7 @@ export class InvitationsTabComponent {
   private readonly dialog = inject(MatDialog);
   private readonly clipboard = inject(Clipboard);
   private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Inputs
   invitations = input.required<InvitationWithStats[]>();
@@ -63,6 +69,9 @@ export class InvitationsTabComponent {
   protected readonly invitationForm: FormGroup = this.fb.group({
     durationDays: [7, [Validators.required, Validators.min(1), Validators.max(365)]],
   });
+
+  // Error signals for validation
+  protected readonly durationDaysError = createFieldErrorSignal(this.invitationForm, 'durationDays', this.destroyRef);
 
   /**
    * Get the base URL for invitation links
@@ -116,7 +125,6 @@ export class InvitationsTabComponent {
     const confirmed = await this.dialog.open(ConfirmDialogComponent, {
       data: {
         message: this.translate.instant('alliance.settings.revokeConfirm'),
-        confirmColor: 'warn'
       }
     }).afterClosed().toPromise();
 
@@ -150,19 +158,8 @@ export class InvitationsTabComponent {
     this.snackBar.open('Invitation link copied to clipboard!', 'Close', { duration: 3000 });
   }
 
-  protected formatDate(date: string): string {
-    return new Date(date).toLocaleDateString();
-  }
-
   protected isInvitationExpired(expiresAt: string): boolean {
     return new Date(expiresAt) < new Date();
-  }
-
-  protected getInvitationStatus(invitation: InvitationWithStats): string {
-    if (this.isInvitationExpired(invitation.expires_at)) {
-      return 'Expired';
-    }
-    return 'Active';
   }
 
   protected getInvitationStatusClass(invitation: InvitationWithStats): string {

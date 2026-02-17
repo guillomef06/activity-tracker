@@ -17,11 +17,13 @@
         />
         <mat-icon matPrefix>schedule</mat-icon>
         <mat-hint>{{ 'alliance.settings.durationHint' | translate }}</mat-hint>
+        @if (durationDaysError()) {
+          <mat-error>{{ durationDaysError() }}</mat-error>
+        }
       </mat-form-field>
 
       <button
         mat-raised-button
-        color="primary"
         type="submit"
         [disabled]="invitationForm.invalid || isLoading() || isSubmitting()"
         class="create-invitation-btn"
@@ -62,7 +64,7 @@
                       </mat-chip>
                     }
                     <mat-chip [class]="getInvitationStatusClass(invitation)">
-                      {{ getInvitationStatus(invitation) }}
+                      {{ invitation | invitationStatus }}
                     </mat-chip>
                   </div>
                 </div>
@@ -73,11 +75,11 @@
             <div class="invitation-details">
               <div class="detail-row">
                 <span class="detail-label">{{ 'alliance.settings.expiresAt' | translate }}:</span>
-                <span class="detail-value">{{ formatDate(invitation.expires_at) }}</span>
+                <span class="detail-value">{{ invitation.expires_at | localDate }}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">{{ 'alliance.settings.createdAt' | translate }}:</span>
-                <span class="detail-value">{{ formatDate(invitation.created_at) }}</span>
+                <span class="detail-value">{{ invitation.created_at | localDate }}</span>
               </div>
 
               <!-- Members who joined via this invitation -->
@@ -89,7 +91,7 @@
                       <mat-list-item>
                         <mat-icon matListItemIcon>person</mat-icon>
                         <div matListItemTitle>{{ member.display_name }}</div>
-                        <div matListItemLine>{{ '@' + member.username }} • {{ formatDate(member.created_at) }}</div>
+                        <div matListItemLine>{{ '@' + member.username }} • {{ member.created_at | localDate }}</div>
                       </mat-list-item>
                     }
                   </mat-list>
@@ -101,7 +103,6 @@
                 @if (!isInvitationExpired(invitation.expires_at)) {
                   <button
                     mat-raised-button
-                    color="warn"
                     (click)="revokeInvitation(invitation.id)"
                     [disabled]="isSubmitting()"
                   >

@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +15,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { PointRulesService } from '@app/core/services/point-rules.service';
+import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { PositionRangePipe } from '@app/shared/pipes/position-range.pipe';
 import type { ActivityPointRule } from '@app/shared/models';
 import { APP_CONSTANTS } from '@app/shared/constants/constants';
 
@@ -36,6 +38,7 @@ import { APP_CONSTANTS } from '@app/shared/constants/constants';
     MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
+    PositionRangePipe,
   ],
   templateUrl: './point-rules-tab.component.html',
   styleUrl: './point-rules-tab.component.scss',
@@ -47,6 +50,7 @@ export class PointRulesTabComponent {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Inputs
   pointRules = input.required<ActivityPointRule[]>();
@@ -67,6 +71,12 @@ export class PointRulesTabComponent {
     position_max: [1, [Validators.required, Validators.min(1)]],
     points: [10, [Validators.required, Validators.min(0)]],
   });
+
+  // Error signals for validation
+  protected readonly activityTypeError = createFieldErrorSignal(this.pointRuleForm, 'activity_type', this.destroyRef);
+  protected readonly positionMinError = createFieldErrorSignal(this.pointRuleForm, 'position_min', this.destroyRef);
+  protected readonly positionMaxError = createFieldErrorSignal(this.pointRuleForm, 'position_max', this.destroyRef);
+  protected readonly pointsError = createFieldErrorSignal(this.pointRuleForm, 'points', this.destroyRef);
 
   protected async createPointRule(): Promise<void> {
     if (this.pointRuleForm.invalid) {
@@ -122,7 +132,6 @@ export class PointRulesTabComponent {
     const confirmed = await this.dialog.open(ConfirmDialogComponent, {
       data: {
         message: this.translate.instant('alliance.settings.pointRules.deleteConfirm'),
-        confirmColor: 'warn'
       }
     }).afterClosed().toPromise();
 
@@ -153,9 +162,5 @@ export class PointRulesTabComponent {
   protected getActivityTypeLabel(value: string): string {
     const activityType = this.activityTypes.find(type => type.value === value);
     return activityType?.labelKey || value;
-  }
-
-  protected formatPositionRange(min: number, max: number): string {
-    return min === max ? `${min}` : `${min}-${max}`;
   }
 }

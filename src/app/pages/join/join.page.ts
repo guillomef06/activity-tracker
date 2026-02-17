@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -39,6 +39,7 @@ export class JoinPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly hidePassword = signal(true);
   protected readonly hideConfirmPassword = signal(true);
@@ -74,11 +75,11 @@ export class JoinPage implements OnInit {
   }
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly tokenError = createFieldErrorSignal(this.joinForm, 'token');
-  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username');
-  protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName');
-  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password');
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword');
+  protected readonly tokenError = createFieldErrorSignal(this.joinForm, 'token', this.destroyRef);
+  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username', this.destroyRef);
+  protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef);
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
 
   protected async validateToken(token?: string): Promise<void> {
     const tokenValue = token || this.joinForm.get('token')?.value;

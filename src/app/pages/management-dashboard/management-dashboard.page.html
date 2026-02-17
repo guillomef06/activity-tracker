@@ -10,11 +10,11 @@
         <mat-icon>view_list</mat-icon>
         {{ 'dashboard.viewAllDetails' | translate }}
       </button>
-      <button mat-stroked-button color="warn" (click)="resetData()">
+      <button mat-stroked-button (click)="resetData()">
         <mat-icon>restore</mat-icon>
         {{ 'dashboard.resetData' | translate }}
       </button>
-      <button mat-raised-button color="primary" (click)="goToActivityInput()">
+      <button mat-raised-button (click)="goToActivityInput()">
         <mat-icon>add</mat-icon>
         {{ 'dashboard.addActivity' | translate }}
       </button>
@@ -51,7 +51,7 @@
       <mat-card-content>
         <mat-icon class="empty-icon">inbox</mat-icon>
         <p>{{ 'dashboard.noActivities' | translate }}</p>
-        <button mat-raised-button color="primary" (click)="goToActivityInput()">
+        <button mat-raised-button (click)="goToActivityInput()">
           <mat-icon>add</mat-icon>
           {{ 'dashboard.submitFirst' | translate }}
         </button>

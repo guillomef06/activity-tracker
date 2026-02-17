@@ -13,16 +13,11 @@
         </p>
       }
 
-      <form (ngSubmit)="onSubmit()" #activityForm="ngForm">
+      <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
         <!-- Week Selection -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
-          <mat-select
-            name="week"
-            [ngModel]="selectedWeeksAgo()"
-            (ngModelChange)="selectedWeeksAgo.set($event)"
-            required
-          >
+          <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
               <mat-option [value]="week.value">
                 {{ week.label }} - {{ week.dateRange }}
@@ -37,11 +32,8 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
           <mat-select
-            name="activityType"
-            [ngModel]="activityType()"
-            (ngModelChange)="activityType.set($event)"
+            formControlName="activityType"
             [disabled]="availableActivities().length === 0"
-            required
           >
             @for (type of availableActivities(); track type.value) {
               <mat-option [value]="type.value">
@@ -51,7 +43,9 @@
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
           <mat-hint>{{ 'activityInput.typeHint' | translate }}</mat-hint>
-          <mat-error>{{ 'activityInput.typeRequired' | translate }}</mat-error>
+          @if (activityTypeError()) {
+            <mat-error>{{ activityTypeError() | translate}}</mat-error>
+          }
         </mat-form-field>
 
         <!-- Position Input -->
@@ -60,17 +54,16 @@
           <input
             matInput
             type="number"
-            name="position"
-            [ngModel]="position()"
-            (ngModelChange)="position.set($event)"
+            formControlName="position"
             [placeholder]="'activityInput.positionPlaceholder' | translate"
             min="1"
             max="999"
-            required
           />
           <mat-icon matPrefix>emoji_events</mat-icon>
           <mat-hint>{{ 'activityInput.positionHint' | translate }}</mat-hint>
-          <mat-error>{{ 'activityInput.positionRequired' | translate }}</mat-error>
+          @if (positionError()) {
+            <mat-error>{{ positionError() }}</mat-error>
+          }
         </mat-form-field>
 
         <!-- Points Preview -->
@@ -86,9 +79,8 @@
         <div class="button-group">
           <button
             mat-raised-button
-            color="primary"
             type="submit"
-            [disabled]="!activityForm.valid || submitting()"
+            [disabled]="activityForm.invalid || submitting()"
           >
             <mat-icon>{{ submitting() ? 'hourglass_empty' : 'send' }}</mat-icon>
             {{ submitting() ? ('activityInput.submitting' | translate) : ('activityInput.submit' | translate) }}
@@ -96,7 +88,6 @@
 
           <button
             mat-stroked-button
-            color="accent"
             type="button"
             (click)="viewDashboard()"
           >

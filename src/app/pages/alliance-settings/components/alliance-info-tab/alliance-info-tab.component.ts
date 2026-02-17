@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, output, signal, effect, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
+import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import type { Alliance } from '@app/shared/models';
 
 @Component({
@@ -31,6 +32,7 @@ export class AllianceInfoTabComponent {
   private readonly allianceService = inject(AllianceService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Inputs
   alliance = input.required<Alliance | null>();
@@ -46,6 +48,9 @@ export class AllianceInfoTabComponent {
   protected readonly allianceNameForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
   });
+
+  // Error signals for validation
+  protected readonly nameError = createFieldErrorSignal(this.allianceNameForm, 'name', this.destroyRef);
 
   constructor() {
     // Update form when alliance changes

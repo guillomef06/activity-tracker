@@ -64,10 +64,10 @@ describe('InvitationsTabComponent', () => {
     expect(clipboard.copy).toHaveBeenCalled();
   });
 
-  it('should determine invitation status correctly', () => {
-    const activeInvitation = { 
-      id: '1', 
-      token: 'active', 
+  it('should return correct CSS class for invitation status', () => {
+    const activeInvitation = {
+      id: '1',
+      token: 'active',
       expires_at: new Date(Date.now() + 86400000).toISOString(),
       created_at: new Date().toISOString(),
       usage_count: 0,
@@ -77,10 +77,10 @@ describe('InvitationsTabComponent', () => {
       used_by: null,
       created_by: 'user-1'
     };
-    
-    const expiredInvitation = { 
-      id: '2', 
-      token: 'expired', 
+
+    const expiredInvitation = {
+      id: '2',
+      token: 'expired',
       expires_at: new Date(Date.now() - 86400000).toISOString(),
       created_at: new Date().toISOString(),
       usage_count: 0,
@@ -90,9 +90,9 @@ describe('InvitationsTabComponent', () => {
       used_by: null,
       created_by: 'user-1'
     };
-    
-    expect(component['getInvitationStatus'](activeInvitation)).toBe('Active');
-    expect(component['getInvitationStatus'](expiredInvitation)).toBe('Expired');
+
+    expect(component['getInvitationStatusClass'](activeInvitation)).toBe('status-active');
+    expect(component['getInvitationStatusClass'](expiredInvitation)).toBe('status-expired');
   });
 
   it('should check if invitation is expired', () => {

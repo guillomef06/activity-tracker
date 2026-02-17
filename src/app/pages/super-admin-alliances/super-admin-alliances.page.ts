@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -14,6 +14,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
+import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import type { Alliance } from '@app/shared/models';
 
 interface AllianceWithStats extends Alliance {
@@ -37,6 +39,7 @@ interface AllianceWithStats extends Alliance {
     MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
+    LocalDatePipe,
   ],
   templateUrl: './super-admin-alliances.page.html',
   styleUrl: './super-admin-alliances.page.scss',
@@ -49,6 +52,7 @@ export class SuperAdminAlliancesPage implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   protected readonly progressBarService = inject(ProgressBarService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly alliances = signal<AllianceWithStats[]>([]);
   protected readonly displayedColumns: string[] = ['name', 'admin', 'members', 'createdAt', 'actions'];
@@ -57,6 +61,9 @@ export class SuperAdminAlliancesPage implements OnInit {
     id: [''],
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
   });
+
+  // Error signals for validation
+  protected readonly nameError = createFieldErrorSignal(this.editForm, 'name', this.destroyRef);
 
   protected readonly editingId = signal<string | null>(null);
 
@@ -155,7 +162,6 @@ export class SuperAdminAlliancesPage implements OnInit {
     const confirmed = await this.dialog.open(ConfirmDialogComponent, {
       data: {
         message: this.translate.instant('superAdmin.alliances.deleteConfirm', { name: alliance.name }),
-        confirmColor: 'warn'
       }
     }).afterClosed().toPromise();
 
@@ -180,10 +186,6 @@ export class SuperAdminAlliancesPage implements OnInit {
         this.snackBar.open('Failed to delete alliance', 'Close', { duration: 3000 });
       }
     });
-  }
-
-  protected formatDate(date: string): string {
-    return new Date(date).toLocaleDateString();
   }
 
   protected isEditing(allianceId: string): boolean {

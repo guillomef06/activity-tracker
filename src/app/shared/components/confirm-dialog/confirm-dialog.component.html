@@ -1,9 +1,10 @@
 <h2 mat-dialog-title>
-  <mat-icon>{{ data.confirmColor === 'warn' ? 'warning' : 'help_outline' }}</mat-icon>
+  <mat-icon
+    class="warn">{{ 'warning' }}</mat-icon>
   {{ data.title || ('common.confirm' | translate) }}
 </h2>
 
-<mat-dialog-content>
+<mat-dialog-content class="mat-typography">
   <p>{{ data.message }}</p>
 </mat-dialog-content>
 
@@ -11,9 +12,8 @@
   <button mat-button (click)="onCancel()">
     {{ data.cancelText || ('common.cancel' | translate) }}
   </button>
-  <button 
-    mat-raised-button 
-    [color]="data.confirmColor || 'primary'"
+  <button
+    mat-raised-button
     (click)="onConfirm()"
     cdkFocusInitial>
     {{ data.confirmText || ('common.confirm' | translate) }}

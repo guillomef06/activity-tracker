@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -34,6 +34,7 @@ export class SuperAdminSetupPage {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly hidePassword = signal(true);
   protected readonly hideConfirmPassword = signal(true);
@@ -56,10 +57,10 @@ export class SuperAdminSetupPage {
   }
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.setupForm, 'username');
-  protected readonly displayNameError = createFieldErrorSignal(this.setupForm, 'displayName');
-  protected readonly passwordError = createFieldErrorSignal(this.setupForm, 'password');
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.setupForm, 'confirmPassword');
+  protected readonly usernameError = createFieldErrorSignal(this.setupForm, 'username', this.destroyRef);
+  protected readonly displayNameError = createFieldErrorSignal(this.setupForm, 'displayName', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.setupForm, 'password', this.destroyRef);
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.setupForm, 'confirmPassword', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {
     if (this.setupForm.invalid || this.isLoading()) {

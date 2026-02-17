@@ -2,20 +2,20 @@
   <mat-card class="login-card">
     <mat-card-header>
       <mat-icon class="login-icon">login</mat-icon>
-      <mat-card-title>Welcome Back</mat-card-title>
-      <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+      <mat-card-title>{{ 'auth.welcomeBack' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'auth.signInSubtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Username</mat-label>
+          <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
             formControlName="username"
             type="text"
             autocomplete="username"
-            placeholder="Enter your username"
+            [placeholder]="'auth.usernamePlaceholder' | translate"
           />
           <mat-icon matPrefix>person</mat-icon>
           @if (usernameError()) {
@@ -24,13 +24,13 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
+          <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
             formControlName="password"
             [type]="hidePassword() ? 'password' : 'text'"
             autocomplete="current-password"
-            placeholder="Enter your password"
+            [placeholder]="'auth.passwordPlaceholder' | translate"
           />
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -58,16 +58,16 @@
         <div class="actions">
           <app-loading-button
             type="submit"
-            text="Sign In"
-            loadingText="Signing in..."
+            [text]="'auth.login' | translate"
+            [loadingText]="'auth.signingIn' | translate"
             [loading]="isLoading()"
             buttonClass="submit-button"
           />
         </div>
 
         <div class="footer-links">
-          <p>Don't have an account? <a routerLink="/signup">Create Alliance</a></p>
-          <p>Have an invitation? <a routerLink="/join">Join Alliance</a></p>
+          <p>{{ 'auth.noAccount' | translate }} <a routerLink="/signup">{{ 'auth.signupTitle' | translate }}</a></p>
+          <p>{{ 'auth.haveInvitation' | translate }} <a routerLink="/join">{{ 'auth.joinTitle' | translate }}</a></p>
         </div>
       </form>
     </mat-card-content>
