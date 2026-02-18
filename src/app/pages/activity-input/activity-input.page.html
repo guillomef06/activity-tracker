@@ -16,6 +16,7 @@
       <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
         <!-- Week Selection -->
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>calendar_today</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
           <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
@@ -24,12 +25,12 @@
               </mat-option>
             }
           </mat-select>
-          <mat-icon matPrefix>calendar_today</mat-icon>
           <mat-hint>{{ 'alliance.retroactive.weekHint' | translate }}</mat-hint>
         </mat-form-field>
 
         <!-- Activity Type Selection (Filtered by Week) -->
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>category</mat-icon>
           <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
           <mat-select
             formControlName="activityType"
@@ -41,7 +42,6 @@
               </mat-option>
             }
           </mat-select>
-          <mat-icon matPrefix>category</mat-icon>
           <mat-hint>{{ 'activityInput.typeHint' | translate }}</mat-hint>
           @if (activityTypeError()) {
             <mat-error>{{ activityTypeError() | translate}}</mat-error>
@@ -51,16 +51,14 @@
         <!-- Position Input OR Participation Toggle -->
         @if (isParticipationMode()) {
           <div class="participation-section">
-            <mat-slide-toggle
-              [checked]="participated()"
-              (change)="participated.set($event.checked)"
-            >
+            <mat-slide-toggle formControlName="participated">
               {{ 'activityInput.participated' | translate }}
             </mat-slide-toggle>
           </div>
         } @else {
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>{{ 'activityInput.position' | translate }}</mat-label>
+            <mat-icon matPrefix>emoji_events</mat-icon>
             <input
               matInput
               type="number"
@@ -69,7 +67,6 @@
               min="1"
               max="999"
             />
-            <mat-icon matPrefix>emoji_events</mat-icon>
             <mat-hint>{{ 'activityInput.positionHint' | translate }}</mat-hint>
             @if (positionError()) {
               <mat-error>{{ positionError() | translate }}</mat-error>

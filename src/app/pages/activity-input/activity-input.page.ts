@@ -61,13 +61,13 @@ export class ActivityInputPage {
 
   calculatedPointsResult = signal<PointCalculationResult | null>(null);
   submitting = signal<boolean>(false);
-  participated = signal<boolean>(false);
 
   // Reactive form
   activityForm: FormGroup = this.fb.group({
     week: [0, Validators.required],
     activityType: ['', Validators.required],
-    position: [1, [Validators.required, Validators.min(1)]]
+    position: [1, [Validators.required, Validators.min(1)]],
+    participated: [false]
   });
 
   // Convert form value changes to signals
@@ -79,6 +79,11 @@ export class ActivityInputPage {
   private activityTypeValue = toSignal(
     this.activityForm.get('activityType')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
     { initialValue: '' }
+  );
+
+  private participatedValue = toSignal(
+    this.activityForm.get('participated')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
+    { initialValue: false }
   );
 
   // Participation mode (reactive: re-evaluates when settings or activityType changes)
@@ -105,7 +110,7 @@ export class ActivityInputPage {
     const activityType = this.activityTypeValue();
     if (!activityType || this.activityForm.get('week')?.invalid) return false;
     if (this.isParticipationMode()) {
-      return this.participated();
+      return this.participatedValue();
     }
     const position = this.activityForm.get('position')?.value;
     return position >= 1;
@@ -167,10 +172,10 @@ export class ActivityInputPage {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.calculatedPointsResult.set(null);
-        this.participated.set(false);
         this.activityForm.patchValue({
           activityType: '',
-          position: 1
+          position: 1,
+          participated: false
         }, { emitEvent: false });
       });
 
@@ -178,7 +183,7 @@ export class ActivityInputPage {
     this.activityForm.get('activityType')?.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.participated.set(false);
+        this.activityForm.get('participated')?.setValue(false);
         this.calculatedPointsResult.set(null);
       });
   }
@@ -212,7 +217,7 @@ export class ActivityInputPage {
         })
       : await this.activityService.addActivity({
           activityType: formValue.activityType,
-          position: formValue.position,
+          position: formValue.position as number,
           date: activityDate
         });
 
@@ -234,12 +239,12 @@ export class ActivityInputPage {
     // Reset form keeping the week selection
     this.activityForm.patchValue({
       activityType: '',
-      position: 1
+      position: 1,
+      participated: false
     });
     this.activityForm.markAsUntouched();
     this.activityForm.markAsPristine();
     this.calculatedPointsResult.set(null);
-    this.participated.set(false);
     this.submitting.set(false);
 
     this.snackBar.open(this.translate.instant('activityInput.success'), this.translate.instant('common.close'), {

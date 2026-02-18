@@ -57,14 +57,14 @@ export class RetroactiveActivitiesTabComponent {
 
   // Form state
   isSubmitting = signal<boolean>(false);
-  participated = signal<boolean>(false);
 
   // Reactive form
   retroactiveForm: FormGroup = this.fb.group({
     member: ['', Validators.required],
     week: [0, Validators.required],
     activity: ['', Validators.required],
-    position: [1, [Validators.required, Validators.min(1)]]
+    position: [1, [Validators.required, Validators.min(1)]],
+    participated: [false]
   });
 
   // Convert form value changes to signals
@@ -76,6 +76,11 @@ export class RetroactiveActivitiesTabComponent {
   private activityValue = toSignal(
     this.retroactiveForm.get('activity')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
     { initialValue: '' }
+  );
+
+  private participatedValue = toSignal(
+    this.retroactiveForm.get('participated')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
+    { initialValue: false }
   );
 
   private positionValue = toSignal(
@@ -147,7 +152,7 @@ export class RetroactiveActivitiesTabComponent {
     const activity = this.activityValue();
     if (!member || !activity) return false;
     if (this.isParticipationMode()) {
-      return this.participated();
+      return this.participatedValue();
     }
     return this.retroactiveForm.valid;
   });
@@ -157,10 +162,10 @@ export class RetroactiveActivitiesTabComponent {
     this.retroactiveForm.get('week')?.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.participated.set(false);
         this.retroactiveForm.patchValue({
           activity: '',
-          position: 1
+          position: 1,
+          participated: false
         }, { emitEvent: false });
       });
 
@@ -168,7 +173,7 @@ export class RetroactiveActivitiesTabComponent {
     this.retroactiveForm.get('activity')?.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.participated.set(false);
+        this.retroactiveForm.get('participated')?.setValue(false);
       });
   }
 
@@ -198,10 +203,10 @@ export class RetroactiveActivitiesTabComponent {
       );
 
       // Reset form keeping member and week
-      this.participated.set(false);
       this.retroactiveForm.patchValue({
         activity: '',
-        position: 1
+        position: 1,
+        participated: false
       });
 
     } catch (error) {
@@ -217,12 +222,12 @@ export class RetroactiveActivitiesTabComponent {
   }
 
   resetForm(): void {
-    this.participated.set(false);
     this.retroactiveForm.reset({
       member: '',
       week: 0,
       activity: '',
-      position: 1
+      position: 1,
+      participated: false
     });
   }
 }

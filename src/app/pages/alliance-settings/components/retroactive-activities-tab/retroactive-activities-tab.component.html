@@ -14,6 +14,7 @@
 
         <!-- Member Selection -->
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>person</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectMember' | translate }}</mat-label>
           <mat-select formControlName="member">
             @for (member of members(); track member.id) {
@@ -22,7 +23,6 @@
               </mat-option>
             }
           </mat-select>
-          <mat-icon matPrefix>person</mat-icon>
           <mat-hint>{{ 'alliance.retroactive.memberHint' | translate }}</mat-hint>
           @if (memberError()) {
             <mat-error>{{ memberError() }}</mat-error>
@@ -31,6 +31,7 @@
 
         <!-- Week Selection -->
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>calendar_today</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
           <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
@@ -39,12 +40,12 @@
               </mat-option>
             }
           </mat-select>
-          <mat-icon matPrefix>calendar_today</mat-icon>
           <mat-hint>{{ 'alliance.retroactive.weekHint' | translate }}</mat-hint>
         </mat-form-field>
 
         <!-- Activity Type Selection (Filtered by Week) -->
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>category</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectActivity' | translate }}</mat-label>
           <mat-select
             formControlName="activity"
@@ -60,7 +61,6 @@
               </mat-option>
             }
           </mat-select>
-          <mat-icon matPrefix>category</mat-icon>
           <mat-hint>{{ 'alliance.retroactive.activityHint' | translate }}</mat-hint>
           @if (activityError()) {
             <mat-error>{{ activityError() }}</mat-error>
@@ -70,22 +70,19 @@
         <!-- Position Input OR Participation Toggle -->
         @if (isParticipationMode()) {
           <div class="participation-section">
-            <mat-slide-toggle
-              [checked]="participated()"
-              (change)="participated.set($event.checked)"
-            >
+            <mat-slide-toggle formControlName="participated">
               {{ 'activityInput.participated' | translate }}
             </mat-slide-toggle>
           </div>
         } @else {
           <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matPrefix>emoji_events</mat-icon>
             <mat-label>{{ 'alliance.retroactive.position' | translate }}</mat-label>
             <input
               matInput
               type="number"
               formControlName="position"
               min="1"/>
-            <mat-icon matPrefix>emoji_events</mat-icon>
             <mat-hint>{{ 'alliance.retroactive.positionHint' | translate }}</mat-hint>
             @if (positionError()) {
               <mat-error>{{ positionError() }}</mat-error>
