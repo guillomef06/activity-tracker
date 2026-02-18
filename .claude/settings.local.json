@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "Bash(node -e:*)",
+      "Bash(node audit-translations.js:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:material.angular.dev)",
+      "WebFetch(domain:angular-material.dev)",
+      "WebFetch(domain:v18.material.angular.dev)",
+      "WebFetch(domain:gist.github.com)"
+    ]
+  }
+}

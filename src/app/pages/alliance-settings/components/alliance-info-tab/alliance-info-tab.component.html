@@ -14,15 +14,14 @@
           placeholder="Enter alliance name"
         />
         <mat-icon matPrefix>groups</mat-icon>
-        @if (allianceNameForm.get('name')?.invalid && allianceNameForm.get('name')?.touched) {
-          <mat-error>{{ 'alliance.settings.errors.nameRequired' | translate }}</mat-error>
+        @if (nameError()) {
+          <mat-error>{{ nameError() }}</mat-error>
         }
       </mat-form-field>
 
       <div class="form-actions">
         <button
           mat-raised-button
-          color="primary"
           type="submit"
           [disabled]="allianceNameForm.invalid || isLoading()"
         >

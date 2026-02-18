@@ -72,7 +72,6 @@ export class ManagementDashboardPage implements OnInit {
     const confirmed = await this.dialog.open(ConfirmDialogComponent, {
       data: {
         message: this.translate.instant('dashboard.resetConfirm'),
-        confirmColor: 'warn'
       }
     }).afterClosed().toPromise();
 

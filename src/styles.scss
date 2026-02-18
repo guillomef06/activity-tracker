@@ -1,76 +1,77 @@
 /* Angular Material Core */
-@use '@angular/material' as mat;
-@use '../_theme-colors' as theme-colors;
+@use "@angular/material" as mat;
+@use "../_theme-colors" as theme-colors;
+@use "sass:map";
+@use 'sass:meta';
 
 // Include Material core styles
 @include mat.core();
 
 // Define light theme
-$light-theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: theme-colors.$primary-palette,
-    tertiary: theme-colors.$tertiary-palette,
-  ),
-  typography: (
-    brand-family: 'Roboto, sans-serif',
-    plain-family: 'Roboto, sans-serif',
-    bold-weight: 700,
-    medium-weight: 500,
-    regular-weight: 400,
-  ),
-  density: (
-    scale: 0,
+$light-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: theme-colors.$primary-palette,
+      tertiary: theme-colors.$tertiary-palette,
+    ),
+    typography: (
+      brand-family: "Roboto, sans-serif",
+      plain-family: "Roboto, sans-serif",
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
+    density: (
+      scale: 0,
+    ),
   )
-));
+);
 
 // Define dark theme
-$dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: theme-colors.$primary-palette,
-    tertiary: theme-colors.$tertiary-palette,
-  ),
-));
+$dark-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: theme-colors.$primary-palette,
+      tertiary: theme-colors.$tertiary-palette,
+    ),
+  )
+);
 
 // Apply the theme to all components
 html {
   // Enable automatic light/dark mode switching
   color-scheme: light dark;
-  
+
   // Apply light theme by default
   @include mat.all-component-themes($light-theme);
-  
+  // M2 retrocompatibility
+  //@include mat.color-variants-backwards-compatibility($light-theme);
+
   // M3 component customizations (shapes only)
   .mat-mdc-card {
     --mdc-elevated-card-container-shape: 16px;
   }
-  
+
   .mat-mdc-button {
     --mdc-text-button-container-shape: 20px;
   }
-  
+
   .mat-mdc-raised-button {
     --mdc-protected-button-container-shape: 20px;
   }
-  
+
   .mat-mdc-outlined-button {
     --mdc-outlined-button-container-shape: 20px;
   }
-  
+
   .mat-expansion-panel {
     --mat-expansion-container-shape: 12px;
   }
-  
+
   .mdc-chip {
     --mdc-chip-container-shape-radius: 8px;
-  }
-}
-
-// Apply dark theme when browser/OS is in dark mode
-@media (prefers-color-scheme: dark) {
-  html {
-    @include mat.all-component-colors($dark-theme);
   }
 }
 
@@ -130,10 +131,6 @@ body {
     background-color: var(--md-sys-color-primary-container);
     color: var(--md-sys-color-on-primary-container);
     font-weight: 500;
-
-    mat-icon {
-      color: var(--md-sys-color-primary);
-    }
   }
 
   /* Language selector menu styles */
@@ -146,5 +143,218 @@ body {
   .check-icon {
     margin-left: auto;
     color: var(--md-sys-color-primary);
+  }
+}
+
+/* Alliance Settings Tabs - Global Material Override */
+.settings-tabs .mat-mdc-tab-label {
+  min-width: 160px;
+}
+
+@media (max-width: 768px) {
+  .settings-tabs .mat-mdc-tab-label {
+    min-width: 80px;
+    padding: 0 0.75rem;
+  }
+}
+
+/* Material Form Field Icon Prefix - Global Spacing */
+mat-form-field .mat-mdc-form-field-icon-prefix {
+  margin-right: 0.5rem;
+}
+
+.confirm-dialog {
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  mat-dialog-content {
+    p {
+      margin: 0;
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 1rem;
+    gap: 1rem;
+  }
+}
+
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+  overflow-y: unset;
+  border-style: solid;
+  border-width: thin;
+  border-color: var(--mat-sys-outline-variant);
+}
+
+// Génère des variables CSS à partir d'une palette SCSS
+@mixin export-palette-css-vars($palette, $prefix) {
+  @each $key, $value in $palette {
+    // On ne prend que les clés numériques (Material)
+    @if meta.type-of($key) == 'number' {
+      --#{$prefix}-#{$key}: #{$value};
+    }
+  }
+}
+
+/* Map des correspondances variables Material <-> palette + index pour light et dark */
+$mat-sys-vars-light: (
+  mat-sys-primary: (palette: primary, idx: 40),
+  mat-sys-on-primary: (palette: primary, idx: 100),
+  mat-sys-primary-container: (palette: primary, idx: 90),
+  mat-sys-on-primary-container: (palette: primary, idx: 10),
+  mat-sys-primary-fixed: (palette: primary, idx: 90),
+  mat-sys-on-primary-fixed: (palette: primary, idx: 10),
+  mat-sys-on-primary-fixed-variant: (palette: primary, idx: 20),
+  mat-sys-primary-fixed-dim: (palette: primary, idx: 80),
+  mat-sys-inverse-primary: (palette: primary, idx: 80),
+
+  mat-sys-secondary: (palette: secondary, idx: 40),
+  mat-sys-on-secondary: (palette: secondary, idx: 100),
+  mat-sys-secondary-container: (palette: secondary, idx: 90),
+  mat-sys-on-secondary-container: (palette: secondary, idx: 10),
+  mat-sys-secondary-fixed: (palette: secondary, idx: 90),
+  mat-sys-on-secondary-fixed: (palette: secondary, idx: 10),
+  mat-sys-on-secondary-fixed-variant: (palette: secondary, idx: 20),
+  mat-sys-secondary-fixed-dim: (palette: secondary, idx: 80),
+
+  mat-sys-tertiary: (palette: tertiary, idx: 40),
+  mat-sys-on-tertiary: (palette: tertiary, idx: 100),
+  mat-sys-tertiary-container: (palette: tertiary, idx: 90),
+  mat-sys-on-tertiary-container: (palette: tertiary, idx: 10),
+  mat-sys-tertiary-fixed: (palette: tertiary, idx: 90),
+  mat-sys-on-tertiary-fixed: (palette: tertiary, idx: 10),
+  mat-sys-on-tertiary-fixed-variant: (palette: tertiary, idx: 20),
+  mat-sys-tertiary-fixed-dim: (palette: tertiary, idx: 80),
+
+  mat-sys-error: (palette: error, idx: 40),
+  mat-sys-on-error: (palette: error, idx: 100),
+  mat-sys-error-container: (palette: error, idx: 90),
+  mat-sys-on-error-container: (palette: error, idx: 10),
+
+  mat-sys-surface: (palette: neutral, idx: 98),
+  mat-sys-on-surface: (palette: neutral, idx: 10),
+  mat-sys-on-surface-variant: (palette: neutral, idx: 40),
+  mat-sys-surface-bright: (palette: neutral, idx: 98),
+  mat-sys-surface-container: (palette: neutral, idx: 90),
+  mat-sys-surface-container-high: (palette: neutral, idx: 87),
+  mat-sys-surface-container-highest: (palette: neutral, idx: 80),
+  mat-sys-surface-container-low: (palette: neutral, idx: 95),
+  mat-sys-surface-container-lowest: (palette: neutral, idx: 100),
+  mat-sys-surface-dim: (palette: neutral, idx: 70),
+  mat-sys-surface-tint: (palette: primary, idx: 40),
+  mat-sys-surface-variant: (palette: neutral-variant, idx: 90),
+  mat-sys-inverse-surface: (palette: neutral, idx: 20),
+  mat-sys-inverse-on-surface: (palette: neutral, idx: 90),
+
+  mat-sys-background: (palette: neutral, idx: 98),
+  mat-sys-on-background: (palette: neutral, idx: 10),
+  mat-sys-neutral-variant20: (palette: neutral-variant, idx: 20),
+  mat-sys-neutral10: (palette: neutral, idx: 10),
+  mat-sys-outline: (palette: neutral, idx: 22),
+  mat-sys-outline-variant: (palette: neutral, idx: 40),
+  mat-sys-scrim: (palette: neutral, idx: 0),
+  mat-sys-shadow: (palette: neutral, idx: 0),
+);
+
+$mat-sys-vars-dark: (
+  mat-sys-primary: (palette: primary, idx: 80),
+  mat-sys-on-primary: (palette: primary, idx: 20),
+  mat-sys-primary-container: (palette: primary, idx: 30),
+  mat-sys-on-primary-container: (palette: primary, idx: 90),
+  mat-sys-primary-fixed: (palette: primary, idx: 90),
+  mat-sys-on-primary-fixed: (palette: primary, idx: 10),
+  mat-sys-on-primary-fixed-variant: (palette: primary, idx: 30),
+  mat-sys-primary-fixed-dim: (palette: primary, idx: 80),
+  mat-sys-inverse-primary: (palette: primary, idx: 40),
+
+  mat-sys-secondary: (palette: secondary, idx: 80),
+  mat-sys-on-secondary: (palette: secondary, idx: 20),
+  mat-sys-secondary-container: (palette: secondary, idx: 30),
+  mat-sys-on-secondary-container: (palette: secondary, idx: 90),
+  mat-sys-secondary-fixed: (palette: secondary, idx: 90),
+  mat-sys-on-secondary-fixed: (palette: secondary, idx: 10),
+  mat-sys-on-secondary-fixed-variant: (palette: secondary, idx: 30),
+  mat-sys-secondary-fixed-dim: (palette: secondary, idx: 80),
+
+  mat-sys-tertiary: (palette: tertiary, idx: 80),
+  mat-sys-on-tertiary: (palette: tertiary, idx: 20),
+  mat-sys-tertiary-container: (palette: tertiary, idx: 30),
+  mat-sys-on-tertiary-container: (palette: tertiary, idx: 90),
+  mat-sys-tertiary-fixed: (palette: tertiary, idx: 90),
+  mat-sys-on-tertiary-fixed: (palette: tertiary, idx: 10),
+  mat-sys-on-tertiary-fixed-variant: (palette: tertiary, idx: 30),
+  mat-sys-tertiary-fixed-dim: (palette: tertiary, idx: 80),
+
+  mat-sys-error: (palette: error, idx: 80),
+  mat-sys-on-error: (palette: error, idx: 20),
+  mat-sys-error-container: (palette: error, idx: 30),
+  mat-sys-on-error-container: (palette: error, idx: 90),
+
+  mat-sys-surface: (palette: neutral, idx: 6),
+  mat-sys-on-surface: (palette: neutral, idx: 90),
+  mat-sys-on-surface-variant: (palette: neutral, idx: 80),
+  mat-sys-surface-bright: (palette: neutral, idx: 24),
+  mat-sys-surface-container: (palette: neutral, idx: 12),
+  mat-sys-surface-container-high: (palette: neutral, idx: 17),
+  mat-sys-surface-container-highest: (palette: neutral, idx: 22),
+  mat-sys-surface-container-low: (palette: neutral, idx: 4),
+  mat-sys-surface-container-lowest: (palette: neutral, idx: 0),
+  mat-sys-surface-dim: (palette: neutral, idx: 4),
+  mat-sys-surface-tint: (palette: primary, idx: 80),
+  mat-sys-surface-variant: (palette: neutral-variant, idx: 30),
+  mat-sys-inverse-surface: (palette: neutral, idx: 90),
+  mat-sys-inverse-on-surface: (palette: neutral, idx: 20),
+
+  mat-sys-background: (palette: neutral, idx: 6),
+  mat-sys-on-background: (palette: neutral, idx: 90),
+  mat-sys-neutral-variant20: (palette: neutral-variant, idx: 20),
+  mat-sys-neutral10: (palette: neutral, idx: 10),
+  mat-sys-outline: (palette: neutral, idx: 40),
+  mat-sys-outline-variant: (palette: neutral, idx: 80),
+  mat-sys-scrim: (palette: neutral, idx: 0),
+  mat-sys-shadow: (palette: neutral, idx: 0),
+);
+
+// Mixin pour générer les variables CSS Material
+@mixin mat-sys-css-vars($palettes, $vars) {
+  @each $var, $info in $vars {
+    $palette: map.get($palettes, map.get($info, palette));
+    $idx: map.get($info, idx);
+    $color: if($palette, map.get($palette, $idx), null);
+    @if $color != null {
+      --#{$var}: #{$color};
+    }
+  }
+}
+
+// Regroupe les palettes importées
+$all-palettes: (
+  primary: theme-colors.$primary-palette,
+  secondary: map.get(theme-colors.$primary-palette, secondary),
+  tertiary: theme-colors.$tertiary-palette,
+  error: map.get(theme-colors.$primary-palette, error),
+  neutral: map.get(theme-colors.$primary-palette, neutral),
+  'neutral-variant': map.get(theme-colors.$primary-palette, neutral-variant),
+);
+
+:root {
+  @include mat-sys-css-vars($all-palettes, $mat-sys-vars-light);
+  @include export-palette-css-vars(theme-colors.$primary-palette, 'primary');
+  @include export-palette-css-vars(theme-colors.$tertiary-palette, 'tertiary');
+  @include export-palette-css-vars(theme-colors.$secondary-palette, 'secondary');
+  // Ajoute d'autres palettes si besoin
+}
+
+// Apply dark theme when browser/OS is in dark mode
+@media (prefers-color-scheme: dark) {
+  :root {
+    @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
+  }
+  html {
+    @include mat.all-component-colors($dark-theme);
   }
 }

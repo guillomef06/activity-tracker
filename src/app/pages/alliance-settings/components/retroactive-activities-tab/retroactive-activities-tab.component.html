@@ -10,16 +10,12 @@
 
   <mat-card class="form-card">
     <mat-card-content>
-      <form (ngSubmit)="onSubmit()" #retroForm="ngForm">
-        
+      <form [formGroup]="retroactiveForm" (ngSubmit)="onSubmit()">
+
         <!-- Member Selection -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'alliance.retroactive.selectMember' | translate }}</mat-label>
-          <mat-select
-            name="member"
-            [ngModel]="selectedMember()"
-            (ngModelChange)="selectedMember.set($event)"
-            required>
+          <mat-select formControlName="member">
             @for (member of members(); track member.id) {
               <mat-option [value]="member.id">
                 {{ member.display_name || member.username }}
@@ -28,18 +24,15 @@
           </mat-select>
           <mat-icon matPrefix>person</mat-icon>
           <mat-hint>{{ 'alliance.retroactive.memberHint' | translate }}</mat-hint>
-          <mat-error>{{ 'alliance.retroactive.memberRequired' | translate }}</mat-error>
+          @if (memberError()) {
+            <mat-error>{{ memberError() }}</mat-error>
+          }
         </mat-form-field>
 
         <!-- Week Selection -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
-          <mat-select
-            name="week"
-            [ngModel]="selectedWeeksAgo()"
-            (ngModelChange)="selectedWeeksAgo.set($event)"
-            required
-          >
+          <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
               <mat-option [value]="week.value">
                 {{ week.label }} - {{ week.dateRange }}
@@ -54,11 +47,8 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>{{ 'alliance.retroactive.selectActivity' | translate }}</mat-label>
           <mat-select
-            name="activity"
-            [ngModel]="selectedActivity()"
-            (ngModelChange)="selectedActivity.set($event)"
-            [disabled]="availableActivities().length === 0"
-            required>
+            formControlName="activity"
+            [disabled]="availableActivities().length === 0">
             @if (availableActivities().length === 0) {
               <mat-option disabled>
                 {{ 'alliance.retroactive.noActivities' | translate }}
@@ -72,7 +62,9 @@
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
           <mat-hint>{{ 'alliance.retroactive.activityHint' | translate }}</mat-hint>
-          <mat-error>{{ 'alliance.retroactive.activityRequired' | translate }}</mat-error>
+          @if (activityError()) {
+            <mat-error>{{ activityError() }}</mat-error>
+          }
         </mat-form-field>
 
         <!-- Position Input -->
@@ -81,18 +73,17 @@
           <input
             matInput
             type="number"
-            name="position"
-            [ngModel]="position()"
-            (ngModelChange)="position.set($event)"
-            min="1"
-            required/>
+            formControlName="position"
+            min="1"/>
           <mat-icon matPrefix>emoji_events</mat-icon>
           <mat-hint>{{ 'alliance.retroactive.positionHint' | translate }}</mat-hint>
-          <mat-error>{{ 'alliance.retroactive.positionRequired' | translate }}</mat-error>
+          @if (positionError()) {
+            <mat-error>{{ positionError() }}</mat-error>
+          }
         </mat-form-field>
 
         <!-- Points Preview -->
-        @if (selectedActivity() && position() >= 1) {
+        @if (calculatedPoints() > 0) {
           <div class="points-preview">
             <mat-icon>stars</mat-icon>
             <span class="points-label">{{ 'alliance.retroactive.pointsPreview' | translate }}:</span>
@@ -104,7 +95,6 @@
         <div class="form-actions">
           <button
             mat-raised-button
-            color="primary"
             type="submit"
             [disabled]="!canSubmit()">
             <mat-icon>add</mat-icon>

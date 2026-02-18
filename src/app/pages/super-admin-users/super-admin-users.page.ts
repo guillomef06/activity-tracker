@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +15,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
+import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import type { UserProfile } from '@app/shared/models';
 
 interface UserWithAlliance extends UserProfile {
@@ -38,6 +40,7 @@ interface UserWithAlliance extends UserProfile {
     MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
+    LocalDatePipe,
   ],
   templateUrl: './super-admin-users.page.html',
   styleUrl: './super-admin-users.page.scss',
@@ -50,6 +53,7 @@ export class SuperAdminUsersPage implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   protected readonly progressBarService = inject(ProgressBarService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly users = signal<UserWithAlliance[]>([]);
   protected readonly displayedColumns: string[] = ['displayName', 'username', 'role', 'alliance', 'createdAt', 'actions'];
@@ -59,6 +63,10 @@ export class SuperAdminUsersPage implements OnInit {
     display_name: ['', [Validators.required, Validators.minLength(2)]],
     role: ['', [Validators.required]],
   });
+
+  // Error signals for validation
+  protected readonly displayNameError = createFieldErrorSignal(this.editForm, 'display_name', this.destroyRef);
+  protected readonly roleError = createFieldErrorSignal(this.editForm, 'role', this.destroyRef);
 
   protected readonly editingId = signal<string | null>(null);
   protected readonly roles = ['super_admin', 'admin', 'member'];
@@ -138,7 +146,6 @@ export class SuperAdminUsersPage implements OnInit {
     const confirmed = await this.dialog.open(ConfirmDialogComponent, {
       data: {
         message: this.translate.instant('superAdmin.users.deleteConfirm', { name: user.display_name }),
-        confirmColor: 'warn'
       }
     }).afterClosed().toPromise();
 
@@ -169,10 +176,6 @@ export class SuperAdminUsersPage implements OnInit {
         });
       }
     });
-  }
-
-  protected formatDate(date: string): string {
-    return new Date(date).toLocaleDateString();
   }
 
   protected getRoleBadgeClass(role: string): string {

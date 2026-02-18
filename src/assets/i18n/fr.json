@@ -1,6 +1,5 @@
 {
   "app": {
-
     "subtitle": "Suivez les activités et consultez les scores sur 6 semaines"
   },
   "auth": {
@@ -14,10 +13,41 @@
     "displayName": "Nom d'affichage",
     "allianceName": "Nom de l'alliance",
     "invitationToken": "Jeton d'invitation",
+    "welcomeBack": "Bon retour",
+    "signInSubtitle": "Connectez-vous à votre compte",
+    "signupTitle": "Créer une Alliance",
+    "signupSubtitle": "Inscrivez-vous en tant qu'Administrateur d'Alliance",
+    "joinTitle": "Rejoindre une Alliance",
+    "joinSubtitle": "Utilisez votre invitation pour rejoindre une alliance",
+    "setupTitle": "Configuration Super Admin",
+    "setupSubtitle": "Créez le premier compte super administrateur",
+    "setupWarning": "Il s'agit d'une configuration unique. Le super administrateur a un accès complet pour gérer toutes les alliances et utilisateurs.",
+    "signingIn": "Connexion en cours...",
+    "creatingAlliance": "Création de l'alliance...",
+    "joining": "Adhésion en cours...",
+    "createSuperAdmin": "Créer le Super Admin",
+    "creating": "Création...",
+    "usernamePlaceholder": "Choisissez un nom d'utilisateur unique",
+    "usernameHint": "3-30 caractères, utilisé pour la connexion",
+    "displayNamePlaceholder": "Entrez votre nom complet",
+    "displayNameHint": "Votre nom tel qu'il apparaîtra aux autres",
+    "allianceNamePlaceholder": "Entrez le nom de votre alliance",
+    "allianceNameHint": "Choisissez un nom pour votre nouvelle alliance",
+    "passwordPlaceholder": "Créez un mot de passe sécurisé",
+    "passwordHint": "Au moins 6 caractères alphanumériques",
+    "confirmPasswordPlaceholder": "Ressaisissez votre mot de passe",
+    "tokenPlaceholder": "Entrez le jeton d'invitation",
+    "tokenHint": "Fourni par l'administrateur de votre alliance",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "haveInvitation": "Vous avez une invitation ?",
+    "wantCreateAlliance": "Vous voulez créer une alliance ?",
     "errors": {
       "required": "Ce champ est requis",
       "minLength": "Longueur minimale non atteinte",
       "maxLength": "Longueur maximale dépassée",
+      "invalidEmail": "Adresse e-mail invalide",
+      "invalidFormat": "Format invalide",
       "passwordMismatch": "Les mots de passe ne correspondent pas",
       "usernameExists": "Ce nom d'utilisateur existe déjà",
       "invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",
@@ -65,18 +95,12 @@
       "durationHint": "Jours avant expiration de l'invitation",
       "createInvitation": "Créer une Invitation",
       "noInvitations": "Aucune invitation créée",
-      "token": "Jeton",
       "expiresAt": "Expire le",
       "createdAt": "Créé le",
-      "status": "Statut",
-      "actions": "Actions",
       "copyLink": "Copier le lien d'invitation",
       "revokeInvitation": "Révoquer l'invitation",
       "revokeConfirm": "Êtes-vous sûr de vouloir révoquer cette invitation ?",
       "membersJoined": "Membres ayant rejoint via cette invitation",
-      "errors": {
-        "nameRequired": "Le nom de l'alliance est requis"
-      },
       "pointRules": {
         "title": "Configuration des règles de points",
         "subtitle": "Configurez des règles de calcul de points personnalisées basées sur la position/classement",
@@ -90,11 +114,6 @@
         "create": "Créer la règle",
         "noRules": "Aucune règle de points configurée",
         "noRulesHint": "Créez des règles pour calculer les points selon la position/classement. Sans règles, les points par défaut seront utilisés.",
-        "errors": {
-          "typeRequired": "Le type d'activité est requis",
-          "positionRequired": "La position est requise",
-          "pointsRequired": "La valeur de points est requise"
-        },
         "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette règle ?"
       }
     },
@@ -103,18 +122,15 @@
       "description": "En tant qu'admin, vous pouvez ajouter des activités pour les membres de l'alliance pour les 6 dernières semaines. Sélectionnez un membre, choisissez une semaine et entrez les détails de l'activité.",
       "selectMember": "Sélectionner un membre",
       "memberHint": "Choisissez le membre de l'alliance pour lequel vous souhaitez ajouter une activité",
-      "memberRequired": "Veuillez sélectionner un membre",
       "selectWeek": "Sélectionner la Semaine",
       "weekHint": "Choisissez la semaine pour laquelle soumettre votre activité.",
       "currentWeek": "Semaine actuelle",
       "weeksAgo": "Il y a {{count}} semaine(s)",
       "selectActivity": "Type d'activité",
       "activityHint": "Seules les activités disponibles pour la semaine sélectionnée sont affichées",
-      "activityRequired": "Veuillez sélectionner un type d'activité",
       "noActivities": "Aucune activité disponible pour cette semaine",
       "position": "Position",
       "positionHint": "Entrez la position ou le classement du membre.",
-      "positionRequired": "La position est requise",
       "pointsPreview": "Points à attribuer",
       "submit": "Ajouter l'activité",
       "submitting": "Ajout en cours...",
@@ -126,23 +142,14 @@
   "activityInput": {
     "title": "Soumettre une Activité",
     "subtitle": "Enregistrez votre activité et gagnez des points",
-    "yourName": "Votre Nom",
-    "enterName": "Entrez votre nom",
     "activityType": "Type d'Activité",
     "position": "Position/Classement",
     "positionPlaceholder": "ex: 1, 5, 10...",
     "positionHint": "Entrez votre position ou classement.",
-    "positionRequired": "La position est requise",
-    "description": "Description",
-    "descriptionPlaceholder": "Décrivez brièvement votre activité",
-    "points": "Points",
     "submit": "Soumettre l'Activité",
     "submitting": "Envoi en cours...",
     "viewDashboard": "Voir le Tableau de Bord",
-    "nameRequired": "Le nom est requis",
     "typeHint": "Seules les activités disponibles pour la semaine sélectionnée sont affichées",
-    "typeRequired": "Le type d'activité est requis",
-    "descriptionRequired": "La description est requise",
     "success": "Activité soumise avec succès !",
     "error": "Échec de la soumission de l'activité"
   },
@@ -159,7 +166,6 @@
     "title": "Tableau de Bord de Gestion",
     "refresh": "Actualiser",
     "addActivity": "Ajouter une Activité",
-    "loading": "Chargement des scores...",
     "noActivities": "Aucune activité enregistrée pour le moment",
     "noActivitiesThisWeek": "Aucune activité disponible cette semaine",
     "availableThisWeek": "Activités Disponibles Cette Semaine",
@@ -184,16 +190,11 @@
   },
   "common": {
     "points": "points",
-    "activities": "activités",
-    "activity": "activité",
     "close": "Fermer",
-    "back": "Retour",
-    "loading": "Chargement...",
     "actions": "Actions",
     "delete": "Supprimer",
     "confirm": "Confirmer",
-    "cancel": "Annuler",
-    "warning": "Attention"
+    "cancel": "Annuler"
   },
   "superAdmin": {
     "dashboard": {
@@ -218,10 +219,6 @@
       "members": "Membres",
       "created": "Créée",
       "actions": "Actions",
-      "edit": "Modifier",
-      "save": "Enregistrer",
-      "cancel": "Annuler",
-      "delete": "Supprimer",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'alliance \"{{name}}\" ? Cela supprimera également tous les utilisateurs, activités et invitations associés."
     },
     "users": {
@@ -235,10 +232,6 @@
       "noAlliance": "Aucune alliance",
       "created": "Créé",
       "actions": "Actions",
-      "edit": "Modifier",
-      "save": "Enregistrer",
-      "cancel": "Annuler",
-      "delete": "Supprimer",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'utilisateur \"{{name}}\" ? Cette action ne peut pas être annulée."
     }
   },

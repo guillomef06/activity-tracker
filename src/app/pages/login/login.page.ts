@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -36,6 +36,7 @@ export class LoginPage {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly hidePassword = signal(true);
   protected readonly isLoading = signal(false);
@@ -47,8 +48,8 @@ export class LoginPage {
   });
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.loginForm, 'username');
-  protected readonly passwordError = createFieldErrorSignal(this.loginForm, 'password');
+  protected readonly usernameError = createFieldErrorSignal(this.loginForm, 'username', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.loginForm, 'password', this.destroyRef);
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);

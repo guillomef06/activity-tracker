@@ -13,12 +13,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatBadgeModule } from "@angular/material/badge";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { ActivityService } from "../../core/services/activity.service";
 import { ProgressBarService } from "../../core/services/progress-bar.service";
 import { UserScore } from "../../shared/models/activity.model";
-import { getWeekLabel, formatShortDate } from "../../shared/utils/date.util";
 import { ActivityLabelPipe } from "../../shared/pipes/activity-label.pipe";
+import { WeekLabelPipe } from "../../shared/pipes/week-label.pipe";
+import { ShortDatePipe } from "../../shared/pipes/short-date.pipe";
 
 @Component({
   selector: "app-activities-details",
@@ -34,6 +35,8 @@ import { ActivityLabelPipe } from "../../shared/pipes/activity-label.pipe";
     MatBadgeModule,
     TranslateModule,
     ActivityLabelPipe,
+    WeekLabelPipe,
+    ShortDatePipe,
   ],
   templateUrl: "./activities-details.page.html",
   styleUrl: "./activities-details.page.scss",
@@ -62,15 +65,9 @@ export class ActivitiesDetailsPage implements OnInit {
   private readonly router = inject(Router);
   private readonly activityService = inject(ActivityService);
   private readonly progressBarService = inject(ProgressBarService);
-  private readonly translate = inject(TranslateService);
 
   protected readonly userScores = signal<UserScore[]>([]);
   protected readonly selectedUserId = signal<string | null>(null);
-
-  // Utility functions exposed to template
-  protected readonly getWeekLabel = (weekIndex: number) =>
-    getWeekLabel(weekIndex, this.translate);
-  protected readonly formatDate = (date: Date) => formatShortDate(date);
 
   // TrackBy functions for performance
   protected readonly trackByUserId = (_index: number, user: UserScore) =>
