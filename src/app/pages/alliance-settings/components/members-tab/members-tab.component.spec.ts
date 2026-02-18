@@ -43,14 +43,6 @@ describe('MembersTabComponent', () => {
     expect(component.members().length).toBe(2);
   });
 
-  it('should format date correctly', () => {
-    const date = '2024-01-15T10:00:00Z';
-    const formatted = component['formatDate'](date);
-    
-    expect(formatted).toBeDefined();
-    expect(typeof formatted).toBe('string');
-  });
-
   it('should return correct role badge class', () => {
     expect(component['getRoleBadgeClass']('admin')).toBe('role-admin');
     expect(component['getRoleBadgeClass']('member')).toBe('role-member');

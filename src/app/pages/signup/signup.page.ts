@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -36,6 +36,7 @@ export class SignupPage {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly hidePassword = signal(true);
   protected readonly hideConfirmPassword = signal(true);
@@ -59,11 +60,11 @@ export class SignupPage {
   }
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username');
-  protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName');
-  protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName');
-  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password');
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword');
+  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username', this.destroyRef);
+  protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName', this.destroyRef);
+  protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {
     if (this.signupForm.invalid || this.isLoading()) {

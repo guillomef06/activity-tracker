@@ -29,6 +29,9 @@
                   <form [formGroup]="editForm">
                     <mat-form-field appearance="outline" class="edit-field">
                       <input matInput formControlName="name" />
+                      @if (nameError()) {
+                        <mat-error>{{ nameError() }}</mat-error>
+                      }
                     </mat-form-field>
                   </form>
                 } @else {
@@ -66,7 +69,7 @@
             <ng-container matColumnDef="createdAt">
               <th mat-header-cell *matHeaderCellDef>{{ 'superAdmin.alliances.created' | translate }}</th>
               <td mat-cell *matCellDef="let alliance">
-                {{ formatDate(alliance.created_at) }}
+                {{ alliance.created_at | localDate }}
               </td>
             </ng-container>
 
@@ -78,7 +81,6 @@
                   <div class="edit-actions">
                     <button
                       mat-icon-button
-                      color="primary"
                       (click)="saveEdit()"
                       [disabled]="editForm.invalid"
                     >
@@ -93,7 +95,7 @@
                     <button mat-icon-button (click)="startEdit(alliance)">
                       <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteAlliance(alliance)">
+                    <button mat-icon-button (click)="deleteAlliance(alliance)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>

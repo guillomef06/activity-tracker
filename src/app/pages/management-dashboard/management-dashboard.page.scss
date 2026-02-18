@@ -84,51 +84,6 @@
   }
 }
 
-.scores-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.score-card {
-  mat-card-header {
-    cursor: pointer;
-    position: relative;
-    padding: 16px;
-    
-    &:hover {
-      background-color: var(--mat-sys-surface-container-highest);
-    }
-  }
-  
-  .rank-badge {
-    margin-right: 8px;
-  }
-  
-  mat-card-subtitle {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 8px;
-  }
-  
-  .expand-button {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-}
-
-.score-details {
-  padding: 16px;
-  
-  h4 {
-    margin: 0 0 1rem 0;
-    font-size: 1rem;
-  }
-}
-
 .week-activities {
   display: flex;
   flex-direction: column;

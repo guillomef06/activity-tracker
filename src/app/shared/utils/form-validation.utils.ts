@@ -4,7 +4,9 @@
  */
 
 import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
-import { Signal, signal, effect } from '@angular/core';
+import { Signal, signal, computed, DestroyRef } from '@angular/core';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { merge } from 'rxjs';
 
 /**
  * Get translated error message key for a form control
@@ -70,54 +72,57 @@ export function passwordMatchValidator(form: FormGroup): ValidationErrors | null
 /**
  * Creates a reactive error signal for a form field
  * This creates a signal that automatically updates when the form control state changes
- * 
+ *
  * @param form - The FormGroup containing the field
  * @param fieldName - The name of the field to validate
+ * @param destroyRef - DestroyRef for automatic cleanup when component is destroyed
  * @param formSubmitted - Optional signal to force showing errors after form submission
  * @returns A signal that returns the error message key or empty string
- * 
+ *
  * @example
  * // Simple usage
- * protected readonly usernameError = createFieldErrorSignal(this.form, 'username');
- * 
+ * protected readonly usernameError = createFieldErrorSignal(
+ *   this.form,
+ *   'username',
+ *   this.destroyRef
+ * );
+ *
  * @example
  * // With form submitted state
  * protected readonly formSubmitted = signal(false);
- * protected readonly usernameError = createFieldErrorSignal(this.form, 'username', this.formSubmitted);
+ * protected readonly usernameError = createFieldErrorSignal(
+ *   this.form,
+ *   'username',
+ *   this.destroyRef,
+ *   this.formSubmitted
+ * );
  */
 export function createFieldErrorSignal(
-  form: FormGroup, 
+  form: FormGroup,
   fieldName: string,
+  destroyRef: DestroyRef,
   formSubmitted?: Signal<boolean>
 ): Signal<string> {
-  const errorSignal = signal('');
   const control = form.get(fieldName);
-  
+
   if (!control) {
-    return errorSignal;
+    return signal('').asReadonly();
   }
 
-  // Update signal when form state changes
-  const updateError = () => {
+  // Convert control changes to signal with automatic cleanup
+  const controlChanges = toSignal(
+    merge(control.valueChanges, control.statusChanges).pipe(
+      takeUntilDestroyed(destroyRef)
+    ),
+    { initialValue: control.value }
+  );
+
+  // Compute error message based on control state and changes
+  return computed(() => {
+    // Trigger recomputation when control changes
+    controlChanges();
+
     const showAll = formSubmitted?.() ?? false;
-    errorSignal.set(getFormControlError(control, showAll));
-  };
-
-  // Listen to control changes
-  control.valueChanges.subscribe(() => updateError());
-  control.statusChanges.subscribe(() => updateError());
-  
-  // Initial update
-  updateError();
-  
-  // If formSubmitted signal is provided, update when it changes
-  if (formSubmitted) {
-    effect(() => {
-      if (formSubmitted()) {
-        updateError();
-      }
-    });
-  }
-
-  return errorSignal.asReadonly();
+    return getFormControlError(control, showAll);
+  });
 }

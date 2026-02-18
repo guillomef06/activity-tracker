@@ -1,6 +1,6 @@
-import { Component, input, computed, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, computed, signal, inject, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -9,10 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ActivityService } from '@app/core/services';
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
 import { getWeekNumberForWeeksAgo, getDateForWeeksAgo, getWeekStart, getWeekEnd } from '@app/shared/utils/date.util';
+import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import type { UserProfile } from '@app/shared/models';
 
 interface WeekOption {
@@ -26,7 +28,7 @@ interface WeekOption {
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -43,73 +45,113 @@ export class RetroactiveActivitiesTabComponent {
   private readonly activityService = inject(ActivityService);
   private readonly translate = inject(TranslateService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   // Inputs
   members = input.required<UserProfile[]>();
 
-  // Form state - Initialize selectedWeeksAgo to 0 to ensure activities load immediately
-  selectedMember = signal<string>('');
-  selectedWeeksAgo = signal<number>(0);
-  selectedActivity = signal<string>('');
-  position = signal<number>(1);
+  // Form state
   isSubmitting = signal<boolean>(false);
+
+  // Reactive form
+  retroactiveForm: FormGroup = this.fb.group({
+    member: ['', Validators.required],
+    week: [0, Validators.required],
+    activity: ['', Validators.required],
+    position: [1, [Validators.required, Validators.min(1)]]
+  });
+
+  // Convert form value changes to signals
+  private weekValue = toSignal(
+    this.retroactiveForm.get('week')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
+    { initialValue: 0 }
+  );
+
+  private activityValue = toSignal(
+    this.retroactiveForm.get('activity')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
+    { initialValue: '' }
+  );
+
+  private positionValue = toSignal(
+    this.retroactiveForm.get('position')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
+    { initialValue: 1 }
+  );
+
+  // Error signals for validation
+  protected readonly memberError = createFieldErrorSignal(this.retroactiveForm, 'member', this.destroyRef);
+  protected readonly activityError = createFieldErrorSignal(this.retroactiveForm, 'activity', this.destroyRef);
+  protected readonly positionError = createFieldErrorSignal(this.retroactiveForm, 'position', this.destroyRef);
 
   // Computed values
   weekOptions = computed<WeekOption[]>(() => {
     const options: WeekOption[] = [];
     const currentWeekLabel = this.translate.instant('alliance.retroactive.currentWeek');
     const weeksAgoLabel = this.translate.instant('alliance.retroactive.weeksAgo');
-    
+
     for (let i = 0; i <= 5; i++) {
       const date = getDateForWeeksAgo(i);
       const weekStart = getWeekStart(date);
       const weekEnd = getWeekEnd(date);
       const dateRange = `${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()}`;
-      
+
       options.push({
         value: i,
         label: i === 0 ? currentWeekLabel : weeksAgoLabel.replace('{{count}}', i.toString()),
         dateRange
       });
     }
-    
+
     return options;
   });
 
   availableActivities = computed(() => {
-    const weekNumber = getWeekNumberForWeeksAgo(this.selectedWeeksAgo());
+    const weekNumber = getWeekNumberForWeeksAgo(this.weekValue() ?? 0);
     return APP_CONSTANTS.ACTIVITY_TYPES
       .filter((type: ActivityType) => type.availableWeeks.includes(weekNumber));
   });
 
   calculatedPoints = computed(() => {
-    const activity = APP_CONSTANTS.ACTIVITY_TYPES.find((t: ActivityType) => t.value === this.selectedActivity());
+    const activity = APP_CONSTANTS.ACTIVITY_TYPES.find((t: ActivityType) => t.value === this.activityValue());
     if (!activity) return 0;
-    
-    const pos = this.position();
+
+    const pos = this.positionValue() ?? 1;
     if (!pos || pos < 1) return 0;
-    
+
     return Math.max(0, activity.points - (pos - 1));
   });
 
   canSubmit = computed(() => {
-    return this.selectedMember() !== '' && 
-           this.selectedActivity() !== '' && 
-           this.position() >= 1 &&
-           !this.isSubmitting();
+    return this.retroactiveForm.valid && !this.isSubmitting();
   });
 
+  constructor() {
+    // Clear activity and position when week changes
+    this.retroactiveForm.get('week')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.retroactiveForm.patchValue({
+          activity: '',
+          position: 1
+        }, { emitEvent: false });
+      });
+  }
+
   async onSubmit(): Promise<void> {
-    if (!this.canSubmit()) return;
+    if (this.retroactiveForm.invalid || this.isSubmitting()) {
+      this.retroactiveForm.markAllAsTouched();
+      return;
+    }
 
     this.isSubmitting.set(true);
 
     try {
-      const activityDate = getDateForWeeksAgo(this.selectedWeeksAgo());
-      
-      await this.activityService.addActivityForMember(this.selectedMember(), {
-        activityType: this.selectedActivity(),
-        position: this.position(),
+      const formValue = this.retroactiveForm.value;
+      const activityDate = getDateForWeeksAgo(formValue.week);
+
+      await this.activityService.addActivityForMember(formValue.member, {
+        activityType: formValue.activity,
+        position: formValue.position,
         date: activityDate
       });
 
@@ -119,9 +161,11 @@ export class RetroactiveActivitiesTabComponent {
         { duration: 3000 }
       );
 
-      // Reset form
-      this.selectedActivity.set('');
-      this.position.set(1);
+      // Reset form keeping member and week
+      this.retroactiveForm.patchValue({
+        activity: '',
+        position: 1
+      });
 
     } catch (error) {
       console.error('Error submitting retroactive activity:', error);
@@ -136,9 +180,11 @@ export class RetroactiveActivitiesTabComponent {
   }
 
   resetForm(): void {
-    this.selectedMember.set('');
-    this.selectedWeeksAgo.set(0);
-    this.selectedActivity.set('');
-    this.position.set(1);
+    this.retroactiveForm.reset({
+      member: '',
+      week: 0,
+      activity: '',
+      position: 1
+    });
   }
 }

@@ -2,67 +2,67 @@
   <mat-card class="signup-card">
     <mat-card-header>
       <mat-icon class="signup-icon">person_add</mat-icon>
-      <mat-card-title>Create Alliance</mat-card-title>
-      <mat-card-subtitle>Sign up as an Alliance Administrator</mat-card-subtitle>
+      <mat-card-title>{{ 'auth.signupTitle' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'auth.signupSubtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Username</mat-label>
+          <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
             formControlName="username"
             type="text"
             autocomplete="username"
-            placeholder="Choose a unique username"
+            [placeholder]="'auth.usernamePlaceholder' | translate"
           />
           <mat-icon matPrefix>person</mat-icon>
-          <mat-hint>3-30 characters, used for login</mat-hint>
+          <mat-hint>{{ 'auth.usernameHint' | translate }}</mat-hint>
           @if (usernameError()) {
             <mat-error>{{ usernameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Display Name</mat-label>
+          <mat-label>{{ 'auth.displayName' | translate }}</mat-label>
           <input
             matInput
             formControlName="displayName"
             type="text"
             autocomplete="name"
-            placeholder="Enter your full name"
+            [placeholder]="'auth.displayNamePlaceholder' | translate"
           />
           <mat-icon matPrefix>badge</mat-icon>
-          <mat-hint>Your name as it will appear to others</mat-hint>
+          <mat-hint>{{ 'auth.displayNameHint' | translate }}</mat-hint>
           @if (displayNameError()) {
             <mat-error>{{ displayNameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Alliance Name</mat-label>
+          <mat-label>{{ 'auth.allianceName' | translate }}</mat-label>
           <input
             matInput
             formControlName="allianceName"
             type="text"
-            placeholder="Enter your alliance name"
+            [placeholder]="'auth.allianceNamePlaceholder' | translate"
           />
           <mat-icon matPrefix>groups</mat-icon>
-          <mat-hint>Choose a name for your new alliance</mat-hint>
+          <mat-hint>{{ 'auth.allianceNameHint' | translate }}</mat-hint>
           @if (allianceNameError()) {
             <mat-error>{{ allianceNameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
+          <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
             formControlName="password"
             [type]="hidePassword() ? 'password' : 'text'"
             autocomplete="new-password"
-            placeholder="Create a secure password"
+            [placeholder]="'auth.passwordPlaceholder' | translate"
           />
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -75,20 +75,20 @@
           >
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          <mat-hint>Minimum 8 characters</mat-hint>
+          <mat-hint>{{ 'auth.passwordHint' | translate }}</mat-hint>
           @if (passwordError()) {
             <mat-error>{{ passwordError() | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Confirm Password</mat-label>
+          <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
           <input
             matInput
             formControlName="confirmPassword"
             [type]="hideConfirmPassword() ? 'password' : 'text'"
             autocomplete="new-password"
-            placeholder="Re-enter your password"
+            [placeholder]="'auth.confirmPasswordPlaceholder' | translate"
           />
           <mat-icon matPrefix>lock_outline</mat-icon>
           <button
@@ -116,16 +116,16 @@
         <div class="actions">
           <app-loading-button
             type="submit"
-            text="Sign Up"
-            loadingText="Creating Alliance..."
+            [text]="'auth.signup' | translate"
+            [loadingText]="'auth.creatingAlliance' | translate"
             [loading]="isLoading()"
             buttonClass="submit-button"
           />
         </div>
 
         <div class="footer-links">
-          <p>Already have an account? <a routerLink="/login">Sign In</a></p>
-          <p>Have an invitation? <a routerLink="/join">Join Alliance</a></p>
+          <p>{{ 'auth.haveAccount' | translate }} <a routerLink="/login">{{ 'auth.login' | translate }}</a></p>
+          <p>{{ 'auth.haveInvitation' | translate }} <a routerLink="/join">{{ 'auth.joinTitle' | translate }}</a></p>
         </div>
       </form>
     </mat-card-content>

@@ -48,10 +48,6 @@
 }
 
 .settings-tabs {
-  ::ng-deep .mat-mdc-tab-label {
-    min-width: 160px;
-  }
-
   .tab-icon {
     margin-right: 0.5rem;
     font-size: 20px;
@@ -85,10 +81,4 @@
     }
   }
 
-  .settings-tabs {
-    ::ng-deep .mat-mdc-tab-label {
-      min-width: 80px;
-      padding: 0 0.75rem;
-    }
-  }
 }

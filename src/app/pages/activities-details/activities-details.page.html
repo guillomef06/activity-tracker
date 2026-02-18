@@ -34,10 +34,10 @@
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                      {{ getWeekLabel(weekIndex) }}
+                      {{ weekIndex | weekLabel }}
                     </mat-panel-title>
                     <mat-panel-description>
-                      {{ formatDate(week.weekStart) }} - {{ formatDate(week.weekEnd) }}
+                      {{ week.weekStart | shortDate }} - {{ week.weekEnd | shortDate }}
                       <mat-chip class="points-chip">{{ week.totalPoints }} {{ 'dashboard.pointsShort' | translate }}</mat-chip>
                     </mat-panel-description>
                   </mat-expansion-panel-header>

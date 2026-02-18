@@ -63,10 +63,6 @@
         }
         
         @if (authService.isAdmin()) {
-          <button mat-menu-item routerLink="/management-dashboard" routerLinkActive="active">
-            <mat-icon>dashboard</mat-icon>
-            <span>{{ 'nav.dashboard' | translate }}</span>
-          </button>
           <button mat-menu-item routerLink="/alliance-settings" routerLinkActive="active">
             <mat-icon>settings</mat-icon>
             <span>{{ 'nav.allianceSettings' | translate }}</span>
@@ -77,7 +73,10 @@
           <mat-icon>add_task</mat-icon>
           <span>{{ 'nav.activities' | translate }}</span>
         </button>
-        
+        <button mat-menu-item routerLink="/management-dashboard" routerLinkActive="active">
+          <mat-icon>dashboard</mat-icon>
+          <span>{{ 'nav.dashboard' | translate }}</span>
+        </button>
         <button mat-menu-item routerLink="/activities-details" routerLinkActive="active">
           <mat-icon>list_alt</mat-icon>
           <span>{{ 'nav.details' | translate }}</span>

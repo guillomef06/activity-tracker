@@ -13,10 +13,41 @@
     "displayName": "Nombre para mostrar",
     "allianceName": "Nombre de la alianza",
     "invitationToken": "Token de invitación",
+    "welcomeBack": "Bienvenido de nuevo",
+    "signInSubtitle": "Inicia sesión en tu cuenta",
+    "signupTitle": "Crear Alianza",
+    "signupSubtitle": "Regístrate como Administrador de Alianza",
+    "joinTitle": "Unirse a una Alianza",
+    "joinSubtitle": "Usa tu invitación para unirte a una alianza",
+    "setupTitle": "Configuración Super Admin",
+    "setupSubtitle": "Crea la primera cuenta de super administrador",
+    "setupWarning": "Esta es una configuración única. El super administrador tiene acceso completo para gestionar todas las alianzas y usuarios.",
+    "signingIn": "Iniciando sesión...",
+    "creatingAlliance": "Creando alianza...",
+    "joining": "Uniéndose...",
+    "createSuperAdmin": "Crear Super Admin",
+    "creating": "Creando...",
+    "usernamePlaceholder": "Elige un nombre de usuario único",
+    "usernameHint": "3-30 caracteres, usado para iniciar sesión",
+    "displayNamePlaceholder": "Introduce tu nombre completo",
+    "displayNameHint": "Tu nombre tal como aparecerá para otros",
+    "allianceNamePlaceholder": "Introduce el nombre de tu alianza",
+    "allianceNameHint": "Elige un nombre para tu nueva alianza",
+    "passwordPlaceholder": "Crea una contraseña segura",
+    "passwordHint": "Al menos 6 caracteres alfanuméricos",
+    "confirmPasswordPlaceholder": "Reintroduce tu contraseña",
+    "tokenPlaceholder": "Introduce el token de invitación",
+    "tokenHint": "Proporcionado por el administrador de tu alianza",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "noAccount": "¿No tienes una cuenta?",
+    "haveInvitation": "¿Tienes una invitación?",
+    "wantCreateAlliance": "¿Quieres crear una alianza?",
     "errors": {
       "required": "Este campo es obligatorio",
       "minLength": "Longitud mínima no alcanzada",
       "maxLength": "Longitud máxima excedida",
+      "invalidEmail": "Dirección de correo electrónico no válida",
+      "invalidFormat": "Formato no válido",
       "passwordMismatch": "Las contraseñas no coinciden",
       "usernameExists": "El nombre de usuario ya existe",
       "invalidCredentials": "Nombre de usuario o contraseña no válidos",
@@ -64,18 +95,12 @@
       "durationHint": "Días hasta que expire la invitación",
       "createInvitation": "Crear Invitación",
       "noInvitations": "No hay invitaciones creadas",
-      "token": "Token",
       "expiresAt": "Expira",
       "createdAt": "Creado",
-      "status": "Estado",
-      "actions": "Acciones",
       "copyLink": "Copiar enlace de invitación",
       "revokeInvitation": "Revocar invitación",
       "revokeConfirm": "¿Está seguro de que desea revocar esta invitación?",
       "membersJoined": "Miembros que se unieron a través de esta invitación",
-      "errors": {
-        "nameRequired": "El nombre de la alianza es obligatorio"
-      },
       "pointRules": {
         "title": "Configuración de reglas de puntos",
         "subtitle": "Configure reglas personalizadas de cálculo de puntos basadas en la posición/clasificación",
@@ -89,11 +114,7 @@
         "create": "Crear regla",
         "noRules": "No hay reglas de puntos configuradas",
         "noRulesHint": "Cree reglas para calcular puntos según la posición/clasificación. Sin reglas, se utilizarán los puntos predeterminados.",
-        "errors": {
-          "typeRequired": "El tipo de actividad es requerido",
-          "positionRequired": "La posición es requerida",
-          "pointsRequired": "El valor de puntos es requerido"
-        }
+        "deleteConfirm": "¿Está seguro de que desea eliminar esta regla?"
       }
     },
     "retroactive": {
@@ -101,18 +122,15 @@
       "description": "Como administrador, puedes agregar actividades para los miembros de la alianza de las últimas 6 semanas. Selecciona un miembro, elige una semana e ingresa los detalles de la actividad.",
       "selectMember": "Seleccionar miembro",
       "memberHint": "Elige el miembro de la alianza para quien deseas agregar una actividad",
-      "memberRequired": "Por favor selecciona un miembro",
       "selectWeek": "Seleccionar semana",
       "weekHint": "Elige la semana en que tuvo lugar la actividad",
       "currentWeek": "Semana actual",
       "weeksAgo": "Hace {{count}} semana(s)",
       "selectActivity": "Tipo de actividad",
       "activityHint": "Solo se muestran las actividades disponibles para la semana seleccionada",
-      "activityRequired": "Por favor selecciona un tipo de actividad",
       "noActivities": "No hay actividades disponibles para esta semana",
       "position": "Posición",
       "positionHint": "Ingresa la posición o clasificación del miembro.",
-      "positionRequired": "La posición es requerida",
       "pointsPreview": "Puntos a otorgar",
       "submit": "Agregar actividad",
       "submitting": "Agregando actividad...",
@@ -124,23 +142,14 @@
   "activityInput": {
     "title": "Enviar Actividad",
     "subtitle": "Registra tu actividad y gana puntos",
-    "yourName": "Tu Nombre",
-    "enterName": "Introduce tu nombre",
     "activityType": "Tipo de Actividad",
     "position": "Posición/Clasificación",
     "positionPlaceholder": "ej: 1, 5, 10...",
     "positionHint": "Ingresa tu posición o clasificación.",
-    "positionRequired": "La posición es requerida",
-    "description": "Descripción",
-    "descriptionPlaceholder": "Describe brevemente tu actividad",
-    "points": "Puntos",
     "submit": "Enviar Actividad",
     "submitting": "Enviando...",
     "viewDashboard": "Ver Tablero",
-    "nameRequired": "El nombre es obligatorio",
     "typeHint": "Solo se muestran las actividades disponibles para la semana seleccionada",
-    "typeRequired": "El tipo de actividad es obligatorio",
-    "descriptionRequired": "La descripción es obligatoria",
     "success": "¡Actividad enviada correctamente!",
     "error": "Error al enviar la actividad"
   },
@@ -157,7 +166,6 @@
     "title": "Panel de Gestión",
     "refresh": "Actualizar",
     "addActivity": "Añadir Actividad",
-    "loading": "Cargando puntuaciones...",
     "noActivities": "Aún no hay actividades registradas",
     "noActivitiesThisWeek": "No hay actividades disponibles esta semana",
     "availableThisWeek": "Actividades Disponibles Esta Semana",
@@ -182,17 +190,13 @@
   },
   "common": {
     "points": "puntos",
-    "activities": "actividades",
-    "activity": "actividad",
     "close": "Cerrar",
-    "back": "Volver",
-    "loading": "Cargando...",
     "actions": "Acciones",
     "delete": "Eliminar",
     "confirm": "Confirmar",
-    "cancel": "Cancelar",
-    "warning": "Advertencia"
-  },  "superAdmin": {
+    "cancel": "Cancelar"
+  },
+  "superAdmin": {
     "dashboard": {
       "title": "Panel de Superadministrador",
       "subtitle": "Vista general y gestión global del sistema",
@@ -215,10 +219,6 @@
       "members": "Miembros",
       "created": "Creada",
       "actions": "Acciones",
-      "edit": "Editar",
-      "save": "Guardar",
-      "cancel": "Cancelar",
-      "delete": "Eliminar",
       "deleteConfirm": "¿Está seguro de que desea eliminar la alianza \"{{name}}\"? Esto también eliminará todos los usuarios, actividades e invitaciones asociados."
     },
     "users": {
@@ -232,10 +232,6 @@
       "noAlliance": "Sin alianza",
       "created": "Creado",
       "actions": "Acciones",
-      "edit": "Editar",
-      "save": "Guardar",
-      "cancel": "Cancelar",
-      "delete": "Eliminar",
       "deleteConfirm": "¿Está seguro de que desea eliminar al usuario \"{{name}}\"? Esta acción no se puede deshacer."
     }
   },
@@ -243,4 +239,3 @@
   "admin": "Administrador",
   "member": "Miembro"
 }
-

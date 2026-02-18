@@ -80,8 +80,4 @@ describe('PointRulesTabComponent', () => {
     expect(label).toBeDefined();
   });
 
-  it('should format position range correctly', () => {
-    expect(component['formatPositionRange'](1, 10)).toBe('1-10');
-    expect(component['formatPositionRange'](5, 5)).toBe('5');
-  });
 });
