@@ -53,4 +53,10 @@ export type {
   PointCalculationResult
 } from './activity-point-rule.model';
 
+// Alliance Activity Settings models
+export type {
+  AllianceActivitySettings,
+  UpsertActivitySettingsRequest
+} from './alliance-activity-settings.model';
+
 

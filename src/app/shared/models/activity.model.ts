@@ -11,7 +11,7 @@ export interface Activity {
   userId: string;
   userName: string;
   activityType: string;
-  position: number; // Position/rank used to calculate points
+  position: number | null; // null when participation_mode is active
   points: number;
   date: Date;
   timestamp: number;
@@ -22,9 +22,9 @@ export interface Activity {
  */
 export interface ActivityRequest {
   activityType: string;
-  position: number; // Position/rank entered by user
+  position: number | null; // null when participation_mode is active
   date: Date;
-  // points will be calculated server-side based on position
+  points?: number; // pre-calculated for participation mode
 }
 
 /**
@@ -34,7 +34,7 @@ export interface ActivityResponse {
   id: string;
   user_id: string;
   activity_type: string;
-  position: number; // Position/rank from database
+  position: number | null; // null when participation_mode is active
   points: number;
   date: string; // ISO timestamp from database
   created_at: string;

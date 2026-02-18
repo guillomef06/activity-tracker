@@ -165,3 +165,9 @@ ng update
 - Respect SOLID and YAGNI
 - Follow established patterns
 - Test changes thoroughly
+
+## Feature Completion Checklist
+When a feature is fully implemented, **always update `DEVELOPMENT_STATUS.md`**:
+- Mark the feature as completed
+- Add any relevant notes (new files, migrations, known limitations)
+- Keep the status file accurate so it reflects the current state of the project

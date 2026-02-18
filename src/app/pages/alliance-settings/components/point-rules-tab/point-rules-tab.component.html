@@ -3,15 +3,53 @@
     <mat-card-title>{{ 'alliance.settings.pointRules.title' | translate }}</mat-card-title>
     <mat-card-subtitle>{{ 'alliance.settings.pointRules.subtitle' | translate }}</mat-card-subtitle>
   </mat-card-header>
-  
+
   <mat-card-content>
+    <!-- Participation Mode Section -->
+    <div class="section">
+      <h3 class="section-title">
+        <mat-icon>how_to_reg</mat-icon>
+        {{ 'alliance.settings.pointRules.participationMode' | translate }}
+      </h3>
+      <p class="section-hint">{{ 'alliance.settings.pointRules.participationModeHint' | translate }}</p>
+
+      <div class="participation-table">
+        @for (item of activitySettingsList(); track item.type.value) {
+          <div class="participation-row">
+            <span class="activity-name">{{ item.type.labelKey | translate }}</span>
+
+            <mat-slide-toggle
+              [checked]="item.setting?.participation_mode ?? false"
+              [disabled]="isUpdatingSetting() === item.type.value"
+              (change)="toggleParticipationMode(item.type.value, $event)"
+            ></mat-slide-toggle>
+
+            @if (item.setting?.participation_mode) {
+              <mat-form-field appearance="outline" class="points-field" subscriptSizing="dynamic">
+                <mat-label>{{ 'alliance.settings.pointRules.participationPoints' | translate }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  [value]="item.setting?.participation_points ?? 5"
+                  min="0"
+                  [disabled]="isUpdatingSetting() === item.type.value"
+                  (change)="onPointsChange(item.type.value, $event)"
+                />
+                <mat-icon matSuffix>star</mat-icon>
+              </mat-form-field>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
     <!-- Add Point Rule Form -->
     <div class="section">
       <h3 class="section-title">
         <mat-icon>add</mat-icon>
         {{ 'alliance.settings.pointRules.addRule' | translate }}
       </h3>
-      
+
       <form [formGroup]="pointRuleForm" (ngSubmit)="createPointRule()" class="point-rule-form">
         <div class="form-row">
           <mat-form-field appearance="outline" class="form-field">

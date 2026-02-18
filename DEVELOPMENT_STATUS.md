@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 9 février 2026 - 04:45
+**Dernière mise à jour:** 18 février 2026
 
 ## 📋 Résumé
 
@@ -56,6 +56,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - ✅ **Super Admin - RLS Policies:** Correction permissions activities/tokens pour modération multi-alliance (is_super_admin() checks)
 - ✅ **Activités Rétroactives - RLS Policies:** Ajout policies permettant aux admins de créer des activités pour les membres de leur alliance et aux super admins pour tous les utilisateurs (migration 07)
 - ✅ **ConfirmDialog Component:** Remplacement de tous les confirm() natifs par un composant Material réutilisable avec i18n (4 langues)
+- ✅ **Mode Participation:** Configuration par activité du mode participation (toggle "J'ai participé" au lieu du champ position)
 
 ---
 
@@ -98,6 +99,31 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - **Réactivité:** Pipe `ActivityLabelPipe` pour traduction dynamique des activités
 - **Corrections i18n:** Suppression de `translate.instant()` au profit du pipe `translate` pour mise à jour temps réel
 - **Architecture extensible:** Structure JSON permet ajout futur de thème, notifications, etc.
+
+---
+
+## 🎯 Mode Participation par Activité ✅
+
+### Fonctionnalité
+Permet à l'admin de configurer certaines activités en "mode participation" : au lieu de saisir une position, le joueur coche simplement "J'ai participé". Les points sont fixes et configurables.
+
+**Configuration admin** (`Alliance Settings` → `Point Rules` → section "Mode Participation") :
+- Toggle par activité pour activer/désactiver le mode participation
+- Champ "Points pour la participation" (visible si toggle activé)
+- Sauvegarde immédiate (upsert)
+
+**Expérience membre** (`Activity Input`) :
+- Si l'activité sélectionnée est en mode participation → affiche un `mat-slide-toggle` au lieu du champ position
+- Le bouton "Soumettre" reste désactivé jusqu'à ce que le toggle soit coché
+- La soumission envoie `position: null` + points fixes
+
+**Entrée rétroactive admin** : même comportement (toggle dans retroactive-activities-tab)
+
+**Fichiers clés :**
+- `supabase/10-alliance-activity-settings.sql` — nouvelle table + RLS avec helper functions
+- `src/app/shared/models/alliance-activity-settings.model.ts`
+- `src/app/core/services/alliance-activity-settings.service.ts`
+- `activity.model.ts` — `position: number | null`
 
 ---
 
@@ -192,6 +218,7 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 - ✅ Authentification multi-rôles (super_admin, admin, member)
 - ✅ Gestion d'alliances et invitations avec tracking
 - ✅ Système de points configurables par position
+- ✅ Mode participation par activité (toggle sans position)
 - ✅ Dashboards avec graphiques et statistiques
 - ✅ Interface responsive (mobile-first)
 - ✅ Internationalisation (EN, FR, ES, IT)
@@ -222,7 +249,7 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 ## 🔗 Fichiers Clés
 
 **Backend:**
-- `supabase/01-initial-schema.sql` → `06-fix-super-admin-activity-token-permissions.sql`
+- `supabase/01-initial-schema.sql` → `10-alliance-activity-settings.sql`
 - `supabase/MIGRATIONS.md` - Guide exécution migrations
 - `supabase/README.md` - Configuration complète
 

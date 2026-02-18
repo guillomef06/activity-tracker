@@ -29,6 +29,15 @@
   margin-bottom: 1rem;
 }
 
+.participation-section {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-variant);
+}
+
 .points-preview {
   display: flex;
   align-items: center;

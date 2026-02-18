@@ -116,7 +116,15 @@ export class PointRulesService {
   /**
    * Calculer les points pour une activité selon la position
    */
-  calculatePoints(activityType: string, position: number): PointCalculationResult {
+  calculatePoints(activityType: string, position: number | null): PointCalculationResult {
+    // Participation mode: position is null, no rule lookup
+    if (position === null) {
+      return {
+        points: getActivityTypePoints(activityType),
+        usedFallback: true
+      };
+    }
+
     // Chercher une règle qui match
     const matchedRule = this.rulesSignal().find(
       rule =>

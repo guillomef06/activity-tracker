@@ -26,7 +26,7 @@ interface SupabaseActivity {
   id: string;
   user_id: string;
   activity_type: string;
-  position: number;
+  position: number | null;
   points: number;
   date: string;
   user_profiles: {
@@ -144,17 +144,17 @@ export class ActivityService {
         // Mode mock : ajoute l'activité localement
         const userId = this.authService.getUserId() ?? 'unknown-user';
         const userProfile = this.authService.userProfile?.() ?? { id: userId, display_name: 'Unknown' };
-        const pointsResult = this.pointRulesService.calculatePoints(
+        const points = request.points ?? this.pointRulesService.calculatePoints(
           request.activityType,
           request.position
-        );
+        ).points;
         const newActivity = {
           id: generateId(),
           userId,
           userName: userProfile.display_name,
           activityType: request.activityType,
           position: request.position,
-          points: pointsResult.points,
+          points,
           date: request.date,
           timestamp: request.date.getTime()
         };
@@ -203,11 +203,11 @@ export class ActivityService {
       return { error: new Error('User not authenticated') };
     }
 
-    // Calculate points based on position
-    const pointsResult = this.pointRulesService.calculatePoints(
+    // Use pre-calculated points (participation mode) or calculate from position
+    const points = request.points ?? this.pointRulesService.calculatePoints(
       request.activityType,
       request.position
-    );
+    ).points;
 
     try {
       const { data, error } = await this.supabase
@@ -217,7 +217,7 @@ export class ActivityService {
             user_id: userId,
             activity_type: request.activityType,
             position: request.position,
-            points: pointsResult.points,
+            points,
             date: request.date.toISOString()
           }
         ], { onConflict: 'user_id,activity_type,date' })
@@ -258,11 +258,11 @@ export class ActivityService {
     userId: string,
     request: ActivityRequest
   ): Promise<{ error: Error | null }> {
-    // Calculate points based on position
-    const pointsResult = this.pointRulesService.calculatePoints(
+    // Use pre-calculated points (participation mode) or calculate from position
+    const points = request.points ?? this.pointRulesService.calculatePoints(
       request.activityType,
       request.position
-    );
+    ).points;
 
     try {
       const { data, error } = await this.supabase
@@ -272,7 +272,7 @@ export class ActivityService {
             user_id: userId,
             activity_type: request.activityType,
             position: request.position,
-            points: pointsResult.points,
+            points,
             date: request.date.toISOString()
           }
         ], { onConflict: 'user_id,activity_type,date' })

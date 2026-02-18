@@ -114,7 +114,10 @@
         "create": "Crea regola",
         "noRules": "Nessuna regola punti configurata",
         "noRulesHint": "Crea regole per calcolare i punti in base alla posizione/classifica. Senza regole, verranno utilizzati i punti predefiniti.",
-        "deleteConfirm": "Sei sicuro di voler eliminare questa regola?"
+        "deleteConfirm": "Sei sicuro di voler eliminare questa regola?",
+        "participationMode": "Modalità Partecipazione",
+        "participationModeHint": "I giocatori confermano semplicemente la partecipazione, senza posizione richiesta",
+        "participationPoints": "Punti per la partecipazione"
       }
     },
     "retroactive": {
@@ -151,7 +154,9 @@
     "viewDashboard": "Visualizza Dashboard",
     "typeHint": "Vengono mostrate solo le attività disponibili per la settimana selezionata",
     "success": "Attività inviata con successo!",
-    "error": "Invio dell'attività non riuscito"
+    "error": "Invio dell'attività non riuscito",
+    "participated": "Ho partecipato questa settimana",
+    "notParticipated": "Non ancora partecipato"
   },
   "activities": {
     "types": {
