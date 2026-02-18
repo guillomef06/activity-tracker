@@ -1,26 +1,9 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Activity, ActivityRequest, UserScore, WeeklyScore } from '../../shared/models';
-import { firstValueFrom } from 'rxjs';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { PointRulesService } from './point-rules.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
-import { generateId } from '../../shared/utils/id-generator.util';
-
-import { environment } from '../../../environments/environment';
-
-interface MockData {
-  users: { id: string; name: string; email: string }[];
-  activities: {
-    userId: string;
-    userName: string;
-    activityType: string;
-    points: number;
-    weeksAgo: number;
-    daysAgo: number;
-  }[];
-}
 
 interface SupabaseActivity {
   id: string;
@@ -38,36 +21,20 @@ interface SupabaseActivity {
   providedIn: 'root'
 })
 export class ActivityService {
-  private http = inject(HttpClient);
   private supabase = inject(SupabaseService);
   private authService = inject(AuthService);
   private pointRulesService = inject(PointRulesService);
-  
+
   private activities = signal<Activity[]>([]);
   private isInitialized = false;
-  
+
   readonly activitiesSignal = this.activities.asReadonly();
-  
-  private get useSupabase(): boolean {
-    return !environment.enableMockData && this.authService.isAuthenticated();
-  }
-  
+
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
-    
-    if (this.useSupabase) {
-      await this.pointRulesService.loadRules();
-      await this.loadFromSupabase();
-    } else {
-      await this.loadInitialData();
-    }
-    
+    await this.pointRulesService.loadRules();
+    await this.loadFromSupabase();
     this.isInitialized = true;
-  }
-  
-  resetToInitialData(): void {
-    this.isInitialized = false;
-    this.initialize();
   }
 
   private async loadFromSupabase(): Promise<void> {
@@ -103,64 +70,13 @@ export class ActivityService {
     }
   }
 
-  private async loadInitialData(): Promise<void> {
-    try {
-      const mockData = await firstValueFrom(
-        this.http.get<MockData>('./assets/data/initial-data.json')
-      );
-      
-      const initialActivities: Activity[] = mockData.activities.map(item => {
-        const date = new Date();
-        date.setDate(date.getDate() - item.daysAgo);
-        
-        return {
-          id: generateId(),
-          userId: item.userId,
-          userName: item.userName,
-          activityType: item.activityType,
-          position: 1, // Default position for legacy data
-          points: item.points,
-          date: date,
-          timestamp: date.getTime()
-        };
-      });
-      
-      this.activities.set(initialActivities);
-    } catch (error) {
-      console.error('Failed to load initial data:', error);
-      this.activities.set([]);
-    }
-  }
-
   getActivities(): Activity[] {
     return this.activities();
   }
 
   async addActivity(request: ActivityRequest): Promise<{ error: Error | null }> {
     try {
-      if (this.useSupabase) {
-        return await this.addActivityToSupabase(request);
-      } else {
-        // Mode mock : ajoute l'activité localement
-        const userId = this.authService.getUserId() ?? 'unknown-user';
-        const userProfile = this.authService.userProfile?.() ?? { id: userId, display_name: 'Unknown' };
-        const points = request.points ?? this.pointRulesService.calculatePoints(
-          request.activityType,
-          request.position
-        ).points;
-        const newActivity = {
-          id: generateId(),
-          userId,
-          userName: userProfile.display_name,
-          activityType: request.activityType,
-          position: request.position,
-          points,
-          date: request.date,
-          timestamp: request.date.getTime()
-        };
-        this.activities.update(current => [newActivity, ...current]);
-        return { error: null };
-      }
+      return await this.addActivityToSupabase(request);
     } catch (error) {
       console.error('Error adding activity:', error);
       return { error: error as Error };
@@ -177,18 +93,11 @@ export class ActivityService {
     request: ActivityRequest
   ): Promise<{ error: Error | null }> {
     try {
-      // Verify admin permissions
       const currentProfile = this.authService.userProfile();
       if (!currentProfile || (currentProfile.role !== 'admin' && currentProfile.role !== 'super_admin')) {
         return { error: new Error('Unauthorized: Only admins can add activities for other members') };
       }
-
-      if (this.useSupabase) {
-        return await this.addActivityForMemberToSupabase(userId, request);
-      } else {
-        // For mock mode, not implemented
-        return { error: new Error('Feature not available in mock mode') };
-      }
+      return await this.addActivityForMemberToSupabase(userId, request);
     } catch (error) {
       console.error('Error adding activity for member:', error);
       return { error: error as Error };
@@ -239,7 +148,6 @@ export class ActivityService {
       };
 
       this.activities.update(current => {
-        // Remplace l'activité existante si elle existe, sinon ajoute
         const filtered = current.filter(a =>
           !(a.userId === newActivity.userId &&
             a.activityType === newActivity.activityType &&
@@ -294,7 +202,6 @@ export class ActivityService {
       };
 
       this.activities.update(current => {
-        // Remplace l'activité existante si elle existe, sinon ajoute
         const filtered = current.filter(a =>
           !(a.userId === newActivity.userId &&
             a.activityType === newActivity.activityType &&

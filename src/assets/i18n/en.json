@@ -185,8 +185,6 @@
     "weeksAgo": "weeks ago",
     "weeklyRanking": "Weekly Ranking",
     "weeklyRankingSubtitle": "Points evolution over the last 6 weeks",
-    "resetData": "Reset Data",
-    "resetConfirm": "Are you sure? This will reload the 5 users' mock data and erase your activities.",
     "viewAllDetails": "View Details"
   },
   "activitiesDetails": {

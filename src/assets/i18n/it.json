@@ -185,8 +185,6 @@
     "weeksAgo": "settimane fa",
     "weeklyRanking": "Classifica Settimanale",
     "weeklyRankingSubtitle": "Evoluzione dei punti nelle ultime 6 settimane",
-    "resetData": "Ripristina Dati",
-    "resetConfirm": "Sei sicuro? Questo ricaricherà i dati di demo con 5 utenti e cancellerà le tue attività.",
     "viewAllDetails": "Visualizza Dettagli"
   },
   "activitiesDetails": {
