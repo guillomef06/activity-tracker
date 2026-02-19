@@ -10,7 +10,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { SnackbarService } from '@app/core/services';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -36,7 +36,6 @@ import type { InvitationWithStats } from '@app/shared/models';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
-    MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
     InvitationStatusPipe,
@@ -49,7 +48,7 @@ import type { InvitationWithStats } from '@app/shared/models';
 export class InvitationsTabComponent {
   private readonly allianceService = inject(AllianceService);
   private readonly fb = inject(FormBuilder);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly clipboard = inject(Clipboard);
   private readonly translate = inject(TranslateService);
@@ -103,9 +102,7 @@ export class InvitationsTabComponent {
         const inviteUrl = `${this.getBaseUrl()}/join?token=${response.token}`;
         this.clipboard.copy(inviteUrl);
         
-        this.snackBar.open('Invitation created and link copied to clipboard!', 'Close', {
-          duration: 5000,
-        });
+        this.snackbarService.success(this.translate.instant('alliance.settings.invitationCreated'), 5000);
 
         // Reset form
         this.invitationForm.reset({ durationDays: 7 });
@@ -115,7 +112,7 @@ export class InvitationsTabComponent {
       }
     } catch (error) {
       console.error('Error creating invitation:', error);
-      this.snackBar.open('Failed to create invitation', 'Close', { duration: 3000 });
+      this.snackbarService.error(this.translate.instant('alliance.settings.invitationCreateFailed'));
     } finally {
       this.isSubmitting.set(false);
     }
@@ -140,13 +137,13 @@ export class InvitationsTabComponent {
         throw error;
       }
 
-      this.snackBar.open('Invitation revoked successfully', 'Close', { duration: 3000 });
+      this.snackbarService.success(this.translate.instant('alliance.settings.invitationRevoked'));
       
       // Notify parent to reload
       this.invitationRevoked.emit();
     } catch (error) {
       console.error('Error revoking invitation:', error);
-      this.snackBar.open('Failed to revoke invitation', 'Close', { duration: 3000 });
+      this.snackbarService.error(this.translate.instant('alliance.settings.invitationRevokeFailed'));
     } finally {
       this.isSubmitting.set(false);
     }
@@ -155,7 +152,7 @@ export class InvitationsTabComponent {
   protected copyInvitationLink(token: string): void {
     const inviteUrl = `${this.getBaseUrl()}/join?token=${token}`;
     this.clipboard.copy(inviteUrl);
-    this.snackBar.open('Invitation link copied to clipboard!', 'Close', { duration: 3000 });
+    this.snackbarService.success(this.translate.instant('alliance.settings.invitationLinkCopied'));
   }
 
   protected isInvitationExpired(expiresAt: string): boolean {

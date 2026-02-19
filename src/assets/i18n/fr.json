@@ -87,7 +87,6 @@
       "members": "membres",
       "noMembers": "Aucun membre pour le moment",
       "displayName": "Nom",
-      "username": "Nom d'utilisateur",
       "role": "Rôle",
       "joinedDate": "Rejoint le",
       "invitationManagement": "Gestion des Invitations",
@@ -101,6 +100,13 @@
       "revokeInvitation": "Révoquer l'invitation",
       "revokeConfirm": "Êtes-vous sûr de vouloir révoquer cette invitation ?",
       "membersJoined": "Membres ayant rejoint via cette invitation",
+      "nameUpdated": "Nom de l'alliance mis à jour avec succès !",
+      "nameUpdateFailed": "Échec de la mise à jour du nom de l'alliance",
+      "invitationCreated": "Invitation créée et lien copié dans le presse-papiers !",
+      "invitationCreateFailed": "Échec de la création de l'invitation",
+      "invitationRevoked": "Invitation révoquée avec succès",
+      "invitationRevokeFailed": "Échec de la révocation de l'invitation",
+      "invitationLinkCopied": "Lien d'invitation copié dans le presse-papiers !",
       "pointRules": {
         "title": "Configuration des règles de points",
         "subtitle": "Configurez des règles de calcul de points personnalisées basées sur la position/classement",
@@ -117,7 +123,14 @@
         "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette règle ?",
         "participationMode": "Mode Participation",
         "participationModeHint": "Les joueurs confirment simplement leur participation, sans position requise",
-        "participationPoints": "Points pour la participation"
+        "participationPoints": "Points pour la participation",
+        "positionRangeError": "La position minimale ne peut pas être supérieure à la position maximale",
+        "created": "Règle de points créée avec succès",
+        "createFailed": "Échec de la création de la règle de points",
+        "deleted": "Règle de points supprimée avec succès",
+        "deleteFailed": "Échec de la suppression de la règle de points",
+        "participationModeFailed": "Échec de la mise à jour du mode participation",
+        "participationPointsFailed": "Échec de la mise à jour des points de participation"
       }
     },
     "retroactive": {
@@ -156,7 +169,8 @@
     "success": "Activité soumise avec succès !",
     "error": "Échec de la soumission de l'activité",
     "participated": "J'ai participé cette semaine",
-    "notParticipated": "Pas encore participé"
+    "notParticipated": "Pas encore participé",
+    "fillAllFields": "Veuillez remplir tous les champs requis"
   },
   "activities": {
     "types": {
@@ -222,7 +236,12 @@
       "members": "Membres",
       "created": "Créée",
       "actions": "Actions",
-      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'alliance \"{{name}}\" ? Cela supprimera également tous les utilisateurs, activités et invitations associés."
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'alliance \"{{name}}\" ? Cela supprimera également tous les utilisateurs, activités et invitations associés.",
+      "loadFailed": "Échec du chargement des alliances",
+      "updated": "Alliance mise à jour avec succès",
+      "updateFailed": "Échec de la mise à jour de l'alliance",
+      "deleted": "Alliance supprimée avec succès",
+      "deleteFailed": "Échec de la suppression de l'alliance"
     },
     "users": {
       "title": "Gestion des Utilisateurs",
@@ -235,7 +254,11 @@
       "noAlliance": "Aucune alliance",
       "created": "Créé",
       "actions": "Actions",
-      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'utilisateur \"{{name}}\" ? Cette action ne peut pas être annulée."
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'utilisateur \"{{name}}\" ? Cette action ne peut pas être annulée.",
+      "loadFailed": "Échec du chargement des utilisateurs",
+      "updated": "Utilisateur mis à jour avec succès",
+      "updateFailed": "Échec de la mise à jour de l'utilisateur",
+      "deleted": "Utilisateur supprimé avec succès"
     }
   },
   "super_admin": "Super Administrateur",

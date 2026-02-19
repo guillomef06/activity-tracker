@@ -12,7 +12,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { SnackbarService } from '@app/core/services';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -39,7 +39,6 @@ import { APP_CONSTANTS } from '@app/shared/constants/constants';
     MatChipsModule,
     MatTooltipModule,
     MatSlideToggleModule,
-    MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
     PositionRangePipe,
@@ -52,7 +51,7 @@ export class PointRulesTabComponent {
   private readonly pointRulesService = inject(PointRulesService);
   private readonly activitySettingsService = inject(AllianceActivitySettingsService);
   private readonly fb = inject(FormBuilder);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   private readonly destroyRef = inject(DestroyRef);
@@ -105,7 +104,7 @@ export class PointRulesTabComponent {
 
     // Validate position range
     if (formValue.position_min > formValue.position_max) {
-      this.snackBar.open('Minimum position cannot be greater than maximum position', 'Close', { duration: 3000 });
+      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.positionRangeError'));
       return;
     }
 
@@ -122,7 +121,7 @@ export class PointRulesTabComponent {
         throw error;
       }
 
-      this.snackBar.open('Point rule created successfully', 'Close', { duration: 3000 });
+      this.snackbarService.success(this.translate.instant('alliance.settings.pointRules.created'));
 
       // Reset form
       this.pointRuleForm.reset({
@@ -136,11 +135,7 @@ export class PointRulesTabComponent {
       this.ruleCreated.emit();
     } catch (error) {
       console.error('Error creating point rule:', error);
-      this.snackBar.open(
-        error instanceof Error ? error.message : 'Failed to create point rule',
-        'Close',
-        { duration: 5000 }
-      );
+      this.snackbarService.error(error instanceof Error ? error.message : this.translate.instant('alliance.settings.pointRules.createFailed'), 5000);
     } finally {
       this.isSubmitting.set(false);
     }
@@ -165,13 +160,13 @@ export class PointRulesTabComponent {
         throw error;
       }
 
-      this.snackBar.open('Point rule deleted successfully', 'Close', { duration: 3000 });
+      this.snackbarService.success(this.translate.instant('alliance.settings.pointRules.deleted'));
 
       // Notify parent to reload
       this.ruleDeleted.emit();
     } catch (error) {
       console.error('Error deleting point rule:', error);
-      this.snackBar.open('Failed to delete point rule', 'Close', { duration: 3000 });
+      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.deleteFailed'));
     } finally {
       this.isSubmitting.set(false);
     }
@@ -189,7 +184,7 @@ export class PointRulesTabComponent {
       if (error) throw error;
     } catch (error) {
       console.error('Error toggling participation mode:', error);
-      this.snackBar.open('Failed to update participation mode', 'Close', { duration: 3000 });
+      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.participationModeFailed'));
     } finally {
       this.isUpdatingSetting.set(null);
     }
@@ -213,7 +208,7 @@ export class PointRulesTabComponent {
       if (error) throw error;
     } catch (error) {
       console.error('Error updating participation points:', error);
-      this.snackBar.open('Failed to update participation points', 'Close', { duration: 3000 });
+      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.participationPointsFailed'));
     } finally {
       this.isUpdatingSetting.set(null);
     }

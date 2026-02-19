@@ -1,21 +1,9 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { Activity, ActivityRequest, UserScore, WeeklyScore } from '../../shared/models';
+import { Activity, ActivityRequest, ActivityWithUser, UserScore, WeeklyScore } from '../../shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { PointRulesService } from './point-rules.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
-
-interface SupabaseActivity {
-  id: string;
-  user_id: string;
-  activity_type: string;
-  position: number | null;
-  points: number;
-  date: string;
-  user_profiles: {
-    display_name: string;
-  };
-}
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +13,10 @@ export class ActivityService {
   private authService = inject(AuthService);
   private pointRulesService = inject(PointRulesService);
 
-  private activities = signal<Activity[]>([]);
+  private activitiesSignal = signal<Activity[]>([]);
   private isInitialized = false;
 
-  readonly activitiesSignal = this.activities.asReadonly();
+  readonly activities = this.activitiesSignal.asReadonly();
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
@@ -37,11 +25,24 @@ export class ActivityService {
     this.isInitialized = true;
   }
 
+  private static mapToActivity(db: ActivityWithUser): Activity {
+    return {
+      id: db.id,
+      userId: db.user_id,
+      userName: db.user_profiles.display_name,
+      activityType: db.activity_type,
+      position: db.position,
+      points: db.points,
+      date: new Date(db.date),
+      timestamp: new Date(db.date).getTime()
+    };
+  }
+
   private async loadFromSupabase(): Promise<void> {
     try {
       const allianceId = this.authService.getAllianceId();
       if (!allianceId) {
-        this.activities.set([]);
+        this.activitiesSignal.set([]);
         return;
       }
 
@@ -52,26 +53,13 @@ export class ActivityService {
 
       if (error) throw error;
 
-      const activities: Activity[] = (data as unknown as SupabaseActivity[]).map(dbActivity => ({
-        id: dbActivity.id,
-        userId: dbActivity.user_id,
-        userName: dbActivity.user_profiles.display_name,
-        activityType: dbActivity.activity_type,
-        position: dbActivity.position,
-        points: dbActivity.points,
-        date: new Date(dbActivity.date),
-        timestamp: new Date(dbActivity.date).getTime()
-      }));
+      const activities = (data as unknown as ActivityWithUser[]).map(ActivityService.mapToActivity);
 
-      this.activities.set(activities);
+      this.activitiesSignal.set(activities);
     } catch (error) {
       console.error('Error loading activities from Supabase:', error);
-      this.activities.set([]);
+      this.activitiesSignal.set([]);
     }
-  }
-
-  getActivities(): Activity[] {
-    return this.activities();
   }
 
   async addActivity(request: ActivityRequest): Promise<{ error: Error | null }> {
@@ -135,19 +123,9 @@ export class ActivityService {
 
       if (error) throw error;
 
-      const dbActivity = data as unknown as SupabaseActivity;
-      const newActivity: Activity = {
-        id: dbActivity.id,
-        userId: dbActivity.user_id,
-        userName: dbActivity.user_profiles.display_name,
-        activityType: dbActivity.activity_type,
-        position: dbActivity.position,
-        points: dbActivity.points,
-        date: new Date(dbActivity.date),
-        timestamp: new Date(dbActivity.date).getTime()
-      };
+      const newActivity = ActivityService.mapToActivity(data as unknown as ActivityWithUser);
 
-      this.activities.update(current => {
+      this.activitiesSignal.update(current => {
         const filtered = current.filter(a =>
           !(a.userId === newActivity.userId &&
             a.activityType === newActivity.activityType &&
@@ -189,19 +167,9 @@ export class ActivityService {
 
       if (error) throw error;
 
-      const dbActivity = data as unknown as SupabaseActivity;
-      const newActivity: Activity = {
-        id: dbActivity.id,
-        userId: dbActivity.user_id,
-        userName: dbActivity.user_profiles.display_name,
-        activityType: dbActivity.activity_type,
-        position: dbActivity.position,
-        points: dbActivity.points,
-        date: new Date(dbActivity.date),
-        timestamp: new Date(dbActivity.date).getTime()
-      };
+      const newActivity = ActivityService.mapToActivity(data as unknown as ActivityWithUser);
 
-      this.activities.update(current => {
+      this.activitiesSignal.update(current => {
         const filtered = current.filter(a =>
           !(a.userId === newActivity.userId &&
             a.activityType === newActivity.activityType &&
@@ -218,7 +186,7 @@ export class ActivityService {
 
 
   getUserScores(): UserScore[] {
-    const activities = this.activities();
+    const activities = this.activitiesSignal();
     const sixWeeksAgo = new Date();
     sixWeeksAgo.setDate(sixWeeksAgo.getDate() - APP_CONSTANTS.SCORING.TOTAL_DAYS);
 
@@ -248,6 +216,31 @@ export class ActivityService {
         averageWeekly
       });
     });
+
+    // Détection des conflits de position entre utilisateurs (même activité, même semaine, même position)
+    const weeksCount = userScores[0]?.weeklyScores.length ?? 0;
+    for (let weekIdx = 0; weekIdx < weeksCount; weekIdx++) {
+      const positionMap = new Map<string, Set<string>>();
+      for (const userScore of userScores) {
+        const week = userScore.weeklyScores[weekIdx];
+        if (!week) continue;
+        for (const act of week.activities) {
+          if (act.position === null) continue; // participation mode, pas de conflit
+          const key = act.activityType + '|' + act.position;
+          if (!positionMap.has(key)) positionMap.set(key, new Set());
+          positionMap.get(key)!.add(act.userId);
+        }
+      }
+      const conflicts = new Set<string>();
+      for (const [key, userIds] of positionMap.entries()) {
+        if (userIds.size > 1) conflicts.add(key);
+      }
+      for (const userScore of userScores) {
+        if (userScore.weeklyScores[weekIdx]) {
+          userScore.weeklyScores[weekIdx].conflictingPositions = conflicts;
+        }
+      }
+    }
 
     return userScores.sort((a, b) => b.sixWeekTotal - a.sixWeekTotal);
   }

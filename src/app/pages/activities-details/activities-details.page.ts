@@ -43,25 +43,6 @@ import { ShortDatePipe } from "../../shared/pipes/short-date.pipe";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActivitiesDetailsPage implements OnInit {
-    /**
-     * Retourne un Set des positions en double pour une semaine donnée (par activitéType).
-     * Utilisé pour mettre en évidence les doublons dans le template.
-     */
-    protected getDuplicatePositions(activities: { activityType: string; position: number }[]): Set<string> {
-      const seen = new Map<string, Set<number>>();
-      const duplicates = new Set<string>();
-      for (const act of activities) {
-        const key = act.activityType;
-        if (!seen.has(key)) seen.set(key, new Set());
-        const positions = seen.get(key)!;
-        if (positions.has(act.position)) {
-          duplicates.add(`${key}|${act.position}`);
-        } else {
-          positions.add(act.position);
-        }
-      }
-      return duplicates;
-    }
   private readonly router = inject(Router);
   private readonly activityService = inject(ActivityService);
   private readonly progressBarService = inject(ProgressBarService);
@@ -86,39 +67,12 @@ export class ActivitiesDetailsPage implements OnInit {
   }
 
   private loadScores(): void {
-    // On veut détecter les conflits de position entre utilisateurs pour chaque semaine et activité
-    // 1. On regroupe les weeklyScores de tous les users par semaine (par index)
     const allUserScores = this.activityService.getUserScores();
-    const weeksCount = allUserScores[0]?.weeklyScores.length || 0;
-    // Pour chaque semaine, on construit une map activitéType|position -> Set<userId>
-    const weekConflicts: Set<string>[] = Array.from({ length: weeksCount }, () => new Set());
-    for (let weekIdx = 0; weekIdx < weeksCount; weekIdx++) {
-      const positionMap = new Map<string, Set<string>>();
-      for (const userScore of allUserScores) {
-        const week = userScore.weeklyScores[weekIdx];
-        if (!week) continue;
-        for (const act of week.activities) {
-          const key = act.activityType + '|' + act.position;
-          if (!positionMap.has(key)) positionMap.set(key, new Set());
-          positionMap.get(key)!.add(act.userId);
-        }
-      }
-      // On garde les couples activitéType|position où il y a plus d'un userId
-      for (const [key, userIds] of positionMap.entries()) {
-        if (userIds.size > 1) {
-          weekConflicts[weekIdx].add(key);
-        }
-      }
-    }
-
-    // On enrichit chaque weeklyScore de chaque user avec la liste des positions en conflit pour la semaine
+    // Les conflits sont calculés dans le service — on inverse juste l'ordre des semaines pour l'affichage (la plus récente en premier)
     this.userScores.set(
       allUserScores.map((userScore) => ({
         ...userScore,
-        weeklyScores: [...userScore.weeklyScores].reverse().map((week, idx) => ({
-          ...week,
-          conflictingPositions: weekConflicts[weeksCount - 1 - idx] // reverse: on aligne l'index
-        }))
+        weeklyScores: [...userScore.weeklyScores].reverse()
       }))
     );
   }

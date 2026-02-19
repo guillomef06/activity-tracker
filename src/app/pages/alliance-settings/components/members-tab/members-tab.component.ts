@@ -30,7 +30,7 @@ export class MembersTabComponent {
   isLoading = input.required<boolean>();
 
   // Table configuration
-  protected readonly memberColumns: string[] = ['displayName', 'username', 'role', 'createdAt'];
+  protected readonly memberColumns: string[] = ['displayName', 'role', 'createdAt'];
 
   protected getRoleBadgeClass(role: string): string {
     switch (role) {

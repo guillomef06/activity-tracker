@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { SnackbarService } from '@app/core/services';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -36,7 +36,6 @@ interface AllianceWithStats extends Alliance {
     MatIconModule,
     MatTableModule,
     MatChipsModule,
-    MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
     LocalDatePipe,
@@ -48,7 +47,7 @@ interface AllianceWithStats extends Alliance {
 export class SuperAdminAlliancesPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly fb = inject(FormBuilder);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   protected readonly progressBarService = inject(ProgressBarService);
@@ -113,7 +112,7 @@ export class SuperAdminAlliancesPage implements OnInit {
         }
       } catch (error) {
         console.error('Error loading alliances:', error);
-        this.snackBar.open('Failed to load alliances', 'Close', { duration: 3000 });
+        this.snackbarService.error(this.translate.instant('superAdmin.alliances.loadFailed'));
       }
     });
   }
@@ -147,13 +146,13 @@ export class SuperAdminAlliancesPage implements OnInit {
 
         if (error) throw error;
 
-        this.snackBar.open('Alliance updated successfully', 'Close', { duration: 3000 });
+        this.snackbarService.success(this.translate.instant('superAdmin.alliances.updated'));
         this.editingId.set(null);
         this.editForm.reset();
         await this.loadAlliances();
       } catch (error) {
         console.error('Error updating alliance:', error);
-        this.snackBar.open('Failed to update alliance', 'Close', { duration: 3000 });
+        this.snackbarService.error(this.translate.instant('superAdmin.alliances.updateFailed'));
       }
     });
   }
@@ -179,11 +178,11 @@ export class SuperAdminAlliancesPage implements OnInit {
 
         if (error) throw error;
 
-        this.snackBar.open('Alliance deleted successfully', 'Close', { duration: 3000 });
+        this.snackbarService.success(this.translate.instant('superAdmin.alliances.deleted'));
         await this.loadAlliances();
       } catch (error) {
         console.error('Error deleting alliance:', error);
-        this.snackBar.open('Failed to delete alliance', 'Close', { duration: 3000 });
+        this.snackbarService.error(this.translate.instant('superAdmin.alliances.deleteFailed'));
       }
     });
   }

@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { SnackbarService } from '@app/core/services';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
@@ -37,7 +37,6 @@ interface UserWithAlliance extends UserProfile {
     MatIconModule,
     MatTableModule,
     MatChipsModule,
-    MatSnackBarModule,
     MatDialogModule,
     TranslateModule,
     LocalDatePipe,
@@ -49,7 +48,7 @@ interface UserWithAlliance extends UserProfile {
 export class SuperAdminUsersPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly fb = inject(FormBuilder);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   protected readonly progressBarService = inject(ProgressBarService);
@@ -96,7 +95,7 @@ export class SuperAdminUsersPage implements OnInit {
         }
       } catch (error) {
         console.error('Error loading users:', error);
-        this.snackBar.open('Failed to load users', 'Close', { duration: 3000 });
+        this.snackbarService.error(this.translate.instant('superAdmin.users.loadFailed'));
       }
     });
   }
@@ -131,13 +130,13 @@ export class SuperAdminUsersPage implements OnInit {
 
         if (error) throw error;
 
-        this.snackBar.open('User updated successfully', 'Close', { duration: 3000 });
+        this.snackbarService.success(this.translate.instant('superAdmin.users.updated'));
         this.editingId.set(null);
         this.editForm.reset();
         await this.loadUsers();
       } catch (error) {
         console.error('Error updating user:', error);
-        this.snackBar.open('Failed to update user', 'Close', { duration: 3000 });
+        this.snackbarService.error(this.translate.instant('superAdmin.users.updateFailed'));
       }
     });
   }
@@ -166,14 +165,12 @@ export class SuperAdminUsersPage implements OnInit {
           throw new Error('Delete function returned false');
         }
 
-        this.snackBar.open('User deleted successfully', 'Close', { duration: 3000 });
+        this.snackbarService.success(this.translate.instant('superAdmin.users.deleted'));
         await this.loadUsers();
       } catch (error) {
         console.error('Error deleting user:', error);
         const errorMessage = (error as { message?: string })?.message || 'Failed to delete user';
-        this.snackBar.open(errorMessage, 'Close', { 
-          duration: 5000 
-        });
+        this.snackbarService.error(errorMessage, 5000);
       }
     });
   }

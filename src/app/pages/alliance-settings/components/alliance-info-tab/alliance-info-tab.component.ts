@@ -5,8 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { TranslateModule } from '@ngx-translate/core';
+import { SnackbarService } from '@app/core/services';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import type { Alliance } from '@app/shared/models';
@@ -21,7 +21,6 @@ import type { Alliance } from '@app/shared/models';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule,
     TranslateModule,
   ],
   templateUrl: './alliance-info-tab.component.html',
@@ -31,7 +30,8 @@ import type { Alliance } from '@app/shared/models';
 export class AllianceInfoTabComponent {
   private readonly allianceService = inject(AllianceService);
   private readonly fb = inject(FormBuilder);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackbarService = inject(SnackbarService);
+  private readonly translate = inject(TranslateService);
   private readonly destroyRef = inject(DestroyRef);
 
   // Inputs
@@ -73,16 +73,14 @@ export class AllianceInfoTabComponent {
       const success = await this.allianceService.updateAllianceName(name);
       
       if (success) {
-        this.snackBar.open('Alliance name updated successfully!', 'Close', {
-          duration: 3000,
-        });
+        this.snackbarService.success(this.translate.instant('alliance.settings.nameUpdated'));
         this.allianceUpdated.emit();
       } else {
         throw new Error('Update failed');
       }
     } catch (error) {
       console.error('Error updating alliance name:', error);
-      this.snackBar.open('Failed to update alliance name', 'Close', { duration: 3000 });
+      this.snackbarService.error(this.translate.instant('alliance.settings.nameUpdateFailed'));
     } finally {
       this.isLoading.set(false);
     }
