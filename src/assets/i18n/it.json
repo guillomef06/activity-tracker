@@ -80,7 +80,9 @@
       },
       "allianceInfo": "Informazioni Alleanza",
       "allianceName": "Nome Alleanza",
-      "updateName": "Aggiorna Nome",
+      "allianceTag": "Tag Alleanza",
+      "allianceTagHint": "Identificatore opzionale di 3 caratteri (es. RgW)",
+      "updateName": "Aggiorna",
       "totalMembers": "Membri Totali",
       "totalInvitations": "Inviti Totali",
       "memberList": "Elenco Membri",
@@ -100,8 +102,8 @@
       "revokeInvitation": "Revoca invito",
       "revokeConfirm": "Sei sicuro di voler revocare questo invito?",
       "membersJoined": "Membri che si sono iscritti tramite questo invito",
-      "nameUpdated": "Nome dell'alleanza aggiornato con successo!",
-      "nameUpdateFailed": "Impossibile aggiornare il nome dell'alleanza",
+      "nameUpdated": "Alleanza aggiornata con successo!",
+      "nameUpdateFailed": "Impossibile aggiornare l'alleanza",
       "invitationCreated": "Invito creato e link copiato negli appunti!",
       "invitationCreateFailed": "Impossibile creare l'invito",
       "invitationRevoked": "Invito revocato con successo",
@@ -211,7 +213,8 @@
     "actions": "Azioni",
     "delete": "Elimina",
     "confirm": "Conferma",
-    "cancel": "Annulla"
+    "cancel": "Annulla",
+    "saving": "Salvataggio..."
   },
   "superAdmin": {
     "dashboard": {
@@ -232,6 +235,7 @@
       "subtitle": "Gestisci tutte le alleanze del sistema",
       "noAlliances": "Nessuna alleanza creata ancora",
       "name": "Nome Alleanza",
+      "tag": "Tag",
       "admin": "Amministratore",
       "members": "Membri",
       "created": "Creata",

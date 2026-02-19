@@ -1,5 +1,5 @@
 import { environment } from './../../../../environments/environment';
-import { Component, inject, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, effect, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -41,12 +41,26 @@ export class AppHeaderComponent {
 
   protected imageBaseUrl: string;
 
+  /** Combined display: [tag]DisplayName or AllianceName DisplayName or just DisplayName */
+  protected readonly headerIdentity = computed(() => {
+    const profile = this.authService.userProfile();
+    const alliance = this.allianceService.alliance();
+    const displayName = profile?.display_name ?? '';
+
+    if (alliance?.tag) {
+      return `[${alliance.tag}] ${displayName}`;
+    } else if (alliance?.name) {
+      return `[${alliance.name}] ${displayName}`;
+    }
+    return displayName;
+  });
+
   constructor() {
     this.imageBaseUrl = environment.production ? "/activity-tracker/assets/favicon.png" : "/assets/favicon.png";
-    // Reactive loading: automatically load alliance when user profile changes
+    // Load alliance for any authenticated user who belongs to one
     effect(() => {
       const profile = this.authService.userProfile();
-      if (profile && !this.authService.isSuperAdmin() && profile.alliance_id) {
+      if (profile?.alliance_id) {
         this.allianceService.loadAlliance();
       }
     });

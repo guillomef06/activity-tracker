@@ -81,6 +81,6 @@ describe('ActivityInputPage', () => {
     await component.onSubmit();
 
     // Form should not be submitted without activity type
-    expect(component.submitting()).toBe(false);
+    expect(component.isSubmitting()).toBe(false);
   });
 });

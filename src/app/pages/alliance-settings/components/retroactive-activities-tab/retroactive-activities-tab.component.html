@@ -101,17 +101,14 @@
 
         <!-- Action Buttons -->
         <div class="form-actions">
-          <button
-            mat-raised-button
+          <app-loading-button
             type="submit"
-            [disabled]="!canSubmit()">
-            <mat-icon>add</mat-icon>
-            @if (isSubmitting()) {
-              {{ 'alliance.retroactive.submitting' | translate }}
-            } @else {
-              {{ 'alliance.retroactive.submit' | translate }}
-            }
-          </button>
+            icon="add"
+            [text]="'alliance.retroactive.submit' | translate"
+            [loadingText]="'alliance.retroactive.submitting' | translate"
+            [loading]="isSubmitting()"
+            [disabled]="!canSubmit()"
+          />
 
           <button
             mat-button

@@ -1,10 +1,15 @@
 button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  mat-icon {
+    margin-right: 0.5rem;
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    vertical-align: middle;
+  }
 
   mat-spinner {
     display: inline-block;
+    margin-right: 0.5rem;
+    vertical-align: middle;
   }
 }

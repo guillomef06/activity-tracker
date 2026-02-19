@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 18 février 2026
+**Dernière mise à jour:** 19 février 2026
 
 ## 📋 Résumé
 
@@ -57,6 +57,8 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - ✅ **Activités Rétroactives - RLS Policies:** Ajout policies permettant aux admins de créer des activités pour les membres de leur alliance et aux super admins pour tous les utilisateurs (migration 07)
 - ✅ **ConfirmDialog Component:** Remplacement de tous les confirm() natifs par un composant Material réutilisable avec i18n (4 langues)
 - ✅ **Mode Participation:** Configuration par activité du mode participation (toggle "J'ai participé" au lieu du champ position)
+- ✅ **Alliance Tag:** Identifiant court (3 caractères) par alliance, affiché dans le header comme `[RgW]DisplayName`
+- ✅ **LoadingButtonComponent:** Composant partagé avec spinner, icône et états loading/disabled — migré sur tous les boutons de soumission
 
 ---
 
@@ -99,6 +101,51 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - **Réactivité:** Pipe `ActivityLabelPipe` pour traduction dynamique des activités
 - **Corrections i18n:** Suppression de `translate.instant()` au profit du pipe `translate` pour mise à jour temps réel
 - **Architecture extensible:** Structure JSON permet ajout futur de thème, notifications, etc.
+
+---
+
+## 🏷️ Alliance Tag ✅
+
+### Fonctionnalité
+Identifiant court (exactement 3 caractères, ex: `RgW`) optionnel par alliance. Affiché dans le header de l'app pour identifier rapidement l'alliance du joueur.
+
+**Format header:**
+- Tag défini → `[RgW]DisplayName`
+- Pas de tag → `AllianceName DisplayName`
+- Pas d'alliance → `DisplayName` uniquement
+
+**Configuration admin** (`Alliance Settings` → `Information`) :
+- Champ "Alliance Tag" optionnel (exactement 3 caractères si renseigné)
+- Sauvegardé avec le nom via le même bouton "Update"
+
+**Super Admin** (`/super-admin/alliances`) :
+- Colonne Tag dans le tableau avec affichage `[tag]` ou `—`
+- Champ tag dans le formulaire d'édition inline
+
+**Fichiers clés :**
+- `supabase/11-alliance-tag.sql` — colonne nullable avec contrainte `char_length = 3`
+- `src/app/shared/models/alliance.model.ts` — champ `tag: string | null` + `UpdateAllianceRequest`
+- `src/app/core/services/alliance.service.ts` — `updateAlliance(updates)` (remplace `updateAllianceName`)
+- `src/app/core/layout/app-header/` — signal `headerIdentity` calculé
+
+---
+
+## 🔘 LoadingButtonComponent Partagé ✅
+
+### Fonctionnalité
+Composant `app-loading-button` centralisé pour tous les boutons de soumission de l'app. Affiche un spinner Material pendant le chargement, désactive le bouton automatiquement.
+
+**Inputs:**
+- `text` — libellé du bouton
+- `loadingText` — libellé pendant le chargement
+- `loading` — affiche le spinner et désactive le bouton
+- `disabled` — désactivation additionnelle (validation formulaire)
+- `icon` — icône Material optionnelle
+- `type` / `color` / `buttonClass` — personnalisation Material
+
+**Composants migrés:** `alliance-info-tab`, `point-rules-tab`, `retroactive-activities-tab`, `invitations-tab`, `activity-input`
+
+**Localisation:** `src/app/shared/components/loading-button/`
 
 ---
 
@@ -219,6 +266,7 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 - ✅ Gestion d'alliances et invitations avec tracking
 - ✅ Système de points configurables par position
 - ✅ Mode participation par activité (toggle sans position)
+- ✅ Alliance tag (identifiant 3 caractères, affiché dans le header)
 - ✅ Dashboards avec graphiques et statistiques
 - ✅ Interface responsive (mobile-first)
 - ✅ Internationalisation (EN, FR, ES, IT)
@@ -249,7 +297,7 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 ## 🔗 Fichiers Clés
 
 **Backend:**
-- `supabase/01-initial-schema.sql` → `10-alliance-activity-settings.sql`
+- `supabase/01-initial-schema.sql` → `11-alliance-tag.sql`
 - `supabase/MIGRATIONS.md` - Guide exécution migrations
 - `supabase/README.md` - Configuration complète
 
