@@ -188,6 +188,19 @@ mat-form-field .mat-mdc-form-field-icon-prefix {
   }
 }
 
+/* Snackbar variants */
+mat-snack-bar-container.success-snackbar {
+  --mdc-snackbar-container-color: var(--mat-sys-success-container);
+  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-success-container);
+  --mat-snack-bar-button-color: var(--mat-sys-success);
+}
+
+mat-snack-bar-container.error-snackbar {
+  --mdc-snackbar-container-color: var(--mat-sys-error-container);
+  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error-container);
+  --mat-snack-bar-button-color: var(--mat-sys-error);
+}
+
 .mat-mdc-dialog-surface.mdc-dialog__surface {
   overflow-y: unset;
   border-style: solid;
@@ -352,12 +365,24 @@ $all-palettes: (
   @include export-palette-css-vars(theme-colors.$tertiary-palette, 'tertiary');
   @include export-palette-css-vars(theme-colors.$secondary-palette, 'secondary');
   // Ajoute d'autres palettes si besoin
+
+  // Success color (not part of Material 3 spec, added manually)
+  --mat-sys-success: #2e7d32;
+  --mat-sys-on-success: #ffffff;
+  --mat-sys-success-container: #c8e6c9;
+  --mat-sys-on-success-container: #1b5e20;
 }
 
 // Apply dark theme when browser/OS is in dark mode
 @media (prefers-color-scheme: dark) {
   :root {
     @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
+
+    // Success color — dark variant
+    --mat-sys-success: #66bb6a;
+    --mat-sys-on-success: #1b5e20;
+    --mat-sys-success-container: #2e7d32;
+    --mat-sys-on-success-container: #c8e6c9;
   }
   html {
     @include mat.all-component-colors($dark-theme);

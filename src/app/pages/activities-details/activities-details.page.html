@@ -48,11 +48,15 @@
                         <div class="activity-chip">
                           <mat-icon class="activity-icon">check_circle</mat-icon>
                           <span class="activity-name">{{ activity.activityType | activityLabel }}</span>
-                          <span [ngClass]="{
-                            'duplicate-position': week.conflictingPositions?.has(activity.activityType + '|' + activity.position)
-                          }">
-                            rank: {{ activity.position }}
-                          </span>
+                          @if (activity.position !== null) {
+                            <span [ngClass]="{
+                              'duplicate-position': week.conflictingPositions?.has(activity.activityType + '|' + activity.position)
+                            }">
+                              rank: {{ activity.position }}
+                            </span>
+                          } @else {
+                            <mat-icon class="participation-icon">check_circle</mat-icon>
+                          }
                           <span class="activity-points">{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</span>
                         </div>
                       }

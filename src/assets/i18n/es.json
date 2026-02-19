@@ -87,7 +87,6 @@
       "members": "miembros",
       "noMembers": "Aún no hay miembros",
       "displayName": "Nombre",
-      "username": "Usuario",
       "role": "Rol",
       "joinedDate": "Se unió",
       "invitationManagement": "Gestión de Invitaciones",
@@ -101,6 +100,13 @@
       "revokeInvitation": "Revocar invitación",
       "revokeConfirm": "¿Está seguro de que desea revocar esta invitación?",
       "membersJoined": "Miembros que se unieron a través de esta invitación",
+      "nameUpdated": "¡Nombre de alianza actualizado con éxito!",
+      "nameUpdateFailed": "Error al actualizar el nombre de la alianza",
+      "invitationCreated": "¡Invitación creada y enlace copiado al portapapeles!",
+      "invitationCreateFailed": "Error al crear la invitación",
+      "invitationRevoked": "Invitación revocada con éxito",
+      "invitationRevokeFailed": "Error al revocar la invitación",
+      "invitationLinkCopied": "¡Enlace de invitación copiado al portapapeles!",
       "pointRules": {
         "title": "Configuración de reglas de puntos",
         "subtitle": "Configure reglas personalizadas de cálculo de puntos basadas en la posición/clasificación",
@@ -117,7 +123,14 @@
         "deleteConfirm": "¿Está seguro de que desea eliminar esta regla?",
         "participationMode": "Modo Participación",
         "participationModeHint": "Los jugadores simplemente confirman su participación, sin posición requerida",
-        "participationPoints": "Puntos por participación"
+        "participationPoints": "Puntos por participación",
+        "positionRangeError": "La posición mínima no puede ser mayor que la posición máxima",
+        "created": "Regla de puntos creada con éxito",
+        "createFailed": "Error al crear la regla de puntos",
+        "deleted": "Regla de puntos eliminada con éxito",
+        "deleteFailed": "Error al eliminar la regla de puntos",
+        "participationModeFailed": "Error al actualizar el modo de participación",
+        "participationPointsFailed": "Error al actualizar los puntos de participación"
       }
     },
     "retroactive": {
@@ -156,7 +169,8 @@
     "success": "¡Actividad enviada correctamente!",
     "error": "Error al enviar la actividad",
     "participated": "Participé esta semana",
-    "notParticipated": "Aún no participé"
+    "notParticipated": "Aún no participé",
+    "fillAllFields": "Por favor, complete todos los campos requeridos"
   },
   "activities": {
     "types": {
@@ -222,7 +236,12 @@
       "members": "Miembros",
       "created": "Creada",
       "actions": "Acciones",
-      "deleteConfirm": "¿Está seguro de que desea eliminar la alianza \"{{name}}\"? Esto también eliminará todos los usuarios, actividades e invitaciones asociados."
+      "deleteConfirm": "¿Está seguro de que desea eliminar la alianza \"{{name}}\"? Esto también eliminará todos los usuarios, actividades e invitaciones asociados.",
+      "loadFailed": "Error al cargar las alianzas",
+      "updated": "Alianza actualizada con éxito",
+      "updateFailed": "Error al actualizar la alianza",
+      "deleted": "Alianza eliminada con éxito",
+      "deleteFailed": "Error al eliminar la alianza"
     },
     "users": {
       "title": "Gestión de Usuarios",
@@ -235,7 +254,11 @@
       "noAlliance": "Sin alianza",
       "created": "Creado",
       "actions": "Acciones",
-      "deleteConfirm": "¿Está seguro de que desea eliminar al usuario \"{{name}}\"? Esta acción no se puede deshacer."
+      "deleteConfirm": "¿Está seguro de que desea eliminar al usuario \"{{name}}\"? Esta acción no se puede deshacer.",
+      "loadFailed": "Error al cargar los usuarios",
+      "updated": "Usuario actualizado con éxito",
+      "updateFailed": "Error al actualizar el usuario",
+      "deleted": "Usuario eliminado con éxito"
     }
   },
   "super_admin": "Super Administrador",

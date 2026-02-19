@@ -87,7 +87,6 @@
       "members": "members",
       "noMembers": "No members yet",
       "displayName": "Name",
-      "username": "Username",
       "role": "Role",
       "joinedDate": "Joined",
       "invitationManagement": "Invitation Management",
@@ -101,6 +100,13 @@
       "revokeInvitation": "Revoke invitation",
       "revokeConfirm": "Are you sure you want to revoke this invitation?",
       "membersJoined": "Members who joined via this invitation",
+      "nameUpdated": "Alliance name updated successfully!",
+      "nameUpdateFailed": "Failed to update alliance name",
+      "invitationCreated": "Invitation created and link copied to clipboard!",
+      "invitationCreateFailed": "Failed to create invitation",
+      "invitationRevoked": "Invitation revoked successfully",
+      "invitationRevokeFailed": "Failed to revoke invitation",
+      "invitationLinkCopied": "Invitation link copied to clipboard!",
       "pointRules": {
         "title": "Point Rules Configuration",
         "subtitle": "Configure custom point calculation rules based on position/rank",
@@ -117,7 +123,14 @@
         "deleteConfirm": "Are you sure you want to delete this rule?",
         "participationMode": "Participation Mode",
         "participationModeHint": "Players simply confirm participation, no position required",
-        "participationPoints": "Points for participation"
+        "participationPoints": "Points for participation",
+        "positionRangeError": "Minimum position cannot be greater than maximum position",
+        "created": "Point rule created successfully",
+        "createFailed": "Failed to create point rule",
+        "deleted": "Point rule deleted successfully",
+        "deleteFailed": "Failed to delete point rule",
+        "participationModeFailed": "Failed to update participation mode",
+        "participationPointsFailed": "Failed to update participation points"
       }
     },
     "retroactive": {
@@ -156,7 +169,8 @@
     "success": "Activity submitted successfully!",
     "error": "Failed to submit activity",
     "participated": "I participated this week",
-    "notParticipated": "Not participated yet"
+    "notParticipated": "Not participated yet",
+    "fillAllFields": "Please fill in all required fields"
   },
   "activities": {
     "types": {
@@ -222,7 +236,12 @@
       "members": "Members",
       "created": "Created",
       "actions": "Actions",
-      "deleteConfirm": "Are you sure you want to delete alliance \"{{name}}\"? This will also delete all associated users, activities, and invitations."
+      "deleteConfirm": "Are you sure you want to delete alliance \"{{name}}\"? This will also delete all associated users, activities, and invitations.",
+      "loadFailed": "Failed to load alliances",
+      "updated": "Alliance updated successfully",
+      "updateFailed": "Failed to update alliance",
+      "deleted": "Alliance deleted successfully",
+      "deleteFailed": "Failed to delete alliance"
     },
     "users": {
       "title": "Users Management",
@@ -235,7 +254,11 @@
       "noAlliance": "No alliance",
       "created": "Created",
       "actions": "Actions",
-      "deleteConfirm": "Are you sure you want to delete user \"{{name}}\"? This action cannot be undone."
+      "deleteConfirm": "Are you sure you want to delete user \"{{name}}\"? This action cannot be undone.",
+      "loadFailed": "Failed to load users",
+      "updated": "User updated successfully",
+      "updateFailed": "Failed to update user",
+      "deleted": "User deleted successfully"
     }
   },
   "super_admin": "Super Admin",
