@@ -22,15 +22,15 @@
         }
       </mat-form-field>
 
-      <button
-        mat-raised-button
+      <app-loading-button
         type="submit"
-        [disabled]="invitationForm.invalid || isLoading() || isSubmitting()"
-        class="create-invitation-btn"
-      >
-        <mat-icon>add</mat-icon>
-        {{ 'alliance.settings.createInvitation' | translate }}
-      </button>
+        icon="add"
+        [text]="'alliance.settings.createInvitation' | translate"
+        [loadingText]="'common.saving' | translate"
+        [loading]="isSubmitting() || isLoading()"
+        [disabled]="invitationForm.invalid"
+        buttonClass="create-invitation-btn"
+      />
     </form>
 
     <!-- Invitations List -->

@@ -19,6 +19,7 @@ import { AllianceService } from '@app/core/services/alliance.service';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { InvitationStatusPipe } from '@app/shared/pipes/invitation-status.pipe';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
+import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { InvitationWithStats } from '@app/shared/models';
 
 @Component({
@@ -40,6 +41,7 @@ import type { InvitationWithStats } from '@app/shared/models';
     TranslateModule,
     InvitationStatusPipe,
     LocalDatePipe,
+    LoadingButtonComponent,
   ],
   templateUrl: './invitations-tab.component.html',
   styleUrl: './invitations-tab.component.scss',

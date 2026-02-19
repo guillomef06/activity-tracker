@@ -20,6 +20,7 @@ import { PointRulesService } from '@app/core/services/point-rules.service';
 import { AllianceActivitySettingsService } from '@app/core/services/alliance-activity-settings.service';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { PositionRangePipe } from '@app/shared/pipes/position-range.pipe';
+import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { ActivityPointRule, AllianceActivitySettings } from '@app/shared/models';
 import { APP_CONSTANTS } from '@app/shared/constants/constants';
 
@@ -42,6 +43,7 @@ import { APP_CONSTANTS } from '@app/shared/constants/constants';
     MatDialogModule,
     TranslateModule,
     PositionRangePipe,
+    LoadingButtonComponent,
   ],
   templateUrl: './point-rules-tab.component.html',
   styleUrl: './point-rules-tab.component.scss',

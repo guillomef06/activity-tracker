@@ -2,9 +2,9 @@
   <mat-card-header>
     <mat-card-title>{{ 'alliance.settings.allianceInfo' | translate }}</mat-card-title>
   </mat-card-header>
-  
+
   <mat-card-content>
-    <form [formGroup]="allianceNameForm" (ngSubmit)="updateAllianceName()">
+    <form [formGroup]="allianceForm" (ngSubmit)="updateAlliance()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-icon matPrefix>groups</mat-icon>
         <mat-label>{{ 'alliance.settings.allianceName' | translate }}</mat-label>
@@ -15,19 +15,35 @@
           placeholder="Enter alliance name"
         />
         @if (nameError()) {
-          <mat-error>{{ nameError() }}</mat-error>
+          <mat-error>{{ nameError() | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-icon matPrefix>tag</mat-icon>
+        <mat-label>{{ 'alliance.settings.allianceTag' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="tag"
+          type="text"
+          maxlength="3"
+          placeholder="e.g. RgW"
+        />
+        <mat-hint>{{ 'alliance.settings.allianceTagHint' | translate }}</mat-hint>
+        @if (tagError()) {
+          <mat-error>{{ tagError() | translate }}</mat-error>
         }
       </mat-form-field>
 
       <div class="form-actions">
-        <button
-          mat-raised-button
+        <app-loading-button
           type="submit"
-          [disabled]="allianceNameForm.invalid || isLoading()"
-        >
-          <mat-icon>save</mat-icon>
-          {{ 'alliance.settings.updateName' | translate }}
-        </button>
+          icon="save"
+          [text]="'alliance.settings.updateName' | translate"
+          [loadingText]="'common.saving' | translate"
+          [loading]="isLoading()"
+          [disabled]="allianceForm.invalid"
+        />
       </div>
     </form>
 
@@ -39,7 +55,7 @@
           <span class="stat-label">{{ 'alliance.settings.totalMembers' | translate }}</span>
         </div>
       </div>
-      
+
       <div class="stat-card">
         <mat-icon>mail</mat-icon>
         <div class="stat-content">

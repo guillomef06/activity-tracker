@@ -67,6 +67,7 @@ describe('SuperAdminAlliancesPage', () => {
   it('should display correct columns', () => {
     expect(component['displayedColumns']).toEqual([
       'name',
+      'tag',
       'admin',
       'members',
       'createdAt',

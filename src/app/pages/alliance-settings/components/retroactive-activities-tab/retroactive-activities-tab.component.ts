@@ -16,6 +16,7 @@ import { AllianceActivitySettingsService } from '@app/core/services/alliance-act
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
 import { getWeekNumberForWeeksAgo, getDateForWeeksAgo, getWeekStart, getWeekEnd } from '@app/shared/utils/date.util';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { UserProfile } from '@app/shared/models';
 
 interface WeekOption {
@@ -38,6 +39,7 @@ interface WeekOption {
     MatIconModule,
     MatSlideToggleModule,
     TranslateModule,
+    LoadingButtonComponent,
   ],
   templateUrl: './retroactive-activities-tab.component.html',
   styleUrl: './retroactive-activities-tab.component.scss',

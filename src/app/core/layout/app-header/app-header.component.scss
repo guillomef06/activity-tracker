@@ -8,7 +8,7 @@
 .app-branding {
   display: flex;
   align-items: center;
-  
+
   .app-logo {
     margin-right: 1rem;
     width: 32px;
@@ -42,55 +42,11 @@
   gap: 1rem;
 }
 
-.user-display-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.user-identity {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--md-sys-color-on-surface);
-
-  mat-icon {
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-    margin: 0;
-  }
-}
-
-.alliance-badge,
-.super-admin-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 16px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.alliance-badge {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    margin: 0;
-  }
-}
-
-.super-admin-badge {
-  background-color: var(--md-sys-color-error-container);
-  color: var(--md-sys-color-on-error-container);
-
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    margin: 0;
-  }
+  white-space: nowrap;
 }
 
 .user-info {
@@ -133,9 +89,7 @@
     font-size: 1.25rem;
   }
 
-  .alliance-badge,
-  .user-display-name,
-  .super-admin-badge {
+  .user-identity {
     display: none;
   }
 }
