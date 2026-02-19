@@ -24,6 +24,40 @@
   }
 }
 
+.section-hint {
+  margin: -0.5rem 0 1rem;
+  font-size: 0.875rem;
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.8;
+}
+
+.participation-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.participation-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--md-sys-color-surface-variant);
+  flex-wrap: wrap;
+
+  .activity-name {
+    flex: 1;
+    font-weight: 500;
+    min-width: 140px;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .points-field {
+    width: 180px;
+  }
+}
+
 .point-rule-form {
   .form-row {
     display: flex;
@@ -123,6 +157,12 @@
 }
 
 @media (max-width: 768px) {
+  .participation-row {
+    .points-field {
+      width: 100%;
+    }
+  }
+
   .point-rule-form {
     .form-row {
       flex-direction: column;

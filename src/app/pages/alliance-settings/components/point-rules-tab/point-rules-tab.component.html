@@ -3,18 +3,57 @@
     <mat-card-title>{{ 'alliance.settings.pointRules.title' | translate }}</mat-card-title>
     <mat-card-subtitle>{{ 'alliance.settings.pointRules.subtitle' | translate }}</mat-card-subtitle>
   </mat-card-header>
-  
+
   <mat-card-content>
+    <!-- Participation Mode Section -->
+    <div class="section">
+      <h3 class="section-title">
+        <mat-icon>how_to_reg</mat-icon>
+        {{ 'alliance.settings.pointRules.participationMode' | translate }}
+      </h3>
+      <p class="section-hint">{{ 'alliance.settings.pointRules.participationModeHint' | translate }}</p>
+
+      <div class="participation-table">
+        @for (item of activitySettingsList(); track item.type.value) {
+          <div class="participation-row">
+            <span class="activity-name">{{ item.type.labelKey | translate }}</span>
+
+            <mat-slide-toggle
+              [checked]="item.setting?.participation_mode ?? false"
+              [disabled]="isUpdatingSetting() === item.type.value"
+              (change)="toggleParticipationMode(item.type.value, $event)"
+            ></mat-slide-toggle>
+
+            @if (item.setting?.participation_mode) {
+              <mat-form-field appearance="outline" class="points-field" subscriptSizing="dynamic">
+                <mat-label>{{ 'alliance.settings.pointRules.participationPoints' | translate }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  [value]="item.setting?.participation_points ?? 5"
+                  min="0"
+                  [disabled]="isUpdatingSetting() === item.type.value"
+                  (change)="onPointsChange(item.type.value, $event)"
+                />
+                <mat-icon matSuffix>star</mat-icon>
+              </mat-form-field>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
     <!-- Add Point Rule Form -->
     <div class="section">
       <h3 class="section-title">
         <mat-icon>add</mat-icon>
         {{ 'alliance.settings.pointRules.addRule' | translate }}
       </h3>
-      
+
       <form [formGroup]="pointRuleForm" (ngSubmit)="createPointRule()" class="point-rule-form">
         <div class="form-row">
           <mat-form-field appearance="outline" class="form-field">
+            <mat-icon matPrefix>category</mat-icon>
             <mat-label>{{ 'alliance.settings.pointRules.activityType' | translate }}</mat-label>
             <mat-select formControlName="activity_type">
               @for (type of activityTypes; track type.value) {
@@ -23,7 +62,6 @@
                 </mat-option>
               }
             </mat-select>
-            <mat-icon matPrefix>category</mat-icon>
             @if (activityTypeError()) {
               <mat-error>{{ activityTypeError() }}</mat-error>
             }
@@ -31,8 +69,8 @@
 
           <mat-form-field appearance="outline" class="form-field-small">
             <mat-label>{{ 'alliance.settings.pointRules.positionMin' | translate }}</mat-label>
-            <input matInput type="number" formControlName="position_min" min="1" />
             <mat-icon matPrefix>looks_one</mat-icon>
+            <input matInput type="number" formControlName="position_min" min="1" />
             @if (positionMinError()) {
               <mat-error>{{ positionMinError() }}</mat-error>
             }
@@ -40,8 +78,8 @@
 
           <mat-form-field appearance="outline" class="form-field-small">
             <mat-label>{{ 'alliance.settings.pointRules.positionMax' | translate }}</mat-label>
-            <input matInput type="number" formControlName="position_max" min="1" />
             <mat-icon matPrefix>looks_two</mat-icon>
+            <input matInput type="number" formControlName="position_max" min="1" />
             @if (positionMaxError()) {
               <mat-error>{{ positionMaxError() }}</mat-error>
             }
@@ -49,8 +87,8 @@
 
           <mat-form-field appearance="outline" class="form-field-small">
             <mat-label>{{ 'alliance.settings.pointRules.points' | translate }}</mat-label>
-            <input matInput type="number" formControlName="points" min="0" />
             <mat-icon matPrefix>star</mat-icon>
+            <input matInput type="number" formControlName="points" min="0" />
             @if (pointsError()) {
               <mat-error>{{ pointsError() }}</mat-error>
             }

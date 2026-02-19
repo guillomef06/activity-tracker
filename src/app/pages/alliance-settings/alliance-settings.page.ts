@@ -6,6 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { PointRulesService } from '@app/core/services/point-rules.service';
+import { AllianceActivitySettingsService } from '@app/core/services/alliance-activity-settings.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
 
@@ -38,6 +39,7 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
 export class AllianceSettingsPage implements OnInit {
   private readonly allianceService = inject(AllianceService);
   private readonly pointRulesService = inject(PointRulesService);
+  private readonly activitySettingsService = inject(AllianceActivitySettingsService);
   protected readonly progressBarService = inject(ProgressBarService);
 
   protected readonly members = signal<UserProfile[]>([]);
@@ -57,6 +59,7 @@ export class AllianceSettingsPage implements OnInit {
           this.loadMembers(),
           this.loadInvitations(),
           this.loadPointRules(),
+          this.activitySettingsService.loadSettings(),
         ]);
       } catch (error) {
         console.error('Error loading alliance data:', error);

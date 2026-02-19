@@ -163,6 +163,11 @@ mat-form-field .mat-mdc-form-field-icon-prefix {
   margin-right: 0.5rem;
 }
 
+/* Slide toggle label spacing (can't be set from component SCSS due to encapsulation) */
+.participation-section .mdc-label {
+  padding-left: 0.5rem;
+}
+
 .confirm-dialog {
   h2 {
     display: flex;

@@ -7,6 +7,7 @@
     <!-- Create Invitation Form -->
     <form [formGroup]="invitationForm" (ngSubmit)="createInvitation()" class="invitation-form">
       <mat-form-field appearance="outline">
+        <mat-icon matPrefix>schedule</mat-icon>
         <mat-label>{{ 'alliance.settings.invitationDuration' | translate }}</mat-label>
         <input
           matInput
@@ -15,7 +16,6 @@
           min="1"
           max="365"
         />
-        <mat-icon matPrefix>schedule</mat-icon>
         <mat-hint>{{ 'alliance.settings.durationHint' | translate }}</mat-hint>
         @if (durationDaysError()) {
           <mat-error>{{ durationDaysError() }}</mat-error>

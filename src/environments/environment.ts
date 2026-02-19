@@ -8,7 +8,6 @@ export const environment = {
   appVersion: '1.0.0-dev',
   apiUrl: 'http://localhost:8080/api',
   enableDebug: true,
-  enableMockData: true,
   storageKey: 'activity-tracker-dev',
   
   // Supabase Configuration

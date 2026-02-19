@@ -114,7 +114,10 @@
         "create": "Crear regla",
         "noRules": "No hay reglas de puntos configuradas",
         "noRulesHint": "Cree reglas para calcular puntos según la posición/clasificación. Sin reglas, se utilizarán los puntos predeterminados.",
-        "deleteConfirm": "¿Está seguro de que desea eliminar esta regla?"
+        "deleteConfirm": "¿Está seguro de que desea eliminar esta regla?",
+        "participationMode": "Modo Participación",
+        "participationModeHint": "Los jugadores simplemente confirman su participación, sin posición requerida",
+        "participationPoints": "Puntos por participación"
       }
     },
     "retroactive": {
@@ -151,7 +154,9 @@
     "viewDashboard": "Ver Tablero",
     "typeHint": "Solo se muestran las actividades disponibles para la semana seleccionada",
     "success": "¡Actividad enviada correctamente!",
-    "error": "Error al enviar la actividad"
+    "error": "Error al enviar la actividad",
+    "participated": "Participé esta semana",
+    "notParticipated": "Aún no participé"
   },
   "activities": {
     "types": {
@@ -180,8 +185,6 @@
     "weeksAgo": "semanas atrás",
     "weeklyRanking": "Clasificación Semanal",
     "weeklyRankingSubtitle": "Evolución de puntos en las últimas 6 semanas",
-    "resetData": "Restablecer Datos",
-    "resetConfirm": "¿Estás seguro? Esto recargará los datos de demostración con 5 usuarios y borrará tus actividades.",
     "viewAllDetails": "Ver Detalles"
   },
   "activitiesDetails": {
