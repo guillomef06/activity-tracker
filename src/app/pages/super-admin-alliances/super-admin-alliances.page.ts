@@ -54,15 +54,17 @@ export class SuperAdminAlliancesPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly alliances = signal<AllianceWithStats[]>([]);
-  protected readonly displayedColumns: string[] = ['name', 'admin', 'members', 'createdAt', 'actions'];
+  protected readonly displayedColumns: string[] = ['name', 'tag', 'admin', 'members', 'createdAt', 'actions'];
 
   protected readonly editForm: FormGroup = this.fb.group({
     id: [''],
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    tag: ['', [Validators.minLength(3), Validators.maxLength(3)]],
   });
 
   // Error signals for validation
   protected readonly nameError = createFieldErrorSignal(this.editForm, 'name', this.destroyRef);
+  protected readonly tagError = createFieldErrorSignal(this.editForm, 'tag', this.destroyRef);
 
   protected readonly editingId = signal<string | null>(null);
 
@@ -122,6 +124,7 @@ export class SuperAdminAlliancesPage implements OnInit {
     this.editForm.patchValue({
       id: alliance.id,
       name: alliance.name,
+      tag: alliance.tag ?? '',
     });
   }
 
@@ -137,11 +140,11 @@ export class SuperAdminAlliancesPage implements OnInit {
 
     await this.progressBarService.withProgress(async () => {
       try {
-        const { id, name } = this.editForm.value;
+        const { id, name, tag } = this.editForm.value;
 
         const { error } = await this.supabase.client
           .from('alliances')
-          .update({ name })
+          .update({ name, tag: tag || null })
           .eq('id', id);
 
         if (error) throw error;

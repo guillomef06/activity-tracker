@@ -139,6 +139,20 @@
   .edit-field {
     margin: 0;
     width: 100%;
+
+    &--tag {
+      max-width: 8rem;
+    }
+  }
+
+  .alliance-tag {
+    font-weight: 600;
+    font-family: monospace;
+    color: var(--md-sys-color-primary);
+  }
+
+  .no-tag {
+    opacity: 0.4;
   }
 
   .actions,

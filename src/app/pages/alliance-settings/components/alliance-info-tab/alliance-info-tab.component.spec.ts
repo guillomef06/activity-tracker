@@ -10,8 +10,8 @@ describe('AllianceInfoTabComponent', () => {
   let allianceService: jasmine.SpyObj<AllianceService>;
 
   beforeEach(async () => {
-    const allianceServiceSpy = jasmine.createSpyObj('AllianceService', ['updateAllianceName']);
-    allianceServiceSpy.updateAllianceName.and.returnValue(Promise.resolve(true));
+    const allianceServiceSpy = jasmine.createSpyObj('AllianceService', ['updateAlliance']);
+    allianceServiceSpy.updateAlliance.and.returnValue(Promise.resolve({ error: null }));
 
     await TestBed.configureTestingModule({
       imports: [AllianceInfoTabComponent, TranslateModule.forRoot()],
@@ -24,12 +24,12 @@ describe('AllianceInfoTabComponent', () => {
     fixture = TestBed.createComponent(AllianceInfoTabComponent);
     component = fixture.componentInstance;
     allianceService = TestBed.inject(AllianceService) as jasmine.SpyObj<AllianceService>;
-    
+
     // Set required inputs
-    fixture.componentRef.setInput('alliance', { id: '1', name: 'Test Alliance', created_at: new Date().toISOString() });
+    fixture.componentRef.setInput('alliance', { id: '1', name: 'Test Alliance', tag: null, created_at: new Date().toISOString() });
     fixture.componentRef.setInput('membersCount', 5);
     fixture.componentRef.setInput('invitationsCount', 2);
-    
+
     fixture.detectChanges();
   });
 
@@ -37,24 +37,24 @@ describe('AllianceInfoTabComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have alliance name form', () => {
-    expect(component['allianceNameForm']).toBeDefined();
-    expect(component['allianceNameForm'].get('name')).toBeDefined();
+  it('should have alliance form', () => {
+    expect(component['allianceForm']).toBeDefined();
+    expect(component['allianceForm'].get('name')).toBeDefined();
   });
 
   it('should update form when alliance input changes', () => {
-    fixture.componentRef.setInput('alliance', { id: '1', name: 'New Alliance Name', created_at: new Date().toISOString() });
+    fixture.componentRef.setInput('alliance', { id: '1', name: 'New Alliance Name', tag: null, created_at: new Date().toISOString() });
     fixture.detectChanges();
-    
-    expect(component['allianceNameForm'].get('name')?.value).toBe('New Alliance Name');
+
+    expect(component['allianceForm'].get('name')?.value).toBe('New Alliance Name');
   });
 
-  it('should call updateAllianceName on submit', async () => {
-    component['allianceNameForm'].patchValue({ name: 'Updated Name' });
-    
-    await component['updateAllianceName']();
-    
-    expect(allianceService.updateAllianceName).toHaveBeenCalledWith('Updated Name');
+  it('should call updateAlliance on submit', async () => {
+    component['allianceForm'].patchValue({ name: 'Updated Name' });
+
+    await component['updateAlliance']();
+
+    expect(allianceService.updateAlliance).toHaveBeenCalledWith({ name: 'Updated Name', tag: null });
   });
 
   it('should display member and invitation counts', () => {

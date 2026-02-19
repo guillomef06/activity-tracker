@@ -10,6 +10,9 @@
     <mat-spinner diameter="20"></mat-spinner>
     <span>{{ loadingText() }}</span>
   } @else {
+    @if (icon()) {
+      <mat-icon>{{ icon() }}</mat-icon>
+    }
     <span>{{ text() }}</span>
   }
 </button>

@@ -9,6 +9,7 @@
 export interface Alliance {
   id: string;
   name: string;
+  tag: string | null;
   owner_id: string | null;
   created_at: string;
   updated_at: string;
@@ -27,6 +28,7 @@ export interface CreateAllianceRequest {
  */
 export interface UpdateAllianceRequest {
   name?: string;
+  tag?: string | null;
 }
 
 /**

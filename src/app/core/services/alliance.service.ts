@@ -1,9 +1,10 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
-import { 
+import {
   Alliance,
   InvitationWithStats,
+  UpdateAllianceRequest,
   UserProfile,
   CreateInvitationResponse,
   ValidateInvitationResponse
@@ -245,19 +246,19 @@ export class AllianceService {
   }
 
   /**
-   * Update alliance name (admin only)
+   * Update alliance (admin only)
    */
-  async updateAllianceName(newName: string): Promise<{ error: Error | null }> {
+  async updateAlliance(updates: UpdateAllianceRequest): Promise<{ error: Error | null }> {
     const allianceId = this.authService.getAllianceId();
 
     if (!allianceId || !this.authService.isAdmin()) {
-      return { error: new Error('Only admins can update alliance name') };
+      return { error: new Error('Only admins can update alliance') };
     }
 
     try {
       const { error } = await this.supabase
         .from('alliances')
-        .update({ name: newName })
+        .update(updates)
         .eq('id', allianceId);
 
       if (error) throw error;
@@ -267,7 +268,7 @@ export class AllianceService {
 
       return { error: null };
     } catch (error) {
-      console.error('Error updating alliance name:', error);
+      console.error('Error updating alliance:', error);
       return { error: error as Error };
     }
   }

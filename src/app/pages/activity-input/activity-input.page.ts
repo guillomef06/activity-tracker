@@ -18,6 +18,7 @@ import { AllianceActivitySettingsService } from '../../core/services/alliance-ac
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 import { PointCalculationResult } from '../../shared/models';
 import { createFieldErrorSignal } from '../../shared/utils/form-validation.utils';
+import { LoadingButtonComponent } from '../../shared/components/loading-button/loading-button.component';
 import {
   getWeekNumberForWeeksAgo,
   getWeekLabel as getWeekLabelUtil,
@@ -42,7 +43,8 @@ interface WeekOption {
     MatButtonModule,
     MatIconModule,
     MatSlideToggleModule,
-    TranslateModule
+    TranslateModule,
+    LoadingButtonComponent,
   ],
   templateUrl: './activity-input.page.html',
   styleUrl: './activity-input.page.scss',
@@ -65,7 +67,7 @@ export class ActivityInputPage implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   calculatedPointsResult = signal<PointCalculationResult | null>(null);
-  submitting = signal<boolean>(false);
+  isSubmitting = signal<boolean>(false);
 
   // Reactive form
   activityForm: FormGroup = this.fb.group({
@@ -200,7 +202,7 @@ export class ActivityInputPage implements OnInit {
       return;
     }
 
-    this.submitting.set(true);
+    this.isSubmitting.set(true);
 
     const formValue = this.activityForm.value;
 
@@ -224,7 +226,7 @@ export class ActivityInputPage implements OnInit {
 
     if (error) {
       this.snackbarService.error(this.translate.instant('activityInput.error'));
-      this.submitting.set(false);
+      this.isSubmitting.set(false);
       return;
     }
 
@@ -237,7 +239,7 @@ export class ActivityInputPage implements OnInit {
     this.activityForm.markAsUntouched();
     this.activityForm.markAsPristine();
     this.calculatedPointsResult.set(null);
-    this.submitting.set(false);
+    this.isSubmitting.set(false);
 
     this.snackbarService.success(this.translate.instant('activityInput.success'));
   }

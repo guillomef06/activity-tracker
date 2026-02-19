@@ -94,15 +94,15 @@
             }
           </mat-form-field>
 
-          <button
-            mat-raised-button
+          <app-loading-button
             type="submit"
-            [disabled]="pointRuleForm.invalid || isLoading() || isSubmitting()"
-            class="submit-button"
-          >
-            <mat-icon>add</mat-icon>
-            {{ 'alliance.settings.pointRules.create' | translate }}
-          </button>
+            icon="add"
+            [text]="'alliance.settings.pointRules.create' | translate"
+            [loadingText]="'common.saving' | translate"
+            [loading]="isSubmitting() || isLoading()"
+            [disabled]="pointRuleForm.invalid"
+            buttonClass="submit-button"
+          />
         </div>
       </form>
     </div>
