@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy, signal, computed, DestroyRef } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, signal, computed, DestroyRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -48,7 +48,12 @@ interface WeekOption {
   styleUrl: './activity-input.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActivityInputPage {
+
+export class ActivityInputPage implements OnInit {
+    async ngOnInit(): Promise<void> {
+      // Charge les activitySettings à chaque affichage de la page
+      await this.activitySettingsService.loadSettings();
+    }
   private activityService = inject(ActivityService);
   authService = inject(AuthService);
   private pointRulesService = inject(PointRulesService);
