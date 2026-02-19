@@ -9,7 +9,9 @@
       "WebFetch(domain:material.angular.dev)",
       "WebFetch(domain:angular-material.dev)",
       "WebFetch(domain:v18.material.angular.dev)",
-      "WebFetch(domain:gist.github.com)"
+      "WebFetch(domain:gist.github.com)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

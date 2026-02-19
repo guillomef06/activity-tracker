@@ -6,9 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ActivityService } from '../../core/services/activity.service';
 import { ProgressBarService } from '../../core/services/progress-bar.service';
 import { UserScore } from '../../shared/models/activity.model';
@@ -26,7 +24,6 @@ import { APP_CONSTANTS } from '../../shared/constants/constants';
     MatChipsModule,
     MatBadgeModule,
     MatTooltipModule,
-    MatDialogModule,
     TranslateModule,
     RankingChartComponent
   ],
@@ -39,7 +36,6 @@ export class ManagementDashboardPage implements OnInit {
   private progressBarService = inject(ProgressBarService);
   private router = inject(Router);
   private translate = inject(TranslateService);
-  private dialog = inject(MatDialog);
 
   userScores = computed(() => this.activityService.getUserScores());
 
@@ -66,21 +62,6 @@ export class ManagementDashboardPage implements OnInit {
     await this.progressBarService.withProgress(async () => {
       await this.activityService.initialize();
     });
-  }
-
-  async resetData(): Promise<void> {
-    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        message: this.translate.instant('dashboard.resetConfirm'),
-      }
-    }).afterClosed().toPromise();
-
-    if (confirmed) {
-      await this.progressBarService.withProgress(async () => {
-        this.activityService.resetToInitialData();
-        await this.initialize();
-      });
-    }
   }
 
   viewAllDetails(): void {

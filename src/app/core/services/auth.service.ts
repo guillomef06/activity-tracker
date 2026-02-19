@@ -2,14 +2,12 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, AuthError } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
-import { 
-  UserProfile, 
-  AdminSignUpRequest, 
-  MemberSignUpRequest, 
-  SignInRequest 
+import {
+  UserProfile,
+  AdminSignUpRequest,
+  MemberSignUpRequest,
+  SignInRequest
 } from '../../shared/models';
-import { environment } from '../../../environments/environment';
-import { validateMockCredentials, MOCK_USERS } from '../../shared/mock-data/mock-users';
 
 /**
  * Authentication Service
@@ -21,7 +19,7 @@ import { validateMockCredentials, MOCK_USERS } from '../../shared/mock-data/mock
 export class AuthService {
   private supabase = inject(SupabaseService);
   private router = inject(Router);
-  
+
   // Reactive state using Angular signals
   private currentUserSignal = signal<User | null>(null);
   private userProfileSignal = signal<UserProfile | null>(null);
@@ -38,109 +36,8 @@ export class AuthService {
   readonly isSuperAdmin = computed(() => this.userProfileSignal()?.role === 'super_admin');
   readonly isLoading = this.loadingSignal.asReadonly();
 
-  private readonly MOCK_SESSION_KEY = 'mock-auth-session';
-
   constructor() {
     this.initializeAuth();
-  }
-
-  /**
-   * Check if mock mode is enabled
-   */
-  private get isMockMode(): boolean {
-    return environment.enableMockData === true;
-  }
-
-  /**
-   * Save mock session to localStorage
-   */
-  private saveMockSession(userId: string): void {
-    localStorage.setItem(this.MOCK_SESSION_KEY, userId);
-  }
-
-  /**
-   * Get mock session from localStorage
-   */
-  private getMockSession(): string | null {
-    return localStorage.getItem(this.MOCK_SESSION_KEY);
-  }
-
-  /**
-   * Clear mock session from localStorage
-   */
-  private clearMockSession(): void {
-    localStorage.removeItem(this.MOCK_SESSION_KEY);
-  }
-
-  /**
-   * Mock sign in - for development/testing only
-   */
-  private async mockSignIn(username: string, password: string): Promise<{ error: AuthError | Error | null }> {
-    const mockUser = validateMockCredentials(username, password);
-    
-    if (!mockUser) {
-      return { error: new Error('Invalid credentials') as AuthError };
-    }
-
-    // Simulate Supabase user object
-    const mockAuthUser: User = {
-      id: mockUser.id,
-      email: `${username}@app.tracker`,
-      aud: 'authenticated',
-      role: 'authenticated',
-      created_at: mockUser.profile.created_at,
-      app_metadata: {},
-      user_metadata: {
-        username: mockUser.username,
-        display_name: mockUser.profile.display_name
-      }
-    } as User;
-
-    // Update signals
-    this.currentUserSignal.set(mockAuthUser);
-    this.userProfileSignal.set(mockUser.profile);
-    
-    // Save session
-    this.saveMockSession(mockUser.id);
-
-    console.log('🔒 [MOCK MODE] Logged in as:', mockUser.profile.display_name, `(${mockUser.profile.role})`);
-    
-    return { error: null };
-  }
-
-  /**
-   * Restore mock session on app init
-   */
-  private async restoreMockSession(): Promise<boolean> {
-    const userId = this.getMockSession();
-    if (!userId) return false;
-
-    const mockUser = MOCK_USERS.find(u => u.id === userId);
-    if (!mockUser) {
-      this.clearMockSession();
-      return false;
-    }
-
-    // Simulate Supabase user object
-    const mockAuthUser: User = {
-      id: mockUser.id,
-      email: `${mockUser.username}@app.tracker`,
-      aud: 'authenticated',
-      role: 'authenticated',
-      created_at: mockUser.profile.created_at,
-      app_metadata: {},
-      user_metadata: {
-        username: mockUser.username,
-        display_name: mockUser.profile.display_name
-      }
-    } as User;
-
-    this.currentUserSignal.set(mockAuthUser);
-    this.userProfileSignal.set(mockUser.profile);
-
-    console.log('🔒 [MOCK MODE] Session restored:', mockUser.profile.display_name, `(${mockUser.profile.role})`);
-    
-    return true;
   }
 
   /**
@@ -156,23 +53,13 @@ export class AuthService {
    */
   private async initializeAuth(): Promise<void> {
     try {
-      // MOCK MODE: Restore from localStorage
-      if (this.isMockMode) {
-        await this.restoreMockSession();
-        this.loadingSignal.set(false);
-        return;
-      }
-
-      // PRODUCTION MODE: Use Supabase
-      // Get current session
       const { data: { session } } = await this.supabase.auth.getSession();
-      
+
       if (session?.user) {
         this.currentUserSignal.set(session.user);
         await this.loadUserProfile(session.user.id);
       }
 
-      // Listen for auth state changes
       this.supabase.auth.onAuthStateChange(async (event, session) => {
         if (session?.user) {
           this.currentUserSignal.set(session.user);
@@ -204,15 +91,13 @@ export class AuthService {
 
         if (error) throw error;
         this.userProfileSignal.set(data);
-        return; // Success - exit
+        return;
       } catch (error) {
         console.error(`Error loading user profile (attempt ${attempt}/${retries}):`, error);
-        
-        // If this is not the last retry, wait before retrying
+
         if (attempt < retries) {
-          await new Promise(resolve => setTimeout(resolve, 500 * attempt)); // Exponential backoff
+          await new Promise(resolve => setTimeout(resolve, 500 * attempt));
         } else {
-          // On final failure, only set to null if we don't already have a profile
           if (!this.userProfileSignal()) {
             this.userProfileSignal.set(null);
           }
@@ -228,7 +113,6 @@ export class AuthService {
     try {
       const email = this.generateEmailFromUsername(data.username);
 
-      // 1. Create auth user
       const { data: authData, error: authError } = await this.supabase.auth.signUp({
         email,
         password: data.password,
@@ -243,7 +127,6 @@ export class AuthService {
       if (authError) return { error: authError };
       if (!authData.user) return { error: new Error('User creation failed') };
 
-      // 2. Create alliance
       const { data: allianceData, error: allianceError } = await this.supabase
         .from('alliances')
         .insert({
@@ -254,14 +137,10 @@ export class AuthService {
         .single();
 
       if (allianceError) {
-        // Note: Cannot rollback auth user with anon key (would get 401)
-        // auth.admin.deleteUser requires service_role key
-        // User will be created in auth but without profile - they can't login
         console.error('Failed to create alliance after user creation:', allianceError);
         return { error: new Error('Failed to create alliance. Please contact support.') };
       }
 
-      // 3. Create user profile
       const now = new Date().toISOString();
       const newProfile: UserProfile = {
         id: authData.user.id,
@@ -282,8 +161,6 @@ export class AuthService {
         return { error: profileError };
       }
 
-      // Set profile directly in state instead of loading from DB
-      // This avoids RLS policy issues immediately after creation
       this.userProfileSignal.set(newProfile);
 
       return { error: null };
@@ -301,7 +178,6 @@ export class AuthService {
     try {
       const email = this.generateEmailFromUsername(username);
 
-      // 1. Create auth user
       const { data: authData, error: authError } = await this.supabase.auth.signUp({
         email,
         password,
@@ -317,7 +193,6 @@ export class AuthService {
       if (authError) return { error: authError };
       if (!authData.user) return { error: new Error('User creation failed') };
 
-      // 2. Create user profile with super_admin role (no alliance needed)
       const now = new Date().toISOString();
       const newProfile: UserProfile = {
         id: authData.user.id,
@@ -338,8 +213,6 @@ export class AuthService {
         return { error: profileError };
       }
 
-      // Set profile directly in state instead of loading from DB
-      // This avoids RLS policy issues immediately after creation
       this.userProfileSignal.set(newProfile);
 
       return { error: null };
@@ -351,11 +224,9 @@ export class AuthService {
 
   /**
    * Member signup - Join existing alliance via invitation token
-   * Supports multi-use tokens with invitation_token_id tracking
    */
   async signUpMember(data: MemberSignUpRequest): Promise<{ error: AuthError | Error | null }> {
     try {
-      // 1. Validate invitation token
       const { data: tokenData, error: tokenError } = await this.supabase
         .from('invitation_tokens')
         .select('*, alliances(*)')
@@ -366,14 +237,12 @@ export class AuthService {
         return { error: new Error('Invalid or expired invitation token') };
       }
 
-      // Check if token is expired
       if (new Date(tokenData.expires_at) < new Date()) {
         return { error: new Error('Invitation token has expired') };
       }
 
       const email = this.generateEmailFromUsername(data.username);
 
-      // 2. Create auth user
       const { data: authData, error: authError } = await this.supabase.auth.signUp({
         email,
         password: data.password,
@@ -388,7 +257,6 @@ export class AuthService {
       if (authError) return { error: authError };
       if (!authData.user) return { error: new Error('User creation failed') };
 
-      // 3. Create user profile
       const now = new Date().toISOString();
       const newProfile: UserProfile = {
         id: authData.user.id,
@@ -409,11 +277,6 @@ export class AuthService {
         return { error: profileError };
       }
 
-      // Note: Token tracking is now handled via invitation_token_id in user_profiles
-      // No need to update used_at (multi-use tokens)
-
-      // Set profile directly in state instead of loading from DB
-      // This avoids RLS policy issues immediately after creation
       this.userProfileSignal.set(newProfile);
 
       return { error: null };
@@ -427,15 +290,8 @@ export class AuthService {
    * Sign in with username and password
    */
   async signIn(data: SignInRequest): Promise<{ error: AuthError | null }> {
-    // MOCK MODE: Use mock authentication
-    if (this.isMockMode) {
-      const result = await this.mockSignIn(data.username, data.password);
-      return { error: result.error as AuthError | null };
-    }
-
-    // PRODUCTION MODE: Use Supabase
     const email = this.generateEmailFromUsername(data.username);
-    
+
     const { error } = await this.supabase.auth.signInWithPassword({
       email,
       password: data.password
@@ -448,17 +304,6 @@ export class AuthService {
    * Sign out current user
    */
   async signOut(): Promise<void> {
-    // MOCK MODE: Clear mock session
-    if (this.isMockMode) {
-      this.clearMockSession();
-      this.currentUserSignal.set(null);
-      this.userProfileSignal.set(null);
-      console.log('🔒 [MOCK MODE] Logged out');
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    // PRODUCTION MODE: Use Supabase
     await this.supabase.auth.signOut();
     this.currentUserSignal.set(null);
     this.userProfileSignal.set(null);

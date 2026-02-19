@@ -7,11 +7,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ActivityService } from '@app/core/services';
+import { AllianceActivitySettingsService } from '@app/core/services/alliance-activity-settings.service';
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
 import { getWeekNumberForWeeksAgo, getDateForWeeksAgo, getWeekStart, getWeekEnd } from '@app/shared/utils/date.util';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
@@ -35,6 +37,7 @@ interface WeekOption {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatSlideToggleModule,
     TranslateModule,
   ],
   templateUrl: './retroactive-activities-tab.component.html',
@@ -43,6 +46,7 @@ interface WeekOption {
 })
 export class RetroactiveActivitiesTabComponent {
   private readonly activityService = inject(ActivityService);
+  private readonly activitySettingsService = inject(AllianceActivitySettingsService);
   private readonly translate = inject(TranslateService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly fb = inject(FormBuilder);
@@ -59,7 +63,8 @@ export class RetroactiveActivitiesTabComponent {
     member: ['', Validators.required],
     week: [0, Validators.required],
     activity: ['', Validators.required],
-    position: [1, [Validators.required, Validators.min(1)]]
+    position: [1, [Validators.required, Validators.min(1)]],
+    participated: [false]
   });
 
   // Convert form value changes to signals
@@ -73,10 +78,26 @@ export class RetroactiveActivitiesTabComponent {
     { initialValue: '' }
   );
 
+  private participatedValue = toSignal(
+    this.retroactiveForm.get('participated')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
+    { initialValue: false }
+  );
+
   private positionValue = toSignal(
     this.retroactiveForm.get('position')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
     { initialValue: 1 }
   );
+
+  // Participation mode (reactive)
+  isParticipationMode = computed(() => {
+    const type = this.activityValue();
+    return type ? this.activitySettingsService.isParticipationMode(type) : false;
+  });
+
+  participationPoints = computed(() => {
+    const type = this.activityValue();
+    return type ? this.activitySettingsService.getParticipationPoints(type) : 5;
+  });
 
   // Error signals for validation
   protected readonly memberError = createFieldErrorSignal(this.retroactiveForm, 'member', this.destroyRef);
@@ -112,6 +133,10 @@ export class RetroactiveActivitiesTabComponent {
   });
 
   calculatedPoints = computed(() => {
+    if (this.isParticipationMode()) {
+      return this.activityValue() ? this.participationPoints() : 0;
+    }
+
     const activity = APP_CONSTANTS.ACTIVITY_TYPES.find((t: ActivityType) => t.value === this.activityValue());
     if (!activity) return 0;
 
@@ -122,7 +147,14 @@ export class RetroactiveActivitiesTabComponent {
   });
 
   canSubmit = computed(() => {
-    return this.retroactiveForm.valid && !this.isSubmitting();
+    if (this.isSubmitting()) return false;
+    const member = this.retroactiveForm.get('member')?.value;
+    const activity = this.activityValue();
+    if (!member || !activity) return false;
+    if (this.isParticipationMode()) {
+      return this.participatedValue();
+    }
+    return this.retroactiveForm.valid;
   });
 
   constructor() {
@@ -132,13 +164,21 @@ export class RetroactiveActivitiesTabComponent {
       .subscribe(() => {
         this.retroactiveForm.patchValue({
           activity: '',
-          position: 1
+          position: 1,
+          participated: false
         }, { emitEvent: false });
+      });
+
+    // Reset participated when activity changes
+    this.retroactiveForm.get('activity')?.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.retroactiveForm.get('participated')?.setValue(false);
       });
   }
 
   async onSubmit(): Promise<void> {
-    if (this.retroactiveForm.invalid || this.isSubmitting()) {
+    if (!this.canSubmit()) {
       this.retroactiveForm.markAllAsTouched();
       return;
     }
@@ -151,7 +191,8 @@ export class RetroactiveActivitiesTabComponent {
 
       await this.activityService.addActivityForMember(formValue.member, {
         activityType: formValue.activity,
-        position: formValue.position,
+        position: this.isParticipationMode() ? null : formValue.position,
+        points: this.isParticipationMode() ? this.participationPoints() : undefined,
         date: activityDate
       });
 
@@ -164,7 +205,8 @@ export class RetroactiveActivitiesTabComponent {
       // Reset form keeping member and week
       this.retroactiveForm.patchValue({
         activity: '',
-        position: 1
+        position: 1,
+        participated: false
       });
 
     } catch (error) {
@@ -184,7 +226,8 @@ export class RetroactiveActivitiesTabComponent {
       member: '',
       week: 0,
       activity: '',
-      position: 1
+      position: 1,
+      participated: false
     });
   }
 }
