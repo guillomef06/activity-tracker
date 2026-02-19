@@ -25,9 +25,7 @@ mat-card-title {
 
 .alliance-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .stat-card {
@@ -65,11 +63,5 @@ mat-card-title {
       font-size: 0.875rem;
       color: var(--md-sys-color-on-surface-variant);
     }
-  }
-}
-
-@media (max-width: 600px) {
-  .alliance-stats {
-    grid-template-columns: 1fr;
   }
 }

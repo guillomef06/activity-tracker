@@ -9,10 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ActivityService } from '@app/core/services';
+import { ActivityService, SnackbarService } from '@app/core/services';
 import { AllianceActivitySettingsService } from '@app/core/services/alliance-activity-settings.service';
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
 import { getWeekNumberForWeeksAgo, getDateForWeeksAgo, getWeekStart, getWeekEnd } from '@app/shared/utils/date.util';
@@ -48,7 +47,7 @@ export class RetroactiveActivitiesTabComponent {
   private readonly activityService = inject(ActivityService);
   private readonly activitySettingsService = inject(AllianceActivitySettingsService);
   private readonly translate = inject(TranslateService);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackbarService = inject(SnackbarService);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -196,11 +195,7 @@ export class RetroactiveActivitiesTabComponent {
         date: activityDate
       });
 
-      this.snackBar.open(
-        this.translate.instant('alliance.retroactive.success'),
-        this.translate.instant('common.close'),
-        { duration: 3000 }
-      );
+      this.snackbarService.success(this.translate.instant('alliance.retroactive.success'));
 
       // Reset form keeping member and week
       this.retroactiveForm.patchValue({
@@ -211,11 +206,7 @@ export class RetroactiveActivitiesTabComponent {
 
     } catch (error) {
       console.error('Error submitting retroactive activity:', error);
-      this.snackBar.open(
-        this.translate.instant('alliance.retroactive.error'),
-        this.translate.instant('common.close'),
-        { duration: 5000 }
-      );
+      this.snackbarService.error(this.translate.instant('alliance.retroactive.error'), 5000);
     } finally {
       this.isSubmitting.set(false);
     }
