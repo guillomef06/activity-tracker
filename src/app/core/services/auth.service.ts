@@ -49,7 +49,11 @@ export class AuthService {
   }
 
   /**
-   * Initialize authentication state on app load
+   * Initialize authentication state on app load.
+   * getSession() handles the initial state (reads from local cache, no network round-trip)
+   * and drives the loadingSignal so guards are unblocked only after the profile is ready.
+   * onAuthStateChange handles all subsequent events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED…)
+   * but skips INITIAL_SESSION to avoid a duplicate user_profiles query.
    */
   private async initializeAuth(): Promise<void> {
     try {
@@ -61,6 +65,8 @@ export class AuthService {
       }
 
       this.supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'INITIAL_SESSION') return;
+
         if (session?.user) {
           this.currentUserSignal.set(session.user);
           await this.loadUserProfile(session.user.id);
