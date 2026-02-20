@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 19 février 2026
+**Dernière mise à jour:** 20 février 2026
 
 ## 📋 Résumé
 
@@ -59,6 +59,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - ✅ **Mode Participation:** Configuration par activité du mode participation (toggle "J'ai participé" au lieu du champ position)
 - ✅ **Alliance Tag:** Identifiant court (3 caractères) par alliance, affiché dans le header comme `[RgW]DisplayName`
 - ✅ **LoadingButtonComponent:** Composant partagé avec spinner, icône et états loading/disabled — migré sur tous les boutons de soumission
+- ✅ **CSS Variables Material 20:** Correction post-migration Angular 20 — tokens snackbar renommés `--mat-snack-bar-*` (avec tiret), et 15 variables `--mat-sys-color-*` alignées sur `--mat-sys-*` dans 16 fichiers SCSS (102 occurrences)
 
 ---
 

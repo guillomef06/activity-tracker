@@ -16,7 +16,7 @@
       font-size: 48px;
       width: 48px;
       height: 48px;
-      color: var(--mat-sys-color-error);
+      color: var(--mat-sys-error);
     }
 
     .header-content {
@@ -99,49 +99,49 @@
 
   &.alliances-card {
     .stat-icon {
-      background-color: var(--mat-sys-color-primary-container);
+      background-color: var(--mat-sys-primary-container);
       mat-icon {
-        color: var(--mat-sys-color-primary);
+        color: var(--mat-sys-primary);
       }
     }
     .stat-value {
-      color: var(--mat-sys-color-primary);
+      color: var(--mat-sys-primary);
     }
   }
 
   &.users-card {
     .stat-icon {
-      background-color: var(--mat-sys-color-secondary-container);
+      background-color: var(--mat-sys-secondary-container);
       mat-icon {
-        color: var(--mat-sys-color-secondary);
+        color: var(--mat-sys-secondary);
       }
     }
     .stat-value {
-      color: var(--mat-sys-color-secondary);
+      color: var(--mat-sys-secondary);
     }
   }
 
   &.activities-card {
     .stat-icon {
-      background-color: var(--mat-sys-color-tertiary-container);
+      background-color: var(--mat-sys-tertiary-container);
       mat-icon {
-        color: var(--mat-sys-color-tertiary);
+        color: var(--mat-sys-tertiary);
       }
     }
     .stat-value {
-      color: var(--mat-sys-color-tertiary);
+      color: var(--mat-sys-tertiary);
     }
   }
 
   &.invitations-card {
     .stat-icon {
-      background-color: var(--mat-sys-color-error-container);
+      background-color: var(--mat-sys-error-container);
       mat-icon {
-        color: var(--mat-sys-color-error);
+        color: var(--mat-sys-error);
       }
     }
     .stat-value {
-      color: var(--mat-sys-color-error);
+      color: var(--mat-sys-error);
     }
   }
 }
@@ -153,7 +153,7 @@
     font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 1rem;
-    color: var(--mat-sys-color-on-surface);
+    color: var(--mat-sys-on-surface);
   }
 }
 
@@ -180,7 +180,7 @@
       font-size: 64px;
       width: 64px;
       height: 64px;
-      color: var(--mat-sys-color-primary);
+      color: var(--mat-sys-primary);
       margin-bottom: 1rem;
     }
 
@@ -188,7 +188,7 @@
       font-size: 1.25rem;
       font-weight: 500;
       margin: 0 0 0.5rem 0;
-      color: var(--mat-sys-color-on-surface);
+      color: var(--mat-sys-on-surface);
     }
 
     p {

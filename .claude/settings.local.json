@@ -17,7 +17,11 @@
       "Bash(npx ng update:*)",
       "Bash(npx ng build:*)",
       "Bash(npm install:*)",
-      "Bash(ng test:*)"
+      "Bash(ng test:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx vitest:*)"
     ]
   }
 }

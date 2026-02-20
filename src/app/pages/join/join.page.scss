@@ -47,12 +47,12 @@ form {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background-color: var(--mat-sys-color-primary-container);
-  color: var(--mat-sys-color-on-primary-container);
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
   border-radius: 4px;
   mat-icon {
     flex-shrink: 0;
-    color: var(--mat-sys-color-primary);
+    color: var(--mat-sys-primary);
   }
 
   div {
@@ -78,8 +78,8 @@ form {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background-color: var(--mat-sys-color-error-container);
-  color: var(--mat-sys-color-on-error-container);
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
   border-radius: 4px;
   font-size: 0.875rem;
 
@@ -87,7 +87,7 @@ form {
     font-size: 20px;
     width: 20px;
     height: 20px;
-    color: var(--mat-sys-color-error);
+    color: var(--mat-sys-error);
   }
 }
 
@@ -104,10 +104,10 @@ button.submit-button {
   p {
     margin: 0.5rem 0;
     font-size: 0.875rem;
-    color: var(--mat-sys-color-on-surface-variant);
+    color: var(--mat-sys-on-surface-variant);
 
     a {
-      color: var(--mat-sys-color-primary);
+      color: var(--mat-sys-primary);
       text-decoration: none;
       font-weight: 500;
 

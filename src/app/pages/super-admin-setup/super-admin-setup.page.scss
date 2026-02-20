@@ -22,7 +22,7 @@
       font-size: 48px;
       width: 48px;
       height: 48px;
-      color: var(--mat-sys-color-primary);
+      color: var(--mat-sys-primary);
       margin-bottom: 1rem;
     }
 
@@ -45,14 +45,14 @@
   gap: 1rem;
   padding: 1rem;
   margin-bottom: 1rem;
-  background-color: var(--mat-sys-color-error-container);
-  color: var(--mat-sys-color-on-error-container);
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
   border-radius: 8px;
-  border-left: 4px solid var(--mat-sys-color-error);
+  border-left: 4px solid var(--mat-sys-error);
 
   mat-icon {
     flex-shrink: 0;
-    color: var(--mat-sys-color-error);
+    color: var(--mat-sys-error);
   }
 
   p {
@@ -77,8 +77,8 @@ form {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background-color: var(--mat-sys-color-error-container);
-  color: var(--mat-sys-color-on-error-container);
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
   border-radius: 4px;
   font-size: 0.875rem;
 
@@ -86,7 +86,7 @@ form {
     font-size: 20px;
     width: 20px;
     height: 20px;
-    color: var(--mat-sys-color-error);
+    color: var(--mat-sys-error);
   }
 }
 
