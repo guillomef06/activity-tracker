@@ -27,7 +27,7 @@
         icon="add"
         [text]="'alliance.settings.createInvitation' | translate"
         [loadingText]="'common.saving' | translate"
-        [loading]="isSubmitting() || isLoading()"
+        [submitting]="isSubmitting()"
         [disabled]="invitationForm.invalid"
         buttonClass="create-invitation-btn"
       />

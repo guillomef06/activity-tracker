@@ -98,7 +98,7 @@
           icon="add"
           [text]="'alliance.settings.pointRules.create' | translate"
           [loadingText]="'common.saving' | translate"
-          [loading]="isSubmitting()"
+          [submitting]="isSubmitting()"
           [disabled]="pointRuleForm.invalid || isLoading()"
         />
       </form>

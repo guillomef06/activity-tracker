@@ -15,7 +15,7 @@ export class LoadingButtonComponent {
   // Inputs
   text = input.required<string>();
   loadingText = input<string>('Loading...');
-  loading = input<boolean>(false);
+  submitting = input<boolean>(false);
   disabled = input<boolean>(false);
   type = input<'button' | 'submit' | 'reset'>('button');
   color = input<'primary' | 'accent' | 'warn' | undefined>('primary');
@@ -26,7 +26,7 @@ export class LoadingButtonComponent {
   clicked = output<void>();
 
   protected handleClick(): void {
-    if (!this.loading() && !this.disabled()) {
+    if (!this.submitting() && !this.disabled()) {
       this.clicked.emit();
     }
   }
