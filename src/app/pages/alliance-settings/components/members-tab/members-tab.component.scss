@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   padding: 3rem 1rem;
-  color: var(--mat-sys-color-on-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
 
   mat-icon {
     font-size: 64px;
@@ -34,7 +34,7 @@
 
   th {
     font-weight: 600;
-    color: var(--mat-sys-color-on-surface);
+    color: var(--mat-sys-on-surface);
   }
 
   td {
@@ -47,7 +47,7 @@
     gap: 0.5rem;
 
     mat-icon {
-      color: var(--mat-sys-color-primary);
+      color: var(--mat-sys-primary);
       font-size: 20px;
       width: 20px;
       height: 20px;
@@ -59,19 +59,19 @@
   }
 
   .username {
-    color: var(--mat-sys-color-on-surface-variant);
+    color: var(--mat-sys-on-surface-variant);
     font-family: monospace;
   }
 
   mat-chip {
     &.role-admin {
-      background-color: var(--mat-sys-color-primary-container);
-      color: var(--mat-sys-color-on-primary-container);
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
     }
 
     &.role-member {
-      background-color: var(--mat-sys-color-secondary-container);
-      color: var(--mat-sys-color-on-secondary-container);
+      background-color: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
     }
   }
 }

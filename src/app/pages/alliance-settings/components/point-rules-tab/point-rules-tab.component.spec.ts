@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi, Mocked } from 'vitest';
 import { PointRulesTabComponent } from './point-rules-tab.component';
 import { PointRulesService } from '@app/core/services/point-rules.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,12 +8,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 describe('PointRulesTabComponent', () => {
   let component: PointRulesTabComponent;
   let fixture: ComponentFixture<PointRulesTabComponent>;
-  let pointRulesService: jasmine.SpyObj<PointRulesService>;
+  let pointRulesService: Mocked<PointRulesService>;
 
   beforeEach(async () => {
-    const pointRulesServiceSpy = jasmine.createSpyObj('PointRulesService', ['createRule', 'deleteRule']);
-    pointRulesServiceSpy.createRule.and.returnValue(Promise.resolve({ error: null }));
-    pointRulesServiceSpy.deleteRule.and.returnValue(Promise.resolve({ error: null }));
+    const pointRulesServiceSpy = {
+      createRule: vi.fn().mockResolvedValue({ error: null }),
+      deleteRule: vi.fn().mockResolvedValue({ error: null }),
+    };
 
     await TestBed.configureTestingModule({
       imports: [PointRulesTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
@@ -23,12 +25,12 @@ describe('PointRulesTabComponent', () => {
 
     fixture = TestBed.createComponent(PointRulesTabComponent);
     component = fixture.componentInstance;
-    pointRulesService = TestBed.inject(PointRulesService) as jasmine.SpyObj<PointRulesService>;
-    
+    pointRulesService = TestBed.inject(PointRulesService) as unknown as Mocked<PointRulesService>;
+
     // Set required inputs
     fixture.componentRef.setInput('pointRules', []);
     fixture.componentRef.setInput('isLoading', false);
-    
+
     fixture.detectChanges();
   });
 
@@ -51,9 +53,9 @@ describe('PointRulesTabComponent', () => {
       position_max: 10,
       points: 50,
     });
-    
+
     await component['createPointRule']();
-    
+
     expect(pointRulesService.createRule).toHaveBeenCalledWith({
       activity_type: 'development',
       position_min: 1,
@@ -69,9 +71,9 @@ describe('PointRulesTabComponent', () => {
       position_max: 1,
       points: 50,
     });
-    
+
     await component['createPointRule']();
-    
+
     expect(pointRulesService.createRule).not.toHaveBeenCalled();
   });
 
@@ -79,5 +81,4 @@ describe('PointRulesTabComponent', () => {
     const label = component['getActivityTypeLabel']('development');
     expect(label).toBeDefined();
   });
-
 });

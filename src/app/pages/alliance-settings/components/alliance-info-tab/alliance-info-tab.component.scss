@@ -36,7 +36,7 @@ mat-card-title {
     font-size: 32px;
     width: 32px;
     height: 32px;
-    color: var(--mat-sys-color-primary);
+    color: var(--mat-sys-primary);
   }
 
   .stat-content {
@@ -47,12 +47,12 @@ mat-card-title {
     .stat-value {
       font-size: 1.75rem;
       font-weight: 600;
-      color: var(--mat-sys-color-on-surface);
+      color: var(--mat-sys-on-surface);
     }
 
     .stat-label {
       font-size: 0.875rem;
-      color: var(--mat-sys-color-on-surface-variant);
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 }

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { LoginPage } from './login.page';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
@@ -11,7 +12,7 @@ describe('LoginPage', () => {
   let fixture: ComponentFixture<LoginPage>;
 
   beforeEach(async () => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['login']);
+    const authServiceSpy = { login: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [LoginPage, TranslateModule.forRoot()],
@@ -33,25 +34,25 @@ describe('LoginPage', () => {
   });
 
   it('should have a valid form with username and password', () => {
-    expect(component['loginForm'].valid).toBeFalse();
-    
+    expect(component['loginForm'].valid).toBe(false);
+
     component['loginForm'].patchValue({
       username: 'testuser',
       password: 'password123',
     });
 
-    expect(component['loginForm'].valid).toBeTrue();
+    expect(component['loginForm'].valid).toBe(true);
   });
 
   it('should require username', () => {
     const usernameControl = component['loginForm'].get('username');
     usernameControl?.setValue('');
-    expect(usernameControl?.hasError('required')).toBeTrue();
+    expect(usernameControl?.hasError('required')).toBe(true);
   });
 
   it('should require password', () => {
     const passwordControl = component['loginForm'].get('password');
     passwordControl?.setValue('');
-    expect(passwordControl?.hasError('required')).toBeTrue();
+    expect(passwordControl?.hasError('required')).toBe(true);
   });
 });

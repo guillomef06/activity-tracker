@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { ActivityInputPage } from './activity-input.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -13,22 +14,22 @@ import { signal } from '@angular/core';
 describe('ActivityInputPage', () => {
   let component: ActivityInputPage;
   let fixture: ComponentFixture<ActivityInputPage>;
-  let pointRulesService: jasmine.SpyObj<PointRulesService>;
+  let pointRulesService: { calculatePoints: ReturnType<typeof vi.fn>; loadRules: ReturnType<typeof vi.fn>; rules: ReturnType<typeof signal> };
 
   beforeEach(async () => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getUserId', 'isAuthenticated'], {
+    const authServiceSpy = {
+      getUserId: vi.fn().mockReturnValue('test-user'),
+      isAuthenticated: vi.fn().mockReturnValue(true),
       userProfile: signal({ id: 'test-user', display_name: 'Test User', username: 'testuser' }),
-    });
-    
-    const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', ['from']);
-    const pointRulesServiceSpy = jasmine.createSpyObj('PointRulesService', ['calculatePoints', 'loadRules'], {
+    };
+
+    const supabaseServiceSpy = { from: vi.fn() };
+
+    const pointRulesServiceSpy = {
+      calculatePoints: vi.fn().mockReturnValue({ points: 15, source: 'default', usedFallback: false }),
+      loadRules: vi.fn().mockResolvedValue({ error: null }),
       rules: signal([]),
-    });
-    
-    authServiceSpy.isAuthenticated.and.returnValue(true);
-    authServiceSpy.getUserId.and.returnValue('test-user');
-    pointRulesServiceSpy.calculatePoints.and.returnValue({ points: 15, source: 'default', usedFallback: false });
-    pointRulesServiceSpy.loadRules.and.returnValue(Promise.resolve({ error: null }));
+    };
 
     await TestBed.configureTestingModule({
       imports: [
@@ -48,7 +49,7 @@ describe('ActivityInputPage', () => {
 
     fixture = TestBed.createComponent(ActivityInputPage);
     component = fixture.componentInstance;
-    pointRulesService = TestBed.inject(PointRulesService) as jasmine.SpyObj<PointRulesService>;
+    pointRulesService = TestBed.inject(PointRulesService) as unknown as typeof pointRulesServiceSpy;
     fixture.detectChanges();
   });
 

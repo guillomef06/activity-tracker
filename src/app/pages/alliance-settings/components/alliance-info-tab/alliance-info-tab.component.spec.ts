@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi, Mocked } from 'vitest';
 import { AllianceInfoTabComponent } from './alliance-info-tab.component';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,11 +8,12 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 describe('AllianceInfoTabComponent', () => {
   let component: AllianceInfoTabComponent;
   let fixture: ComponentFixture<AllianceInfoTabComponent>;
-  let allianceService: jasmine.SpyObj<AllianceService>;
+  let allianceService: Mocked<AllianceService>;
 
   beforeEach(async () => {
-    const allianceServiceSpy = jasmine.createSpyObj('AllianceService', ['updateAlliance']);
-    allianceServiceSpy.updateAlliance.and.returnValue(Promise.resolve({ error: null }));
+    const allianceServiceSpy = {
+      updateAlliance: vi.fn().mockResolvedValue({ error: null }),
+    };
 
     await TestBed.configureTestingModule({
       imports: [AllianceInfoTabComponent, TranslateModule.forRoot()],
@@ -23,7 +25,7 @@ describe('AllianceInfoTabComponent', () => {
 
     fixture = TestBed.createComponent(AllianceInfoTabComponent);
     component = fixture.componentInstance;
-    allianceService = TestBed.inject(AllianceService) as jasmine.SpyObj<AllianceService>;
+    allianceService = TestBed.inject(AllianceService) as unknown as Mocked<AllianceService>;
 
     // Set required inputs
     fixture.componentRef.setInput('alliance', { id: '1', name: 'Test Alliance', tag: null, created_at: new Date().toISOString() });

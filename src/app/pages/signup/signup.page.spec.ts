@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { SignupPage } from './signup.page';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
@@ -11,7 +12,7 @@ describe('SignupPage', () => {
   let fixture: ComponentFixture<SignupPage>;
 
   beforeEach(async () => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['signupAdmin']);
+    const authServiceSpy = { signupAdmin: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [SignupPage, TranslateModule.forRoot()],
@@ -33,8 +34,8 @@ describe('SignupPage', () => {
   });
 
   it('should have a valid form with all required fields', () => {
-    expect(component['signupForm'].valid).toBeFalse();
-    
+    expect(component['signupForm'].valid).toBe(false);
+
     component['signupForm'].patchValue({
       username: 'newadmin',
       password: 'SecurePassword123!',
@@ -43,7 +44,7 @@ describe('SignupPage', () => {
       allianceName: 'Test Alliance',
     });
 
-    expect(component['signupForm'].valid).toBeTrue();
+    expect(component['signupForm'].valid).toBe(true);
   });
 
   it('should validate password match', () => {
@@ -55,6 +56,6 @@ describe('SignupPage', () => {
       allianceName: 'Alliance',
     });
 
-    expect(component['signupForm'].hasError('passwordMismatch')).toBeTrue();
+    expect(component['signupForm'].hasError('passwordMismatch')).toBe(true);
   });
 });

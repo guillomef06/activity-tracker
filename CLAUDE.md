@@ -4,14 +4,29 @@
 Angular activity tracking application with mobile-first design for GitHub Pages deployment.
 Users input activities, management views scores on rolling 6-week basis.
 
+---
+
+## ⚠️ DEFINITION OF DONE — OBLIGATOIRE AVANT TOUTE FIN DE TÂCHE
+
+**Claude ne peut pas déclarer une tâche terminée sans avoir effectué ces étapes dans l'ordre :**
+
+1. [ ] **Tests mis à jour** — tout fichier modifié ou créé a son `.spec.ts` correspondant à jour
+2. [ ] **`DEVELOPMENT_STATUS.md` mis à jour** — feature marquée comme complète, nouveaux fichiers listés, limitations connues notées
+3. [ ] **Aucune régression** — les tests existants passent toujours
+
+> Ces étapes sont non négociables. Si elles ne sont pas réalisées, la tâche n'est pas terminée.
+
+---
+
 ## Critical Rules
 
 ### Component File Structure
 - **ALWAYS use separate files** for TS, HTML, and SCSS (never inline templates/styles)
-- Each component requires 3 files:
+- Each component requires 4 files:
   - `component-name.component.ts` - Logic
   - `component-name.component.html` - Template
   - `component-name.component.scss` - Styles
+  - `component-name.component.spec.ts` - Tests
 - Use `templateUrl` and `styleUrl`, never inline `template` or `styles`
 - Organize in dedicated folders:
   ```
@@ -25,6 +40,11 @@ Users input activities, management views scores on rolling 6-week basis.
 ### Strict Prohibitions
 - **NEVER use `::ng-deep`** - Use proper Angular encapsulation or global styles
 - **NEVER use functions in templates** (e.g., `{{ myFunction() }}` or `[prop]="myFunction()"`). Use signals, variables, or getters instead
+
+### Tests
+- **Tout nouveau composant ou service doit avoir un fichier `.spec.ts`**
+- **Toute modification de logique métier doit se refléter dans les tests existants**
+- Les tests doivent couvrir les cas nominaux et les cas d'erreur principaux
 
 ### Material Design First
 - **Always prefer Material components** over custom HTML when available
@@ -91,8 +111,6 @@ src/app/
 - Touch-friendly UI (min 44px touch targets)
 - Use CSS Grid/Flexbox for responsive layouts
 - Use relative units (rem, em, %) over px
-- Test on mobile, tablet, desktop viewports
-- Consider PWA for offline support
 
 ## Performance
 - Lazy load routes
@@ -130,27 +148,6 @@ src/app/
 - Comments explain "why", not "what"
 - Use ESLint/Prettier
 
-## Development Commands
-
-```bash
-# Development server
-npm start
-# or
-ng serve
-
-# Production build
-ng build --configuration production
-
-# Run tests
-ng test
-
-# Lint code
-ng lint
-
-# Update dependencies
-ng update
-```
-
 ## Git Workflow
 - Clear, concise commit messages
 - Atomic, focused commits
@@ -165,9 +162,3 @@ ng update
 - Respect SOLID and YAGNI
 - Follow established patterns
 - Test changes thoroughly
-
-## Feature Completion Checklist
-When a feature is fully implemented, **always update `DEVELOPMENT_STATUS.md`**:
-- Mark the feature as completed
-- Add any relevant notes (new files, migrations, known limitations)
-- Keep the status file accurate so it reflects the current state of the project

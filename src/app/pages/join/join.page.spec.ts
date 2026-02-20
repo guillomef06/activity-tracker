@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { JoinPage } from './join.page';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
@@ -11,7 +12,7 @@ describe('JoinPage', () => {
   let fixture: ComponentFixture<JoinPage>;
 
   beforeEach(async () => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['joinWithInvitation']);
+    const authServiceSpy = { joinWithInvitation: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [JoinPage, TranslateModule.forRoot()],
@@ -33,8 +34,8 @@ describe('JoinPage', () => {
   });
 
   it('should have a valid form with all required fields', () => {
-    expect(component['joinForm'].valid).toBeFalse();
-    
+    expect(component['joinForm'].valid).toBe(false);
+
     component['joinForm'].patchValue({
       token: 'abc123',
       username: 'newmember',
@@ -43,7 +44,7 @@ describe('JoinPage', () => {
       displayName: 'New Member',
     });
 
-    expect(component['joinForm'].valid).toBeTrue();
+    expect(component['joinForm'].valid).toBe(true);
   });
 
   it('should validate password match', () => {
@@ -55,6 +56,6 @@ describe('JoinPage', () => {
       displayName: 'Member',
     });
 
-    expect(component['joinForm'].hasError('passwordMismatch')).toBeTrue();
+    expect(component['joinForm'].hasError('passwordMismatch')).toBe(true);
   });
 });

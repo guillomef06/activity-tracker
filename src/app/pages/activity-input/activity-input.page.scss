@@ -10,13 +10,14 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background-color: var(--mat-sys-color-surface-variant);
+  background-color: var(--mat-sys-surface-variant);
   border-radius: 8px;
   font-size: 1rem;
-  color: var(--mat-sys-color-on-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 1rem;
 
   mat-icon {
-    color: var(--mat-sys-color-primary);
+    color: var(--mat-sys-primary);
   }
 
   span {
@@ -53,15 +54,15 @@ form {
   padding: 0 1rem;
   margin-bottom: 1rem;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--mat-sys-color-primary-container) 0%, var(--mat-sys-color-tertiary-container) 100%);
-  color: var(--mat-sys-color-on-primary-container);
+  background: linear-gradient(135deg, var(--mat-sys-primary-container) 0%, var(--mat-sys-tertiary-container) 100%);
+  color: var(--mat-sys-on-primary-container);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   mat-icon {
     font-size: 32px;
     width: 32px;
     height: 32px;
-    color: var(--mat-sys-color-primary);
+    color: var(--mat-sys-primary);
   }
 
   .points-info {

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { SuperAdminUsersPage } from './super-admin-users.page';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { provideRouter } from '@angular/router';
@@ -11,29 +12,29 @@ describe('SuperAdminUsersPage', () => {
   let fixture: ComponentFixture<SuperAdminUsersPage>;
 
   beforeEach(async () => {
-    const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', [], {
+    const supabaseServiceSpy = {
       client: {
-        from: jasmine.createSpy('from').and.returnValue({
-          select: jasmine.createSpy('select').and.returnValue({
-            order: jasmine.createSpy('order').and.returnValue(
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnValue({
+            order: vi.fn().mockReturnValue(
               Promise.resolve({ data: [], error: null })
             ),
           }),
-          update: jasmine.createSpy('update').and.returnValue({
-            eq: jasmine.createSpy('eq').and.returnValue(
+          update: vi.fn().mockReturnValue({
+            eq: vi.fn().mockReturnValue(
               Promise.resolve({ error: null })
             ),
           }),
         }),
         auth: {
           admin: {
-            deleteUser: jasmine.createSpy('deleteUser').and.returnValue(
+            deleteUser: vi.fn().mockReturnValue(
               Promise.resolve({ error: null })
             ),
           },
         },
       },
-    });
+    };
 
     await TestBed.configureTestingModule({
       imports: [SuperAdminUsersPage, TranslateModule.forRoot()],
