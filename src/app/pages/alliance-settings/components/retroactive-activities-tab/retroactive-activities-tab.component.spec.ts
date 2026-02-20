@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi, Mocked } from 'vitest';
 import { RetroactiveActivitiesTabComponent } from './retroactive-activities-tab.component';
 import { ActivityService } from '@app/core/services';
 import { TranslateModule } from '@ngx-translate/core';
@@ -8,12 +9,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 describe('RetroactiveActivitiesTabComponent', () => {
   let component: RetroactiveActivitiesTabComponent;
   let fixture: ComponentFixture<RetroactiveActivitiesTabComponent>;
-  let activityServiceSpy: jasmine.SpyObj<ActivityService>;
-  let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
+  let activityServiceSpy: { addActivityForMember: ReturnType<typeof vi.fn> };
+  let snackBarSpy: { open: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    activityServiceSpy = jasmine.createSpyObj('ActivityService', ['addActivityForMember']);
-    snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
+    activityServiceSpy = { addActivityForMember: vi.fn() };
+    snackBarSpy = { open: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [
@@ -29,13 +30,13 @@ describe('RetroactiveActivitiesTabComponent', () => {
 
     fixture = TestBed.createComponent(RetroactiveActivitiesTabComponent);
     component = fixture.componentInstance;
-    
+
     // Set required input
     fixture.componentRef.setInput('members', [
       { id: 'user1', display_name: 'John Doe', username: 'john' },
       { id: 'user2', display_name: 'Jane Doe', username: 'jane' }
     ]);
-    
+
     fixture.detectChanges();
   });
 
@@ -87,7 +88,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
   }); */
 
   /* it('should call activityService.addActivityForMember on submit', async () => {
-    activityServiceSpy.addActivityForMember.and.returnValue(Promise.resolve({ error: null }));
+    activityServiceSpy.addActivityForMember.mockResolvedValue({ error: null });
 
     component['retroactiveForm'].patchValue({ member: 'user1', activity: 'legion', position: 3, week: 0 });
 
@@ -95,16 +96,16 @@ describe('RetroactiveActivitiesTabComponent', () => {
 
     expect(activityServiceSpy.addActivityForMember).toHaveBeenCalledWith(
       'user1',
-      jasmine.objectContaining({
+      expect.objectContaining({
         activityType: 'legion',
         position: 3,
-        date: jasmine.any(Date)
+        date: expect.any(Date)
       })
     );
   }); */
 
   it('should show success message after successful submission', async () => {
-    activityServiceSpy.addActivityForMember.and.returnValue(Promise.resolve({ error: null }));
+    activityServiceSpy.addActivityForMember.mockResolvedValue({ error: null });
 
     component['retroactiveForm'].patchValue({ member: 'user1', activity: 'legion', position: 3 });
 
@@ -114,7 +115,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
   });
 
   it('should reset activity and position after successful submission', async () => {
-    activityServiceSpy.addActivityForMember.and.returnValue(Promise.resolve({ error: null }));
+    activityServiceSpy.addActivityForMember.mockResolvedValue({ error: null });
 
     component['retroactiveForm'].patchValue({ member: 'user1', activity: 'legion', position: 3 });
 

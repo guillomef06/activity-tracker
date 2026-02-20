@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { SuperAdminAlliancesPage } from './super-admin-alliances.page';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { provideRouter } from '@angular/router';
@@ -13,31 +14,31 @@ describe('SuperAdminAlliancesPage', () => {
   beforeEach(async () => {
     // Create a chainable mock for Supabase client
     interface MockQueryBuilder {
-      select: jasmine.Spy;
-      order: jasmine.Spy;
-      eq: jasmine.Spy;
-      limit: jasmine.Spy;
-      single: jasmine.Spy;
-      update: jasmine.Spy;
-      delete: jasmine.Spy;
+      select: ReturnType<typeof vi.fn>;
+      order: ReturnType<typeof vi.fn>;
+      eq: ReturnType<typeof vi.fn>;
+      limit: ReturnType<typeof vi.fn>;
+      single: ReturnType<typeof vi.fn>;
+      update: ReturnType<typeof vi.fn>;
+      delete: ReturnType<typeof vi.fn>;
       then: (resolve: (value: { data: unknown[]; count: number; error: null }) => void) => void;
     }
-    
+
     const mockQueryBuilder = {} as MockQueryBuilder;
-    mockQueryBuilder.select = jasmine.createSpy('select').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.order = jasmine.createSpy('order').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.eq = jasmine.createSpy('eq').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.limit = jasmine.createSpy('limit').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.single = jasmine.createSpy('single').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.update = jasmine.createSpy('update').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.delete = jasmine.createSpy('delete').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.select = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.order = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.eq = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.limit = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.single = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.update = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.delete = vi.fn().mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.then = (resolve) => { resolve({ data: [], count: 0, error: null }); };
 
-    const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', [], {
+    const supabaseServiceSpy = {
       client: {
-        from: jasmine.createSpy('from').and.returnValue(mockQueryBuilder),
+        from: vi.fn().mockReturnValue(mockQueryBuilder),
       },
-    });
+    };
 
     await TestBed.configureTestingModule({
       imports: [SuperAdminAlliancesPage, TranslateModule.forRoot()],

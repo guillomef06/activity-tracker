@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { SuperAdminSetupPage } from './super-admin-setup.page';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
@@ -11,7 +12,7 @@ describe('SuperAdminSetupPage', () => {
   let fixture: ComponentFixture<SuperAdminSetupPage>;
 
   beforeEach(async () => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['setupSuperAdmin']);
+    const authServiceSpy = { setupSuperAdmin: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [SuperAdminSetupPage, TranslateModule.forRoot()],
@@ -33,8 +34,8 @@ describe('SuperAdminSetupPage', () => {
   });
 
   it('should have a valid form with required fields', () => {
-    expect(component['setupForm'].valid).toBeFalse();
-    
+    expect(component['setupForm'].valid).toBe(false);
+
     component['setupForm'].patchValue({
       username: 'superadmin',
       password: 'SecurePassword123!',
@@ -42,7 +43,7 @@ describe('SuperAdminSetupPage', () => {
       displayName: 'Super Administrator',
     });
 
-    expect(component['setupForm'].valid).toBeTrue();
+    expect(component['setupForm'].valid).toBe(true);
   });
 
   it('should validate password match', () => {
@@ -53,6 +54,6 @@ describe('SuperAdminSetupPage', () => {
       displayName: 'Super Admin',
     });
 
-    expect(component['setupForm'].hasError('passwordMismatch')).toBeTrue();
+    expect(component['setupForm'].hasError('passwordMismatch')).toBe(true);
   });
 });

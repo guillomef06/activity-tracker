@@ -5,7 +5,8 @@
 @use 'sass:meta';
 
 // Include Material core styles
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Define light theme
 $light-theme: mat.define-theme(
@@ -51,19 +52,19 @@ html {
 
   // M3 component customizations (shapes only)
   .mat-mdc-card {
-    --mdc-elevated-card-container-shape: 16px;
+    --mat-card-elevated-container-shape: 16px;
   }
 
   .mat-mdc-button {
-    --mdc-text-button-container-shape: 20px;
+    --mat-button-text-container-shape: 20px;
   }
 
   .mat-mdc-raised-button {
-    --mdc-protected-button-container-shape: 20px;
+    --mat-button-protected-container-shape: 20px;
   }
 
   .mat-mdc-outlined-button {
-    --mdc-outlined-button-container-shape: 20px;
+    --mat-button-outlined-container-shape: 20px;
   }
 
   .mat-expansion-panel {
@@ -71,7 +72,7 @@ html {
   }
 
   .mdc-chip {
-    --mdc-chip-container-shape-radius: 8px;
+    --mat-chip-container-shape-radius: 8px;
   }
 }
 
@@ -190,14 +191,14 @@ mat-form-field .mat-mdc-form-field-icon-prefix {
 
 /* Snackbar variants */
 mat-snack-bar-container.success-snackbar {
-  --mdc-snackbar-container-color: var(--mat-sys-success-container);
-  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-success-container);
+  --mat-snackbar-container-color: var(--mat-sys-success-container);
+  --mat-snackbar-supporting-text-color: var(--mat-sys-on-success-container);
   --mat-snack-bar-button-color: var(--mat-sys-success);
 }
 
 mat-snack-bar-container.error-snackbar {
-  --mdc-snackbar-container-color: var(--mat-sys-error-container);
-  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error-container);
+  --mat-snackbar-container-color: var(--mat-sys-error-container);
+  --mat-snackbar-supporting-text-color: var(--mat-sys-on-error-container);
   --mat-snack-bar-button-color: var(--mat-sys-error);
 }
 
