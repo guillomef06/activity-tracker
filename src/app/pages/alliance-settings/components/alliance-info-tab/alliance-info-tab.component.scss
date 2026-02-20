@@ -2,33 +2,30 @@
   margin: 1rem 0;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .full-width {
   width: 100%;
-  margin-bottom: 1rem;
 }
 
 mat-card-title {
   padding-bottom: 1rem;
 }
 
-.form-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-start;
-}
-
 .alliance-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
 }
 
 .stat-card {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.5rem;
-  background-color: var(--md-sys-color-surface-variant);
-  border-radius: 12px;
+  padding: 1rem;
   transition: transform 0.2s ease;
 
   &:hover {
@@ -39,7 +36,7 @@ mat-card-title {
     font-size: 32px;
     width: 32px;
     height: 32px;
-    color: var(--md-sys-color-primary);
+    color: var(--mat-sys-color-primary);
   }
 
   .stat-content {
@@ -50,12 +47,12 @@ mat-card-title {
     .stat-value {
       font-size: 1.75rem;
       font-weight: 600;
-      color: var(--md-sys-color-on-surface);
+      color: var(--mat-sys-color-on-surface);
     }
 
     .stat-label {
       font-size: 0.875rem;
-      color: var(--md-sys-color-on-surface-variant);
+      color: var(--mat-sys-color-on-surface-variant);
     }
   }
 }

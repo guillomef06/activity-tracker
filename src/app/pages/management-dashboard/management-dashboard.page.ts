@@ -71,8 +71,4 @@ export class ManagementDashboardPage implements OnInit {
   goToActivityInput(): void {
     this.router.navigate(['/']);
   }
-
-  refresh(): void {
-    this.initialize();
-  }
 }

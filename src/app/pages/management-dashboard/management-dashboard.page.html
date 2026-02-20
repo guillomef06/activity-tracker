@@ -2,17 +2,9 @@
   <div class="header-actions">
     <h2>{{ 'dashboard.title' | translate }}</h2>
     <div class="actions">
-      <button mat-stroked-button (click)="refresh()">
-        <mat-icon>refresh</mat-icon>
-        {{ 'dashboard.refresh' | translate }}
-      </button>
       <button mat-stroked-button (click)="viewAllDetails()">
         <mat-icon>view_list</mat-icon>
         {{ 'dashboard.viewAllDetails' | translate }}
-      </button>
-      <button mat-raised-button (click)="goToActivityInput()">
-        <mat-icon>add</mat-icon>
-        {{ 'dashboard.addActivity' | translate }}
       </button>
     </div>
   </div>

@@ -1,11 +1,11 @@
 .alliance-settings-container {
-  padding: 1.5rem;
+  padding: 1.0rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .page-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 
   mat-card-header {
     display: flex;
@@ -16,7 +16,7 @@
       font-size: 40px;
       width: 40px;
       height: 40px;
-      color: var(--md-sys-color-primary);
+      color: var(--mat-sys-color-primary);
     }
 
     .header-content {
@@ -30,20 +30,6 @@
         opacity: 0.8;
       }
     }
-  }
-}
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  gap: 1rem;
-
-  p {
-    margin: 0;
-    opacity: 0.7;
   }
 }
 

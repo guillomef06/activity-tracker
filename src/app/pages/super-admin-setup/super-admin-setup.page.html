@@ -14,6 +14,7 @@
 
       <form [formGroup]="setupForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>person</mat-icon>
           <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
@@ -22,7 +23,6 @@
             autocomplete="username"
             [placeholder]="'auth.usernamePlaceholder' | translate"
           />
-          <mat-icon matPrefix>person</mat-icon>
           <mat-hint>{{ 'auth.usernameHint' | translate }}</mat-hint>
           @if (usernameError()) {
             <mat-error>{{ usernameError() | translate }}</mat-error>
@@ -30,6 +30,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>badge</mat-icon>
           <mat-label>{{ 'auth.displayName' | translate }}</mat-label>
           <input
             matInput
@@ -38,7 +39,6 @@
             autocomplete="name"
             [placeholder]="'auth.displayNamePlaceholder' | translate"
           />
-          <mat-icon matPrefix>badge</mat-icon>
           <mat-hint>{{ 'auth.displayNameHint' | translate }}</mat-hint>
           @if (displayNameError()) {
             <mat-error>{{ displayNameError() | translate }}</mat-error>
@@ -46,6 +46,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>lock</mat-icon>
           <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
@@ -54,7 +55,6 @@
             autocomplete="new-password"
             [placeholder]="'auth.passwordPlaceholder' | translate"
           />
-          <mat-icon matPrefix>lock</mat-icon>
           <button
             mat-icon-button
             matSuffix
@@ -72,6 +72,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>lock_outline</mat-icon>
           <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
           <input
             matInput
@@ -80,7 +81,6 @@
             autocomplete="new-password"
             [placeholder]="'auth.confirmPasswordPlaceholder' | translate"
           />
-          <mat-icon matPrefix>lock_outline</mat-icon>
           <button
             mat-icon-button
             matSuffix
@@ -103,15 +103,13 @@
           </div>
         }
 
-        <div class="actions">
-          <app-loading-button
-            type="submit"
-            [text]="'auth.createSuperAdmin' | translate"
-            [loadingText]="'auth.creating' | translate"
-            [loading]="isLoading()"
-            buttonClass="submit-button"
-          />
-        </div>
+        <app-loading-button
+          type="submit"
+          [text]="'auth.createSuperAdmin' | translate"
+          [loadingText]="'auth.creating' | translate"
+          [loading]="isLoading()"
+          buttonClass="submit-button"
+        />
       </form>
     </mat-card-content>
   </mat-card>

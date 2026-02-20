@@ -1,11 +1,11 @@
 .retroactive-tab-container {
-  padding: 1.5rem;
+  padding: 1rem;
   max-width: 800px;
   margin: 0 auto;
 }
 
 .info-card {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 
   mat-card-content {
     p {
@@ -18,7 +18,7 @@
 
 .form-card {
   mat-card-content {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 }
 
@@ -37,7 +37,7 @@ form {
   align-items: center;
   padding: 1rem;
   border-radius: 8px;
-  background-color: var(--md-sys-color-surface-variant);
+  background-color: var(--mat-sys-color-surface-variant);
 }
 
 .points-preview {
@@ -68,7 +68,6 @@ form {
 .form-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
   flex-wrap: wrap;
 
   button {

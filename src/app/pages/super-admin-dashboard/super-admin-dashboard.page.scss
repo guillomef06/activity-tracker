@@ -1,5 +1,5 @@
 .super-admin-dashboard {
-  padding: 1.5rem;
+  padding: 1rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -16,7 +16,7 @@
       font-size: 48px;
       width: 48px;
       height: 48px;
-      color: var(--md-sys-color-error);
+      color: var(--mat-sys-color-error);
     }
 
     .header-content {
@@ -52,7 +52,7 @@
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -60,8 +60,8 @@
   mat-card-content {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    padding: 1.5rem !important;
+    gap: 1rem;
+    padding: 1rem !important;
   }
 
   .stat-icon {
@@ -99,49 +99,49 @@
 
   &.alliances-card {
     .stat-icon {
-      background-color: var(--md-sys-color-primary-container);
+      background-color: var(--mat-sys-color-primary-container);
       mat-icon {
-        color: var(--md-sys-color-primary);
+        color: var(--mat-sys-color-primary);
       }
     }
     .stat-value {
-      color: var(--md-sys-color-primary);
+      color: var(--mat-sys-color-primary);
     }
   }
 
   &.users-card {
     .stat-icon {
-      background-color: var(--md-sys-color-secondary-container);
+      background-color: var(--mat-sys-color-secondary-container);
       mat-icon {
-        color: var(--md-sys-color-secondary);
+        color: var(--mat-sys-color-secondary);
       }
     }
     .stat-value {
-      color: var(--md-sys-color-secondary);
+      color: var(--mat-sys-color-secondary);
     }
   }
 
   &.activities-card {
     .stat-icon {
-      background-color: var(--md-sys-color-tertiary-container);
+      background-color: var(--mat-sys-color-tertiary-container);
       mat-icon {
-        color: var(--md-sys-color-tertiary);
+        color: var(--mat-sys-color-tertiary);
       }
     }
     .stat-value {
-      color: var(--md-sys-color-tertiary);
+      color: var(--mat-sys-color-tertiary);
     }
   }
 
   &.invitations-card {
     .stat-icon {
-      background-color: var(--md-sys-color-error-container);
+      background-color: var(--mat-sys-color-error-container);
       mat-icon {
-        color: var(--md-sys-color-error);
+        color: var(--mat-sys-color-error);
       }
     }
     .stat-value {
-      color: var(--md-sys-color-error);
+      color: var(--mat-sys-color-error);
     }
   }
 }
@@ -152,15 +152,15 @@
   h2 {
     font-size: 1.5rem;
     font-weight: 500;
-    margin-bottom: 1.5rem;
-    color: var(--md-sys-color-on-surface);
+    margin-bottom: 1rem;
+    color: var(--mat-sys-color-on-surface);
   }
 }
 
 .actions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .action-card {
@@ -180,7 +180,7 @@
       font-size: 64px;
       width: 64px;
       height: 64px;
-      color: var(--md-sys-color-primary);
+      color: var(--mat-sys-color-primary);
       margin-bottom: 1rem;
     }
 
@@ -188,7 +188,7 @@
       font-size: 1.25rem;
       font-weight: 500;
       margin: 0 0 0.5rem 0;
-      color: var(--md-sys-color-on-surface);
+      color: var(--mat-sys-color-on-surface);
     }
 
     p {
@@ -207,7 +207,7 @@
   }
 
   .page-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 
     mat-card-header {
       .header-icon {
