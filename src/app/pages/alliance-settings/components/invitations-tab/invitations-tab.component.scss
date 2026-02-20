@@ -82,7 +82,7 @@ mat-card-title {
 
       .token-code {
         font-family: 'Courier New', monospace;
-        background-color: var(--md-sys-color-surface-variant);
+        background-color: var(--mat-sys-color-surface-variant);
         padding: 0.25rem 0.5rem;
         border-radius: 4px;
         font-size: 0.875rem;
@@ -103,7 +103,7 @@ mat-card-title {
       display: flex;
       justify-content: space-between;
       padding: 0.5rem 0;
-      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      border-bottom: 1px solid var(--mat-sys-color-outline-variant);
 
       .detail-label {
         font-weight: 600;
@@ -122,7 +122,7 @@ mat-card-title {
         margin: 0 0 1rem 0;
         font-size: 1rem;
         font-weight: 600;
-        color: var(--md-sys-color-primary);
+        color: var(--mat-sys-color-primary);
       }
 
       mat-list {
@@ -130,7 +130,7 @@ mat-card-title {
       }
 
       mat-list-item {
-        border-bottom: 1px solid var(--md-sys-color-outline-variant);
+        border-bottom: 1px solid var(--mat-sys-color-outline-variant);
 
         &:last-child {
           border-bottom: none;
@@ -154,13 +154,13 @@ mat-card-title {
 
 mat-chip {
   &.status-active {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+    background-color: var(--mat-sys-color-primary-container);
+    color: var(--mat-sys-color-on-primary-container);
   }
 
   &.status-expired {
-    background-color: var(--md-sys-color-error-container);
-    color: var(--md-sys-color-on-error-container);
+    background-color: var(--mat-sys-color-error-container);
+    color: var(--mat-sys-color-on-error-container);
   }
 }
 

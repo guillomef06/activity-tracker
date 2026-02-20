@@ -14,7 +14,7 @@
 
         <!-- Member Selection -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix>person</mat-icon>
+          <mat-icon matIconPrefix>person</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectMember' | translate }}</mat-label>
           <mat-select formControlName="member">
             @for (member of members(); track member.id) {
@@ -31,7 +31,7 @@
 
         <!-- Week Selection -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix>calendar_today</mat-icon>
+          <mat-icon matIconPrefix>calendar_today</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
           <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
@@ -45,7 +45,7 @@
 
         <!-- Activity Type Selection (Filtered by Week) -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix>category</mat-icon>
+          <mat-icon matIconPrefix>category</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectActivity' | translate }}</mat-label>
           <mat-select
             formControlName="activity"
@@ -76,7 +76,7 @@
           </div>
         } @else {
           <mat-form-field appearance="outline" class="full-width">
-            <mat-icon matPrefix>emoji_events</mat-icon>
+            <mat-icon matIconPrefix>emoji_events</mat-icon>
             <mat-label>{{ 'alliance.retroactive.position' | translate }}</mat-label>
             <input
               matInput
@@ -109,15 +109,6 @@
             [loading]="isSubmitting()"
             [disabled]="!canSubmit()"
           />
-
-          <button
-            mat-button
-            type="button"
-            (click)="resetForm()"
-            [disabled]="isSubmitting()">
-            <mat-icon>refresh</mat-icon>
-            {{ 'alliance.retroactive.reset' | translate }}
-          </button>
         </div>
       </form>
     </mat-card-content>

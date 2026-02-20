@@ -10,19 +10,19 @@
 .setup-card {
   width: 100%;
   max-width: 500px;
-  padding: 1.5rem;
+  padding: 1rem;
 
   mat-card-header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 
     .setup-icon {
       font-size: 48px;
       width: 48px;
       height: 48px;
-      color: var(--md-sys-color-primary);
+      color: var(--mat-sys-color-primary);
       margin-bottom: 1rem;
     }
 
@@ -44,15 +44,15 @@
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  margin-bottom: 1.5rem;
-  background-color: var(--md-sys-color-error-container);
-  color: var(--md-sys-color-on-error-container);
+  margin-bottom: 1rem;
+  background-color: var(--mat-sys-color-error-container);
+  color: var(--mat-sys-color-on-error-container);
   border-radius: 8px;
-  border-left: 4px solid var(--md-sys-color-error);
+  border-left: 4px solid var(--mat-sys-color-error);
 
   mat-icon {
     flex-shrink: 0;
-    color: var(--md-sys-color-error);
+    color: var(--mat-sys-color-error);
   }
 
   p {
@@ -77,8 +77,8 @@ form {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background-color: var(--md-sys-color-error-container);
-  color: var(--md-sys-color-on-error-container);
+  background-color: var(--mat-sys-color-error-container);
+  color: var(--mat-sys-color-on-error-container);
   border-radius: 4px;
   font-size: 0.875rem;
 
@@ -86,23 +86,14 @@ form {
     font-size: 20px;
     width: 20px;
     height: 20px;
-    color: var(--md-sys-color-error);
+    color: var(--mat-sys-color-error);
   }
 }
 
-.actions {
-  margin-top: 1rem;
-
-  .submit-button {
-    width: 100%;
-    height: 48px;
-    font-size: 1rem;
-
-    mat-spinner {
-      display: inline-block;
-      margin-right: 0.5rem;
-    }
-  }
+button.submit-button {
+  width: 100%;
+  height: 48px;
+  font-size: 1rem;
 }
 
 // Mobile responsiveness

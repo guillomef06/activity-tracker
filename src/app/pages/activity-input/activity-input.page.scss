@@ -10,13 +10,13 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background-color: var(--md-sys-color-surface-variant);
+  background-color: var(--mat-sys-color-surface-variant);
   border-radius: 8px;
   font-size: 1rem;
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--mat-sys-color-on-surface-variant);
 
   mat-icon {
-    color: var(--md-sys-color-primary);
+    color: var(--mat-sys-color-primary);
   }
 
   span {
@@ -24,9 +24,14 @@
   }
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .full-width {
   width: 100%;
-  margin-bottom: 1rem;
 }
 
 .participation-section {
@@ -48,15 +53,15 @@
   padding: 0 1rem;
   margin-bottom: 1rem;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--md-sys-color-primary-container) 0%, var(--md-sys-color-tertiary-container) 100%);
-  color: var(--md-sys-color-on-primary-container);
+  background: linear-gradient(135deg, var(--mat-sys-color-primary-container) 0%, var(--mat-sys-color-tertiary-container) 100%);
+  color: var(--mat-sys-color-on-primary-container);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   mat-icon {
     font-size: 32px;
     width: 32px;
     height: 32px;
-    color: var(--md-sys-color-primary);
+    color: var(--mat-sys-color-primary);
   }
 
   .points-info {
@@ -84,10 +89,6 @@
 @media (max-width: 599px) {
   mat-card-subtitle {
     display: none;
-  }
-
-  .full-width {
-    margin-bottom: 2rem;
   }
 
   .button-group {

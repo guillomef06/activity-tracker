@@ -108,7 +108,7 @@ body {
 
 @media (min-width: 600px) {
   .container {
-    padding: 1.5rem;
+    padding: 1rem;
     max-width: 720px;
   }
 }
@@ -128,8 +128,8 @@ body {
 /* Active route indicator in navigation menu */
 .mat-mdc-menu-panel {
   button.mat-mdc-menu-item.active {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+    background-color: var(--mat-sys-color-primary-container);
+    color: var(--mat-sys-color-on-primary-container);
     font-weight: 500;
   }
 
@@ -142,7 +142,7 @@ body {
 
   .check-icon {
     margin-left: auto;
-    color: var(--md-sys-color-primary);
+    color: var(--mat-sys-color-primary);
   }
 }
 

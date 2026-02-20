@@ -1,7 +1,6 @@
 <div class="join-container">
   <mat-card class="join-card">
     <mat-card-header>
-      <mat-icon class="join-icon">group_add</mat-icon>
       <mat-card-title>{{ 'auth.joinTitle' | translate }}</mat-card-title>
       <mat-card-subtitle>{{ 'auth.joinSubtitle' | translate }}</mat-card-subtitle>
     </mat-card-header>
@@ -9,6 +8,7 @@
     <mat-card-content>
       <form [formGroup]="joinForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>vpn_key</mat-icon>
           <mat-label>{{ 'auth.invitationToken' | translate }}</mat-label>
           <input
             matInput
@@ -17,7 +17,6 @@
             [placeholder]="'auth.tokenPlaceholder' | translate"
             (blur)="validateToken()"
           />
-          <mat-icon matPrefix>vpn_key</mat-icon>
           <mat-hint>{{ 'auth.tokenHint' | translate }}</mat-hint>
           @if (tokenError()) {
             <mat-error>{{ tokenError() | translate }}</mat-error>
@@ -35,6 +34,7 @@
         }
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>person</mat-icon>
           <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
@@ -43,7 +43,6 @@
             autocomplete="username"
             [placeholder]="'auth.usernamePlaceholder' | translate"
           />
-          <mat-icon matPrefix>person</mat-icon>
           <mat-hint>{{ 'auth.usernameHint' | translate }}</mat-hint>
           @if (usernameError()) {
             <mat-error>{{ usernameError() | translate }}</mat-error>
@@ -51,6 +50,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>badge</mat-icon>
           <mat-label>{{ 'auth.displayName' | translate }}</mat-label>
           <input
             matInput
@@ -59,7 +59,6 @@
             autocomplete="name"
             [placeholder]="'auth.displayNamePlaceholder' | translate"
           />
-          <mat-icon matPrefix>badge</mat-icon>
           <mat-hint>{{ 'auth.displayNameHint' | translate }}</mat-hint>
           @if (displayNameError()) {
             <mat-error>{{ displayNameError() | translate }}</mat-error>
@@ -67,6 +66,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>lock</mat-icon>
           <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
@@ -75,7 +75,6 @@
             autocomplete="new-password"
             [placeholder]="'auth.passwordPlaceholder' | translate"
           />
-          <mat-icon matPrefix>lock</mat-icon>
           <button
             mat-icon-button
             matSuffix
@@ -93,6 +92,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>lock_outline</mat-icon>
           <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
           <input
             matInput
@@ -101,7 +101,6 @@
             autocomplete="new-password"
             [placeholder]="'auth.confirmPasswordPlaceholder' | translate"
           />
-          <mat-icon matPrefix>lock_outline</mat-icon>
           <button
             mat-icon-button
             matSuffix
@@ -124,15 +123,13 @@
           </div>
         }
 
-        <div class="actions">
-          <app-loading-button
-            type="submit"
-            [text]="'auth.joinTitle' | translate"
-            [loadingText]="'auth.joining' | translate"
-            [loading]="isLoading()"
-            buttonClass="submit-button"
-          />
-        </div>
+        <app-loading-button
+          type="submit"
+          [text]="'auth.joinTitle' | translate"
+          [loadingText]="'auth.joining' | translate"
+          [loading]="isLoading()"
+          buttonClass="submit-button"
+        />
 
         <div class="footer-links">
           <p>{{ 'auth.haveAccount' | translate }} <a routerLink="/login">{{ 'auth.login' | translate }}</a></p>
