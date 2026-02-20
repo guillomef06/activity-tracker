@@ -16,7 +16,7 @@
       <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
         <!-- Week Selection -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix>calendar_today</mat-icon>
+          <mat-icon matIconPrefix>calendar_today</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
           <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
@@ -30,7 +30,7 @@
 
         <!-- Activity Type Selection (Filtered by Week) -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matPrefix>category</mat-icon>
+          <mat-icon matIconPrefix>category</mat-icon>
           <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
           <mat-select
             formControlName="activityType"
@@ -57,8 +57,8 @@
           </div>
         } @else {
           <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matIconPrefix>emoji_events</mat-icon>
             <mat-label>{{ 'activityInput.position' | translate }}</mat-label>
-            <mat-icon matPrefix>emoji_events</mat-icon>
             <input
               matInput
               type="number"

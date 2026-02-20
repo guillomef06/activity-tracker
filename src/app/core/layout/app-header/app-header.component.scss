@@ -45,7 +45,7 @@
 .user-identity {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--md-sys-color-on-surface);
+  color: var(--mat-sys-color-on-surface);
   white-space: nowrap;
 }
 
@@ -61,14 +61,14 @@
 
   .username {
     font-size: 0.875rem;
-    color: var(--md-sys-color-on-surface-variant);
+    color: var(--mat-sys-color-on-surface-variant);
     margin-bottom: 0.25rem;
   }
 
   .user-role {
     font-size: 0.75rem;
     text-transform: uppercase;
-    color: var(--md-sys-color-primary);
+    color: var(--mat-sys-color-primary);
     font-weight: 500;
   }
 }

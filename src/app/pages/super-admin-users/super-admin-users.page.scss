@@ -1,11 +1,11 @@
 .super-admin-users {
-  padding: 1.5rem;
+  padding: 1rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
 .page-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 
   mat-card-header {
     display: flex;
@@ -16,7 +16,7 @@
       font-size: 40px;
       width: 40px;
       height: 40px;
-      color: var(--md-sys-color-secondary);
+      color: var(--mat-sys-color-secondary);
     }
 
     .header-content {
@@ -85,7 +85,7 @@
 
   th {
     font-weight: 600;
-    background-color: var(--md-sys-color-surface-variant);
+    background-color: var(--mat-sys-color-surface-variant);
   }
 
   td, th {
@@ -101,7 +101,7 @@
       font-size: 20px;
       width: 20px;
       height: 20px;
-      color: var(--md-sys-color-secondary);
+      color: var(--mat-sys-color-secondary);
     }
 
     strong {
@@ -111,7 +111,7 @@
 
   .username {
     font-family: 'Courier New', monospace;
-    color: var(--md-sys-color-primary);
+    color: var(--mat-sys-color-primary);
   }
 
   .alliance-info {
@@ -133,18 +133,18 @@
   }
 
   .role-super-admin {
-    background-color: var(--md-sys-color-error-container) !important;
-    color: var(--md-sys-color-on-error-container) !important;
+    background-color: var(--mat-sys-color-error-container) !important;
+    color: var(--mat-sys-color-on-error-container) !important;
   }
 
   .role-admin {
-    background-color: var(--md-sys-color-primary-container) !important;
-    color: var(--md-sys-color-on-primary-container) !important;
+    background-color: var(--mat-sys-color-primary-container) !important;
+    color: var(--mat-sys-color-on-primary-container) !important;
   }
 
   .role-member {
-    background-color: var(--md-sys-color-secondary-container) !important;
-    color: var(--md-sys-color-on-secondary-container) !important;
+    background-color: var(--mat-sys-color-secondary-container) !important;
+    color: var(--mat-sys-color-on-secondary-container) !important;
   }
 
   .edit-field {
