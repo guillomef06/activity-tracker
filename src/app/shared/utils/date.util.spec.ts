@@ -1,9 +1,10 @@
-import { 
-  getCurrentWeekNumber, 
-  getWeekNumberForWeeksAgo, 
+import { vi } from 'vitest';
+import {
+  getCurrentWeekNumber,
+  getWeekNumberForWeeksAgo,
   getDateForWeeksAgo,
   getWeekStart,
-  getWeekEnd 
+  getWeekEnd
 } from './date.util';
 
 describe('Date Utility Functions', () => {
@@ -38,24 +39,22 @@ describe('Date Utility Functions', () => {
 
   describe('getCurrentWeekNumber (Cycle Calculation)', () => {
     beforeEach(() => {
-      jasmine.clock().install();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
 
     it('should return 1 for the reference date (Jan 25, 2026)', () => {
-      const baseTime = new Date('2026-01-25T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-01-25T12:00:00'));
 
       const weekNumber = getCurrentWeekNumber();
       expect(weekNumber).toBe(1);
     });
 
     it('should return 3 for Feb 9, 2026 (2 weeks after reference)', () => {
-      const baseTime = new Date('2026-02-09T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-02-09T12:00:00'));
 
       const weekNumber = getCurrentWeekNumber();
       expect(weekNumber).toBe(3);
@@ -63,8 +62,7 @@ describe('Date Utility Functions', () => {
 
     it('should cycle back to 1 after week 6', () => {
       // 6 weeks after Jan 25 = Week 1 again (Mar 8, 2026 = Week 1 of next cycle)
-      const baseTime = new Date('2026-03-08T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-03-08T12:00:00'));
 
       const weekNumber = getCurrentWeekNumber();
       expect(weekNumber).toBe(1);
@@ -72,8 +70,7 @@ describe('Date Utility Functions', () => {
 
     it('should return week 6 for the 6th week of cycle', () => {
       // 5 weeks after Jan 25 = Week 6 (Mar 1, 2026)
-      const baseTime = new Date('2026-03-01T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-03-01T12:00:00'));
 
       const weekNumber = getCurrentWeekNumber();
       expect(weekNumber).toBe(6);
@@ -82,24 +79,22 @@ describe('Date Utility Functions', () => {
 
   describe('getWeekNumberForWeeksAgo', () => {
     beforeEach(() => {
-      jasmine.clock().install();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
 
     it('should return current week number for weeksAgo = 0', () => {
-      const baseTime = new Date('2026-02-09T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-02-09T12:00:00'));
 
       const weekNumber = getWeekNumberForWeeksAgo(0);
       expect(weekNumber).toBe(3);
     });
 
     it('should return week 2 for 1 week ago when current is week 3', () => {
-      const baseTime = new Date('2026-02-09T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-02-09T12:00:00'));
 
       const weekNumber = getWeekNumberForWeeksAgo(1);
       expect(weekNumber).toBe(2);
@@ -107,8 +102,7 @@ describe('Date Utility Functions', () => {
 
     it('should wrap around cycle correctly across boundaries', () => {
       // Current = Week 2 (Feb 1, 2026), 1 week ago should be Week 1
-      const baseTime = new Date('2026-02-01T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-02-01T12:00:00'));
 
       const weekNumber = getWeekNumberForWeeksAgo(1);
       expect(weekNumber).toBe(1); // Previous week in cycle
@@ -150,16 +144,15 @@ describe('Date Utility Functions', () => {
 
   describe('Activity Availability Integration Test', () => {
     beforeEach(() => {
-      jasmine.clock().install();
+      vi.useFakeTimers();
     });
 
     afterEach(() => {
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
 
     it('should correctly identify available activities for week 3', () => {
-      const baseTime = new Date('2026-02-09T12:00:00').getTime();
-      jasmine.clock().mockDate(new Date(baseTime));
+      vi.setSystemTime(new Date('2026-02-09T12:00:00'));
 
       const weekNumber = getCurrentWeekNumber();
       

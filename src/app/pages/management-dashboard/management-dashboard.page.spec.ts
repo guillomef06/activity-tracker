@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { ManagementDashboardPage } from './management-dashboard.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -34,7 +35,7 @@ describe('ManagementDashboardPage', () => {
   });
 
   it('should navigate to activities details page', () => {
-    const navigateSpy = spyOn(component['router'], 'navigate');
+    const navigateSpy = vi.spyOn(component['router'], 'navigate');
     
     component.viewAllDetails();
     

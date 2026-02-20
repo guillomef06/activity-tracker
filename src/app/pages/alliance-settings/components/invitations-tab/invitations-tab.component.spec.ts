@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi, Mocked } from 'vitest';
 import { InvitationsTabComponent } from './invitations-tab.component';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -8,16 +9,15 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 describe('InvitationsTabComponent', () => {
   let component: InvitationsTabComponent;
   let fixture: ComponentFixture<InvitationsTabComponent>;
-  let allianceService: jasmine.SpyObj<AllianceService>;
-  let clipboard: jasmine.SpyObj<Clipboard>;
+  let allianceService: Mocked<AllianceService>;
+  let clipboard: { copy: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
-    const allianceServiceSpy = jasmine.createSpyObj('AllianceService', ['createInvitation', 'revokeInvitation']);
-    const clipboardSpy = jasmine.createSpyObj('Clipboard', ['copy']);
-
-    allianceServiceSpy.createInvitation.and.returnValue(Promise.resolve({ token: 'test-token-123' }));
-    allianceServiceSpy.revokeInvitation.and.returnValue(Promise.resolve({ error: null }));
-    clipboardSpy.copy.and.returnValue(true);
+    const allianceServiceSpy = {
+      createInvitation: vi.fn().mockResolvedValue({ token: 'test-token-123' }),
+      revokeInvitation: vi.fn().mockResolvedValue({ error: null }),
+    };
+    const clipboardSpy = { copy: vi.fn().mockReturnValue(true) };
 
     await TestBed.configureTestingModule({
       imports: [InvitationsTabComponent, TranslateModule.forRoot()],
@@ -30,13 +30,13 @@ describe('InvitationsTabComponent', () => {
 
     fixture = TestBed.createComponent(InvitationsTabComponent);
     component = fixture.componentInstance;
-    allianceService = TestBed.inject(AllianceService) as jasmine.SpyObj<AllianceService>;
-    clipboard = TestBed.inject(Clipboard) as jasmine.SpyObj<Clipboard>;
-    
+    allianceService = TestBed.inject(AllianceService) as unknown as Mocked<AllianceService>;
+    clipboard = TestBed.inject(Clipboard) as unknown as typeof clipboardSpy;
+
     // Set required inputs
     fixture.componentRef.setInput('invitations', []);
     fixture.componentRef.setInput('isLoading', false);
-    
+
     fixture.detectChanges();
   });
 
@@ -51,16 +51,16 @@ describe('InvitationsTabComponent', () => {
 
   it('should create invitation and copy link', async () => {
     component['invitationForm'].patchValue({ durationDays: 7 });
-    
+
     await component['createInvitation']();
-    
+
     expect(allianceService.createInvitation).toHaveBeenCalledWith(7);
     expect(clipboard.copy).toHaveBeenCalled();
   });
 
   it('should copy invitation link to clipboard', () => {
     component['copyInvitationLink']('test-token');
-    
+
     expect(clipboard.copy).toHaveBeenCalled();
   });
 
@@ -98,7 +98,7 @@ describe('InvitationsTabComponent', () => {
   it('should check if invitation is expired', () => {
     const futureDate = new Date(Date.now() + 86400000).toISOString();
     const pastDate = new Date(Date.now() - 86400000).toISOString();
-    
+
     expect(component['isInvitationExpired'](futureDate)).toBe(false);
     expect(component['isInvitationExpired'](pastDate)).toBe(true);
   });

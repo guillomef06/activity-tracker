@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { vi } from 'vitest';
 import { SuperAdminDashboardPage } from './super-admin-dashboard.page';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { provideRouter } from '@angular/router';
@@ -13,23 +14,23 @@ describe('SuperAdminDashboardPage', () => {
   beforeEach(async () => {
     // Create a chainable mock for Supabase client
     interface MockQueryBuilder {
-      select: jasmine.Spy;
-      is: jasmine.Spy;
-      gt: jasmine.Spy;
+      select: ReturnType<typeof vi.fn>;
+      is: ReturnType<typeof vi.fn>;
+      gt: ReturnType<typeof vi.fn>;
       then: (resolve: (value: { data: null; count: number; error: null }) => void) => void;
     }
-    
+
     const mockQueryBuilder = {} as MockQueryBuilder;
-    mockQueryBuilder.select = jasmine.createSpy('select').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.is = jasmine.createSpy('is').and.returnValue(mockQueryBuilder);
-    mockQueryBuilder.gt = jasmine.createSpy('gt').and.returnValue(mockQueryBuilder);
+    mockQueryBuilder.select = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.is = vi.fn().mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.gt = vi.fn().mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.then = (resolve) => { resolve({ data: null, count: 0, error: null }); };
 
-    const supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', [], {
+    const supabaseServiceSpy = {
       client: {
-        from: jasmine.createSpy('from').and.returnValue(mockQueryBuilder),
+        from: vi.fn().mockReturnValue(mockQueryBuilder),
       },
-    });
+    };
 
     await TestBed.configureTestingModule({
       imports: [SuperAdminDashboardPage, TranslateModule.forRoot()],

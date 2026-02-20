@@ -1,12 +1,12 @@
 <button
   [type]="type()"
-  [disabled]="disabled() || loading()"
+  [disabled]="disabled() || submitting()"
   [color]="color()"
   [class]="buttonClass()"
   mat-raised-button
   (click)="handleClick()"
 >
-  @if (loading()) {
+  @if (submitting()) {
     <mat-spinner diameter="20"></mat-spinner>
     <span>{{ loadingText() }}</span>
   } @else {

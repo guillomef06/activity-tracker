@@ -5,7 +5,8 @@
 @use 'sass:meta';
 
 // Include Material core styles
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Define light theme
 $light-theme: mat.define-theme(
@@ -51,19 +52,19 @@ html {
 
   // M3 component customizations (shapes only)
   .mat-mdc-card {
-    --mdc-elevated-card-container-shape: 16px;
+    --mat-card-elevated-container-shape: 16px;
   }
 
   .mat-mdc-button {
-    --mdc-text-button-container-shape: 20px;
+    --mat-button-text-container-shape: 20px;
   }
 
   .mat-mdc-raised-button {
-    --mdc-protected-button-container-shape: 20px;
+    --mat-button-protected-container-shape: 20px;
   }
 
   .mat-mdc-outlined-button {
-    --mdc-outlined-button-container-shape: 20px;
+    --mat-button-outlined-container-shape: 20px;
   }
 
   .mat-expansion-panel {
@@ -71,7 +72,7 @@ html {
   }
 
   .mdc-chip {
-    --mdc-chip-container-shape-radius: 8px;
+    --mat-chip-container-shape-radius: 8px;
   }
 }
 
@@ -128,8 +129,8 @@ body {
 /* Active route indicator in navigation menu */
 .mat-mdc-menu-panel {
   button.mat-mdc-menu-item.active {
-    background-color: var(--mat-sys-color-primary-container);
-    color: var(--mat-sys-color-on-primary-container);
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
     font-weight: 500;
   }
 
@@ -142,7 +143,7 @@ body {
 
   .check-icon {
     margin-left: auto;
-    color: var(--mat-sys-color-primary);
+    color: var(--mat-sys-primary);
   }
 }
 
@@ -190,14 +191,14 @@ mat-form-field .mat-mdc-form-field-icon-prefix {
 
 /* Snackbar variants */
 mat-snack-bar-container.success-snackbar {
-  --mdc-snackbar-container-color: var(--mat-sys-success-container);
-  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-success-container);
+  --mat-snack-bar-container-color: var(--mat-sys-success-container);
+  --mat-snack-bar-supporting-text-color: var(--mat-sys-on-success-container);
   --mat-snack-bar-button-color: var(--mat-sys-success);
 }
 
 mat-snack-bar-container.error-snackbar {
-  --mdc-snackbar-container-color: var(--mat-sys-error-container);
-  --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error-container);
+  --mat-snack-bar-container-color: var(--mat-sys-error-container);
+  --mat-snack-bar-supporting-text-color: var(--mat-sys-on-error-container);
   --mat-snack-bar-button-color: var(--mat-sys-error);
 }
 
