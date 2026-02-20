@@ -49,7 +49,7 @@ export const adminGuard: CanActivateFn = async (route, state) => {
   }
 
   // Redirect to home if not admin
-  return router.createUrlTree(['/activity-input']);
+  return router.createUrlTree(['/']);
 };
 
 /**
@@ -70,7 +70,7 @@ export const guestGuard: CanActivateFn = async () => {
   }
 
   // Redirect authenticated users to home
-  return router.createUrlTree(['/activity-input']);
+  return router.createUrlTree(['/']);
 };
 
 /**
@@ -97,5 +97,5 @@ export const superAdminGuard: CanActivateFn = async (route, state) => {
   }
 
   // Redirect to home if not super admin
-  return router.createUrlTree(['/activity-input']);
+  return router.createUrlTree(['/']);
 };

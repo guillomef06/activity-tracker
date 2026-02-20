@@ -63,10 +63,8 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "dashboard": "Dashboard",
     "allianceSettings": "Alliance Settings",
-    "activities": "Activities",
-    "details": "Details"
+    "home": "Home"
   },
   "alliance": {
     "settings": {
@@ -166,7 +164,6 @@
     "positionHint": "Enter your position or rank",
     "submit": "Submit Activity",
     "submitting": "Submitting...",
-    "viewDashboard": "View Dashboard",
     "typeHint": "Only activities available for the selected week are shown",
     "success": "Activity submitted successfully!",
     "error": "Failed to submit activity",
@@ -184,24 +181,13 @@
     }
   },
   "dashboard": {
-    "title": "Management Dashboard",
-    "refresh": "Refresh",
-    "addActivity": "Add Activity",
-    "noActivities": "No activities recorded yet",
     "noActivitiesThisWeek": "No activities available this week",
-    "availableThisWeek": "Available Activities This Week",
-    "submitFirst": "Submit First Activity",
     "totalPoints": "total points",
-    "avgWeekly": "week avg",
     "weeklyBreakdown": "Weekly Breakdown",
     "pointsShort": "pts",
-    "week": "Week",
     "currentWeek": "Current Week",
     "lastWeek": "Last Week",
-    "weeksAgo": "weeks ago",
-    "weeklyRanking": "Weekly Ranking",
-    "weeklyRankingSubtitle": "Points evolution over the last 6 weeks",
-    "viewAllDetails": "View Details"
+    "weeksAgo": "weeks ago"
   },
   "activitiesDetails": {
     "title": "Activities Details",

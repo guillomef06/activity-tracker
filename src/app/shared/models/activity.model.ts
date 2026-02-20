@@ -69,5 +69,4 @@ export interface UserScore {
   userName: string;
   weeklyScores: WeeklyScore[];
   sixWeekTotal: number;
-  averageWeekly: number;
 }

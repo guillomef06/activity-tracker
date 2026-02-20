@@ -206,14 +206,12 @@ export class ActivityService {
       const userName = activities[0]?.userName || 'Unknown';
       const weeklyScores = this.calculateWeeklyScores(activities);
       const sixWeekTotal = weeklyScores.reduce((sum, week) => sum + week.totalPoints, 0);
-      const averageWeekly = sixWeekTotal / APP_CONSTANTS.SCORING.WEEKS_TO_TRACK;
 
       userScores.push({
         userId,
         userName,
         weeklyScores,
         sixWeekTotal,
-        averageWeekly
       });
     });
 
@@ -274,7 +272,7 @@ export class ActivityService {
       });
     }
 
-    return weeks.reverse();
+    return weeks;
   }
 
 }

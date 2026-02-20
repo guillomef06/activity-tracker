@@ -30,26 +30,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./core/layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
     children: [
-      // Default redirect based on role (handled in MainLayoutComponent or redirect to activity-input)
+      // Home page (members and admins)
       {
         path: '',
-        redirectTo: 'activity-input',
-        pathMatch: 'full'
-      },
-      // Member routes
-      {
-        path: 'activity-input',
-        loadComponent: () => import('./pages/activity-input/activity-input.page').then(m => m.ActivityInputPage)
-      },
-      {
-        path: 'activities-details',
-        loadComponent: () => import('./pages/activities-details/activities-details.page').then(m => m.ActivitiesDetailsPage)
+        loadComponent: () => import('./pages/home/home.page').then(m => m.HomePage)
       },
       // Admin routes
-      {
-        path: 'management-dashboard',
-        loadComponent: () => import('./pages/management-dashboard/management-dashboard.page').then(m => m.ManagementDashboardPage)
-      },
       {
         path: 'alliance-settings',
         canActivate: [adminGuard],

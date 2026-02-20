@@ -49,17 +49,9 @@
           </button>
         }
 
-        <button mat-menu-item routerLink="/activity-input" routerLinkActive="active">
-          <mat-icon>add_task</mat-icon>
-          <span>{{ 'nav.activities' | translate }}</span>
-        </button>
-        <button mat-menu-item routerLink="/management-dashboard" routerLinkActive="active">
-          <mat-icon>dashboard</mat-icon>
-          <span>{{ 'nav.dashboard' | translate }}</span>
-        </button>
-        <button mat-menu-item routerLink="/activities-details" routerLinkActive="active">
-          <mat-icon>list_alt</mat-icon>
-          <span>{{ 'nav.details' | translate }}</span>
+        <button mat-menu-item routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon>home</mat-icon>
+          <span>{{ 'nav.home' | translate }}</span>
         </button>
 
         <mat-divider></mat-divider>

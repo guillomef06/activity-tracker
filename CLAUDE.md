@@ -13,6 +13,7 @@ Users input activities, management views scores on rolling 6-week basis.
 1. [ ] **Tests mis à jour** — tout fichier modifié ou créé a son `.spec.ts` correspondant à jour
 2. [ ] **`DEVELOPMENT_STATUS.md` mis à jour** — feature marquée comme complète, nouveaux fichiers listés, limitations connues notées
 3. [ ] **Aucune régression** — les tests existants passent toujours
+4. [ ] **Lint OK** — le lint ne doit pas etre en erreur
 
 > Ces étapes sont non négociables. Si elles ne sont pas réalisées, la tâche n'est pas terminée.
 

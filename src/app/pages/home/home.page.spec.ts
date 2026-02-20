@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { ActivityInputPage } from './activity-input.page';
+import { HomePage } from './home.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -9,18 +9,19 @@ import { ActivityService } from '../../core/services/activity.service';
 import { PointRulesService } from '../../core/services/point-rules.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SupabaseService } from '../../core/services/supabase.service';
+import { AllianceActivitySettingsService } from '../../core/services/alliance-activity-settings.service';
 import { signal } from '@angular/core';
 
-describe('ActivityInputPage', () => {
-  let component: ActivityInputPage;
-  let fixture: ComponentFixture<ActivityInputPage>;
-  let pointRulesService: { calculatePoints: ReturnType<typeof vi.fn>; loadRules: ReturnType<typeof vi.fn>; rules: ReturnType<typeof signal> };
+describe('HomePage', () => {
+  let component: HomePage;
+  let fixture: ComponentFixture<HomePage>;
 
   beforeEach(async () => {
     const authServiceSpy = {
       getUserId: vi.fn().mockReturnValue('test-user'),
       isAuthenticated: vi.fn().mockReturnValue(true),
       userProfile: signal({ id: 'test-user', display_name: 'Test User', username: 'testuser' }),
+      getAllianceId: vi.fn().mockReturnValue('alliance-1'),
     };
 
     const supabaseServiceSpy = { from: vi.fn() };
@@ -31,10 +32,16 @@ describe('ActivityInputPage', () => {
       rules: signal([]),
     };
 
+    const activitySettingsServiceSpy = {
+      loadSettings: vi.fn().mockResolvedValue(undefined),
+      isParticipationMode: vi.fn().mockReturnValue(false),
+      getParticipationPoints: vi.fn().mockReturnValue(5),
+    };
+
     await TestBed.configureTestingModule({
       imports: [
-        ActivityInputPage,
-        TranslateModule.forRoot()
+        HomePage,
+        TranslateModule.forRoot(),
       ],
       providers: [
         provideAnimations(),
@@ -44,12 +51,12 @@ describe('ActivityInputPage', () => {
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         { provide: PointRulesService, useValue: pointRulesServiceSpy },
-      ]
+        { provide: AllianceActivitySettingsService, useValue: activitySettingsServiceSpy },
+      ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ActivityInputPage);
+    fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
-    pointRulesService = TestBed.inject(PointRulesService) as unknown as typeof pointRulesServiceSpy;
     fixture.detectChanges();
   });
 
@@ -66,22 +73,13 @@ describe('ActivityInputPage', () => {
     expect(component.availableActivities().length).toBeGreaterThan(0);
   });
 
-  it('should update points when activity type and position change', () => {
-    component['activityForm'].patchValue({ activityType: 'development', position: 5 });
-
-    // Manually trigger point calculation
-    const result = pointRulesService.calculatePoints('development', 5);
-    component.calculatedPointsResult.set(result);
-
-    expect(component.points()).toBe(15);
+  it('should not submit when activity type is empty', async () => {
+    component['activityForm'].patchValue({ activityType: '', position: 1 });
+    await component.onSubmit();
+    expect(component.isSubmitting()).toBe(false);
   });
 
-  it('should not submit if activity type is empty', async () => {
-    component['activityForm'].patchValue({ activityType: '', position: 1 });
-
-    await component.onSubmit();
-
-    // Form should not be submitted without activity type
-    expect(component.isSubmitting()).toBe(false);
+  it('should expose userScores as a computed signal', () => {
+    expect(Array.isArray(component.userScores())).toBe(true);
   });
 });

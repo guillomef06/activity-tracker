@@ -85,10 +85,8 @@ export class LoginPage {
       const role = this.authService.userProfile()?.role;
       if (role === 'super_admin') {
         await this.router.navigate(['/super-admin']);
-      } else if (role === 'admin') {
-        await this.router.navigate(['/management-dashboard']);
       } else {
-        await this.router.navigate(['/activity-input']);
+        await this.router.navigate(['/']);
       }
     } catch (error: unknown) {
       console.error('Login error:', error);

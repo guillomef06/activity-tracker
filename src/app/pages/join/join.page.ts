@@ -136,8 +136,8 @@ export class JoinPage implements OnInit {
       
       await this.authService.signUpMember(request);
       
-      // Redirect to activity input page
-      await this.router.navigate(['/activity-input']);
+      // Redirect to home
+      await this.router.navigate(['/']);
     } catch (error: unknown) {
       console.error('Join error:', error);
       
