@@ -74,6 +74,7 @@
     "settings": {
       "title": "Alliance Settings",
       "tabs": {
+        "overview": "Alliance",
         "information": "Information",
         "members": "Members",
         "invitations": "Invitations",

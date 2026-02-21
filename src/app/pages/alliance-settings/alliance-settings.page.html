@@ -10,41 +10,19 @@
   </mat-card>
 
   <mat-tab-group class="settings-tabs">
-    <!-- Alliance Information Tab -->
+    <!-- Alliance Overview Tab (Information + Members + Invitations merged) -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">info</mat-icon>
-        {{ 'alliance.settings.tabs.information' | translate }}
+        <mat-icon class="tab-icon">manage_accounts</mat-icon>
+        {{ 'alliance.settings.tabs.overview' | translate }}
       </ng-template>
 
-      <app-alliance-info-tab
+      <app-alliance-overview-tab
         [alliance]="alliance()"
-        [membersCount]="members().length"
-        [invitationsCount]="invitations().length"
-        (allianceUpdated)="handleAllianceUpdated()"
-      />
-    </mat-tab>
-
-    <!-- Members Tab -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">people</mat-icon>
-        {{ 'alliance.settings.tabs.members' | translate }}
-      </ng-template>
-
-      <app-members-tab [members]="members()" [isLoading]="progressBarService.isLoading()" />
-    </mat-tab>
-
-    <!-- Invitations Tab -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">mail</mat-icon>
-        {{ 'alliance.settings.tabs.invitations' | translate }}
-      </ng-template>
-
-      <app-invitations-tab
+        [members]="members()"
         [invitations]="invitations()"
         [isLoading]="progressBarService.isLoading()"
+        (allianceUpdated)="handleAllianceUpdated()"
         (invitationCreated)="handleInvitationCreated()"
         (invitationRevoked)="handleInvitationRevoked()"
       />
