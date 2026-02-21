@@ -1,0 +1,209 @@
+<!-- Alliance Info Form -->
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>{{ 'alliance.settings.allianceInfo' | translate }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="allianceForm" (ngSubmit)="updateAlliance()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-icon matIconPrefix>groups</mat-icon>
+        <mat-label>{{ 'alliance.settings.allianceName' | translate }}</mat-label>
+        <input matInput formControlName="name" type="text" />
+        @if (nameError()) {
+          <mat-error>{{ nameError() | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-icon matIconPrefix>tag</mat-icon>
+        <mat-label>{{ 'alliance.settings.allianceTag' | translate }}</mat-label>
+        <input matInput formControlName="tag" type="text" maxlength="3" />
+        <mat-hint>{{ 'alliance.settings.allianceTagHint' | translate }}</mat-hint>
+        @if (tagError()) {
+          <mat-error>{{ tagError() | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <app-loading-button
+        type="submit"
+        icon="save"
+        [text]="'alliance.settings.updateName' | translate"
+        [loadingText]="'common.saving' | translate"
+        [submitting]="isAllianceSubmitting()"
+        [disabled]="allianceForm.invalid"
+      />
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Create Invitation Form -->
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>{{ 'alliance.settings.invitationManagement' | translate }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="invitationForm" (ngSubmit)="createInvitation()" class="invitation-form">
+      <mat-form-field appearance="outline">
+        <mat-icon matIconPrefix>schedule</mat-icon>
+        <mat-label>{{ 'alliance.settings.invitationDuration' | translate }}</mat-label>
+        <input matInput formControlName="durationDays" type="number" min="1" max="365" />
+        <mat-hint>{{ 'alliance.settings.durationHint' | translate }}</mat-hint>
+        @if (durationDaysError()) {
+          <mat-error>{{ durationDaysError() | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <app-loading-button
+        type="submit"
+        icon="add"
+        [text]="'alliance.settings.createInvitation' | translate"
+        [loadingText]="'common.saving' | translate"
+        [submitting]="isInvitationSubmitting()"
+        [disabled]="invitationForm.invalid"
+        buttonClass="create-invitation-btn"
+      />
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Invitations List -->
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>{{ 'alliance.settings.tabs.invitations' | translate }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    @if (enrichedInvitations().length === 0) {
+      <div class="empty-state">
+        <mat-icon>mail_outline</mat-icon>
+        <p>{{ 'alliance.settings.noInvitations' | translate }}</p>
+      </div>
+    } @else {
+      <mat-accordion class="invitations-accordion">
+        @for (invitation of enrichedInvitations(); track invitation.id) {
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="invitation-header">
+                  <div class="invitation-info">
+                    <mat-icon>link</mat-icon>
+                    <code class="token-code">{{ invitation.token.substring(0, 12) }}...</code>
+                    @if (!invitation.isExpired) {
+                      <button
+                        mat-icon-button
+                        (click)="copyInvitationLink(invitation.token); $event.stopPropagation()"
+                        [matTooltip]="'alliance.settings.copyLink' | translate"
+                      >
+                        <mat-icon>content_copy</mat-icon>
+                      </button>
+                    }
+                  </div>
+                  <div class="invitation-badges">
+                    @if (invitation.usage_count > 0) {
+                      <mat-chip> {{ invitation.usage_count }} {{ 'alliance.settings.members' | translate }} </mat-chip>
+                    }
+                    <mat-chip [class]="invitation.statusClass">
+                      {{ invitation | invitationStatus }}
+                    </mat-chip>
+                  </div>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- Invitation Details -->
+            <div class="invitation-details">
+              <div class="detail-row">
+                <span class="detail-label">{{ 'alliance.settings.expiresAt' | translate }}:</span>
+                <span class="detail-value">{{ invitation.expires_at | localDate }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">{{ 'alliance.settings.createdAt' | translate }}:</span>
+                <span class="detail-value">{{ invitation.created_at | localDate }}</span>
+              </div>
+
+              @if (invitation.members && invitation.members.length > 0) {
+                <div class="members-section">
+                  <h4>{{ 'alliance.settings.membersJoined' | translate }}</h4>
+                  <mat-list>
+                    @for (member of invitation.members; track member.id) {
+                      <mat-list-item>
+                        <mat-icon matListItemIcon>person</mat-icon>
+                        <div matListItemTitle>{{ member.display_name }}</div>
+                        <div matListItemLine>{{ '@' + member.username }} • {{ member.created_at | localDate }}</div>
+                      </mat-list-item>
+                    }
+                  </mat-list>
+                </div>
+              }
+
+              <!-- Actions -->
+              <div class="invitation-actions">
+                @if (!invitation.isExpired) {
+                  <button
+                    mat-raised-button
+                    (click)="revokeInvitation(invitation.id)"
+                    [disabled]="isInvitationSubmitting()"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    {{ 'alliance.settings.revokeInvitation' | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    }
+  </mat-card-content>
+</mat-card>
+
+<!-- Members List -->
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>{{ 'alliance.settings.memberList' | translate }}</mat-card-title>
+    <mat-card-subtitle>{{ members().length }} {{ 'alliance.settings.members' | translate }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    @if (enrichedMembers().length === 0) {
+      <div class="empty-state">
+        <mat-icon>person_add</mat-icon>
+        <p>{{ 'alliance.settings.noMembers' | translate }}</p>
+      </div>
+    } @else {
+      <div class="table-container">
+        <table mat-table [dataSource]="enrichedMembers()" class="members-table">
+          <!-- Display Name Column -->
+          <ng-container matColumnDef="displayName">
+            <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.displayName' | translate }}</th>
+            <td mat-cell *matCellDef="let member">
+              <div class="member-info">
+                <mat-icon>person</mat-icon>
+                <span>{{ member.display_name }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.role' | translate }}</th>
+            <td mat-cell *matCellDef="let member">
+              <mat-chip [class]="member.roleClass">
+                {{ member.role | translate }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Joined Date Column -->
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>{{ 'alliance.settings.joinedDate' | translate }}</th>
+            <td mat-cell *matCellDef="let member">
+              {{ member.created_at | localDate }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="memberColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: memberColumns"></tr>
+        </table>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

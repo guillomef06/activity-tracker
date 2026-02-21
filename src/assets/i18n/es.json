@@ -74,6 +74,7 @@
     "settings": {
       "title": "Configuración de la Alianza",
       "tabs": {
+        "overview": "Alianza",
         "information": "Información",
         "members": "Miembros",
         "invitations": "Invitaciones",

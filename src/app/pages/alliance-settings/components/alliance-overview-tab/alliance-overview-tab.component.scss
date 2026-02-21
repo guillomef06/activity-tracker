@@ -1,4 +1,4 @@
-.tab-content {
+.section-card {
   margin: 1rem 0;
 }
 
@@ -6,11 +6,23 @@ mat-card-title {
   padding-bottom: 1rem;
 }
 
-.invitation-form {
+// Alliance info form
+form {
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+// Create invitation form
+.invitation-form {
+  flex-direction: row;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 
   mat-form-field {
     flex: 0 0 200px;
@@ -25,6 +37,7 @@ mat-card-title {
   }
 }
 
+// Empty states
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -48,6 +61,7 @@ mat-card-title {
   }
 }
 
+// Invitations accordion
 .invitations-accordion {
   display: flex;
   flex-direction: column;
@@ -63,7 +77,8 @@ mat-card-title {
 
   .invitation-header {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: space-between;
     width: 100%;
     gap: 1rem;
@@ -93,6 +108,17 @@ mat-card-title {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+  }
+
+  // Mobile: hide badges in collapsed header, show only when expanded
+  @media (max-width: 768px) {
+    mat-expansion-panel:not(.mat-expanded) .invitation-badges {
+      display: none;
+    }
+
+    mat-expansion-panel.mat-expanded mat-expansion-panel-header {
+      height: 100%;
     }
   }
 
@@ -152,6 +178,7 @@ mat-card-title {
   }
 }
 
+// Invitation status chips
 mat-chip {
   &.status-active {
     background-color: var(--mat-sys-primary-container);
@@ -161,6 +188,54 @@ mat-chip {
   &.status-expired {
     background-color: var(--mat-sys-error-container);
     color: var(--mat-sys-on-error-container);
+  }
+}
+
+// Members table
+.table-container {
+  overflow-x: auto;
+}
+
+.members-table {
+  width: 100%;
+  margin-top: 1rem;
+
+  th {
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+
+  td {
+    padding: 1rem 0.5rem;
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      color: var(--mat-sys-primary);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  mat-chip {
+    &.role-admin {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &.role-member {
+      background-color: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
+    }
   }
 }
 
@@ -174,12 +249,21 @@ mat-chip {
     }
   }
 
-  .invitation-header {
-    flex-direction: column;
-    align-items: flex-start !important;
+  .invitations-accordion {
+    mat-panel-title {
+      .invitation-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  }
 
-    .invitation-badges {
-      margin-top: 0.5rem;
+  .members-table {
+    font-size: 0.875rem;
+
+    td,
+    th {
+      padding: 0.75rem 0.25rem;
     }
   }
 }
