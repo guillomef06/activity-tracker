@@ -24,7 +24,7 @@ export interface LanguageInfo {
  * Priority: User DB preference → Browser language → Fallback (en)
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LanguageService {
   private readonly translateService = inject(TranslateService);
@@ -38,7 +38,7 @@ export class LanguageService {
     { code: 'en', name: 'English', flag: '🇬🇧' },
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'it', name: 'Italiano', flag: '🇮🇹' }
+    { code: 'it', name: 'Italiano', flag: '🇮🇹' },
   ];
 
   /**
@@ -54,7 +54,7 @@ export class LanguageService {
    */
   public initializeLanguage(): void {
     const userProfile = this.authService.userProfile();
-    
+
     // Priority 1: User preference from database
     if (userProfile?.preferences?.language) {
       this.setLanguage(userProfile.preferences.language, false);
@@ -85,7 +85,7 @@ export class LanguageService {
 
     // Update translation service
     this.translateService.use(language);
-    
+
     // Update signal for reactive UI
     this.currentLanguage.set(language);
 
@@ -110,7 +110,7 @@ export class LanguageService {
       const currentPreferences = userProfile.preferences || {};
       const updatedPreferences: UserPreferences = {
         ...currentPreferences,
-        language
+        language,
       };
 
       const { error } = await this.supabaseService.client
@@ -125,7 +125,6 @@ export class LanguageService {
 
       // Language preference saved successfully to database
       // The updated preference will be loaded on next session
-
     } catch (error) {
       console.error('Failed to save language preference:', error);
     }

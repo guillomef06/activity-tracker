@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnackbarService {
   private readonly snackBar = inject(MatSnackBar);
@@ -14,7 +14,7 @@ export class SnackbarService {
       duration,
       horizontalPosition: 'end',
       verticalPosition: 'top',
-      panelClass: ['success-snackbar']
+      panelClass: ['success-snackbar'],
     });
   }
 
@@ -23,7 +23,7 @@ export class SnackbarService {
       duration,
       horizontalPosition: 'end',
       verticalPosition: 'top',
-      panelClass: ['error-snackbar']
+      panelClass: ['error-snackbar'],
     });
   }
 }

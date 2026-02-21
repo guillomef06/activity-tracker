@@ -1,4 +1,13 @@
-import { Component, inject, input, output, signal, computed, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  output,
+  signal,
+  computed,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -47,7 +56,7 @@ import { APP_CONSTANTS } from '@app/shared/constants/constants';
   ],
   templateUrl: './point-rules-tab.component.html',
   styleUrl: './point-rules-tab.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PointRulesTabComponent {
   private readonly pointRulesService = inject(PointRulesService);
@@ -70,7 +79,12 @@ export class PointRulesTabComponent {
   protected readonly isSubmitting = signal(false);
   protected readonly isUpdatingSetting = signal<string | null>(null);
   protected readonly activityTypes = APP_CONSTANTS.ACTIVITY_TYPES;
-  protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
+  protected readonly pointRuleColumns: string[] = [
+    'activityType',
+    'positionRange',
+    'points',
+    'actions',
+  ];
 
   // Merged list of activity types with their current settings for the participation section
   protected readonly activitySettingsList = computed(() => {
@@ -80,7 +94,7 @@ export class PointRulesTabComponent {
     );
     return this.activityTypes.map(type => ({
       type,
-      setting: settingsMap.get(type.value)
+      setting: settingsMap.get(type.value),
     }));
   });
 
@@ -92,10 +106,26 @@ export class PointRulesTabComponent {
   });
 
   // Error signals for validation
-  protected readonly activityTypeError = createFieldErrorSignal(this.pointRuleForm, 'activity_type', this.destroyRef);
-  protected readonly positionMinError = createFieldErrorSignal(this.pointRuleForm, 'position_min', this.destroyRef);
-  protected readonly positionMaxError = createFieldErrorSignal(this.pointRuleForm, 'position_max', this.destroyRef);
-  protected readonly pointsError = createFieldErrorSignal(this.pointRuleForm, 'points', this.destroyRef);
+  protected readonly activityTypeError = createFieldErrorSignal(
+    this.pointRuleForm,
+    'activity_type',
+    this.destroyRef
+  );
+  protected readonly positionMinError = createFieldErrorSignal(
+    this.pointRuleForm,
+    'position_min',
+    this.destroyRef
+  );
+  protected readonly positionMaxError = createFieldErrorSignal(
+    this.pointRuleForm,
+    'position_max',
+    this.destroyRef
+  );
+  protected readonly pointsError = createFieldErrorSignal(
+    this.pointRuleForm,
+    'points',
+    this.destroyRef
+  );
 
   protected async createPointRule(): Promise<void> {
     if (this.pointRuleForm.invalid) {
@@ -106,7 +136,9 @@ export class PointRulesTabComponent {
 
     // Validate position range
     if (formValue.position_min > formValue.position_max) {
-      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.positionRangeError'));
+      this.snackbarService.error(
+        this.translate.instant('alliance.settings.pointRules.positionRangeError')
+      );
       return;
     }
 
@@ -137,18 +169,26 @@ export class PointRulesTabComponent {
       this.ruleCreated.emit();
     } catch (error) {
       console.error('Error creating point rule:', error);
-      this.snackbarService.error(error instanceof Error ? error.message : this.translate.instant('alliance.settings.pointRules.createFailed'), 5000);
+      this.snackbarService.error(
+        error instanceof Error
+          ? error.message
+          : this.translate.instant('alliance.settings.pointRules.createFailed'),
+        5000
+      );
     } finally {
       this.isSubmitting.set(false);
     }
   }
 
   protected async deletePointRule(id: string): Promise<void> {
-    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        message: this.translate.instant('alliance.settings.pointRules.deleteConfirm'),
-      }
-    }).afterClosed().toPromise();
+    const confirmed = await this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          message: this.translate.instant('alliance.settings.pointRules.deleteConfirm'),
+        },
+      })
+      .afterClosed()
+      .toPromise();
 
     if (!confirmed) {
       return;
@@ -168,25 +208,32 @@ export class PointRulesTabComponent {
       this.ruleDeleted.emit();
     } catch (error) {
       console.error('Error deleting point rule:', error);
-      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.deleteFailed'));
+      this.snackbarService.error(
+        this.translate.instant('alliance.settings.pointRules.deleteFailed')
+      );
     } finally {
       this.isSubmitting.set(false);
     }
   }
 
-  protected async toggleParticipationMode(activityType: string, event: MatSlideToggleChange): Promise<void> {
+  protected async toggleParticipationMode(
+    activityType: string,
+    event: MatSlideToggleChange
+  ): Promise<void> {
     this.isUpdatingSetting.set(activityType);
     try {
       const currentPoints = this.activitySettingsService.getParticipationPoints(activityType);
       const { error } = await this.activitySettingsService.upsertSetting({
         activity_type: activityType,
         participation_mode: event.checked,
-        participation_points: currentPoints
+        participation_points: currentPoints,
       });
       if (error) throw error;
     } catch (error) {
       console.error('Error toggling participation mode:', error);
-      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.participationModeFailed'));
+      this.snackbarService.error(
+        this.translate.instant('alliance.settings.pointRules.participationModeFailed')
+      );
     } finally {
       this.isUpdatingSetting.set(null);
     }
@@ -205,12 +252,14 @@ export class PointRulesTabComponent {
       const { error } = await this.activitySettingsService.upsertSetting({
         activity_type: activityType,
         participation_mode: true,
-        participation_points: points
+        participation_points: points,
       });
       if (error) throw error;
     } catch (error) {
       console.error('Error updating participation points:', error);
-      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.participationPointsFailed'));
+      this.snackbarService.error(
+        this.translate.instant('alliance.settings.pointRules.participationPointsFailed')
+      );
     } finally {
       this.isUpdatingSetting.set(null);
     }

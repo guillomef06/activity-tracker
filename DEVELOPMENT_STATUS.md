@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 20 février 2026
+**Dernière mise à jour:** 21 février 2026
 
 ## 📋 Résumé
 
@@ -29,8 +29,8 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 
 ### 4. Pages Complétées
 - **Authentification:** `/login`, `/signup`, `/join/:token`, `/super-admin-setup`
-- **Membre:** `/activity-input`, `/activities-details`
-- **Admin:** `/management-dashboard`, `/alliance-settings`
+- **Membre/Admin:** `/` (home — formulaire activité + liste des scores)
+- **Admin:** `/alliance-settings`
 - **Super Admin:** `/super-admin`, `/super-admin/alliances`, `/super-admin/users`
 - **Routes:** Toutes configurées avec guards appropriés
 
@@ -61,6 +61,7 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 - ✅ **LoadingButtonComponent:** Composant partagé avec spinner, icône et états loading/disabled — migré sur tous les boutons de soumission
 - ✅ **CSS Variables Material 20:** Correction post-migration Angular 20 — tokens snackbar renommés `--mat-snack-bar-*` (avec tiret), et 15 variables `--mat-sys-color-*` alignées sur `--mat-sys-*` dans 16 fichiers SCSS (102 occurrences)
 - ✅ **AuthService — double requête user_profiles:** Suppression du bloc `getSession()` dans `initializeAuth()` ; tout centralisé dans `onAuthStateChange` (source unique). `loadingSignal` passe à `false` uniquement après que le profil est chargé, garantissant que les guards ont user + profil disponibles simultanément.
+- ✅ **Home page unifiée:** Suppression de `activity-input`, `activities-details`, `management-dashboard`, `ranking-chart`. Nouvelle page `/` fusionnant le formulaire d'activité (section 1) et la liste des scores (section 2). Suppression de `averageWeekly`, de `chart.js`/`ng2-charts`, simplification de l'ordre des semaines (plus de double-reverse). Guards et redirections post-login/join alignés sur `/`.
 
 ---
 

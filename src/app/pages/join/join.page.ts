@@ -1,4 +1,11 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -12,7 +19,10 @@ import { AuthService } from '@app/core/services/auth.service';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { MemberSignUpRequest } from '@app/shared/models';
-import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import {
+  passwordMatchValidator,
+  createFieldErrorSignal,
+} from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-join',
@@ -31,7 +41,7 @@ import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/util
   ],
   templateUrl: './join.page.html',
   styleUrl: './join.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JoinPage implements OnInit {
   private readonly authService = inject(AuthService);
@@ -49,13 +59,16 @@ export class JoinPage implements OnInit {
   protected readonly allianceName = signal<string | null>(null);
   protected readonly invitationToken = signal<string | null>(null);
 
-  protected readonly joinForm: FormGroup = this.fb.group({
-    token: ['', [Validators.required, Validators.minLength(6)]],
-    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-    displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', [Validators.required]],
-  }, { validators: passwordMatchValidator });
+  protected readonly joinForm: FormGroup = this.fb.group(
+    {
+      token: ['', [Validators.required, Validators.minLength(6)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validators: passwordMatchValidator }
+  );
 
   ngOnInit(): void {
     // Check if token is provided in query params
@@ -76,14 +89,30 @@ export class JoinPage implements OnInit {
 
   // Reactive error signals (automatically update when form state changes)
   protected readonly tokenError = createFieldErrorSignal(this.joinForm, 'token', this.destroyRef);
-  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username', this.destroyRef);
-  protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef);
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
+  protected readonly usernameError = createFieldErrorSignal(
+    this.joinForm,
+    'username',
+    this.destroyRef
+  );
+  protected readonly displayNameError = createFieldErrorSignal(
+    this.joinForm,
+    'displayName',
+    this.destroyRef
+  );
+  protected readonly passwordError = createFieldErrorSignal(
+    this.joinForm,
+    'password',
+    this.destroyRef
+  );
+  protected readonly confirmPasswordError = createFieldErrorSignal(
+    this.joinForm,
+    'confirmPassword',
+    this.destroyRef
+  );
 
   protected async validateToken(token?: string): Promise<void> {
     const tokenValue = token || this.joinForm.get('token')?.value;
-    
+
     if (!tokenValue || tokenValue.length < 6) {
       this.allianceName.set(null);
       this.invitationToken.set(null);
@@ -95,7 +124,7 @@ export class JoinPage implements OnInit {
 
     try {
       const response = await this.allianceService.validateInvitation(tokenValue);
-      
+
       if (response.valid && response.alliance) {
         this.invitationToken.set(tokenValue);
         this.allianceName.set(response.alliance.name);
@@ -126,23 +155,23 @@ export class JoinPage implements OnInit {
 
     try {
       const { token, username, displayName, password } = this.joinForm.value;
-      
+
       const request: MemberSignUpRequest = {
         username,
         password,
         displayName,
         invitationToken: token,
       };
-      
+
       await this.authService.signUpMember(request);
-      
-      // Redirect to activity input page
-      await this.router.navigate(['/activity-input']);
+
+      // Redirect to home
+      await this.router.navigate(['/']);
     } catch (error: unknown) {
       console.error('Join error:', error);
-      
+
       const errorMessage = (error as { message?: string })?.message || '';
-      
+
       if (errorMessage.includes('already exists') || errorMessage.includes('duplicate')) {
         this.errorMessage.set('auth.errors.usernameExists');
       } else if (errorMessage.includes('token') || errorMessage.includes('invitation')) {

@@ -15,11 +15,11 @@ describe('MembersTabComponent', () => {
 
     fixture = TestBed.createComponent(MembersTabComponent);
     component = fixture.componentInstance;
-    
+
     // Set required inputs
     fixture.componentRef.setInput('members', []);
     fixture.componentRef.setInput('isLoading', false);
-    
+
     fixture.detectChanges();
   });
 
@@ -33,13 +33,25 @@ describe('MembersTabComponent', () => {
 
   it('should display members when provided', () => {
     const mockMembers = [
-      { id: '1', display_name: 'User 1', username: 'user1', role: 'admin', created_at: new Date().toISOString() },
-      { id: '2', display_name: 'User 2', username: 'user2', role: 'member', created_at: new Date().toISOString() },
+      {
+        id: '1',
+        display_name: 'User 1',
+        username: 'user1',
+        role: 'admin',
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        display_name: 'User 2',
+        username: 'user2',
+        role: 'member',
+        created_at: new Date().toISOString(),
+      },
     ];
-    
+
     fixture.componentRef.setInput('members', mockMembers);
     fixture.detectChanges();
-    
+
     expect(component.members().length).toBe(2);
   });
 

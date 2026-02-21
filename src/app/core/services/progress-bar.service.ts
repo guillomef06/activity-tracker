@@ -6,7 +6,7 @@ import { Injectable, signal } from '@angular/core';
  * Provides a centralized loading state for all pages
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProgressBarService {
   /**

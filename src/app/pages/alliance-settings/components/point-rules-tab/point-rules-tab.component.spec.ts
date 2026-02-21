@@ -18,9 +18,7 @@ describe('PointRulesTabComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [PointRulesTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
-      providers: [
-        { provide: PointRulesService, useValue: pointRulesServiceSpy },
-      ],
+      providers: [{ provide: PointRulesService, useValue: pointRulesServiceSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PointRulesTabComponent);

@@ -16,21 +16,15 @@ describe('SuperAdminUsersPage', () => {
       client: {
         from: vi.fn().mockReturnValue({
           select: vi.fn().mockReturnValue({
-            order: vi.fn().mockReturnValue(
-              Promise.resolve({ data: [], error: null })
-            ),
+            order: vi.fn().mockReturnValue(Promise.resolve({ data: [], error: null })),
           }),
           update: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue(
-              Promise.resolve({ error: null })
-            ),
+            eq: vi.fn().mockReturnValue(Promise.resolve({ error: null })),
           }),
         }),
         auth: {
           admin: {
-            deleteUser: vi.fn().mockReturnValue(
-              Promise.resolve({ error: null })
-            ),
+            deleteUser: vi.fn().mockReturnValue(Promise.resolve({ error: null })),
           },
         },
       },

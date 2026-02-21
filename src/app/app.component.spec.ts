@@ -8,11 +8,7 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent, TranslateModule.forRoot()],
-      providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        TranslateService
-      ]
+      providers: [provideRouter([]), provideHttpClient(), TranslateService],
     }).compileComponents();
   });
 
@@ -25,14 +21,14 @@ describe('AppComponent', () => {
   it('should configure supported languages', () => {
     TestBed.createComponent(AppComponent);
     const translate = TestBed.inject(TranslateService);
-    
+
     expect(translate.getLangs()).toEqual(['en', 'fr', 'it', 'es']);
   });
 
   it('should use browser language or fallback to en', () => {
     TestBed.createComponent(AppComponent);
     const translate = TestBed.inject(TranslateService);
-    
+
     // Either uses browser language or defaults to 'en'
     const currentLang = translate.currentLang || translate.getDefaultLang();
     expect(currentLang).toBeTruthy();

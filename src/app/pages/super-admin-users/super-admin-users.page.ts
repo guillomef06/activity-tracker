@@ -1,4 +1,11 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -43,7 +50,7 @@ interface UserWithAlliance extends UserProfile {
   ],
   templateUrl: './super-admin-users.page.html',
   styleUrl: './super-admin-users.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuperAdminUsersPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
@@ -55,7 +62,14 @@ export class SuperAdminUsersPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly users = signal<UserWithAlliance[]>([]);
-  protected readonly displayedColumns: string[] = ['displayName', 'username', 'role', 'alliance', 'createdAt', 'actions'];
+  protected readonly displayedColumns: string[] = [
+    'displayName',
+    'username',
+    'role',
+    'alliance',
+    'createdAt',
+    'actions',
+  ];
 
   protected readonly editForm: FormGroup = this.fb.group({
     id: [''],
@@ -64,7 +78,11 @@ export class SuperAdminUsersPage implements OnInit {
   });
 
   // Error signals for validation
-  protected readonly displayNameError = createFieldErrorSignal(this.editForm, 'display_name', this.destroyRef);
+  protected readonly displayNameError = createFieldErrorSignal(
+    this.editForm,
+    'display_name',
+    this.destroyRef
+  );
   protected readonly roleError = createFieldErrorSignal(this.editForm, 'role', this.destroyRef);
 
   protected readonly editingId = signal<string | null>(null);
@@ -86,10 +104,12 @@ export class SuperAdminUsersPage implements OnInit {
         if (usersError) throw usersError;
 
         if (usersData) {
-          const usersWithAlliance: UserWithAlliance[] = usersData.map((user: { alliances?: { name: string } | null } & UserProfile) => ({
-            ...user,
-            alliance_name: user.alliances?.name || null,
-          }));
+          const usersWithAlliance: UserWithAlliance[] = usersData.map(
+            (user: { alliances?: { name: string } | null } & UserProfile) => ({
+              ...user,
+              alliance_name: user.alliances?.name || null,
+            })
+          );
 
           this.users.set(usersWithAlliance);
         }
@@ -142,11 +162,16 @@ export class SuperAdminUsersPage implements OnInit {
   }
 
   protected async deleteUser(user: UserProfile): Promise<void> {
-    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        message: this.translate.instant('superAdmin.users.deleteConfirm', { name: user.display_name }),
-      }
-    }).afterClosed().toPromise();
+    const confirmed = await this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          message: this.translate.instant('superAdmin.users.deleteConfirm', {
+            name: user.display_name,
+          }),
+        },
+      })
+      .afterClosed()
+      .toPromise();
 
     if (!confirmed) {
       return;
@@ -156,11 +181,12 @@ export class SuperAdminUsersPage implements OnInit {
       try {
         // Use RPC function to delete user completely (user_profiles + auth.users)
         // This function has SECURITY DEFINER to bypass RLS for auth.users deletion
-        const { data, error } = await this.supabase.client
-          .rpc('delete_user_complete', { user_id: user.id });
+        const { data, error } = await this.supabase.client.rpc('delete_user_complete', {
+          user_id: user.id,
+        });
 
         if (error) throw error;
-        
+
         if (!data) {
           throw new Error('Delete function returned false');
         }

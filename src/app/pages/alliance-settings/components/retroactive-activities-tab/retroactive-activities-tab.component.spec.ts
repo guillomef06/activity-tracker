@@ -17,15 +17,11 @@ describe('RetroactiveActivitiesTabComponent', () => {
     snackBarSpy = { open: vi.fn() };
 
     await TestBed.configureTestingModule({
-      imports: [
-        RetroactiveActivitiesTabComponent,
-        TranslateModule.forRoot(),
-        NoopAnimationsModule
-      ],
+      imports: [RetroactiveActivitiesTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
         { provide: ActivityService, useValue: activityServiceSpy },
-        { provide: MatSnackBar, useValue: snackBarSpy }
-      ]
+        { provide: MatSnackBar, useValue: snackBarSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RetroactiveActivitiesTabComponent);
@@ -34,7 +30,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
     // Set required input
     fixture.componentRef.setInput('members', [
       { id: 'user1', display_name: 'John Doe', username: 'john' },
-      { id: 'user2', display_name: 'Jane Doe', username: 'jane' }
+      { id: 'user2', display_name: 'Jane Doe', username: 'jane' },
     ]);
 
     fixture.detectChanges();
@@ -126,7 +122,12 @@ describe('RetroactiveActivitiesTabComponent', () => {
   });
 
   it('should reset all form fields when resetForm is called', () => {
-    component['retroactiveForm'].patchValue({ member: 'user1', activity: 'legion', position: 5, week: 2 });
+    component['retroactiveForm'].patchValue({
+      member: 'user1',
+      activity: 'legion',
+      position: 5,
+      week: 2,
+    });
 
     component.resetForm();
 

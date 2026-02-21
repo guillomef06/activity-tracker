@@ -7,4 +7,3 @@ export { PointRulesService } from './point-rules.service';
 export { AllianceActivitySettingsService } from './alliance-activity-settings.service';
 export { ProgressBarService } from './progress-bar.service';
 export { SnackbarService } from './snackbar.service';
-

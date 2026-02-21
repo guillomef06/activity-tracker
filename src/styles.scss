@@ -1,7 +1,7 @@
 /* Angular Material Core */
-@use "@angular/material" as mat;
-@use "../_theme-colors" as theme-colors;
-@use "sass:map";
+@use '@angular/material' as mat;
+@use '../_theme-colors' as theme-colors;
+@use 'sass:map';
 @use 'sass:meta';
 
 // Include Material core styles
@@ -17,8 +17,8 @@ $light-theme: mat.define-theme(
       tertiary: theme-colors.$tertiary-palette,
     ),
     typography: (
-      brand-family: "Roboto, sans-serif",
-      plain-family: "Roboto, sans-serif",
+      brand-family: 'Roboto, sans-serif',
+      plain-family: 'Roboto, sans-serif',
       bold-weight: 700,
       medium-weight: 500,
       regular-weight: 400,
@@ -221,121 +221,417 @@ mat-snack-bar-container.error-snackbar {
 
 /* Map des correspondances variables Material <-> palette + index pour light et dark */
 $mat-sys-vars-light: (
-  mat-sys-primary: (palette: primary, idx: 40),
-  mat-sys-on-primary: (palette: primary, idx: 100),
-  mat-sys-primary-container: (palette: primary, idx: 90),
-  mat-sys-on-primary-container: (palette: primary, idx: 10),
-  mat-sys-primary-fixed: (palette: primary, idx: 90),
-  mat-sys-on-primary-fixed: (palette: primary, idx: 10),
-  mat-sys-on-primary-fixed-variant: (palette: primary, idx: 20),
-  mat-sys-primary-fixed-dim: (palette: primary, idx: 80),
-  mat-sys-inverse-primary: (palette: primary, idx: 80),
-
-  mat-sys-secondary: (palette: secondary, idx: 40),
-  mat-sys-on-secondary: (palette: secondary, idx: 100),
-  mat-sys-secondary-container: (palette: secondary, idx: 90),
-  mat-sys-on-secondary-container: (palette: secondary, idx: 10),
-  mat-sys-secondary-fixed: (palette: secondary, idx: 90),
-  mat-sys-on-secondary-fixed: (palette: secondary, idx: 10),
-  mat-sys-on-secondary-fixed-variant: (palette: secondary, idx: 20),
-  mat-sys-secondary-fixed-dim: (palette: secondary, idx: 80),
-
-  mat-sys-tertiary: (palette: tertiary, idx: 40),
-  mat-sys-on-tertiary: (palette: tertiary, idx: 100),
-  mat-sys-tertiary-container: (palette: tertiary, idx: 90),
-  mat-sys-on-tertiary-container: (palette: tertiary, idx: 10),
-  mat-sys-tertiary-fixed: (palette: tertiary, idx: 90),
-  mat-sys-on-tertiary-fixed: (palette: tertiary, idx: 10),
-  mat-sys-on-tertiary-fixed-variant: (palette: tertiary, idx: 20),
-  mat-sys-tertiary-fixed-dim: (palette: tertiary, idx: 80),
-
-  mat-sys-error: (palette: error, idx: 40),
-  mat-sys-on-error: (palette: error, idx: 100),
-  mat-sys-error-container: (palette: error, idx: 90),
-  mat-sys-on-error-container: (palette: error, idx: 10),
-
-  mat-sys-surface: (palette: neutral, idx: 98),
-  mat-sys-on-surface: (palette: neutral, idx: 10),
-  mat-sys-on-surface-variant: (palette: neutral, idx: 40),
-  mat-sys-surface-bright: (palette: neutral, idx: 98),
-  mat-sys-surface-container: (palette: neutral, idx: 90),
-  mat-sys-surface-container-high: (palette: neutral, idx: 87),
-  mat-sys-surface-container-highest: (palette: neutral, idx: 80),
-  mat-sys-surface-container-low: (palette: neutral, idx: 95),
-  mat-sys-surface-container-lowest: (palette: neutral, idx: 100),
-  mat-sys-surface-dim: (palette: neutral, idx: 70),
-  mat-sys-surface-tint: (palette: primary, idx: 40),
-  mat-sys-surface-variant: (palette: neutral-variant, idx: 90),
-  mat-sys-inverse-surface: (palette: neutral, idx: 20),
-  mat-sys-inverse-on-surface: (palette: neutral, idx: 90),
-
-  mat-sys-background: (palette: neutral, idx: 98),
-  mat-sys-on-background: (palette: neutral, idx: 10),
-  mat-sys-neutral-variant20: (palette: neutral-variant, idx: 20),
-  mat-sys-neutral10: (palette: neutral, idx: 10),
-  mat-sys-outline: (palette: neutral, idx: 22),
-  mat-sys-outline-variant: (palette: neutral, idx: 40),
-  mat-sys-scrim: (palette: neutral, idx: 0),
-  mat-sys-shadow: (palette: neutral, idx: 0),
+  mat-sys-primary: (
+    palette: primary,
+    idx: 40,
+  ),
+  mat-sys-on-primary: (
+    palette: primary,
+    idx: 100,
+  ),
+  mat-sys-primary-container: (
+    palette: primary,
+    idx: 90,
+  ),
+  mat-sys-on-primary-container: (
+    palette: primary,
+    idx: 10,
+  ),
+  mat-sys-primary-fixed: (
+    palette: primary,
+    idx: 90,
+  ),
+  mat-sys-on-primary-fixed: (
+    palette: primary,
+    idx: 10,
+  ),
+  mat-sys-on-primary-fixed-variant: (
+    palette: primary,
+    idx: 20,
+  ),
+  mat-sys-primary-fixed-dim: (
+    palette: primary,
+    idx: 80,
+  ),
+  mat-sys-inverse-primary: (
+    palette: primary,
+    idx: 80,
+  ),
+  mat-sys-secondary: (
+    palette: secondary,
+    idx: 40,
+  ),
+  mat-sys-on-secondary: (
+    palette: secondary,
+    idx: 100,
+  ),
+  mat-sys-secondary-container: (
+    palette: secondary,
+    idx: 90,
+  ),
+  mat-sys-on-secondary-container: (
+    palette: secondary,
+    idx: 10,
+  ),
+  mat-sys-secondary-fixed: (
+    palette: secondary,
+    idx: 90,
+  ),
+  mat-sys-on-secondary-fixed: (
+    palette: secondary,
+    idx: 10,
+  ),
+  mat-sys-on-secondary-fixed-variant: (
+    palette: secondary,
+    idx: 20,
+  ),
+  mat-sys-secondary-fixed-dim: (
+    palette: secondary,
+    idx: 80,
+  ),
+  mat-sys-tertiary: (
+    palette: tertiary,
+    idx: 40,
+  ),
+  mat-sys-on-tertiary: (
+    palette: tertiary,
+    idx: 100,
+  ),
+  mat-sys-tertiary-container: (
+    palette: tertiary,
+    idx: 90,
+  ),
+  mat-sys-on-tertiary-container: (
+    palette: tertiary,
+    idx: 10,
+  ),
+  mat-sys-tertiary-fixed: (
+    palette: tertiary,
+    idx: 90,
+  ),
+  mat-sys-on-tertiary-fixed: (
+    palette: tertiary,
+    idx: 10,
+  ),
+  mat-sys-on-tertiary-fixed-variant: (
+    palette: tertiary,
+    idx: 20,
+  ),
+  mat-sys-tertiary-fixed-dim: (
+    palette: tertiary,
+    idx: 80,
+  ),
+  mat-sys-error: (
+    palette: error,
+    idx: 40,
+  ),
+  mat-sys-on-error: (
+    palette: error,
+    idx: 100,
+  ),
+  mat-sys-error-container: (
+    palette: error,
+    idx: 90,
+  ),
+  mat-sys-on-error-container: (
+    palette: error,
+    idx: 10,
+  ),
+  mat-sys-surface: (
+    palette: neutral,
+    idx: 98,
+  ),
+  mat-sys-on-surface: (
+    palette: neutral,
+    idx: 10,
+  ),
+  mat-sys-on-surface-variant: (
+    palette: neutral,
+    idx: 40,
+  ),
+  mat-sys-surface-bright: (
+    palette: neutral,
+    idx: 98,
+  ),
+  mat-sys-surface-container: (
+    palette: neutral,
+    idx: 90,
+  ),
+  mat-sys-surface-container-high: (
+    palette: neutral,
+    idx: 87,
+  ),
+  mat-sys-surface-container-highest: (
+    palette: neutral,
+    idx: 80,
+  ),
+  mat-sys-surface-container-low: (
+    palette: neutral,
+    idx: 95,
+  ),
+  mat-sys-surface-container-lowest: (
+    palette: neutral,
+    idx: 100,
+  ),
+  mat-sys-surface-dim: (
+    palette: neutral,
+    idx: 70,
+  ),
+  mat-sys-surface-tint: (
+    palette: primary,
+    idx: 40,
+  ),
+  mat-sys-surface-variant: (
+    palette: neutral-variant,
+    idx: 90,
+  ),
+  mat-sys-inverse-surface: (
+    palette: neutral,
+    idx: 20,
+  ),
+  mat-sys-inverse-on-surface: (
+    palette: neutral,
+    idx: 90,
+  ),
+  mat-sys-background: (
+    palette: neutral,
+    idx: 98,
+  ),
+  mat-sys-on-background: (
+    palette: neutral,
+    idx: 10,
+  ),
+  mat-sys-neutral-variant20: (
+    palette: neutral-variant,
+    idx: 20,
+  ),
+  mat-sys-neutral10: (
+    palette: neutral,
+    idx: 10,
+  ),
+  mat-sys-outline: (
+    palette: neutral,
+    idx: 22,
+  ),
+  mat-sys-outline-variant: (
+    palette: neutral,
+    idx: 40,
+  ),
+  mat-sys-scrim: (
+    palette: neutral,
+    idx: 0,
+  ),
+  mat-sys-shadow: (
+    palette: neutral,
+    idx: 0,
+  ),
 );
 
 $mat-sys-vars-dark: (
-  mat-sys-primary: (palette: primary, idx: 80),
-  mat-sys-on-primary: (palette: primary, idx: 20),
-  mat-sys-primary-container: (palette: primary, idx: 30),
-  mat-sys-on-primary-container: (palette: primary, idx: 90),
-  mat-sys-primary-fixed: (palette: primary, idx: 90),
-  mat-sys-on-primary-fixed: (palette: primary, idx: 10),
-  mat-sys-on-primary-fixed-variant: (palette: primary, idx: 30),
-  mat-sys-primary-fixed-dim: (palette: primary, idx: 80),
-  mat-sys-inverse-primary: (palette: primary, idx: 40),
-
-  mat-sys-secondary: (palette: secondary, idx: 80),
-  mat-sys-on-secondary: (palette: secondary, idx: 20),
-  mat-sys-secondary-container: (palette: secondary, idx: 30),
-  mat-sys-on-secondary-container: (palette: secondary, idx: 90),
-  mat-sys-secondary-fixed: (palette: secondary, idx: 90),
-  mat-sys-on-secondary-fixed: (palette: secondary, idx: 10),
-  mat-sys-on-secondary-fixed-variant: (palette: secondary, idx: 30),
-  mat-sys-secondary-fixed-dim: (palette: secondary, idx: 80),
-
-  mat-sys-tertiary: (palette: tertiary, idx: 80),
-  mat-sys-on-tertiary: (palette: tertiary, idx: 20),
-  mat-sys-tertiary-container: (palette: tertiary, idx: 30),
-  mat-sys-on-tertiary-container: (palette: tertiary, idx: 90),
-  mat-sys-tertiary-fixed: (palette: tertiary, idx: 90),
-  mat-sys-on-tertiary-fixed: (palette: tertiary, idx: 10),
-  mat-sys-on-tertiary-fixed-variant: (palette: tertiary, idx: 30),
-  mat-sys-tertiary-fixed-dim: (palette: tertiary, idx: 80),
-
-  mat-sys-error: (palette: error, idx: 80),
-  mat-sys-on-error: (palette: error, idx: 20),
-  mat-sys-error-container: (palette: error, idx: 30),
-  mat-sys-on-error-container: (palette: error, idx: 90),
-
-  mat-sys-surface: (palette: neutral, idx: 6),
-  mat-sys-on-surface: (palette: neutral, idx: 90),
-  mat-sys-on-surface-variant: (palette: neutral, idx: 80),
-  mat-sys-surface-bright: (palette: neutral, idx: 24),
-  mat-sys-surface-container: (palette: neutral, idx: 12),
-  mat-sys-surface-container-high: (palette: neutral, idx: 17),
-  mat-sys-surface-container-highest: (palette: neutral, idx: 22),
-  mat-sys-surface-container-low: (palette: neutral, idx: 4),
-  mat-sys-surface-container-lowest: (palette: neutral, idx: 0),
-  mat-sys-surface-dim: (palette: neutral, idx: 4),
-  mat-sys-surface-tint: (palette: primary, idx: 80),
-  mat-sys-surface-variant: (palette: neutral-variant, idx: 30),
-  mat-sys-inverse-surface: (palette: neutral, idx: 90),
-  mat-sys-inverse-on-surface: (palette: neutral, idx: 20),
-
-  mat-sys-background: (palette: neutral, idx: 6),
-  mat-sys-on-background: (palette: neutral, idx: 90),
-  mat-sys-neutral-variant20: (palette: neutral-variant, idx: 20),
-  mat-sys-neutral10: (palette: neutral, idx: 10),
-  mat-sys-outline: (palette: neutral, idx: 40),
-  mat-sys-outline-variant: (palette: neutral, idx: 80),
-  mat-sys-scrim: (palette: neutral, idx: 0),
-  mat-sys-shadow: (palette: neutral, idx: 0),
+  mat-sys-primary: (
+    palette: primary,
+    idx: 80,
+  ),
+  mat-sys-on-primary: (
+    palette: primary,
+    idx: 20,
+  ),
+  mat-sys-primary-container: (
+    palette: primary,
+    idx: 30,
+  ),
+  mat-sys-on-primary-container: (
+    palette: primary,
+    idx: 90,
+  ),
+  mat-sys-primary-fixed: (
+    palette: primary,
+    idx: 90,
+  ),
+  mat-sys-on-primary-fixed: (
+    palette: primary,
+    idx: 10,
+  ),
+  mat-sys-on-primary-fixed-variant: (
+    palette: primary,
+    idx: 30,
+  ),
+  mat-sys-primary-fixed-dim: (
+    palette: primary,
+    idx: 80,
+  ),
+  mat-sys-inverse-primary: (
+    palette: primary,
+    idx: 40,
+  ),
+  mat-sys-secondary: (
+    palette: secondary,
+    idx: 80,
+  ),
+  mat-sys-on-secondary: (
+    palette: secondary,
+    idx: 20,
+  ),
+  mat-sys-secondary-container: (
+    palette: secondary,
+    idx: 30,
+  ),
+  mat-sys-on-secondary-container: (
+    palette: secondary,
+    idx: 90,
+  ),
+  mat-sys-secondary-fixed: (
+    palette: secondary,
+    idx: 90,
+  ),
+  mat-sys-on-secondary-fixed: (
+    palette: secondary,
+    idx: 10,
+  ),
+  mat-sys-on-secondary-fixed-variant: (
+    palette: secondary,
+    idx: 30,
+  ),
+  mat-sys-secondary-fixed-dim: (
+    palette: secondary,
+    idx: 80,
+  ),
+  mat-sys-tertiary: (
+    palette: tertiary,
+    idx: 80,
+  ),
+  mat-sys-on-tertiary: (
+    palette: tertiary,
+    idx: 20,
+  ),
+  mat-sys-tertiary-container: (
+    palette: tertiary,
+    idx: 30,
+  ),
+  mat-sys-on-tertiary-container: (
+    palette: tertiary,
+    idx: 90,
+  ),
+  mat-sys-tertiary-fixed: (
+    palette: tertiary,
+    idx: 90,
+  ),
+  mat-sys-on-tertiary-fixed: (
+    palette: tertiary,
+    idx: 10,
+  ),
+  mat-sys-on-tertiary-fixed-variant: (
+    palette: tertiary,
+    idx: 30,
+  ),
+  mat-sys-tertiary-fixed-dim: (
+    palette: tertiary,
+    idx: 80,
+  ),
+  mat-sys-error: (
+    palette: error,
+    idx: 80,
+  ),
+  mat-sys-on-error: (
+    palette: error,
+    idx: 20,
+  ),
+  mat-sys-error-container: (
+    palette: error,
+    idx: 30,
+  ),
+  mat-sys-on-error-container: (
+    palette: error,
+    idx: 90,
+  ),
+  mat-sys-surface: (
+    palette: neutral,
+    idx: 6,
+  ),
+  mat-sys-on-surface: (
+    palette: neutral,
+    idx: 90,
+  ),
+  mat-sys-on-surface-variant: (
+    palette: neutral,
+    idx: 80,
+  ),
+  mat-sys-surface-bright: (
+    palette: neutral,
+    idx: 24,
+  ),
+  mat-sys-surface-container: (
+    palette: neutral,
+    idx: 12,
+  ),
+  mat-sys-surface-container-high: (
+    palette: neutral,
+    idx: 17,
+  ),
+  mat-sys-surface-container-highest: (
+    palette: neutral,
+    idx: 22,
+  ),
+  mat-sys-surface-container-low: (
+    palette: neutral,
+    idx: 4,
+  ),
+  mat-sys-surface-container-lowest: (
+    palette: neutral,
+    idx: 0,
+  ),
+  mat-sys-surface-dim: (
+    palette: neutral,
+    idx: 4,
+  ),
+  mat-sys-surface-tint: (
+    palette: primary,
+    idx: 80,
+  ),
+  mat-sys-surface-variant: (
+    palette: neutral-variant,
+    idx: 30,
+  ),
+  mat-sys-inverse-surface: (
+    palette: neutral,
+    idx: 90,
+  ),
+  mat-sys-inverse-on-surface: (
+    palette: neutral,
+    idx: 20,
+  ),
+  mat-sys-background: (
+    palette: neutral,
+    idx: 6,
+  ),
+  mat-sys-on-background: (
+    palette: neutral,
+    idx: 90,
+  ),
+  mat-sys-neutral-variant20: (
+    palette: neutral-variant,
+    idx: 20,
+  ),
+  mat-sys-neutral10: (
+    palette: neutral,
+    idx: 10,
+  ),
+  mat-sys-outline: (
+    palette: neutral,
+    idx: 40,
+  ),
+  mat-sys-outline-variant: (
+    palette: neutral,
+    idx: 80,
+  ),
+  mat-sys-scrim: (
+    palette: neutral,
+    idx: 0,
+  ),
+  mat-sys-shadow: (
+    palette: neutral,
+    idx: 0,
+  ),
 );
 
 // Mixin pour générer les variables CSS Material

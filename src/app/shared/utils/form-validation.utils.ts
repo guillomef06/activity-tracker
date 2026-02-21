@@ -60,12 +60,12 @@ export function getFormControlError(control: AbstractControl | null, showAll = f
 export function passwordMatchValidator(form: FormGroup): ValidationErrors | null {
   const password = form.get('password')?.value;
   const confirmPassword = form.get('confirmPassword')?.value;
-  
+
   if (password !== confirmPassword) {
     form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
     return { passwordMismatch: true };
   }
-  
+
   return null;
 }
 
@@ -111,9 +111,7 @@ export function createFieldErrorSignal(
 
   // Convert control changes to signal with automatic cleanup
   const controlChanges = toSignal(
-    merge(control.valueChanges, control.statusChanges).pipe(
-      takeUntilDestroyed(destroyRef)
-    ),
+    merge(control.valueChanges, control.statusChanges).pipe(takeUntilDestroyed(destroyRef)),
     { initialValue: control.value }
   );
 

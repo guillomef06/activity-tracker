@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
   imports: [],
   templateUrl: './app-footer.component.html',
   styleUrl: './app-footer.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppFooterComponent {
   protected readonly version = environment.appVersion;

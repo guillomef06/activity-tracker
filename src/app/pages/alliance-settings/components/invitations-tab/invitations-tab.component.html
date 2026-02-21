@@ -2,20 +2,14 @@
   <mat-card-header>
     <mat-card-title>{{ 'alliance.settings.invitationManagement' | translate }}</mat-card-title>
   </mat-card-header>
-  
+
   <mat-card-content>
     <!-- Create Invitation Form -->
     <form [formGroup]="invitationForm" (ngSubmit)="createInvitation()" class="invitation-form">
       <mat-form-field appearance="outline">
         <mat-icon matIconPrefix>schedule</mat-icon>
         <mat-label>{{ 'alliance.settings.invitationDuration' | translate }}</mat-label>
-        <input
-          matInput
-          formControlName="durationDays"
-          type="number"
-          min="1"
-          max="365"
-        />
+        <input matInput formControlName="durationDays" type="number" min="1" max="365" />
         <mat-hint>{{ 'alliance.settings.durationHint' | translate }}</mat-hint>
         @if (durationDaysError()) {
           <mat-error>{{ durationDaysError() }}</mat-error>
@@ -101,11 +95,7 @@
               <!-- Actions -->
               <div class="invitation-actions">
                 @if (!isInvitationExpired(invitation.expires_at)) {
-                  <button
-                    mat-raised-button
-                    (click)="revokeInvitation(invitation.id)"
-                    [disabled]="isSubmitting()"
-                  >
+                  <button mat-raised-button (click)="revokeInvitation(invitation.id)" [disabled]="isSubmitting()">
                     <mat-icon>delete</mat-icon>
                     {{ 'alliance.settings.revokeInvitation' | translate }}
                   </button>

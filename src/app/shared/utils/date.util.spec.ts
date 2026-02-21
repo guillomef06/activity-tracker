@@ -4,16 +4,15 @@ import {
   getWeekNumberForWeeksAgo,
   getDateForWeeksAgo,
   getWeekStart,
-  getWeekEnd
+  getWeekEnd,
 } from './date.util';
 
 describe('Date Utility Functions', () => {
-  
   describe('getWeekStart', () => {
     it('should return Sunday for a date in the middle of the week', () => {
       const wednesday = new Date('2026-02-11T12:00:00'); // Wednesday
       const sunday = getWeekStart(wednesday);
-      
+
       expect(sunday.getDay()).toBe(0); // Sunday = 0
       expect(sunday.getDate()).toBe(8); // Feb 8, 2026 is Sunday
     });
@@ -21,7 +20,7 @@ describe('Date Utility Functions', () => {
     it('should return the same date if already Sunday', () => {
       const sunday = new Date('2026-02-08T12:00:00');
       const result = getWeekStart(sunday);
-      
+
       expect(result.getDay()).toBe(0);
       expect(result.getDate()).toBe(8);
     });
@@ -31,7 +30,7 @@ describe('Date Utility Functions', () => {
     it('should return Saturday for a date in the middle of the week', () => {
       const wednesday = new Date('2026-02-11T12:00:00');
       const saturday = getWeekEnd(wednesday);
-      
+
       expect(saturday.getDay()).toBe(6); // Saturday = 6
       expect(saturday.getDate()).toBe(14); // Feb 14, 2026 is Saturday
     });
@@ -114,7 +113,7 @@ describe('Date Utility Functions', () => {
       const result = getDateForWeeksAgo(0);
       const today = new Date();
       const currentSunday = getWeekStart(today);
-      
+
       expect(result.getDay()).toBe(0); // Sunday
       expect(result.getDate()).toBe(currentSunday.getDate());
     });
@@ -125,7 +124,7 @@ describe('Date Utility Functions', () => {
       const currentSunday = getWeekStart(today);
       const expectedDate = new Date(currentSunday);
       expectedDate.setDate(expectedDate.getDate() - 7);
-      
+
       expect(result.getDay()).toBe(0); // Sunday
       expect(result.getDate()).toBe(expectedDate.getDate());
     });
@@ -136,7 +135,7 @@ describe('Date Utility Functions', () => {
       const currentSunday = getWeekStart(today);
       const expectedDate = new Date(currentSunday);
       expectedDate.setDate(expectedDate.getDate() - 35);
-      
+
       expect(result.getDay()).toBe(0); // Sunday
       expect(result.getDate()).toBe(expectedDate.getDate());
     });
@@ -155,12 +154,12 @@ describe('Date Utility Functions', () => {
       vi.setSystemTime(new Date('2026-02-09T12:00:00'));
 
       const weekNumber = getCurrentWeekNumber();
-      
+
       // Week 3 activities: Golden Expedition (weeks 1,3), Legion (all weeks)
       const goldenExpeditionWeeks = [1, 3];
       const kvkPrepWeeks = [2, 4];
       const legionWeeks = [1, 2, 3, 4, 5, 6];
-      
+
       expect(goldenExpeditionWeeks.includes(weekNumber)).toBe(true);
       expect(kvkPrepWeeks.includes(weekNumber)).toBe(false);
       expect(legionWeeks.includes(weekNumber)).toBe(true);
