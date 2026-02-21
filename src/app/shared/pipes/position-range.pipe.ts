@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'positionRange',
-  standalone: true,
   pure: true,
 })
 export class PositionRangePipe implements PipeTransform {

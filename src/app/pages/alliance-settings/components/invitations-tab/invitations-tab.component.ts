@@ -1,12 +1,4 @@
-import {
-  Component,
-  inject,
-  input,
-  output,
-  signal,
-  ChangeDetectionStrategy,
-  DestroyRef,
-} from '@angular/core';
+import { Component, inject, input, output, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,10 +21,10 @@ import { InvitationStatusPipe } from '@app/shared/pipes/invitation-status.pipe';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { InvitationWithStats } from '@app/shared/models';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-invitations-tab',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatCardModule,
@@ -80,11 +72,7 @@ export class InvitationsTabComponent {
   });
 
   // Error signals for validation
-  protected readonly durationDaysError = createFieldErrorSignal(
-    this.invitationForm,
-    'durationDays',
-    this.destroyRef
-  );
+  protected readonly durationDaysError = createFieldErrorSignal(this.invitationForm, 'durationDays', this.destroyRef);
 
   /**
    * Get the base URL for invitation links
@@ -116,10 +104,7 @@ export class InvitationsTabComponent {
         const inviteUrl = `${this.getBaseUrl()}/join?token=${response.token}`;
         this.clipboard.copy(inviteUrl);
 
-        this.snackbarService.success(
-          this.translate.instant('alliance.settings.invitationCreated'),
-          5000
-        );
+        this.snackbarService.success(this.translate.instant('alliance.settings.invitationCreated'), 5000);
 
         // Reset form
         this.invitationForm.reset({ durationDays: 7 });
@@ -129,23 +114,22 @@ export class InvitationsTabComponent {
       }
     } catch (error) {
       console.error('Error creating invitation:', error);
-      this.snackbarService.error(
-        this.translate.instant('alliance.settings.invitationCreateFailed')
-      );
+      this.snackbarService.error(this.translate.instant('alliance.settings.invitationCreateFailed'));
     } finally {
       this.isSubmitting.set(false);
     }
   }
 
   protected async revokeInvitation(id: string): Promise<void> {
-    const confirmed = await this.dialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          message: this.translate.instant('alliance.settings.revokeConfirm'),
-        },
-      })
-      .afterClosed()
-      .toPromise();
+    const confirmed = await firstValueFrom(
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            message: this.translate.instant('alliance.settings.revokeConfirm'),
+          },
+        })
+        .afterClosed()
+    );
 
     if (!confirmed) {
       return;
@@ -165,9 +149,7 @@ export class InvitationsTabComponent {
       this.invitationRevoked.emit();
     } catch (error) {
       console.error('Error revoking invitation:', error);
-      this.snackbarService.error(
-        this.translate.instant('alliance.settings.invitationRevokeFailed')
-      );
+      this.snackbarService.error(this.translate.instant('alliance.settings.invitationRevokeFailed'));
     } finally {
       this.isSubmitting.set(false);
     }

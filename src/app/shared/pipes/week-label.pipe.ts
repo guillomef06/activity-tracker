@@ -4,7 +4,6 @@ import { getWeekLabel } from '../utils/date.util';
 
 @Pipe({
   name: 'weekLabel',
-  standalone: true,
   pure: true,
 })
 export class WeekLabelPipe implements PipeTransform {

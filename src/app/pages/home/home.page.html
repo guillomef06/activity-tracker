@@ -143,11 +143,9 @@
                           <span class="activity-name">{{ activity.activityType | activityLabel }}</span>
                           @if (activity.position !== null) {
                             <span
-                              [ngClass]="{
-                                'duplicate-position': week.conflictingPositions?.has(
-                                  activity.activityType + '|' + activity.position
-                                ),
-                              }"
+                              [class.duplicate-position]="
+                                week.conflictingPositions?.has(activity.activityType + '|' + activity.position)
+                              "
                             >
                               rank: {{ activity.position }}
                             </span>

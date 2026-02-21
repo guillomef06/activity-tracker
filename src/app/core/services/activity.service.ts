@@ -1,14 +1,8 @@
 import { Injectable, signal, inject } from '@angular/core';
-import {
-  Activity,
-  ActivityRequest,
-  ActivityWithUser,
-  UserScore,
-  WeeklyScore,
-} from '../../shared/models';
+import { Activity, ActivityRequest, ActivityWithUser, UserScore, WeeklyScore } from '../../shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
-import { PointRulesService } from './point-rules.service';
+import { AllianceService } from './alliance.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 
 @Injectable({
@@ -17,7 +11,7 @@ import { APP_CONSTANTS } from '../../shared/constants/constants';
 export class ActivityService {
   private supabase = inject(SupabaseService);
   private authService = inject(AuthService);
-  private pointRulesService = inject(PointRulesService);
+  private allianceService = inject(AllianceService);
 
   private activitiesSignal = signal<Activity[]>([]);
   private isInitialized = false;
@@ -26,7 +20,7 @@ export class ActivityService {
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
-    await this.pointRulesService.loadRules();
+    await this.allianceService.loadRules();
     await this.loadFromSupabase();
     this.isInitialized = true;
   }
@@ -82,16 +76,10 @@ export class ActivityService {
    * @param userId - The ID of the member for whom the activity is being added
    * @param request - The activity details
    */
-  async addActivityForMember(
-    userId: string,
-    request: ActivityRequest
-  ): Promise<{ error: Error | null }> {
+  async addActivityForMember(userId: string, request: ActivityRequest): Promise<{ error: Error | null }> {
     try {
       const currentProfile = this.authService.userProfile();
-      if (
-        !currentProfile ||
-        (currentProfile.role !== 'admin' && currentProfile.role !== 'super_admin')
-      ) {
+      if (!currentProfile || (currentProfile.role !== 'admin' && currentProfile.role !== 'super_admin')) {
         return {
           error: new Error('Unauthorized: Only admins can add activities for other members'),
         };
@@ -111,8 +99,7 @@ export class ActivityService {
 
     // Use pre-calculated points (participation mode) or calculate from position
     const points =
-      request.points ??
-      this.pointRulesService.calculatePoints(request.activityType, request.position).points;
+      request.points ?? this.allianceService.calculatePoints(request.activityType, request.position).points;
 
     try {
       const { data, error } = await this.supabase
@@ -160,8 +147,7 @@ export class ActivityService {
   ): Promise<{ error: Error | null }> {
     // Use pre-calculated points (participation mode) or calculate from position
     const points =
-      request.points ??
-      this.pointRulesService.calculatePoints(request.activityType, request.position).points;
+      request.points ?? this.allianceService.calculatePoints(request.activityType, request.position).points;
 
     try {
       const { data, error } = await this.supabase

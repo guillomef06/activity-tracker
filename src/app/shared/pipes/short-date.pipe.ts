@@ -3,7 +3,6 @@ import { formatShortDate } from '../utils/date.util';
 
 @Pipe({
   name: 'shortDate',
-  standalone: true,
   pure: true,
 })
 export class ShortDatePipe implements PipeTransform {

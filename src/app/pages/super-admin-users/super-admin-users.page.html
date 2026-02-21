@@ -30,7 +30,7 @@
                   <mat-form-field appearance="outline" class="edit-field">
                     <input matInput formControlName="display_name" />
                     @if (displayNameError()) {
-                      <mat-error>{{ displayNameError() }}</mat-error>
+                      <mat-error>{{ displayNameError() | translate }}</mat-error>
                     }
                   </mat-form-field>
                 </form>
@@ -66,7 +66,7 @@
                       }
                     </mat-select>
                     @if (roleError()) {
-                      <mat-error>{{ roleError() }}</mat-error>
+                      <mat-error>{{ roleError() | translate }}</mat-error>
                     }
                   </mat-form-field>
                 </form>

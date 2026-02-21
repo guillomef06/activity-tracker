@@ -10,16 +10,7 @@ import type { UserProfile } from '@app/shared/models';
 
 @Component({
   selector: 'app-members-tab',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatTableModule,
-    MatIconModule,
-    MatChipsModule,
-    TranslateModule,
-    LocalDatePipe,
-  ],
+  imports: [CommonModule, MatCardModule, MatTableModule, MatIconModule, MatChipsModule, TranslateModule, LocalDatePipe],
   templateUrl: './members-tab.component.html',
   styleUrl: './members-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

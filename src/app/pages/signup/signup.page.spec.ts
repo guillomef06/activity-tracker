@@ -38,8 +38,8 @@ describe('SignupPage', () => {
 
     component['signupForm'].patchValue({
       username: 'newadmin',
-      password: 'SecurePassword123!',
-      confirmPassword: 'SecurePassword123!',
+      password: 'SecurePassword123',
+      confirmPassword: 'SecurePassword123',
       displayName: 'New Admin',
       allianceName: 'Test Alliance',
     });
@@ -50,8 +50,8 @@ describe('SignupPage', () => {
   it('should validate password match', () => {
     component['signupForm'].patchValue({
       username: 'admin',
-      password: 'Password123!',
-      confirmPassword: 'Different123!',
+      password: 'Password123',
+      confirmPassword: 'Different123',
       displayName: 'Admin',
       allianceName: 'Alliance',
     });

@@ -38,8 +38,8 @@ describe('SuperAdminSetupPage', () => {
 
     component['setupForm'].patchValue({
       username: 'superadmin',
-      password: 'SecurePassword123!',
-      confirmPassword: 'SecurePassword123!',
+      password: 'SecurePassword123',
+      confirmPassword: 'SecurePassword123',
       displayName: 'Super Administrator',
     });
 
@@ -49,8 +49,8 @@ describe('SuperAdminSetupPage', () => {
   it('should validate password match', () => {
     component['setupForm'].patchValue({
       username: 'superadmin',
-      password: 'Password123!',
-      confirmPassword: 'DifferentPassword123!',
+      password: 'Password123',
+      confirmPassword: 'DifferentPassword123',
       displayName: 'Super Admin',
     });
 

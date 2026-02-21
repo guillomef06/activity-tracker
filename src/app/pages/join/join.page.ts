@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  OnInit,
-  ChangeDetectionStrategy,
-  DestroyRef,
-} from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -19,14 +12,10 @@ import { AuthService } from '@app/core/services/auth.service';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { MemberSignUpRequest } from '@app/shared/models';
-import {
-  passwordMatchValidator,
-  createFieldErrorSignal,
-} from '@app/shared/utils/form-validation.utils';
+import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-join',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -64,7 +53,7 @@ export class JoinPage implements OnInit {
       token: ['', [Validators.required, Validators.minLength(6)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: passwordMatchValidator }
@@ -89,26 +78,10 @@ export class JoinPage implements OnInit {
 
   // Reactive error signals (automatically update when form state changes)
   protected readonly tokenError = createFieldErrorSignal(this.joinForm, 'token', this.destroyRef);
-  protected readonly usernameError = createFieldErrorSignal(
-    this.joinForm,
-    'username',
-    this.destroyRef
-  );
-  protected readonly displayNameError = createFieldErrorSignal(
-    this.joinForm,
-    'displayName',
-    this.destroyRef
-  );
-  protected readonly passwordError = createFieldErrorSignal(
-    this.joinForm,
-    'password',
-    this.destroyRef
-  );
-  protected readonly confirmPasswordError = createFieldErrorSignal(
-    this.joinForm,
-    'confirmPassword',
-    this.destroyRef
-  );
+  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username', this.destroyRef);
+  protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef);
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
 
   protected async validateToken(token?: string): Promise<void> {
     const tokenValue = token || this.joinForm.get('token')?.value;

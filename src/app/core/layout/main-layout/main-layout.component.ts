@@ -5,7 +5,6 @@ import { AppFooterComponent } from '../app-footer/app-footer.component';
 
 @Component({
   selector: 'app-main-layout',
-  standalone: true,
   imports: [RouterOutlet, AppHeaderComponent, AppFooterComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss',

@@ -8,49 +8,40 @@ import { Signal, signal, computed, DestroyRef } from '@angular/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { merge } from 'rxjs';
 
+const DEFAULT_ERROR_KEYS: Record<string, string> = {
+  required: 'errors.required',
+  minlength: 'errors.minLength',
+  maxlength: 'errors.maxLength',
+  min: 'errors.min',
+  max: 'errors.max',
+  email: 'errors.email',
+  pattern: 'errors.pattern',
+  passwordMismatch: 'errors.passwordMismatch',
+};
+
 /**
  * Get translated error message key for a form control
  * Returns empty string if no errors or control not touched/dirty
  * @param control - The form control to check
  * @param showAll - If true, shows errors even if control is pristine and untouched (useful after form submit)
+ * @param customErrorKeys - Optional map to override or extend default validator → translation key mappings
  */
-export function getFormControlError(control: AbstractControl | null, showAll = false): string {
+export function getFormControlError(
+  control: AbstractControl | null,
+  showAll = false,
+  customErrorKeys: Record<string, string> = {}
+): string {
   if (!control || !control.errors) {
     return '';
   }
 
-  // Show errors only if control is touched, dirty, or showAll is true
   if (!showAll && !control.touched && !control.dirty) {
     return '';
   }
 
-  // Check common validators
-  if (control.errors['required']) {
-    return 'auth.errors.required';
-  }
-
-  if (control.errors['minlength']) {
-    return 'auth.errors.minLength';
-  }
-
-  if (control.errors['maxlength']) {
-    return 'auth.errors.maxLength';
-  }
-
-  if (control.errors['email']) {
-    return 'auth.errors.invalidEmail';
-  }
-
-  if (control.errors['pattern']) {
-    return 'auth.errors.invalidFormat';
-  }
-
-  if (control.errors['passwordMismatch']) {
-    return 'auth.errors.passwordMismatch';
-  }
-
-  // Default unknown error
-  return 'auth.errors.invalidFormat';
+  const errorMap = { ...DEFAULT_ERROR_KEYS, ...customErrorKeys };
+  const firstErrorKey = Object.keys(control.errors)[0];
+  return errorMap[firstErrorKey] ?? 'errors.pattern';
 }
 
 /**
@@ -70,38 +61,33 @@ export function passwordMatchValidator(form: FormGroup): ValidationErrors | null
 }
 
 /**
- * Creates a reactive error signal for a form field
- * This creates a signal that automatically updates when the form control state changes
+ * Creates a reactive error signal for a form field.
+ * Automatically maps Angular validator error names to i18n translation keys.
  *
  * @param form - The FormGroup containing the field
  * @param fieldName - The name of the field to validate
  * @param destroyRef - DestroyRef for automatic cleanup when component is destroyed
  * @param formSubmitted - Optional signal to force showing errors after form submission
- * @returns A signal that returns the error message key or empty string
+ * @param customErrorKeys - Optional map to override or extend default validator → translation key mappings
+ * @returns A readonly signal that returns a translation key, or empty string when valid
  *
  * @example
- * // Simple usage
- * protected readonly usernameError = createFieldErrorSignal(
- *   this.form,
- *   'username',
- *   this.destroyRef
- * );
+ * // Simple usage — uses default error key mapping
+ * protected readonly emailError = createFieldErrorSignal(this.form, 'email', this.destroyRef);
  *
  * @example
- * // With form submitted state
- * protected readonly formSubmitted = signal(false);
- * protected readonly usernameError = createFieldErrorSignal(
- *   this.form,
- *   'username',
- *   this.destroyRef,
- *   this.formSubmitted
+ * // With custom keys for specific validators
+ * protected readonly durationError = createFieldErrorSignal(
+ *   this.form, 'durationDays', this.destroyRef, undefined,
+ *   { min: 'invitations.errors.minDuration', max: 'invitations.errors.maxDuration' }
  * );
  */
 export function createFieldErrorSignal(
   form: FormGroup,
   fieldName: string,
   destroyRef: DestroyRef,
-  formSubmitted?: Signal<boolean>
+  formSubmitted?: Signal<boolean>,
+  customErrorKeys: Record<string, string> = {}
 ): Signal<string> {
   const control = form.get(fieldName);
 
@@ -109,18 +95,14 @@ export function createFieldErrorSignal(
     return signal('').asReadonly();
   }
 
-  // Convert control changes to signal with automatic cleanup
   const controlChanges = toSignal(
     merge(control.valueChanges, control.statusChanges).pipe(takeUntilDestroyed(destroyRef)),
     { initialValue: control.value }
   );
 
-  // Compute error message based on control state and changes
   return computed(() => {
-    // Trigger recomputation when control changes
     controlChanges();
-
     const showAll = formSubmitted?.() ?? false;
-    return getFormControlError(control, showAll);
+    return getFormControlError(control, showAll, customErrorKeys);
   });
 }

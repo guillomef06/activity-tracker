@@ -24,7 +24,7 @@
           </mat-select>
           <mat-hint>{{ 'alliance.retroactive.memberHint' | translate }}</mat-hint>
           @if (memberError()) {
-            <mat-error>{{ memberError() }}</mat-error>
+            <mat-error>{{ memberError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -58,7 +58,7 @@
           </mat-select>
           <mat-hint>{{ 'alliance.retroactive.activityHint' | translate }}</mat-hint>
           @if (activityError()) {
-            <mat-error>{{ activityError() }}</mat-error>
+            <mat-error>{{ activityError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -76,7 +76,7 @@
             <input matInput type="number" formControlName="position" min="1" />
             <mat-hint>{{ 'alliance.retroactive.positionHint' | translate }}</mat-hint>
             @if (positionError()) {
-              <mat-error>{{ positionError() }}</mat-error>
+              <mat-error>{{ positionError() | translate }}</mat-error>
             }
           </mat-form-field>
         }

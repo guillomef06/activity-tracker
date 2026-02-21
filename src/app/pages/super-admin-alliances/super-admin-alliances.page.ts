@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  OnInit,
-  ChangeDetectionStrategy,
-  DestroyRef,
-} from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -24,6 +17,7 @@ import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import type { Alliance } from '@app/shared/models';
+import { firstValueFrom } from 'rxjs';
 
 interface AllianceWithStats extends Alliance {
   member_count: number;
@@ -32,7 +26,6 @@ interface AllianceWithStats extends Alliance {
 
 @Component({
   selector: 'app-super-admin-alliances',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -61,14 +54,7 @@ export class SuperAdminAlliancesPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly alliances = signal<AllianceWithStats[]>([]);
-  protected readonly displayedColumns: string[] = [
-    'name',
-    'tag',
-    'admin',
-    'members',
-    'createdAt',
-    'actions',
-  ];
+  protected readonly displayedColumns: string[] = ['name', 'tag', 'admin', 'members', 'createdAt', 'actions'];
 
   protected readonly editForm: FormGroup = this.fb.group({
     id: [''],
@@ -175,16 +161,17 @@ export class SuperAdminAlliancesPage implements OnInit {
   }
 
   protected async deleteAlliance(alliance: Alliance): Promise<void> {
-    const confirmed = await this.dialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          message: this.translate.instant('superAdmin.alliances.deleteConfirm', {
-            name: alliance.name,
-          }),
-        },
-      })
-      .afterClosed()
-      .toPromise();
+    const confirmed = await firstValueFrom(
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            message: this.translate.instant('superAdmin.alliances.deleteConfirm', {
+              name: alliance.name,
+            }),
+          },
+        })
+        .afterClosed()
+    );
 
     if (!confirmed) {
       return;
@@ -193,10 +180,7 @@ export class SuperAdminAlliancesPage implements OnInit {
     await this.progressBarService.withProgress(async () => {
       try {
         // Delete alliance (cascade will handle related records)
-        const { error } = await this.supabase.client
-          .from('alliances')
-          .delete()
-          .eq('id', alliance.id);
+        const { error } = await this.supabase.client.from('alliances').delete().eq('id', alliance.id);
 
         if (error) throw error;
 
