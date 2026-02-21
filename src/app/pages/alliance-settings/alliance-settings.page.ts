@@ -9,9 +9,7 @@ import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
 
 // Child components
-import { AllianceInfoTabComponent } from './components/alliance-info-tab/alliance-info-tab.component';
-import { MembersTabComponent } from './components/members-tab/members-tab.component';
-import { InvitationsTabComponent } from './components/invitations-tab/invitations-tab.component';
+import { AllianceOverviewTabComponent } from './components/alliance-overview-tab/alliance-overview-tab.component';
 import { PointRulesTabComponent } from './components/point-rules-tab/point-rules-tab.component';
 import { RetroactiveActivitiesTabComponent } from './components/retroactive-activities-tab/retroactive-activities-tab.component';
 
@@ -23,9 +21,7 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
     MatIconModule,
     MatTabsModule,
     TranslateModule,
-    AllianceInfoTabComponent,
-    MembersTabComponent,
-    InvitationsTabComponent,
+    AllianceOverviewTabComponent,
     PointRulesTabComponent,
     RetroactiveActivitiesTabComponent,
   ],

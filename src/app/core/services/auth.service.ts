@@ -52,9 +52,12 @@ export class AuthService {
    */
   private async initializeAuth(): Promise<void> {
     try {
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
+      );
       const {
         data: { session },
-      } = await this.supabase.auth.getSession();
+      } = await Promise.race([this.supabase.auth.getSession(), timeoutPromise]);
 
       if (session?.user) {
         this.currentUserSignal.set(session.user);

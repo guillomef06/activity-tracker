@@ -74,6 +74,7 @@
     "settings": {
       "title": "Impostazioni Alleanza",
       "tabs": {
+        "overview": "Alleanza",
         "information": "Informazioni",
         "members": "Membri",
         "invitations": "Inviti",
