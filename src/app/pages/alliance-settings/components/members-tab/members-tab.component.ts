@@ -22,7 +22,7 @@ import type { UserProfile } from '@app/shared/models';
   ],
   templateUrl: './members-tab.component.html',
   styleUrl: './members-tab.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MembersTabComponent {
   // Inputs

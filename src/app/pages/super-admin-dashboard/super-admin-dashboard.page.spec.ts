@@ -24,7 +24,9 @@ describe('SuperAdminDashboardPage', () => {
     mockQueryBuilder.select = vi.fn().mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.is = vi.fn().mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.gt = vi.fn().mockReturnValue(mockQueryBuilder);
-    mockQueryBuilder.then = (resolve) => { resolve({ data: null, count: 0, error: null }); };
+    mockQueryBuilder.then = resolve => {
+      resolve({ data: null, count: 0, error: null });
+    };
 
     const supabaseServiceSpy = {
       client: {

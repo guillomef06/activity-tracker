@@ -30,7 +30,7 @@ import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils'
   ],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
   private readonly authService = inject(AuthService);
@@ -48,8 +48,16 @@ export class LoginPage {
   });
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.loginForm, 'username', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.loginForm, 'password', this.destroyRef);
+  protected readonly usernameError = createFieldErrorSignal(
+    this.loginForm,
+    'username',
+    this.destroyRef
+  );
+  protected readonly passwordError = createFieldErrorSignal(
+    this.loginForm,
+    'password',
+    this.destroyRef
+  );
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
@@ -66,21 +74,21 @@ export class LoginPage {
 
     try {
       const { username, password } = this.loginForm.value;
-      
+
       const request: SignInRequest = {
         username,
         password,
       };
-      
+
       const { error } = await this.authService.signIn(request);
-      
+
       if (error) {
         throw error;
       }
-      
+
       // Wait a bit for the profile to load
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       // Redirect based on role
       const role = this.authService.userProfile()?.role;
       if (role === 'super_admin') {
@@ -90,9 +98,9 @@ export class LoginPage {
       }
     } catch (error: unknown) {
       console.error('Login error:', error);
-      
+
       const errorMessage = (error as { message?: string })?.message || '';
-      
+
       if (errorMessage.includes('Invalid') || errorMessage.includes('credentials')) {
         this.errorMessage.set('auth.errors.invalidCredentials');
       } else if (errorMessage.includes('not found')) {

@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { AllianceActivitySettings, UpsertActivitySettingsRequest } from '../../shared/models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AllianceActivitySettingsService {
   private readonly supabase = inject(SupabaseService);
@@ -17,22 +17,28 @@ export class AllianceActivitySettingsService {
    * Returns true if the given activity type has participation_mode enabled
    */
   isParticipationMode(activityType: string): boolean {
-    return this.settingsSignal().find(s => s.activity_type === activityType)?.participation_mode ?? false;
+    return (
+      this.settingsSignal().find(s => s.activity_type === activityType)?.participation_mode ?? false
+    );
   }
 
   /**
    * Returns the fixed points for a participation-mode activity
    */
   getParticipationPoints(activityType: string): number {
-    return this.settingsSignal().find(s => s.activity_type === activityType)?.participation_points ?? 5;
+    return (
+      this.settingsSignal().find(s => s.activity_type === activityType)?.participation_points ?? 5
+    );
   }
 
   /**
    * Computed signal: participation mode for a given activity type (reactive)
    */
   participationModeFor(activityType: string) {
-    return computed(() =>
-      this.settingsSignal().find(s => s.activity_type === activityType)?.participation_mode ?? false
+    return computed(
+      () =>
+        this.settingsSignal().find(s => s.activity_type === activityType)?.participation_mode ??
+        false
     );
   }
 
@@ -67,17 +73,15 @@ export class AllianceActivitySettingsService {
       return { error: new Error('No alliance ID') };
     }
 
-    const { error } = await this.supabase
-      .from('alliance_activity_settings')
-      .upsert(
-        {
-          alliance_id: profile.alliance_id,
-          activity_type: request.activity_type,
-          participation_mode: request.participation_mode,
-          participation_points: request.participation_points
-        },
-        { onConflict: 'alliance_id,activity_type' }
-      );
+    const { error } = await this.supabase.from('alliance_activity_settings').upsert(
+      {
+        alliance_id: profile.alliance_id,
+        activity_type: request.activity_type,
+        participation_mode: request.participation_mode,
+        participation_points: request.participation_points,
+      },
+      { onConflict: 'alliance_id,activity_type' }
+    );
 
     if (error) {
       return { error: new Error(error.message) };

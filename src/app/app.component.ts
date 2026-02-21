@@ -9,7 +9,7 @@ import { AuthService } from '@app/core/services/auth.service';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   private translate = inject(TranslateService);

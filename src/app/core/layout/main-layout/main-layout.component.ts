@@ -9,6 +9,6 @@ import { AppFooterComponent } from '../app-footer/app-footer.component';
   imports: [RouterOutlet, AppHeaderComponent, AppFooterComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainLayoutComponent {}

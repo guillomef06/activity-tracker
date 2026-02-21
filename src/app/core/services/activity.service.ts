@@ -1,12 +1,18 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { Activity, ActivityRequest, ActivityWithUser, UserScore, WeeklyScore } from '../../shared/models';
+import {
+  Activity,
+  ActivityRequest,
+  ActivityWithUser,
+  UserScore,
+  WeeklyScore,
+} from '../../shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { PointRulesService } from './point-rules.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ActivityService {
   private supabase = inject(SupabaseService);
@@ -34,7 +40,7 @@ export class ActivityService {
       position: db.position,
       points: db.points,
       date: new Date(db.date),
-      timestamp: new Date(db.date).getTime()
+      timestamp: new Date(db.date).getTime(),
     };
   }
 
@@ -46,7 +52,7 @@ export class ActivityService {
         return;
       }
 
-      const { data, error} = await this.supabase
+      const { data, error } = await this.supabase
         .from('activities')
         .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
         .order('date', { ascending: false });
@@ -82,8 +88,13 @@ export class ActivityService {
   ): Promise<{ error: Error | null }> {
     try {
       const currentProfile = this.authService.userProfile();
-      if (!currentProfile || (currentProfile.role !== 'admin' && currentProfile.role !== 'super_admin')) {
-        return { error: new Error('Unauthorized: Only admins can add activities for other members') };
+      if (
+        !currentProfile ||
+        (currentProfile.role !== 'admin' && currentProfile.role !== 'super_admin')
+      ) {
+        return {
+          error: new Error('Unauthorized: Only admins can add activities for other members'),
+        };
       }
       return await this.addActivityForMemberToSupabase(userId, request);
     } catch (error) {
@@ -92,32 +103,32 @@ export class ActivityService {
     }
   }
 
-  private async addActivityToSupabase(
-    request: ActivityRequest
-  ): Promise<{ error: Error | null }> {
+  private async addActivityToSupabase(request: ActivityRequest): Promise<{ error: Error | null }> {
     const userId = this.authService.getUserId();
     if (!userId) {
       return { error: new Error('User not authenticated') };
     }
 
     // Use pre-calculated points (participation mode) or calculate from position
-    const points = request.points ?? this.pointRulesService.calculatePoints(
-      request.activityType,
-      request.position
-    ).points;
+    const points =
+      request.points ??
+      this.pointRulesService.calculatePoints(request.activityType, request.position).points;
 
     try {
       const { data, error } = await this.supabase
         .from('activities')
-        .upsert([
-          {
-            user_id: userId,
-            activity_type: request.activityType,
-            position: request.position,
-            points,
-            date: request.date.toISOString()
-          }
-        ], { onConflict: 'user_id,activity_type,date' })
+        .upsert(
+          [
+            {
+              user_id: userId,
+              activity_type: request.activityType,
+              position: request.position,
+              points,
+              date: request.date.toISOString(),
+            },
+          ],
+          { onConflict: 'user_id,activity_type,date' }
+        )
         .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
         .single();
 
@@ -126,10 +137,13 @@ export class ActivityService {
       const newActivity = ActivityService.mapToActivity(data as unknown as ActivityWithUser);
 
       this.activitiesSignal.update(current => {
-        const filtered = current.filter(a =>
-          !(a.userId === newActivity.userId &&
-            a.activityType === newActivity.activityType &&
-            a.date.toISOString() === newActivity.date.toISOString())
+        const filtered = current.filter(
+          a =>
+            !(
+              a.userId === newActivity.userId &&
+              a.activityType === newActivity.activityType &&
+              a.date.toISOString() === newActivity.date.toISOString()
+            )
         );
         return [newActivity, ...filtered];
       });
@@ -145,23 +159,25 @@ export class ActivityService {
     request: ActivityRequest
   ): Promise<{ error: Error | null }> {
     // Use pre-calculated points (participation mode) or calculate from position
-    const points = request.points ?? this.pointRulesService.calculatePoints(
-      request.activityType,
-      request.position
-    ).points;
+    const points =
+      request.points ??
+      this.pointRulesService.calculatePoints(request.activityType, request.position).points;
 
     try {
       const { data, error } = await this.supabase
         .from('activities')
-        .upsert([
-          {
-            user_id: userId,
-            activity_type: request.activityType,
-            position: request.position,
-            points,
-            date: request.date.toISOString()
-          }
-        ], { onConflict: 'user_id,activity_type,date' })
+        .upsert(
+          [
+            {
+              user_id: userId,
+              activity_type: request.activityType,
+              position: request.position,
+              points,
+              date: request.date.toISOString(),
+            },
+          ],
+          { onConflict: 'user_id,activity_type,date' }
+        )
         .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
         .single();
 
@@ -170,10 +186,13 @@ export class ActivityService {
       const newActivity = ActivityService.mapToActivity(data as unknown as ActivityWithUser);
 
       this.activitiesSignal.update(current => {
-        const filtered = current.filter(a =>
-          !(a.userId === newActivity.userId &&
-            a.activityType === newActivity.activityType &&
-            a.date.toISOString() === newActivity.date.toISOString())
+        const filtered = current.filter(
+          a =>
+            !(
+              a.userId === newActivity.userId &&
+              a.activityType === newActivity.activityType &&
+              a.date.toISOString() === newActivity.date.toISOString()
+            )
         );
         return [newActivity, ...filtered];
       });
@@ -184,15 +203,12 @@ export class ActivityService {
     }
   }
 
-
   getUserScores(): UserScore[] {
     const activities = this.activitiesSignal();
     const sixWeeksAgo = new Date();
     sixWeeksAgo.setDate(sixWeeksAgo.getDate() - APP_CONSTANTS.SCORING.TOTAL_DAYS);
 
-    const recentActivities = activities.filter(
-      activity => new Date(activity.date) >= sixWeeksAgo
-    );
+    const recentActivities = activities.filter(activity => new Date(activity.date) >= sixWeeksAgo);
 
     const userMap = new Map<string, Activity[]>();
     recentActivities.forEach(activity => {
@@ -249,7 +265,7 @@ export class ActivityService {
 
     for (let i = 0; i < APP_CONSTANTS.SCORING.WEEKS_TO_TRACK; i++) {
       const weekEnd = new Date(today);
-      weekEnd.setDate(today.getDate() - (i * APP_CONSTANTS.SCORING.DAYS_PER_WEEK));
+      weekEnd.setDate(today.getDate() - i * APP_CONSTANTS.SCORING.DAYS_PER_WEEK);
       weekEnd.setHours(23, 59, 59, 999);
 
       const weekStart = new Date(weekEnd);
@@ -268,11 +284,10 @@ export class ActivityService {
         weekEnd,
         totalPoints,
         activities: weekActivities,
-        conflictingPositions: undefined
+        conflictingPositions: undefined,
       });
     }
 
     return weeks;
   }
-
 }

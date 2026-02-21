@@ -21,9 +21,7 @@
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
           <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
-              <mat-option [value]="week.value">
-                {{ week.label }} - {{ week.dateRange }}
-              </mat-option>
+              <mat-option [value]="week.value"> {{ week.label }} - {{ week.dateRange }} </mat-option>
             }
           </mat-select>
           <mat-hint>{{ 'alliance.retroactive.weekHint' | translate }}</mat-hint>
@@ -33,10 +31,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>category</mat-icon>
           <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
-          <mat-select
-            formControlName="activityType"
-            [disabled]="availableActivities().length === 0"
-          >
+          <mat-select formControlName="activityType" [disabled]="availableActivities().length === 0">
             @for (type of availableActivities(); track type.value) {
               <mat-option [value]="type.value">
                 {{ type.labelKey | translate }}
@@ -134,7 +129,9 @@
                     </mat-panel-title>
                     <mat-panel-description>
                       {{ week.weekStart | shortDate }} - {{ week.weekEnd | shortDate }}
-                      <mat-chip class="points-chip">{{ week.totalPoints }} {{ 'dashboard.pointsShort' | translate }}</mat-chip>
+                      <mat-chip class="points-chip"
+                        >{{ week.totalPoints }} {{ 'dashboard.pointsShort' | translate }}</mat-chip
+                      >
                     </mat-panel-description>
                   </mat-expansion-panel-header>
 
@@ -145,15 +142,21 @@
                           <mat-icon class="activity-icon">check_circle</mat-icon>
                           <span class="activity-name">{{ activity.activityType | activityLabel }}</span>
                           @if (activity.position !== null) {
-                            <span [ngClass]="{
-                              'duplicate-position': week.conflictingPositions?.has(activity.activityType + '|' + activity.position)
-                            }">
+                            <span
+                              [ngClass]="{
+                                'duplicate-position': week.conflictingPositions?.has(
+                                  activity.activityType + '|' + activity.position
+                                ),
+                              }"
+                            >
                               rank: {{ activity.position }}
                             </span>
                           } @else {
                             <mat-icon class="participation-icon">check_circle</mat-icon>
                           }
-                          <span class="activity-points">{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</span>
+                          <span class="activity-points"
+                            >{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</span
+                          >
                         </div>
                       }
                     </div>

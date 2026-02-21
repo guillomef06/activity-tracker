@@ -11,7 +11,6 @@
   <mat-card class="form-card">
     <mat-card-content>
       <form [formGroup]="retroactiveForm" (ngSubmit)="onSubmit()">
-
         <!-- Member Selection -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>person</mat-icon>
@@ -35,9 +34,7 @@
           <mat-label>{{ 'alliance.retroactive.selectWeek' | translate }}</mat-label>
           <mat-select formControlName="week">
             @for (week of weekOptions(); track week.value) {
-              <mat-option [value]="week.value">
-                {{ week.label }} - {{ week.dateRange }}
-              </mat-option>
+              <mat-option [value]="week.value"> {{ week.label }} - {{ week.dateRange }} </mat-option>
             }
           </mat-select>
           <mat-hint>{{ 'alliance.retroactive.weekHint' | translate }}</mat-hint>
@@ -47,9 +44,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>category</mat-icon>
           <mat-label>{{ 'alliance.retroactive.selectActivity' | translate }}</mat-label>
-          <mat-select
-            formControlName="activity"
-            [disabled]="availableActivities().length === 0">
+          <mat-select formControlName="activity" [disabled]="availableActivities().length === 0">
             @if (availableActivities().length === 0) {
               <mat-option disabled>
                 {{ 'alliance.retroactive.noActivities' | translate }}
@@ -78,11 +73,7 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matIconPrefix>emoji_events</mat-icon>
             <mat-label>{{ 'alliance.retroactive.position' | translate }}</mat-label>
-            <input
-              matInput
-              type="number"
-              formControlName="position"
-              min="1"/>
+            <input matInput type="number" formControlName="position" min="1" />
             <mat-hint>{{ 'alliance.retroactive.positionHint' | translate }}</mat-hint>
             @if (positionError()) {
               <mat-error>{{ positionError() }}</mat-error>

@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 export function formatShortDate(date: Date): string {
   return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
-    day: 'numeric'
+    day: 'numeric',
   });
 }
 
@@ -57,23 +57,23 @@ const CYCLE_REFERENCE_DATE = new Date('2026-01-25T00:00:00');
 /**
  * Get the current week number in the repeating 6-week cycle
  * The cycle repeats indefinitely: 1 → 2 → 3 → 4 → 5 → 6 → 1 → 2 → ...
- * 
+ *
  * Used to filter which activities are available for submission:
  * - Golden Expedition: weeks 1, 3
  * - KvK Prep: weeks 2, 4
  * - KvK Cross Border: weeks 2, 4
  * - Legion: weeks 1-6 (all weeks)
  * - Desolate Desert: week 5
- * 
+ *
  * @returns number between 1 and 6 representing the current week in the cycle
  */
 export function getCurrentWeekNumber(): number {
   const currentWeekStart = getWeekStart(new Date());
   const referenceWeekStart = getWeekStart(CYCLE_REFERENCE_DATE);
-  
+
   const diffInMs = currentWeekStart.getTime() - referenceWeekStart.getTime();
   const weeksElapsed = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
-  
+
   return (weeksElapsed % 6) + 1;
 }
 
@@ -85,13 +85,13 @@ export function getCurrentWeekNumber(): number {
 export function getWeekNumberForWeeksAgo(weeksAgo: number): number {
   const currentWeekStart = getWeekStart(new Date());
   const targetWeekStart = new Date(currentWeekStart);
-  targetWeekStart.setDate(currentWeekStart.getDate() - (weeksAgo * 7));
-  
+  targetWeekStart.setDate(currentWeekStart.getDate() - weeksAgo * 7);
+
   const referenceWeekStart = getWeekStart(CYCLE_REFERENCE_DATE);
   const diffInMs = targetWeekStart.getTime() - referenceWeekStart.getTime();
   const weeksElapsed = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
-  
-  return ((weeksElapsed % 6) + 6) % 6 + 1;   
+
+  return (((weeksElapsed % 6) + 6) % 6) + 1;
 }
 
 /**
@@ -103,7 +103,7 @@ export function getWeekNumberForWeeksAgo(weeksAgo: number): number {
 export function getDateForWeeksAgo(weeksAgo: number): Date {
   const currentWeekStart = getWeekStart(new Date());
   const targetDate = new Date(currentWeekStart);
-  targetDate.setDate(currentWeekStart.getDate() - (weeksAgo * 7));
+  targetDate.setDate(currentWeekStart.getDate() - weeksAgo * 7);
   return targetDate;
 }
 
@@ -116,14 +116,14 @@ export function getWeekDateRange(weekNumber: number): { start: Date; end: Date }
   if (weekNumber < 1 || weekNumber > 6) {
     throw new Error('Week number must be between 1 and 6');
   }
-  
+
   const currentWeekStart = getWeekStart(new Date());
   const weeksAgo = 6 - weekNumber;
-  
+
   const weekStart = new Date(currentWeekStart);
-  weekStart.setDate(currentWeekStart.getDate() - (weeksAgo * 7));
-  
+  weekStart.setDate(currentWeekStart.getDate() - weeksAgo * 7);
+
   const weekEnd = getWeekEnd(weekStart);
-  
+
   return { start: weekStart, end: weekEnd };
 }

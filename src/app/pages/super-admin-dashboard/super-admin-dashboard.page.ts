@@ -28,7 +28,7 @@ interface DashboardStats {
   ],
   templateUrl: './super-admin-dashboard.page.html',
   styleUrl: './super-admin-dashboard.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuperAdminDashboardPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
@@ -50,7 +50,9 @@ export class SuperAdminDashboardPage implements OnInit {
       try {
         const [alliances, users, activities, invitations] = await Promise.all([
           this.supabase.client.from('alliances').select('count', { count: 'exact', head: true }),
-          this.supabase.client.from('user_profiles').select('count', { count: 'exact', head: true }),
+          this.supabase.client
+            .from('user_profiles')
+            .select('count', { count: 'exact', head: true }),
           this.supabase.client.from('activities').select('count', { count: 'exact', head: true }),
           this.supabase.client
             .from('invitation_tokens')

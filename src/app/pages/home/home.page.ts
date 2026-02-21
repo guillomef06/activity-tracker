@@ -187,21 +187,20 @@ export class HomePage implements OnInit {
   });
 
   constructor() {
-    this.activityForm.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        const type = this.activityForm.value.activityType;
-        const pos = this.activityForm.value.position;
-        if (type && pos > 0 && !this.isParticipationMode()) {
-          const result = this.pointRulesService.calculatePoints(type, pos);
-          this.calculatedPointsResult.set(result);
-        } else {
-          this.calculatedPointsResult.set(null);
-        }
-      });
+    this.activityForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      const type = this.activityForm.value.activityType;
+      const pos = this.activityForm.value.position;
+      if (type && pos > 0 && !this.isParticipationMode()) {
+        const result = this.pointRulesService.calculatePoints(type, pos);
+        this.calculatedPointsResult.set(result);
+      } else {
+        this.calculatedPointsResult.set(null);
+      }
+    });
 
-    this.activityForm.get('week')?.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.activityForm
+      .get('week')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.calculatedPointsResult.set(null);
         this.activityForm.patchValue(
@@ -210,8 +209,9 @@ export class HomePage implements OnInit {
         );
       });
 
-    this.activityForm.get('activityType')?.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.activityForm
+      .get('activityType')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.activityForm.get('participated')?.setValue(false);
         this.calculatedPointsResult.set(null);

@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [MatButtonModule, MatProgressSpinnerModule, MatIconModule],
   templateUrl: './loading-button.component.html',
   styleUrl: './loading-button.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingButtonComponent {
   // Inputs

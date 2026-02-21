@@ -11,7 +11,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { AdminSignUpRequest } from '@app/shared/models';
-import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import {
+  passwordMatchValidator,
+  createFieldErrorSignal,
+} from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-signup',
@@ -30,7 +33,7 @@ import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/util
   ],
   templateUrl: './signup.page.html',
   styleUrl: './signup.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SignupPage {
   private readonly authService = inject(AuthService);
@@ -43,13 +46,16 @@ export class SignupPage {
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
-  protected readonly signupForm: FormGroup = this.fb.group({
-    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-    displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', [Validators.required]],
-  }, { validators: passwordMatchValidator });
+  protected readonly signupForm: FormGroup = this.fb.group(
+    {
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validators: passwordMatchValidator }
+  );
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
@@ -60,11 +66,31 @@ export class SignupPage {
   }
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username', this.destroyRef);
-  protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName', this.destroyRef);
-  protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
+  protected readonly usernameError = createFieldErrorSignal(
+    this.signupForm,
+    'username',
+    this.destroyRef
+  );
+  protected readonly displayNameError = createFieldErrorSignal(
+    this.signupForm,
+    'displayName',
+    this.destroyRef
+  );
+  protected readonly allianceNameError = createFieldErrorSignal(
+    this.signupForm,
+    'allianceName',
+    this.destroyRef
+  );
+  protected readonly passwordError = createFieldErrorSignal(
+    this.signupForm,
+    'password',
+    this.destroyRef
+  );
+  protected readonly confirmPasswordError = createFieldErrorSignal(
+    this.signupForm,
+    'confirmPassword',
+    this.destroyRef
+  );
 
   protected async onSubmit(): Promise<void> {
     if (this.signupForm.invalid || this.isLoading()) {
@@ -77,23 +103,23 @@ export class SignupPage {
 
     try {
       const { username, displayName, allianceName, password } = this.signupForm.value;
-      
+
       const request: AdminSignUpRequest = {
         username,
         password,
         displayName,
         allianceName,
       };
-      
+
       await this.authService.signUpAdmin(request);
-      
+
       // Redirect to dashboard
       await this.router.navigate(['/dashboard']);
     } catch (error: unknown) {
       console.error('Signup error:', error);
-      
+
       const errorMessage = (error as { message?: string })?.message || '';
-      
+
       if (errorMessage.includes('already exists') || errorMessage.includes('duplicate')) {
         this.errorMessage.set('auth.errors.usernameExists');
       } else if (errorMessage.includes('alliance')) {

@@ -21,7 +21,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
   // Redirect to login with return URL
   return router.createUrlTree(['/login'], {
-    queryParams: { returnUrl: state.url }
+    queryParams: { returnUrl: state.url },
   });
 };
 
@@ -40,7 +40,7 @@ export const adminGuard: CanActivateFn = async (route, state) => {
 
   if (!authService.isAuthenticated()) {
     return router.createUrlTree(['/login'], {
-      queryParams: { returnUrl: state.url }
+      queryParams: { returnUrl: state.url },
     });
   }
 
@@ -88,7 +88,7 @@ export const superAdminGuard: CanActivateFn = async (route, state) => {
 
   if (!authService.isAuthenticated()) {
     return router.createUrlTree(['/login'], {
-      queryParams: { returnUrl: state.url }
+      queryParams: { returnUrl: state.url },
     });
   }
 

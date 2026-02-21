@@ -1,4 +1,11 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -42,7 +49,7 @@ interface AllianceWithStats extends Alliance {
   ],
   templateUrl: './super-admin-alliances.page.html',
   styleUrl: './super-admin-alliances.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuperAdminAlliancesPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
@@ -54,7 +61,14 @@ export class SuperAdminAlliancesPage implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly alliances = signal<AllianceWithStats[]>([]);
-  protected readonly displayedColumns: string[] = ['name', 'tag', 'admin', 'members', 'createdAt', 'actions'];
+  protected readonly displayedColumns: string[] = [
+    'name',
+    'tag',
+    'admin',
+    'members',
+    'createdAt',
+    'actions',
+  ];
 
   protected readonly editForm: FormGroup = this.fb.group({
     id: [''],
@@ -86,7 +100,7 @@ export class SuperAdminAlliancesPage implements OnInit {
         if (alliancesData) {
           // For each alliance, get member count and admin name
           const alliancesWithStats = await Promise.all(
-            alliancesData.map(async (alliance) => {
+            alliancesData.map(async alliance => {
               // Get member count
               const { count } = await this.supabase.client
                 .from('user_profiles')
@@ -161,11 +175,16 @@ export class SuperAdminAlliancesPage implements OnInit {
   }
 
   protected async deleteAlliance(alliance: Alliance): Promise<void> {
-    const confirmed = await this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        message: this.translate.instant('superAdmin.alliances.deleteConfirm', { name: alliance.name }),
-      }
-    }).afterClosed().toPromise();
+    const confirmed = await this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          message: this.translate.instant('superAdmin.alliances.deleteConfirm', {
+            name: alliance.name,
+          }),
+        },
+      })
+      .afterClosed()
+      .toPromise();
 
     if (!confirmed) {
       return;

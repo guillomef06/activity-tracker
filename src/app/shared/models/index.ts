@@ -1,19 +1,19 @@
 // Activity models
-export type { 
-  Activity, 
+export type {
+  Activity,
   ActivityRequest,
   ActivityResponse,
   ActivityWithUser,
-  WeeklyScore, 
-  UserScore 
+  WeeklyScore,
+  UserScore,
 } from './activity.model';
 
 // User models
-export type { 
-  User, 
+export type {
+  User,
   UserProfile,
   CreateUserProfileRequest,
-  UpdateUserProfileRequest
+  UpdateUserProfileRequest,
 } from './user.model';
 
 // Alliance models
@@ -21,7 +21,7 @@ export type {
   Alliance,
   CreateAllianceRequest,
   UpdateAllianceRequest,
-  AllianceWithStats
+  AllianceWithStats,
 } from './alliance.model';
 
 // Auth models
@@ -30,7 +30,7 @@ export type {
   MemberSignUpRequest,
   SignInRequest,
   AuthResponse,
-  AuthErrorResponse
+  AuthErrorResponse,
 } from './auth.model';
 
 // Invitation models
@@ -42,7 +42,7 @@ export type {
   ValidateInvitationResponse,
   InvitationWithAlliance,
   InvitationMember,
-  InvitationWithStats
+  InvitationWithStats,
 } from './invitation.model';
 
 // Activity Point Rule models
@@ -50,13 +50,11 @@ export type {
   ActivityPointRule,
   CreatePointRuleRequest,
   UpdatePointRuleRequest,
-  PointCalculationResult
+  PointCalculationResult,
 } from './activity-point-rule.model';
 
 // Alliance Activity Settings models
 export type {
   AllianceActivitySettings,
-  UpsertActivitySettingsRequest
+  UpsertActivitySettingsRequest,
 } from './alliance-activity-settings.model';
-
-

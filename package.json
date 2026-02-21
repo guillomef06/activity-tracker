@@ -12,7 +12,20 @@
     "test": "ng test",
     "test:ci": "ng test --watch=false",
     "lint": "ng lint",
-    "deploy": "ng deploy --base-href=/activity-tracker/"
+    "lint:fix": "ng lint --fix",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
+    "deploy": "ng deploy --base-href=/activity-tracker/",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,html,scss}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "src/**/*.json": [
+      "prettier --write"
+    ]
   },
   "private": true,
   "dependencies": {
@@ -40,7 +53,11 @@
     "angular-cli-ghpages": "^2.0.0",
     "angular-eslint": "21.0.1",
     "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jsdom": "^28.1.0",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "8.46.4",
     "vitest": "^3.2.4"

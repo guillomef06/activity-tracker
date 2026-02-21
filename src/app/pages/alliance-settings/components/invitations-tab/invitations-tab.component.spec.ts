@@ -75,7 +75,7 @@ describe('InvitationsTabComponent', () => {
       alliance_id: 'alliance-1',
       used_at: null,
       used_by: null,
-      created_by: 'user-1'
+      created_by: 'user-1',
     };
 
     const expiredInvitation = {
@@ -88,7 +88,7 @@ describe('InvitationsTabComponent', () => {
       alliance_id: 'alliance-1',
       used_at: null,
       used_by: null,
-      created_by: 'user-1'
+      created_by: 'user-1',
     };
 
     expect(component['getInvitationStatusClass'](activeInvitation)).toBe('status-active');

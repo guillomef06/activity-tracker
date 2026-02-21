@@ -8,12 +8,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-icon matIconPrefix>groups</mat-icon>
         <mat-label>{{ 'alliance.settings.allianceName' | translate }}</mat-label>
-        <input
-          matInput
-          formControlName="name"
-          type="text"
-          placeholder="Enter alliance name"
-        />
+        <input matInput formControlName="name" type="text" placeholder="Enter alliance name" />
         @if (nameError()) {
           <mat-error>{{ nameError() | translate }}</mat-error>
         }
@@ -22,13 +17,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-icon matIconPrefix>tag</mat-icon>
         <mat-label>{{ 'alliance.settings.allianceTag' | translate }}</mat-label>
-        <input
-          matInput
-          formControlName="tag"
-          type="text"
-          maxlength="3"
-          placeholder="e.g. RgW"
-        />
+        <input matInput formControlName="tag" type="text" maxlength="3" placeholder="e.g. RgW" />
         <mat-hint>{{ 'alliance.settings.allianceTagHint' | translate }}</mat-hint>
         @if (tagError()) {
           <mat-error>{{ tagError() | translate }}</mat-error>

@@ -27,7 +27,9 @@ describe('HomePage', () => {
     const supabaseServiceSpy = { from: vi.fn() };
 
     const pointRulesServiceSpy = {
-      calculatePoints: vi.fn().mockReturnValue({ points: 15, source: 'default', usedFallback: false }),
+      calculatePoints: vi
+        .fn()
+        .mockReturnValue({ points: 15, source: 'default', usedFallback: false }),
       loadRules: vi.fn().mockResolvedValue({ error: null }),
       rules: signal([]),
     };
@@ -39,10 +41,7 @@ describe('HomePage', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [
-        HomePage,
-        TranslateModule.forRoot(),
-      ],
+      imports: [HomePage, TranslateModule.forRoot()],
       providers: [
         provideAnimations(),
         provideRouter([]),
