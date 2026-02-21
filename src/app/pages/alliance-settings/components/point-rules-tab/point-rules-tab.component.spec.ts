@@ -1,29 +1,33 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, Mocked } from 'vitest';
 import { PointRulesTabComponent } from './point-rules-tab.component';
-import { PointRulesService } from '@app/core/services/point-rules.service';
+import { AllianceService } from '@app/core/services/alliance.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { signal } from '@angular/core';
 
 describe('PointRulesTabComponent', () => {
   let component: PointRulesTabComponent;
   let fixture: ComponentFixture<PointRulesTabComponent>;
-  let pointRulesService: Mocked<PointRulesService>;
+  let allianceService: Mocked<AllianceService>;
 
   beforeEach(async () => {
-    const pointRulesServiceSpy = {
+    const allianceServiceSpy = {
       createRule: vi.fn().mockResolvedValue({ error: null }),
       deleteRule: vi.fn().mockResolvedValue({ error: null }),
+      getParticipationPoints: vi.fn().mockReturnValue(5),
+      upsertSetting: vi.fn().mockResolvedValue({ error: null }),
+      settings: signal([]),
     };
 
     await TestBed.configureTestingModule({
       imports: [PointRulesTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
-      providers: [{ provide: PointRulesService, useValue: pointRulesServiceSpy }],
+      providers: [{ provide: AllianceService, useValue: allianceServiceSpy }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PointRulesTabComponent);
     component = fixture.componentInstance;
-    pointRulesService = TestBed.inject(PointRulesService) as unknown as Mocked<PointRulesService>;
+    allianceService = TestBed.inject(AllianceService) as unknown as Mocked<AllianceService>;
 
     // Set required inputs
     fixture.componentRef.setInput('pointRules', []);
@@ -54,7 +58,7 @@ describe('PointRulesTabComponent', () => {
 
     await component['createPointRule']();
 
-    expect(pointRulesService.createRule).toHaveBeenCalledWith({
+    expect(allianceService.createRule).toHaveBeenCalledWith({
       activity_type: 'development',
       position_min: 1,
       position_max: 10,
@@ -72,7 +76,7 @@ describe('PointRulesTabComponent', () => {
 
     await component['createPointRule']();
 
-    expect(pointRulesService.createRule).not.toHaveBeenCalled();
+    expect(allianceService.createRule).not.toHaveBeenCalled();
   });
 
   it('should get activity type label', () => {

@@ -9,20 +9,10 @@ export type {
 } from './activity.model';
 
 // User models
-export type {
-  User,
-  UserProfile,
-  CreateUserProfileRequest,
-  UpdateUserProfileRequest,
-} from './user.model';
+export type { User, UserProfile, CreateUserProfileRequest, UpdateUserProfileRequest } from './user.model';
 
 // Alliance models
-export type {
-  Alliance,
-  CreateAllianceRequest,
-  UpdateAllianceRequest,
-  AllianceWithStats,
-} from './alliance.model';
+export type { Alliance, CreateAllianceRequest, UpdateAllianceRequest, AllianceWithStats } from './alliance.model';
 
 // Auth models
 export type {
@@ -54,7 +44,4 @@ export type {
 } from './activity-point-rule.model';
 
 // Alliance Activity Settings models
-export type {
-  AllianceActivitySettings,
-  UpsertActivitySettingsRequest,
-} from './alliance-activity-settings.model';
+export type { AllianceActivitySettings, UpsertActivitySettingsRequest } from './alliance-activity-settings.model';

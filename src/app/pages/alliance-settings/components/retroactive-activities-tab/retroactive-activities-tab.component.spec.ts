@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { vi, Mocked } from 'vitest';
+import { vi } from 'vitest';
 import { RetroactiveActivitiesTabComponent } from './retroactive-activities-tab.component';
 import { ActivityService } from '@app/core/services';
 import { TranslateModule } from '@ngx-translate/core';
@@ -74,31 +74,6 @@ describe('RetroactiveActivitiesTabComponent', () => {
 
     expect(component.canSubmit()).toBe(false);
   });
-
-  /* it('should enable submit when all required fields are filled', () => {
-    component['retroactiveForm'].patchValue({ member: 'alice', week: 0, activity: 'legion', position: 5 });
-    fixture.detectChanges();
-    return fixture.whenStable().then(() => {
-      expect(component.canSubmit()).toBe(true);
-    });
-  }); */
-
-  /* it('should call activityService.addActivityForMember on submit', async () => {
-    activityServiceSpy.addActivityForMember.mockResolvedValue({ error: null });
-
-    component['retroactiveForm'].patchValue({ member: 'user1', activity: 'legion', position: 3, week: 0 });
-
-    await component.onSubmit();
-
-    expect(activityServiceSpy.addActivityForMember).toHaveBeenCalledWith(
-      'user1',
-      expect.objectContaining({
-        activityType: 'legion',
-        position: 3,
-        date: expect.any(Date)
-      })
-    );
-  }); */
 
   it('should show success message after successful submission', async () => {
     activityServiceSpy.addActivityForMember.mockResolvedValue({ error: null });

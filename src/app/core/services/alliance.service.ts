@@ -1,18 +1,31 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import {
   Alliance,
+  AllianceActivitySettings,
+  ActivityPointRule,
   InvitationWithStats,
   UpdateAllianceRequest,
   UserProfile,
   CreateInvitationResponse,
   ValidateInvitationResponse,
+  CreatePointRuleRequest,
+  UpdatePointRuleRequest,
+  PointCalculationResult,
+  UpsertActivitySettingsRequest,
 } from '../../shared/models';
+import { getActivityTypePoints } from '../../shared/constants/constants';
+
+type AllianceWithRelations = Alliance & {
+  user_profiles: UserProfile[];
+  activity_point_rules: ActivityPointRule[];
+  alliance_activity_settings: AllianceActivitySettings[];
+};
 
 /**
  * Alliance Service
- * Manages alliance operations, invitations, and members
+ * Manages alliance operations, invitations, members, point rules and activity settings.
  */
 @Injectable({
   providedIn: 'root',
@@ -24,10 +37,62 @@ export class AllianceService {
   private allianceSignal = signal<Alliance | null>(null);
   private membersSignal = signal<UserProfile[]>([]);
   private invitationsSignal = signal<InvitationWithStats[]>([]);
+  private rulesSignal = signal<ActivityPointRule[]>([]);
+  private settingsSignal = signal<AllianceActivitySettings[]>([]);
 
   readonly alliance = this.allianceSignal.asReadonly();
   readonly members = this.membersSignal.asReadonly();
   readonly invitations = this.invitationsSignal.asReadonly();
+  readonly rules = this.rulesSignal.asReadonly();
+  readonly settings = this.settingsSignal.asReadonly();
+
+  /**
+   * Load alliance, members, point rules and activity settings in a single Supabase query (4→1 requests).
+   * Updates all signals internally.
+   * Individual methods (loadAlliance, loadMembers, loadRules, loadSettings) are kept for targeted reloads after mutations.
+   */
+  async loadAllSettings(): Promise<void> {
+    const allianceId = this.authService.getAllianceId();
+    if (!allianceId) {
+      this.allianceSignal.set(null);
+      this.membersSignal.set([]);
+      this.rulesSignal.set([]);
+      this.settingsSignal.set([]);
+      return;
+    }
+
+    try {
+      const { data, error } = await this.supabase
+        .from('alliances')
+        .select('*, user_profiles(*), activity_point_rules(*), alliance_activity_settings(*)')
+        .eq('id', allianceId)
+        .single();
+
+      if (error) throw error;
+
+      const { user_profiles, activity_point_rules, alliance_activity_settings, ...alliance } =
+        data as AllianceWithRelations;
+
+      this.allianceSignal.set(alliance as Alliance);
+
+      const members = [...(user_profiles ?? [])].sort(
+        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+      this.membersSignal.set(members);
+
+      const pointRules = [...(activity_point_rules ?? [])].sort(
+        (a, b) => a.activity_type.localeCompare(b.activity_type) || a.position_min - b.position_min
+      );
+      this.rulesSignal.set(pointRules);
+      this.settingsSignal.set(alliance_activity_settings ?? []);
+    } catch (error) {
+      console.error('Error loading alliance settings:', error);
+      this.allianceSignal.set(null);
+      this.membersSignal.set([]);
+      this.rulesSignal.set([]);
+      this.settingsSignal.set([]);
+    }
+  }
 
   /**
    * Load current user's alliance
@@ -40,11 +105,7 @@ export class AllianceService {
     }
 
     try {
-      const { data, error } = await this.supabase
-        .from('alliances')
-        .select('*')
-        .eq('id', allianceId)
-        .single();
+      const { data, error } = await this.supabase.from('alliances').select('*').eq('id', allianceId).single();
 
       if (error) throw error;
       this.allianceSignal.set(data);
@@ -78,6 +139,237 @@ export class AllianceService {
       this.membersSignal.set([]);
     }
   }
+
+  // ─── Point Rules ───────────────────────────────────────────────────────────
+
+  /**
+   * Load all point rules for the current alliance
+   */
+  async loadRules(): Promise<{ error: Error | null }> {
+    const profile = this.authService.userProfile();
+    if (!profile?.alliance_id) {
+      return { error: new Error('No alliance ID') };
+    }
+
+    const { data, error } = await this.supabase
+      .from('activity_point_rules')
+      .select('*')
+      .eq('alliance_id', profile.alliance_id)
+      .order('activity_type', { ascending: true })
+      .order('position_min', { ascending: true });
+
+    if (error) {
+      return { error: new Error(error.message) };
+    }
+
+    this.rulesSignal.set(data || []);
+    return { error: null };
+  }
+
+  /**
+   * Set rules from externally fetched data
+   */
+  setRules(rules: ActivityPointRule[]): void {
+    this.rulesSignal.set(rules);
+  }
+
+  /**
+   * Create a new point rule (admin only)
+   */
+  async createRule(rule: CreatePointRuleRequest): Promise<{ error: Error | null }> {
+    const profile = this.authService.userProfile();
+    if (!profile?.alliance_id) {
+      return { error: new Error('No alliance ID') };
+    }
+
+    const validation = this.validateNoOverlap(rule, this.rulesSignal());
+    if (!validation.valid) {
+      const conflict = validation.conflictingRule;
+      return {
+        error: new Error(
+          `Chevauchement avec règle existante: ${conflict?.activity_type} positions ${conflict?.position_min}-${conflict?.position_max}`
+        ),
+      };
+    }
+
+    const { error } = await this.supabase.from('activity_point_rules').insert({
+      alliance_id: profile.alliance_id,
+      ...rule,
+    });
+
+    if (error) {
+      return { error: new Error(error.message) };
+    }
+
+    await this.loadRules();
+    return { error: null };
+  }
+
+  /**
+   * Update an existing point rule
+   */
+  async updateRule(id: string, updates: UpdatePointRuleRequest): Promise<{ error: Error | null }> {
+    const { error } = await this.supabase.from('activity_point_rules').update(updates).eq('id', id);
+
+    if (error) {
+      return { error: new Error(error.message) };
+    }
+
+    await this.loadRules();
+    return { error: null };
+  }
+
+  /**
+   * Delete a point rule
+   */
+  async deleteRule(id: string): Promise<{ error: Error | null }> {
+    const { error } = await this.supabase.from('activity_point_rules').delete().eq('id', id);
+
+    if (error) {
+      return { error: new Error(error.message) };
+    }
+
+    await this.loadRules();
+    return { error: null };
+  }
+
+  /**
+   * Calculate points for an activity based on position
+   */
+  calculatePoints(activityType: string, position: number | null): PointCalculationResult {
+    if (position === null) {
+      return {
+        points: getActivityTypePoints(activityType),
+        usedFallback: true,
+      };
+    }
+
+    const matchedRule = this.rulesSignal().find(
+      rule => rule.activity_type === activityType && position >= rule.position_min && position <= rule.position_max
+    );
+
+    if (matchedRule) {
+      return {
+        points: matchedRule.points,
+        matchedRule,
+        usedFallback: false,
+      };
+    }
+
+    return {
+      points: getActivityTypePoints(activityType),
+      usedFallback: true,
+    };
+  }
+
+  /**
+   * Validate that there is no range overlap for a new rule
+   */
+  validateNoOverlap(
+    newRule: CreatePointRuleRequest,
+    existingRules: ActivityPointRule[]
+  ): { valid: boolean; conflictingRule?: ActivityPointRule } {
+    const conflictingRule = existingRules.find(
+      rule =>
+        rule.activity_type === newRule.activity_type &&
+        !(newRule.position_max < rule.position_min || newRule.position_min > rule.position_max)
+    );
+
+    return {
+      valid: !conflictingRule,
+      conflictingRule,
+    };
+  }
+
+  /**
+   * Get all rules for a specific activity type
+   */
+  getRulesForActivityType(activityType: string): ActivityPointRule[] {
+    return this.rulesSignal().filter(rule => rule.activity_type === activityType);
+  }
+
+  // ─── Activity Settings ─────────────────────────────────────────────────────
+
+  /**
+   * Load all activity settings for the current alliance
+   */
+  async loadSettings(): Promise<{ error: Error | null }> {
+    const profile = this.authService.userProfile();
+    if (!profile?.alliance_id) {
+      return { error: new Error('No alliance ID') };
+    }
+
+    const { data, error } = await this.supabase
+      .from('alliance_activity_settings')
+      .select('*')
+      .eq('alliance_id', profile.alliance_id);
+
+    if (error) {
+      return { error: new Error(error.message) };
+    }
+
+    this.settingsSignal.set(data || []);
+    return { error: null };
+  }
+
+  /**
+   * Set settings from externally fetched data
+   */
+  setSettings(settings: AllianceActivitySettings[]): void {
+    this.settingsSignal.set(settings);
+  }
+
+  /**
+   * Returns true if the given activity type has participation_mode enabled
+   */
+  isParticipationMode(activityType: string): boolean {
+    return this.settingsSignal().find(s => s.activity_type === activityType)?.participation_mode ?? false;
+  }
+
+  /**
+   * Returns the fixed points for a participation-mode activity
+   */
+  getParticipationPoints(activityType: string): number {
+    return this.settingsSignal().find(s => s.activity_type === activityType)?.participation_points ?? 5;
+  }
+
+  /**
+   * Computed signal: participation mode for a given activity type (reactive)
+   */
+  participationModeFor(activityType: string) {
+    return computed(
+      () => this.settingsSignal().find(s => s.activity_type === activityType)?.participation_mode ?? false
+    );
+  }
+
+  /**
+   * Upsert a single activity setting (admin only)
+   */
+  async upsertSetting(request: UpsertActivitySettingsRequest): Promise<{ error: Error | null }> {
+    const profile = this.authService.userProfile();
+    if (!profile?.alliance_id) {
+      return { error: new Error('No alliance ID') };
+    }
+
+    const { error } = await this.supabase.from('alliance_activity_settings').upsert(
+      {
+        alliance_id: profile.alliance_id,
+        activity_type: request.activity_type,
+        participation_mode: request.participation_mode,
+        participation_points: request.participation_points,
+      },
+      { onConflict: 'alliance_id,activity_type' }
+    );
+
+    if (error) {
+      return { error: new Error(error.message) };
+    }
+
+    await this.loadSettings();
+    return { error: null };
+  }
+
+  // ─── Invitations ───────────────────────────────────────────────────────────
 
   /**
    * Create invitation token (admin only)
@@ -115,10 +407,7 @@ export class AllianceService {
       if (error) throw error;
 
       // Generate invitation URL with proper base-href support
-      const base =
-        typeof document !== 'undefined'
-          ? document.querySelector('base')?.getAttribute('href') || '/'
-          : '/';
+      const base = typeof document !== 'undefined' ? document.querySelector('base')?.getAttribute('href') || '/' : '/';
       const basePath = base.endsWith('/') ? base.slice(0, -1) : base;
       const baseUrl = typeof window !== 'undefined' ? `${window.location.origin}${basePath}` : '';
       const invitationUrl = `${baseUrl}/join?token=${token}`;
@@ -236,15 +525,6 @@ export class AllianceService {
   }
 
   /**
-   * Generate a secure random token
-   */
-  private generateSecureToken(): string {
-    const array = new Uint8Array(32);
-    crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-  }
-
-  /**
    * Update alliance (admin only)
    */
   async updateAlliance(updates: UpdateAllianceRequest): Promise<{ error: Error | null }> {
@@ -267,5 +547,14 @@ export class AllianceService {
       console.error('Error updating alliance:', error);
       return { error: error as Error };
     }
+  }
+
+  /**
+   * Generate a secure random token
+   */
+  private generateSecureToken(): string {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
   }
 }

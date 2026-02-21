@@ -9,7 +9,6 @@ import { APP_CONSTANTS } from '../constants/constants';
  */
 @Pipe({
   name: 'activityLabel',
-  standalone: true,
   pure: false, // Need to re-evaluate when language changes
 })
 export class ActivityLabelPipe implements PipeTransform {

@@ -21,7 +21,11 @@
       "Bash(ls:*)",
       "Bash(find:*)",
       "Bash(npm run build:*)",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "mcp__angular-cli__get_best_practices",
+      "Bash(cd /d/workplace/activity-tracker/activity-tracker && npm run lint 2>&1)",
+      "Bash(tail:*)",
+      "Bash(cd:*)"
     ]
   }
 }

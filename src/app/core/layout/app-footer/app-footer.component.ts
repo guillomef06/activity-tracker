@@ -3,7 +3,6 @@ import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-footer',
-  standalone: true,
   imports: [],
   templateUrl: './app-footer.component.html',
   styleUrl: './app-footer.component.scss',

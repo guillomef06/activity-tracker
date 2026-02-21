@@ -1,19 +1,10 @@
-import {
-  Component,
-  inject,
-  signal,
-  OnInit,
-  computed,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, inject, signal, OnInit, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 import { AllianceService } from '@app/core/services/alliance.service';
-import { PointRulesService } from '@app/core/services/point-rules.service';
-import { AllianceActivitySettingsService } from '@app/core/services/alliance-activity-settings.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
 
@@ -26,7 +17,6 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
 
 @Component({
   selector: 'app-alliance-settings',
-  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
@@ -45,8 +35,6 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
 })
 export class AllianceSettingsPage implements OnInit {
   private readonly allianceService = inject(AllianceService);
-  private readonly pointRulesService = inject(PointRulesService);
-  private readonly activitySettingsService = inject(AllianceActivitySettingsService);
   protected readonly progressBarService = inject(ProgressBarService);
 
   protected readonly members = signal<UserProfile[]>([]);
@@ -61,13 +49,10 @@ export class AllianceSettingsPage implements OnInit {
   private async loadData(): Promise<void> {
     await this.progressBarService.withProgress(async () => {
       try {
-        await Promise.all([
-          this.allianceService.loadAlliance(),
-          this.loadMembers(),
-          this.loadInvitations(),
-          this.loadPointRules(),
-          this.activitySettingsService.loadSettings(),
-        ]);
+        // 2 requests instead of 5: alliance + members + rules + settings in one, invitations separate (view)
+        await Promise.all([this.allianceService.loadAllSettings(), this.loadInvitations()]);
+        this.members.set(this.allianceService.members());
+        this.pointRules.set(this.allianceService.rules());
       } catch (error) {
         console.error('Error loading alliance data:', error);
       }
@@ -85,8 +70,8 @@ export class AllianceSettingsPage implements OnInit {
   }
 
   protected async loadPointRules(): Promise<void> {
-    await this.pointRulesService.loadRules();
-    this.pointRules.set(this.pointRulesService.rules());
+    await this.allianceService.loadRules();
+    this.pointRules.set(this.allianceService.rules());
   }
 
   // Event handlers for child components

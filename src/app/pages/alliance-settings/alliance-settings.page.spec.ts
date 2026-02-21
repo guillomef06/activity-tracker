@@ -3,7 +3,6 @@ import { vi, Mocked } from 'vitest';
 import { AllianceSettingsPage } from './alliance-settings.page';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { AuthService } from '@app/core/services/auth.service';
-import { PointRulesService } from '@app/core/services/point-rules.service';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -14,31 +13,25 @@ describe('AllianceSettingsPage', () => {
   let component: AllianceSettingsPage;
   let fixture: ComponentFixture<AllianceSettingsPage>;
   let allianceService: Mocked<AllianceService>;
-  let pointRulesService: Mocked<PointRulesService>;
 
   beforeEach(async () => {
     const allianceServiceSpy = {
-      getAllianceById: vi.fn(),
-      updateAllianceName: vi.fn(),
-      getMembers: vi.fn(),
-      getInvitations: vi.fn(),
+      loadAllSettings: vi.fn().mockResolvedValue(undefined),
+      loadAlliance: vi.fn().mockResolvedValue(undefined),
+      loadInvitations: vi.fn().mockResolvedValue(undefined),
+      loadRules: vi.fn().mockResolvedValue({ error: null }),
       createInvitation: vi.fn(),
       revokeInvitation: vi.fn(),
-      loadAlliance: vi.fn().mockResolvedValue(undefined),
-      loadMembers: vi.fn().mockResolvedValue(undefined),
-      loadInvitations: vi.fn().mockResolvedValue(undefined),
+      updateAlliance: vi.fn(),
       alliance: signal(null),
       members: signal([]),
       invitations: signal([]),
+      rules: signal([]),
+      settings: signal([]),
     };
 
     const authServiceSpy = {
       userProfile: signal({ alliance_id: 'test-alliance-id' }),
-    };
-
-    const pointRulesServiceSpy = {
-      loadRules: vi.fn().mockResolvedValue({ error: null }),
-      rules: signal([]),
     };
 
     await TestBed.configureTestingModule({
@@ -46,7 +39,6 @@ describe('AllianceSettingsPage', () => {
       providers: [
         { provide: AllianceService, useValue: allianceServiceSpy },
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: PointRulesService, useValue: pointRulesServiceSpy },
         provideRouter([]),
         provideHttpClient(),
         provideAnimations(),
@@ -56,7 +48,6 @@ describe('AllianceSettingsPage', () => {
     fixture = TestBed.createComponent(AllianceSettingsPage);
     component = fixture.componentInstance;
     allianceService = TestBed.inject(AllianceService) as unknown as Mocked<AllianceService>;
-    pointRulesService = TestBed.inject(PointRulesService) as unknown as Mocked<PointRulesService>;
 
     fixture.detectChanges();
   });
@@ -68,10 +59,8 @@ describe('AllianceSettingsPage', () => {
   it('should load data on init', async () => {
     await component.ngOnInit();
 
-    expect(allianceService.loadAlliance).toHaveBeenCalled();
-    expect(allianceService.loadMembers).toHaveBeenCalled();
+    expect(allianceService.loadAllSettings).toHaveBeenCalled();
     expect(allianceService.loadInvitations).toHaveBeenCalled();
-    expect(pointRulesService.loadRules).toHaveBeenCalled();
   });
 
   it('should expose alliance signal from service', () => {
@@ -94,6 +83,6 @@ describe('AllianceSettingsPage', () => {
   it('should handle rule created event', async () => {
     await component['handleRuleCreated']();
 
-    expect(pointRulesService.loadRules).toHaveBeenCalled();
+    expect(allianceService.loadRules).toHaveBeenCalled();
   });
 });

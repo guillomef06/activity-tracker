@@ -16,7 +16,6 @@ import { ProgressBarService } from '@app/core/services/progress-bar.service';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
   imports: [
     CommonModule,
     RouterLink,
@@ -56,9 +55,7 @@ export class AppHeaderComponent {
   });
 
   constructor() {
-    this.imageBaseUrl = environment.production
-      ? '/activity-tracker/assets/favicon.png'
-      : '/assets/favicon.png';
+    this.imageBaseUrl = environment.production ? '/activity-tracker/assets/favicon.png' : '/assets/favicon.png';
     // Load alliance for any authenticated user who belongs to one
     effect(() => {
       const profile = this.authService.userProfile();
