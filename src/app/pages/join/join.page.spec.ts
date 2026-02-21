@@ -39,8 +39,8 @@ describe('JoinPage', () => {
     component['joinForm'].patchValue({
       token: 'abc123',
       username: 'newmember',
-      password: 'SecurePassword123!',
-      confirmPassword: 'SecurePassword123!',
+      password: 'SecurePassword123',
+      confirmPassword: 'SecurePassword123',
       displayName: 'New Member',
     });
 
@@ -51,8 +51,8 @@ describe('JoinPage', () => {
     component['joinForm'].patchValue({
       token: 'abc123',
       username: 'member',
-      password: 'Password123!',
-      confirmPassword: 'Different123!',
+      password: 'Password123',
+      confirmPassword: 'Different123',
       displayName: 'Member',
     });
 

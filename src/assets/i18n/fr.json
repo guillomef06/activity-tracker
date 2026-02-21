@@ -43,12 +43,6 @@
     "haveInvitation": "Vous avez une invitation ?",
     "wantCreateAlliance": "Vous voulez créer une alliance ?",
     "errors": {
-      "required": "Ce champ est requis",
-      "minLength": "Longueur minimale non atteinte",
-      "maxLength": "Longueur maximale dépassée",
-      "invalidEmail": "Adresse e-mail invalide",
-      "invalidFormat": "Format invalide",
-      "passwordMismatch": "Les mots de passe ne correspondent pas",
       "usernameExists": "Ce nom d'utilisateur existe déjà",
       "invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",
       "userNotFound": "Utilisateur non trouvé",
@@ -60,6 +54,16 @@
       "allianceCreationFailed": "Échec de la création de l'alliance",
       "invalidToken": "Jeton d'invitation invalide ou expiré"
     }
+  },
+  "errors": {
+    "required": "Ce champ est requis",
+    "minLength": "Longueur minimale non atteinte",
+    "maxLength": "Longueur maximale dépassée",
+    "min": "La valeur est inférieure au minimum autorisé",
+    "max": "La valeur dépasse le maximum autorisé",
+    "email": "Adresse e-mail invalide",
+    "pattern": "Format invalide",
+    "passwordMismatch": "Les mots de passe ne correspondent pas"
   },
   "nav": {
     "superAdminDashboard": "Super Admin",

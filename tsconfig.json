@@ -21,6 +21,9 @@
       "ES2022",
       "dom"
     ],
+    "types": [
+      "vitest/globals"
+    ],
     "paths": {
       "@app/*": ["./src/app/*"],
       "@core/*": ["./src/app/core/*"],

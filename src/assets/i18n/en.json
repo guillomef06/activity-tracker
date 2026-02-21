@@ -43,12 +43,6 @@
     "haveInvitation": "Have an invitation?",
     "wantCreateAlliance": "Want to create an alliance?",
     "errors": {
-      "required": "This field is required",
-      "minLength": "Minimum length not met",
-      "maxLength": "Maximum length exceeded",
-      "invalidEmail": "Invalid email address",
-      "invalidFormat": "Invalid format",
-      "passwordMismatch": "Passwords do not match",
       "usernameExists": "Username already exists",
       "invalidCredentials": "Invalid username or password",
       "userNotFound": "User not found",
@@ -60,6 +54,16 @@
       "allianceCreationFailed": "Failed to create alliance",
       "invalidToken": "Invalid or expired invitation token"
     }
+  },
+  "errors": {
+    "required": "This field is required",
+    "minLength": "Minimum length not met",
+    "maxLength": "Maximum length exceeded",
+    "min": "Value is below the minimum allowed",
+    "max": "Value exceeds the maximum allowed",
+    "email": "Invalid email address",
+    "pattern": "Invalid format",
+    "passwordMismatch": "Passwords do not match"
   },
   "nav": {
     "superAdminDashboard": "Super Admin",

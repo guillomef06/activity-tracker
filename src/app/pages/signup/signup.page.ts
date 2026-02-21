@@ -47,7 +47,7 @@ export class SignupPage {
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: passwordMatchValidator }
