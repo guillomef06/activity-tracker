@@ -1,4 +1,11 @@
-import { Component, inject, signal, OnInit, computed, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  computed,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,7 +41,7 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
   ],
   templateUrl: './alliance-settings.page.html',
   styleUrl: './alliance-settings.page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AllianceSettingsPage implements OnInit {
   private readonly allianceService = inject(AllianceService);

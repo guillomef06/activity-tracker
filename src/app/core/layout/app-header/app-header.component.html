@@ -1,13 +1,6 @@
 <mat-toolbar class="app-header">
   <div class="app-branding">
-    <img
-      ngOptimizedImage
-      src="{{ imageBaseUrl }}"
-      width="32"
-      height="32"
-      alt="Logo"
-      class="app-logo"
-    />
+    <img ngOptimizedImage src="{{ imageBaseUrl }}" width="32" height="32" alt="Logo" class="app-logo" />
     <div class="header-content">
       <h1>Activity Tracker</h1>
       <p class="subtitle">{{ 'app.subtitle' | translate }}</p>
@@ -49,25 +42,20 @@
           </button>
         }
 
-        <button mat-menu-item routerLink="/activity-input" routerLinkActive="active">
-          <mat-icon>add_task</mat-icon>
-          <span>{{ 'nav.activities' | translate }}</span>
-        </button>
-        <button mat-menu-item routerLink="/management-dashboard" routerLinkActive="active">
-          <mat-icon>dashboard</mat-icon>
-          <span>{{ 'nav.dashboard' | translate }}</span>
-        </button>
-        <button mat-menu-item routerLink="/activities-details" routerLinkActive="active">
-          <mat-icon>list_alt</mat-icon>
-          <span>{{ 'nav.details' | translate }}</span>
+        <button mat-menu-item routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon>home</mat-icon>
+          <span>{{ 'nav.home' | translate }}</span>
         </button>
 
         <mat-divider></mat-divider>
 
         <!-- Language selector -->
         @for (lang of languageService.availableLanguages; track lang.code) {
-          <button mat-menu-item (click)="changeLanguage(lang.code)"
-                  [class.active]="languageService.currentLanguage() === lang.code">
+          <button
+            mat-menu-item
+            (click)="changeLanguage(lang.code)"
+            [class.active]="languageService.currentLanguage() === lang.code"
+          >
             <span class="language-flag">{{ lang.flag }}</span>
             <span>{{ lang.name }}</span>
             @if (languageService.currentLanguage() === lang.code) {

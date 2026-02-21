@@ -63,10 +63,8 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "dashboard": "Panel de Control",
     "allianceSettings": "Configuración Alianza",
-    "activities": "Actividades",
-    "details": "Detalles"
+    "home": "Inicio"
   },
   "alliance": {
     "settings": {
@@ -166,7 +164,6 @@
     "positionHint": "Ingresa tu posición o clasificación.",
     "submit": "Enviar Actividad",
     "submitting": "Enviando...",
-    "viewDashboard": "Ver Tablero",
     "typeHint": "Solo se muestran las actividades disponibles para la semana seleccionada",
     "success": "¡Actividad enviada correctamente!",
     "error": "Error al enviar la actividad",
@@ -184,24 +181,13 @@
     }
   },
   "dashboard": {
-    "title": "Panel de Gestión",
-    "refresh": "Actualizar",
-    "addActivity": "Añadir Actividad",
-    "noActivities": "Aún no hay actividades registradas",
     "noActivitiesThisWeek": "No hay actividades disponibles esta semana",
-    "availableThisWeek": "Actividades Disponibles Esta Semana",
-    "submitFirst": "Enviar Primera Actividad",
     "totalPoints": "puntos totales",
-    "avgWeekly": "promedio semanal",
     "weeklyBreakdown": "Desglose Semanal",
     "pointsShort": "pts",
-    "week": "Semana",
     "currentWeek": "Semana Actual",
     "lastWeek": "Semana Pasada",
-    "weeksAgo": "semanas atrás",
-    "weeklyRanking": "Clasificación Semanal",
-    "weeklyRankingSubtitle": "Evolución de puntos en las últimas 6 semanas",
-    "viewAllDetails": "Ver Detalles"
+    "weeksAgo": "semanas atrás"
   },
   "activitiesDetails": {
     "title": "Detalles de Actividades",

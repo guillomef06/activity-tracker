@@ -32,7 +32,9 @@ describe('SuperAdminAlliancesPage', () => {
     mockQueryBuilder.single = vi.fn().mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.update = vi.fn().mockReturnValue(mockQueryBuilder);
     mockQueryBuilder.delete = vi.fn().mockReturnValue(mockQueryBuilder);
-    mockQueryBuilder.then = (resolve) => { resolve({ data: [], count: 0, error: null }); };
+    mockQueryBuilder.then = resolve => {
+      resolve({ data: [], count: 0, error: null });
+    };
 
     const supabaseServiceSpy = {
       client: {

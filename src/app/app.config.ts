@@ -13,11 +13,11 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(),
     provideTranslateService({
-      fallbackLang: 'en'
+      fallbackLang: 'en',
     }),
     provideTranslateHttpLoader({
       prefix: './assets/i18n/',
-      suffix: '.json'
-    })
-  ]
+      suffix: '.json',
+    }),
+  ],
 };

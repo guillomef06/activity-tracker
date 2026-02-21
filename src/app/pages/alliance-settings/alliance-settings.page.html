@@ -10,74 +10,69 @@
   </mat-card>
 
   <mat-tab-group class="settings-tabs">
-      <!-- Alliance Information Tab -->
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">info</mat-icon>
-          {{ 'alliance.settings.tabs.information' | translate }}
-        </ng-template>
-        
-        <app-alliance-info-tab
-          [alliance]="alliance()"
-          [membersCount]="members().length"
-          [invitationsCount]="invitations().length"
-          (allianceUpdated)="handleAllianceUpdated()"
-        />
-      </mat-tab>
+    <!-- Alliance Information Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">info</mat-icon>
+        {{ 'alliance.settings.tabs.information' | translate }}
+      </ng-template>
 
-      <!-- Members Tab -->
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">people</mat-icon>
-          {{ 'alliance.settings.tabs.members' | translate }}
-        </ng-template>
-        
-        <app-members-tab
-          [members]="members()"
-          [isLoading]="progressBarService.isLoading()"
-        />
-      </mat-tab>
+      <app-alliance-info-tab
+        [alliance]="alliance()"
+        [membersCount]="members().length"
+        [invitationsCount]="invitations().length"
+        (allianceUpdated)="handleAllianceUpdated()"
+      />
+    </mat-tab>
 
-      <!-- Invitations Tab -->
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">mail</mat-icon>
-          {{ 'alliance.settings.tabs.invitations' | translate }}
-        </ng-template>
-        
-        <app-invitations-tab
-          [invitations]="invitations()"
-          [isLoading]="progressBarService.isLoading()"
-          (invitationCreated)="handleInvitationCreated()"
-          (invitationRevoked)="handleInvitationRevoked()"
-        />
-      </mat-tab>
+    <!-- Members Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">people</mat-icon>
+        {{ 'alliance.settings.tabs.members' | translate }}
+      </ng-template>
 
-      <!-- Point Rules Tab -->
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">rule</mat-icon>
-          {{ 'alliance.settings.tabs.pointRules' | translate }}
-        </ng-template>
-        
-        <app-point-rules-tab
-          [pointRules]="pointRules()"
-          [isLoading]="progressBarService.isLoading()"
-          (ruleCreated)="handleRuleCreated()"
-          (ruleDeleted)="handleRuleDeleted()"
-        />
-      </mat-tab>
+      <app-members-tab [members]="members()" [isLoading]="progressBarService.isLoading()" />
+    </mat-tab>
 
-      <!-- Retroactive Activities Tab -->
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">history</mat-icon>
-          {{ 'alliance.settings.tabs.retroactive' | translate }}
-        </ng-template>
-        
-        <app-retroactive-activities-tab
-          [members]="members()"
-        />
-      </mat-tab>
-    </mat-tab-group>
+    <!-- Invitations Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">mail</mat-icon>
+        {{ 'alliance.settings.tabs.invitations' | translate }}
+      </ng-template>
+
+      <app-invitations-tab
+        [invitations]="invitations()"
+        [isLoading]="progressBarService.isLoading()"
+        (invitationCreated)="handleInvitationCreated()"
+        (invitationRevoked)="handleInvitationRevoked()"
+      />
+    </mat-tab>
+
+    <!-- Point Rules Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">rule</mat-icon>
+        {{ 'alliance.settings.tabs.pointRules' | translate }}
+      </ng-template>
+
+      <app-point-rules-tab
+        [pointRules]="pointRules()"
+        [isLoading]="progressBarService.isLoading()"
+        (ruleCreated)="handleRuleCreated()"
+        (ruleDeleted)="handleRuleDeleted()"
+      />
+    </mat-tab>
+
+    <!-- Retroactive Activities Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">history</mat-icon>
+        {{ 'alliance.settings.tabs.retroactive' | translate }}
+      </ng-template>
+
+      <app-retroactive-activities-tab [members]="members()" />
+    </mat-tab>
+  </mat-tab-group>
 </div>

@@ -27,11 +27,11 @@ import { ProgressBarService } from '@app/core/services/progress-bar.service';
     MatMenuModule,
     MatDividerModule,
     MatProgressBarModule,
-    TranslateModule
+    TranslateModule,
   ],
   templateUrl: './app-header.component.html',
   styleUrl: './app-header.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppHeaderComponent {
   protected readonly authService = inject(AuthService);
@@ -56,7 +56,9 @@ export class AppHeaderComponent {
   });
 
   constructor() {
-    this.imageBaseUrl = environment.production ? "/activity-tracker/assets/favicon.png" : "/assets/favicon.png";
+    this.imageBaseUrl = environment.production
+      ? '/activity-tracker/assets/favicon.png'
+      : '/assets/favicon.png';
     // Load alliance for any authenticated user who belongs to one
     effect(() => {
       const profile = this.authService.userProfile();

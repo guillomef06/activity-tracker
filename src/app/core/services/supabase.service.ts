@@ -7,24 +7,20 @@ import { environment } from '../../../environments/environment';
  * This service is a singleton that all other services use to interact with Supabase
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
 
   constructor() {
     // Initialize Supabase client with credentials from environment
-    this.supabase = createClient(
-      environment.supabase.url,
-      environment.supabase.anonKey,
-      {
-        auth: {
-          autoRefreshToken: true,
-          persistSession: true,
-          detectSessionInUrl: true
-        }
-      }
-    );
+    this.supabase = createClient(environment.supabase.url, environment.supabase.anonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+      },
+    });
   }
 
   /**

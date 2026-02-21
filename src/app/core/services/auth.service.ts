@@ -6,7 +6,7 @@ import {
   UserProfile,
   AdminSignUpRequest,
   MemberSignUpRequest,
-  SignInRequest
+  SignInRequest,
 } from '../../shared/models';
 
 /**
@@ -14,7 +14,7 @@ import {
  * Manages user authentication, signup, and session state using Supabase Auth
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private supabase = inject(SupabaseService);
@@ -57,7 +57,9 @@ export class AuthService {
    */
   private async initializeAuth(): Promise<void> {
     try {
-      const { data: { session } } = await this.supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await this.supabase.auth.getSession();
 
       if (session?.user) {
         this.currentUserSignal.set(session.user);
@@ -125,9 +127,9 @@ export class AuthService {
         options: {
           data: {
             username: data.username,
-            display_name: data.displayName
-          }
-        }
+            display_name: data.displayName,
+          },
+        },
       });
 
       if (authError) return { error: authError };
@@ -137,7 +139,7 @@ export class AuthService {
         .from('alliances')
         .insert({
           name: data.allianceName,
-          owner_id: authData.user.id
+          owner_id: authData.user.id,
         })
         .select()
         .single();
@@ -156,12 +158,10 @@ export class AuthService {
         username: data.username,
         role: 'admin',
         created_at: now,
-        updated_at: now
+        updated_at: now,
       };
 
-      const { error: profileError } = await this.supabase
-        .from('user_profiles')
-        .insert(newProfile);
+      const { error: profileError } = await this.supabase.from('user_profiles').insert(newProfile);
 
       if (profileError) {
         return { error: profileError };
@@ -180,7 +180,11 @@ export class AuthService {
    * Super Admin signup - Create super admin account (no alliance)
    * WARNING: This should only be used for initial setup!
    */
-  async signUpSuperAdmin(username: string, password: string, displayName: string): Promise<{ error: AuthError | Error | null }> {
+  async signUpSuperAdmin(
+    username: string,
+    password: string,
+    displayName: string
+  ): Promise<{ error: AuthError | Error | null }> {
     try {
       const email = this.generateEmailFromUsername(username);
 
@@ -191,9 +195,9 @@ export class AuthService {
           data: {
             username,
             display_name: displayName,
-            is_super_admin: true
-          }
-        }
+            is_super_admin: true,
+          },
+        },
       });
 
       if (authError) return { error: authError };
@@ -208,12 +212,10 @@ export class AuthService {
         username,
         role: 'super_admin',
         created_at: now,
-        updated_at: now
+        updated_at: now,
       };
 
-      const { error: profileError } = await this.supabase
-        .from('user_profiles')
-        .insert(newProfile);
+      const { error: profileError } = await this.supabase.from('user_profiles').insert(newProfile);
 
       if (profileError) {
         return { error: profileError };
@@ -255,9 +257,9 @@ export class AuthService {
         options: {
           data: {
             username: data.username,
-            display_name: data.displayName
-          }
-        }
+            display_name: data.displayName,
+          },
+        },
       });
 
       if (authError) return { error: authError };
@@ -272,12 +274,10 @@ export class AuthService {
         username: data.username,
         role: 'member',
         created_at: now,
-        updated_at: now
+        updated_at: now,
       };
 
-      const { error: profileError } = await this.supabase
-        .from('user_profiles')
-        .insert(newProfile);
+      const { error: profileError } = await this.supabase.from('user_profiles').insert(newProfile);
 
       if (profileError) {
         return { error: profileError };
@@ -300,7 +300,7 @@ export class AuthService {
 
     const { error } = await this.supabase.auth.signInWithPassword({
       email,
-      password: data.password
+      password: data.password,
     });
 
     return { error };

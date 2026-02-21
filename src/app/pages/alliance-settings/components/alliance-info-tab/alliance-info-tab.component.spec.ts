@@ -17,10 +17,7 @@ describe('AllianceInfoTabComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [AllianceInfoTabComponent, TranslateModule.forRoot()],
-      providers: [
-        { provide: AllianceService, useValue: allianceServiceSpy },
-        provideAnimations(),
-      ],
+      providers: [{ provide: AllianceService, useValue: allianceServiceSpy }, provideAnimations()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AllianceInfoTabComponent);
@@ -28,7 +25,12 @@ describe('AllianceInfoTabComponent', () => {
     allianceService = TestBed.inject(AllianceService) as unknown as Mocked<AllianceService>;
 
     // Set required inputs
-    fixture.componentRef.setInput('alliance', { id: '1', name: 'Test Alliance', tag: null, created_at: new Date().toISOString() });
+    fixture.componentRef.setInput('alliance', {
+      id: '1',
+      name: 'Test Alliance',
+      tag: null,
+      created_at: new Date().toISOString(),
+    });
     fixture.componentRef.setInput('membersCount', 5);
     fixture.componentRef.setInput('invitationsCount', 2);
 
@@ -45,7 +47,12 @@ describe('AllianceInfoTabComponent', () => {
   });
 
   it('should update form when alliance input changes', () => {
-    fixture.componentRef.setInput('alliance', { id: '1', name: 'New Alliance Name', tag: null, created_at: new Date().toISOString() });
+    fixture.componentRef.setInput('alliance', {
+      id: '1',
+      name: 'New Alliance Name',
+      tag: null,
+      created_at: new Date().toISOString(),
+    });
     fixture.detectChanges();
 
     expect(component['allianceForm'].get('name')?.value).toBe('New Alliance Name');
@@ -56,7 +63,10 @@ describe('AllianceInfoTabComponent', () => {
 
     await component['updateAlliance']();
 
-    expect(allianceService.updateAlliance).toHaveBeenCalledWith({ name: 'Updated Name', tag: null });
+    expect(allianceService.updateAlliance).toHaveBeenCalledWith({
+      name: 'Updated Name',
+      tag: null,
+    });
   });
 
   it('should display member and invitation counts', () => {

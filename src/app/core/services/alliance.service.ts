@@ -7,7 +7,7 @@ import {
   UpdateAllianceRequest,
   UserProfile,
   CreateInvitationResponse,
-  ValidateInvitationResponse
+  ValidateInvitationResponse,
 } from '../../shared/models';
 
 /**
@@ -15,12 +15,12 @@ import {
  * Manages alliance operations, invitations, and members
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AllianceService {
   private supabase = inject(SupabaseService);
   private authService = inject(AuthService);
-  
+
   private allianceSignal = signal<Alliance | null>(null);
   private membersSignal = signal<UserProfile[]>([]);
   private invitationsSignal = signal<InvitationWithStats[]>([]);
@@ -107,7 +107,7 @@ export class AllianceService {
           alliance_id: allianceId,
           token: token,
           expires_at: expiresAt.toISOString(),
-          created_by: userId
+          created_by: userId,
         })
         .select()
         .single();
@@ -115,22 +115,21 @@ export class AllianceService {
       if (error) throw error;
 
       // Generate invitation URL with proper base-href support
-      const base = typeof document !== 'undefined' 
-        ? (document.querySelector('base')?.getAttribute('href') || '/')
-        : '/';
+      const base =
+        typeof document !== 'undefined'
+          ? document.querySelector('base')?.getAttribute('href') || '/'
+          : '/';
       const basePath = base.endsWith('/') ? base.slice(0, -1) : base;
-      const baseUrl = typeof window !== 'undefined' 
-        ? `${window.location.origin}${basePath}`
-        : '';
+      const baseUrl = typeof window !== 'undefined' ? `${window.location.origin}${basePath}` : '';
       const invitationUrl = `${baseUrl}/join?token=${token}`;
 
       // Reload invitations
       await this.loadInvitations();
 
-      return { 
-        token: data.token, 
+      return {
+        token: data.token,
         url: invitationUrl,
-        expires_at: data.expires_at
+        expires_at: data.expires_at,
       };
     } catch (error) {
       console.error('Error creating invitation:', error);
@@ -152,33 +151,33 @@ export class AllianceService {
 
       if (error || !data) {
         console.error('Token validation error:', error);
-        return { 
-          valid: false, 
-          alliance: null, 
-          error: 'Invalid invitation token' 
+        return {
+          valid: false,
+          alliance: null,
+          error: 'Invalid invitation token',
         };
       }
 
       // Check if expired
       if (new Date(data.expires_at) < new Date()) {
-        return { 
-          valid: false, 
-          alliance: null, 
-          error: 'Invitation token has expired' 
+        return {
+          valid: false,
+          alliance: null,
+          error: 'Invitation token has expired',
         };
       }
 
-      return { 
-        valid: true, 
-        alliance: data.alliances as Alliance, 
-        error: null 
+      return {
+        valid: true,
+        alliance: data.alliances as Alliance,
+        error: null,
       };
     } catch (error) {
       console.error('Error validating invitation:', error);
-      return { 
-        valid: false, 
-        alliance: null, 
-        error: 'Error validating invitation' 
+      return {
+        valid: false,
+        alliance: null,
+        error: 'Error validating invitation',
       };
     }
   }
@@ -188,7 +187,7 @@ export class AllianceService {
    */
   async loadInvitations(): Promise<void> {
     const allianceId = this.authService.getAllianceId();
-    
+
     if (!allianceId || !this.authService.isAdmin()) {
       this.invitationsSignal.set([]);
       return;
@@ -256,10 +255,7 @@ export class AllianceService {
     }
 
     try {
-      const { error } = await this.supabase
-        .from('alliances')
-        .update(updates)
-        .eq('id', allianceId);
+      const { error } = await this.supabase.from('alliances').update(updates).eq('id', allianceId);
 
       if (error) throw error;
 

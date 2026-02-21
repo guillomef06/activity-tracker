@@ -5,12 +5,12 @@ import {
   ActivityPointRule,
   CreatePointRuleRequest,
   UpdatePointRuleRequest,
-  PointCalculationResult
+  PointCalculationResult,
 } from '../../shared/models';
 import { getActivityTypePoints } from '../../shared/constants/constants';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PointRulesService {
   private supabase = inject(SupabaseService);
@@ -60,16 +60,14 @@ export class PointRulesService {
       return {
         error: new Error(
           `Chevauchement avec règle existante: ${conflict?.activity_type} positions ${conflict?.position_min}-${conflict?.position_max}`
-        )
+        ),
       };
     }
 
-    const { error } = await this.supabase
-      .from('activity_point_rules')
-      .insert({
-        alliance_id: profile.alliance_id,
-        ...rule
-      });
+    const { error } = await this.supabase.from('activity_point_rules').insert({
+      alliance_id: profile.alliance_id,
+      ...rule,
+    });
 
     if (error) {
       return { error: new Error(error.message) };
@@ -83,10 +81,7 @@ export class PointRulesService {
    * Mettre à jour une règle existante
    */
   async updateRule(id: string, updates: UpdatePointRuleRequest): Promise<{ error: Error | null }> {
-    const { error } = await this.supabase
-      .from('activity_point_rules')
-      .update(updates)
-      .eq('id', id);
+    const { error } = await this.supabase.from('activity_point_rules').update(updates).eq('id', id);
 
     if (error) {
       return { error: new Error(error.message) };
@@ -100,10 +95,7 @@ export class PointRulesService {
    * Supprimer une règle
    */
   async deleteRule(id: string): Promise<{ error: Error | null }> {
-    const { error } = await this.supabase
-      .from('activity_point_rules')
-      .delete()
-      .eq('id', id);
+    const { error } = await this.supabase.from('activity_point_rules').delete().eq('id', id);
 
     if (error) {
       return { error: new Error(error.message) };
@@ -121,7 +113,7 @@ export class PointRulesService {
     if (position === null) {
       return {
         points: getActivityTypePoints(activityType),
-        usedFallback: true
+        usedFallback: true,
       };
     }
 
@@ -137,7 +129,7 @@ export class PointRulesService {
       return {
         points: matchedRule.points,
         matchedRule,
-        usedFallback: false
+        usedFallback: false,
       };
     }
 
@@ -145,7 +137,7 @@ export class PointRulesService {
     const fallbackPoints = getActivityTypePoints(activityType);
     return {
       points: fallbackPoints,
-      usedFallback: true
+      usedFallback: true,
     };
   }
 
@@ -159,15 +151,12 @@ export class PointRulesService {
     const conflictingRule = existingRules.find(
       rule =>
         rule.activity_type === newRule.activity_type &&
-        !(
-          newRule.position_max < rule.position_min ||
-          newRule.position_min > rule.position_max
-        )
+        !(newRule.position_max < rule.position_min || newRule.position_min > rule.position_max)
     );
 
     return {
       valid: !conflictingRule,
-      conflictingRule
+      conflictingRule,
     };
   }
 
