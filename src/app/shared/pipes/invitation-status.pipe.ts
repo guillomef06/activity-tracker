@@ -3,7 +3,6 @@ import type { InvitationWithStats } from '../models';
 
 @Pipe({
   name: 'invitationStatus',
-  standalone: true,
   pure: true,
 })
 export class InvitationStatusPipe implements PipeTransform {

@@ -10,14 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
-import {
-  passwordMatchValidator,
-  createFieldErrorSignal,
-} from '@app/shared/utils/form-validation.utils';
+import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-super-admin-setup',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -63,26 +59,10 @@ export class SuperAdminSetupPage {
   }
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(
-    this.setupForm,
-    'username',
-    this.destroyRef
-  );
-  protected readonly displayNameError = createFieldErrorSignal(
-    this.setupForm,
-    'displayName',
-    this.destroyRef
-  );
-  protected readonly passwordError = createFieldErrorSignal(
-    this.setupForm,
-    'password',
-    this.destroyRef
-  );
-  protected readonly confirmPasswordError = createFieldErrorSignal(
-    this.setupForm,
-    'confirmPassword',
-    this.destroyRef
-  );
+  protected readonly usernameError = createFieldErrorSignal(this.setupForm, 'username', this.destroyRef);
+  protected readonly displayNameError = createFieldErrorSignal(this.setupForm, 'displayName', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.setupForm, 'password', this.destroyRef);
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.setupForm, 'confirmPassword', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {
     if (this.setupForm.invalid || this.isLoading()) {

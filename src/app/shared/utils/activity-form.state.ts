@@ -1,12 +1,6 @@
 import { signal, computed } from '@angular/core';
 import { APP_CONSTANTS } from '../constants/constants';
-import {
-  getWeekNumberForWeeksAgo,
-  getDateForWeeksAgo,
-  getWeekStart,
-  getWeekEnd,
-  getWeekLabel,
-} from './date.util';
+import { getWeekNumberForWeeksAgo, getDateForWeeksAgo, getWeekStart, getWeekEnd, getWeekLabel } from './date.util';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface ActivityFormStateConfig {
@@ -32,9 +26,7 @@ export function useActivityFormState(config: ActivityFormStateConfig) {
       const label =
         i === 0
           ? config.translate.instant('alliance.retroactive.currentWeek')
-          : config.translate
-              .instant('alliance.retroactive.weeksAgo')
-              .replace('{{count}}', i.toString());
+          : config.translate.instant('alliance.retroactive.weeksAgo').replace('{{count}}', i.toString());
       options.push({
         value: i,
         label,
@@ -45,9 +37,7 @@ export function useActivityFormState(config: ActivityFormStateConfig) {
   });
 
   // Week labels (for dropdowns)
-  const weekLabels = computed(() =>
-    weekOptions().map(week => getWeekLabel(week.value, config.translate))
-  );
+  const weekLabels = computed(() => weekOptions().map(week => getWeekLabel(week.value, config.translate)));
 
   // Activities filtered by week
   const availableActivities = computed(() => {

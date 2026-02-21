@@ -3,12 +3,12 @@ import { authGuard, adminGuard, superAdminGuard, guestGuard } from './core/guard
 
 export const routes: Routes = [
   // Authentication routes (only accessible when not logged in)
-  {
+  /* {
     path: 'super-admin-setup',
     canActivate: [guestGuard],
     loadComponent: () =>
       import('./pages/super-admin-setup/super-admin-setup.page').then(m => m.SuperAdminSetupPage),
-  },
+  }, */
   {
     path: 'login',
     canActivate: [guestGuard],
@@ -29,8 +29,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./core/layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
+    loadComponent: () => import('./core/layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
     children: [
       // Home page (members and admins)
       {
@@ -42,9 +41,7 @@ export const routes: Routes = [
         path: 'alliance-settings',
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./pages/alliance-settings/alliance-settings.page').then(
-            m => m.AllianceSettingsPage
-          ),
+          import('./pages/alliance-settings/alliance-settings.page').then(m => m.AllianceSettingsPage),
       },
       // Super Admin routes
       {
@@ -59,23 +56,17 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             loadComponent: () =>
-              import('./pages/super-admin-dashboard/super-admin-dashboard.page').then(
-                m => m.SuperAdminDashboardPage
-              ),
+              import('./pages/super-admin-dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage),
           },
           {
             path: 'alliances',
             loadComponent: () =>
-              import('./pages/super-admin-alliances/super-admin-alliances.page').then(
-                m => m.SuperAdminAlliancesPage
-              ),
+              import('./pages/super-admin-alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage),
           },
           {
             path: 'users',
             loadComponent: () =>
-              import('./pages/super-admin-users/super-admin-users.page').then(
-                m => m.SuperAdminUsersPage
-              ),
+              import('./pages/super-admin-users/super-admin-users.page').then(m => m.SuperAdminUsersPage),
           },
         ],
       },

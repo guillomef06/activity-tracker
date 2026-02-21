@@ -15,7 +15,6 @@ import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils'
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -48,16 +47,8 @@ export class LoginPage {
   });
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(
-    this.loginForm,
-    'username',
-    this.destroyRef
-  );
-  protected readonly passwordError = createFieldErrorSignal(
-    this.loginForm,
-    'password',
-    this.destroyRef
-  );
+  protected readonly usernameError = createFieldErrorSignal(this.loginForm, 'username', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.loginForm, 'password', this.destroyRef);
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);

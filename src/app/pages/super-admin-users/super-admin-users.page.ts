@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  signal,
-  OnInit,
-  ChangeDetectionStrategy,
-  DestroyRef,
-} from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -25,6 +18,7 @@ import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import type { UserProfile } from '@app/shared/models';
+import { firstValueFrom } from 'rxjs';
 
 interface UserWithAlliance extends UserProfile {
   alliance_name: string | null;
@@ -32,7 +26,6 @@ interface UserWithAlliance extends UserProfile {
 
 @Component({
   selector: 'app-super-admin-users',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -78,11 +71,7 @@ export class SuperAdminUsersPage implements OnInit {
   });
 
   // Error signals for validation
-  protected readonly displayNameError = createFieldErrorSignal(
-    this.editForm,
-    'display_name',
-    this.destroyRef
-  );
+  protected readonly displayNameError = createFieldErrorSignal(this.editForm, 'display_name', this.destroyRef);
   protected readonly roleError = createFieldErrorSignal(this.editForm, 'role', this.destroyRef);
 
   protected readonly editingId = signal<string | null>(null);
@@ -143,10 +132,7 @@ export class SuperAdminUsersPage implements OnInit {
       try {
         const { id, display_name, role } = this.editForm.value;
 
-        const { error } = await this.supabase.client
-          .from('user_profiles')
-          .update({ display_name, role })
-          .eq('id', id);
+        const { error } = await this.supabase.client.from('user_profiles').update({ display_name, role }).eq('id', id);
 
         if (error) throw error;
 
@@ -162,16 +148,17 @@ export class SuperAdminUsersPage implements OnInit {
   }
 
   protected async deleteUser(user: UserProfile): Promise<void> {
-    const confirmed = await this.dialog
-      .open(ConfirmDialogComponent, {
-        data: {
-          message: this.translate.instant('superAdmin.users.deleteConfirm', {
-            name: user.display_name,
-          }),
-        },
-      })
-      .afterClosed()
-      .toPromise();
+    const confirmed = await firstValueFrom(
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            message: this.translate.instant('superAdmin.users.deleteConfirm', {
+              name: user.display_name,
+            }),
+          },
+        })
+        .afterClosed()
+    );
 
     if (!confirmed) {
       return;

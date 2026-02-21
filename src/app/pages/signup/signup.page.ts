@@ -11,14 +11,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { AdminSignUpRequest } from '@app/shared/models';
-import {
-  passwordMatchValidator,
-  createFieldErrorSignal,
-} from '@app/shared/utils/form-validation.utils';
+import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-signup',
-  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -66,31 +62,11 @@ export class SignupPage {
   }
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(
-    this.signupForm,
-    'username',
-    this.destroyRef
-  );
-  protected readonly displayNameError = createFieldErrorSignal(
-    this.signupForm,
-    'displayName',
-    this.destroyRef
-  );
-  protected readonly allianceNameError = createFieldErrorSignal(
-    this.signupForm,
-    'allianceName',
-    this.destroyRef
-  );
-  protected readonly passwordError = createFieldErrorSignal(
-    this.signupForm,
-    'password',
-    this.destroyRef
-  );
-  protected readonly confirmPasswordError = createFieldErrorSignal(
-    this.signupForm,
-    'confirmPassword',
-    this.destroyRef
-  );
+  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username', this.destroyRef);
+  protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName', this.destroyRef);
+  protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {
     if (this.signupForm.invalid || this.isLoading()) {

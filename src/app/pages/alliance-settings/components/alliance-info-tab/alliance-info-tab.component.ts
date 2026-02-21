@@ -1,13 +1,4 @@
-import {
-  Component,
-  inject,
-  input,
-  output,
-  signal,
-  effect,
-  ChangeDetectionStrategy,
-  DestroyRef,
-} from '@angular/core';
+import { Component, inject, input, output, signal, effect, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,7 +13,6 @@ import type { Alliance } from '@app/shared/models';
 
 @Component({
   selector: 'app-alliance-info-tab',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatCardModule,

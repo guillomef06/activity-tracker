@@ -6,10 +6,9 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { ActivityService } from '../../core/services/activity.service';
-import { PointRulesService } from '../../core/services/point-rules.service';
+import { AllianceService } from '../../core/services/alliance.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SupabaseService } from '../../core/services/supabase.service';
-import { AllianceActivitySettingsService } from '../../core/services/alliance-activity-settings.service';
 import { signal } from '@angular/core';
 
 describe('HomePage', () => {
@@ -26,18 +25,14 @@ describe('HomePage', () => {
 
     const supabaseServiceSpy = { from: vi.fn() };
 
-    const pointRulesServiceSpy = {
-      calculatePoints: vi
-        .fn()
-        .mockReturnValue({ points: 15, source: 'default', usedFallback: false }),
+    const allianceServiceSpy = {
+      calculatePoints: vi.fn().mockReturnValue({ points: 15, source: 'default', usedFallback: false }),
       loadRules: vi.fn().mockResolvedValue({ error: null }),
-      rules: signal([]),
-    };
-
-    const activitySettingsServiceSpy = {
-      loadSettings: vi.fn().mockResolvedValue(undefined),
+      loadSettings: vi.fn().mockResolvedValue({ error: null }),
       isParticipationMode: vi.fn().mockReturnValue(false),
       getParticipationPoints: vi.fn().mockReturnValue(5),
+      rules: signal([]),
+      settings: signal([]),
     };
 
     await TestBed.configureTestingModule({
@@ -49,8 +44,7 @@ describe('HomePage', () => {
         ActivityService,
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SupabaseService, useValue: supabaseServiceSpy },
-        { provide: PointRulesService, useValue: pointRulesServiceSpy },
-        { provide: AllianceActivitySettingsService, useValue: activitySettingsServiceSpy },
+        { provide: AllianceService, useValue: allianceServiceSpy },
       ],
     }).compileComponents();
 

@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-loading-button',
-  standalone: true,
   imports: [MatButtonModule, MatProgressSpinnerModule, MatIconModule],
   templateUrl: './loading-button.component.html',
   styleUrl: './loading-button.component.scss',

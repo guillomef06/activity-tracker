@@ -3,7 +3,5 @@ export { StorageService } from './storage.service';
 export { SupabaseService } from './supabase.service';
 export { AuthService } from './auth.service';
 export { AllianceService } from './alliance.service';
-export { PointRulesService } from './point-rules.service';
-export { AllianceActivitySettingsService } from './alliance-activity-settings.service';
 export { ProgressBarService } from './progress-bar.service';
 export { SnackbarService } from './snackbar.service';

@@ -1,12 +1,4 @@
-import {
-  Component,
-  inject,
-  ChangeDetectionStrategy,
-  signal,
-  computed,
-  DestroyRef,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, signal, computed, DestroyRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,13 +10,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
-import { NgClass } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivityService } from '../../core/services/activity.service';
 import { AuthService } from '../../core/services/auth.service';
-import { PointRulesService } from '../../core/services/point-rules.service';
-import { AllianceActivitySettingsService } from '../../core/services/alliance-activity-settings.service';
+import { AllianceService } from '../../core/services/alliance.service';
 import { ProgressBarService } from '../../core/services/progress-bar.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
@@ -35,12 +25,7 @@ import { LoadingButtonComponent } from '../../shared/components/loading-button/l
 import { ActivityLabelPipe } from '../../shared/pipes/activity-label.pipe';
 import { WeekLabelPipe } from '../../shared/pipes/week-label.pipe';
 import { ShortDatePipe } from '../../shared/pipes/short-date.pipe';
-import {
-  getWeekNumberForWeeksAgo,
-  getWeekStart,
-  getDateForWeeksAgo,
-  getWeekEnd,
-} from '../../shared/utils/date.util';
+import { getWeekNumberForWeeksAgo, getWeekStart, getDateForWeeksAgo, getWeekEnd } from '../../shared/utils/date.util';
 
 interface WeekOption {
   value: number;
@@ -50,10 +35,8 @@ interface WeekOption {
 
 @Component({
   selector: 'app-home-page',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgClass,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -77,8 +60,7 @@ interface WeekOption {
 export class HomePage implements OnInit {
   private readonly activityService = inject(ActivityService);
   readonly authService = inject(AuthService);
-  private readonly pointRulesService = inject(PointRulesService);
-  private readonly activitySettingsService = inject(AllianceActivitySettingsService);
+  private readonly allianceService = inject(AllianceService);
   private readonly progressBarService = inject(ProgressBarService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly translate = inject(TranslateService);
@@ -122,12 +104,12 @@ export class HomePage implements OnInit {
 
   readonly isParticipationMode = computed(() => {
     const type = this.activityTypeValue();
-    return type ? this.activitySettingsService.isParticipationMode(type) : false;
+    return type ? this.allianceService.isParticipationMode(type) : false;
   });
 
   readonly participationPoints = computed(() => {
     const type = this.activityTypeValue();
-    return type ? this.activitySettingsService.getParticipationPoints(type) : 5;
+    return type ? this.allianceService.getParticipationPoints(type) : 5;
   });
 
   readonly points = computed<number | null>(() => {
@@ -147,16 +129,8 @@ export class HomePage implements OnInit {
     return position >= 1;
   });
 
-  protected readonly activityTypeError = createFieldErrorSignal(
-    this.activityForm,
-    'activityType',
-    this.destroyRef
-  );
-  protected readonly positionError = createFieldErrorSignal(
-    this.activityForm,
-    'position',
-    this.destroyRef
-  );
+  protected readonly activityTypeError = createFieldErrorSignal(this.activityForm, 'activityType', this.destroyRef);
+  protected readonly positionError = createFieldErrorSignal(this.activityForm, 'position', this.destroyRef);
 
   readonly weekOptions = computed<WeekOption[]>(() => {
     const options: WeekOption[] = [];
@@ -181,9 +155,7 @@ export class HomePage implements OnInit {
 
   readonly availableActivities = computed(() => {
     const selectedWeekNumber = getWeekNumberForWeeksAgo(this.weekValue() ?? 0);
-    return APP_CONSTANTS.ACTIVITY_TYPES.filter(type =>
-      type.availableWeeks.includes(selectedWeekNumber)
-    );
+    return APP_CONSTANTS.ACTIVITY_TYPES.filter(type => type.availableWeeks.includes(selectedWeekNumber));
   });
 
   constructor() {
@@ -191,7 +163,7 @@ export class HomePage implements OnInit {
       const type = this.activityForm.value.activityType;
       const pos = this.activityForm.value.position;
       if (type && pos > 0 && !this.isParticipationMode()) {
-        const result = this.pointRulesService.calculatePoints(type, pos);
+        const result = this.allianceService.calculatePoints(type, pos);
         this.calculatedPointsResult.set(result);
       } else {
         this.calculatedPointsResult.set(null);
@@ -203,10 +175,7 @@ export class HomePage implements OnInit {
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.calculatedPointsResult.set(null);
-        this.activityForm.patchValue(
-          { activityType: '', position: 1, participated: false },
-          { emitEvent: false }
-        );
+        this.activityForm.patchValue({ activityType: '', position: 1, participated: false }, { emitEvent: false });
       });
 
     this.activityForm
@@ -220,10 +189,7 @@ export class HomePage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.progressBarService.withProgress(async () => {
-      await Promise.all([
-        this.activitySettingsService.loadSettings(),
-        this.activityService.initialize(),
-      ]);
+      await Promise.all([this.allianceService.loadSettings(), this.activityService.initialize()]);
     });
   }
 

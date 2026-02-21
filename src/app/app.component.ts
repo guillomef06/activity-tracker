@@ -1,4 +1,4 @@
-import { Component, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '@app/core/services/language.service';
@@ -6,10 +6,10 @@ import { AuthService } from '@app/core/services/auth.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   private translate = inject(TranslateService);
