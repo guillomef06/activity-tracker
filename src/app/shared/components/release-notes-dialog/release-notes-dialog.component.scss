@@ -1,0 +1,70 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  mat-icon {
+    color: var(--mat-sys-primary);
+  }
+}
+
+.release-section {
+  & + .release-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.release-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+
+  .version {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--mat-sys-primary);
+  }
+
+  .date {
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  .entry-icon {
+    font-size: 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+
+    &--feature {
+      color: var(--mat-sys-primary);
+    }
+
+    &--fix {
+      color: var(--mat-sys-error);
+    }
+
+    &--improvement {
+      color: var(--mat-sys-tertiary, #7d5260);
+    }
+  }
+}

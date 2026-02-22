@@ -1,6 +1,14 @@
 <mat-toolbar class="app-header">
   <div class="app-branding">
-    <img ngOptimizedImage src="{{ imageBaseUrl }}" width="32" height="32" alt="Logo" class="app-logo" />
+    <div class="logo-wrapper">
+      <img ngOptimizedImage src="{{ imageBaseUrl }}" width="32" height="32" alt="Logo" class="app-logo" />
+      <span
+        class="connectivity-dot"
+        [class.offline]="!pwaService.isOnline()"
+        [attr.aria-label]="(pwaService.isOnline() ? 'pwa.online' : 'pwa.offline') | translate"
+        role="status"
+      ></span>
+    </div>
     <div class="header-content">
       <h1>Activity Tracker</h1>
       <p class="subtitle">{{ 'app.subtitle' | translate }}</p>
@@ -63,6 +71,19 @@
             }
           </button>
         }
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item (click)="openReleaseNotes()">
+          <mat-icon
+            matBadge="!"
+            [matBadgeHidden]="!releaseNotesService.hasUnseenNotes()"
+            matBadgeColor="warn"
+            matBadgeSize="small"
+            >new_releases</mat-icon
+          >
+          <span>{{ 'releaseNotes.title' | translate }}</span>
+        </button>
 
         <mat-divider></mat-divider>
 

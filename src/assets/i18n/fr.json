@@ -258,5 +258,17 @@
   },
   "super_admin": "Super Administrateur",
   "admin": "Administrateur",
-  "member": "Membre"
+  "member": "Membre",
+  "pwa": {
+    "offline": "Vous êtes hors ligne",
+    "online": "Vous êtes en ligne",
+    "updateAvailable": "Une nouvelle version est disponible",
+    "reload": "Recharger",
+    "install": "Installez l'application pour une meilleure expérience",
+    "installDismiss": "Fermer la bannière d'installation"
+  },
+  "releaseNotes": {
+    "title": "Nouveautés",
+    "markAsSeen": "Marquer comme lu"
+  }
 }

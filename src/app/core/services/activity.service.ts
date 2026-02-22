@@ -4,6 +4,7 @@ import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { AllianceService } from './alliance.service';
 import { APP_CONSTANTS } from '../../shared/constants/constants';
+import { getDateForWeeksAgo, getWeekEnd } from '../../shared/utils/date.util';
 
 @Injectable({
   providedIn: 'root',
@@ -191,10 +192,9 @@ export class ActivityService {
 
   getUserScores(): UserScore[] {
     const activities = this.activitiesSignal();
-    const sixWeeksAgo = new Date();
-    sixWeeksAgo.setDate(sixWeeksAgo.getDate() - APP_CONSTANTS.SCORING.TOTAL_DAYS);
+    const oldestWeekStart = getDateForWeeksAgo(APP_CONSTANTS.SCORING.WEEKS_TO_TRACK - 1);
 
-    const recentActivities = activities.filter(activity => new Date(activity.date) >= sixWeeksAgo);
+    const recentActivities = activities.filter(activity => new Date(activity.date) >= oldestWeekStart);
 
     const userMap = new Map<string, Activity[]>();
     recentActivities.forEach(activity => {
@@ -247,16 +247,10 @@ export class ActivityService {
 
   private calculateWeeklyScores(activities: Activity[]): WeeklyScore[] {
     const weeks: WeeklyScore[] = [];
-    const today = new Date();
 
     for (let i = 0; i < APP_CONSTANTS.SCORING.WEEKS_TO_TRACK; i++) {
-      const weekEnd = new Date(today);
-      weekEnd.setDate(today.getDate() - i * APP_CONSTANTS.SCORING.DAYS_PER_WEEK);
-      weekEnd.setHours(23, 59, 59, 999);
-
-      const weekStart = new Date(weekEnd);
-      weekStart.setDate(weekEnd.getDate() - (APP_CONSTANTS.SCORING.DAYS_PER_WEEK - 1));
-      weekStart.setHours(0, 0, 0, 0);
+      const weekStart = getDateForWeeksAgo(i);
+      const weekEnd = getWeekEnd(weekStart);
 
       const weekActivities = activities.filter(activity => {
         const activityDate = new Date(activity.date);

@@ -1,0 +1,80 @@
+[
+  {
+    "version": "1.0.0",
+    "date": "2026-02-22",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Activity submission with position/rank tracking",
+          "fr": "Soumission d'activité avec suivi de position/classement",
+          "es": "Envío de actividades con seguimiento de posición",
+          "it": "Invio attività con tracciamento posizione"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Rolling 6-week score dashboard",
+          "fr": "Tableau de bord des scores sur 6 semaines glissantes",
+          "es": "Panel de puntuaciones de las últimas 6 semanas",
+          "it": "Dashboard punteggi su 6 settimane"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Alliance management (members, invitations, point rules)",
+          "fr": "Gestion de l'alliance (membres, invitations, règles de points)",
+          "es": "Gestión de alianza (miembros, invitaciones, reglas de puntos)",
+          "it": "Gestione alleanza (membri, inviti, regole punti)"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Retroactive activity submission for admins",
+          "fr": "Saisie rétroactive d'activités pour les administrateurs",
+          "es": "Envío retroactivo de actividades para administradores",
+          "it": "Inserimento retroattivo attività per amministratori"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Token-based invitation system",
+          "fr": "Système d'invitation par jeton",
+          "es": "Sistema de invitación por token",
+          "it": "Sistema di invito tramite token"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Multi-language support (EN, FR, ES, IT)",
+          "fr": "Support multilingue (EN, FR, ES, IT)",
+          "es": "Soporte multilingüe (EN, FR, ES, IT)",
+          "it": "Supporto multilingua (EN, FR, ES, IT)"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "PWA support — install on home screen, offline mode",
+          "fr": "Support PWA — installation sur l'écran d'accueil, mode hors ligne",
+          "es": "Soporte PWA — instalar en pantalla de inicio, modo sin conexión",
+          "it": "Supporto PWA — installa nella schermata home, modalità offline"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Connectivity indicator in header",
+          "fr": "Indicateur de connectivité dans l'en-tête",
+          "es": "Indicador de conectividad en el encabezado",
+          "it": "Indicatore di connettività nell'intestazione"
+        }
+      }
+    ]
+  }
+]
