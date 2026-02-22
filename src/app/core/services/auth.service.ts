@@ -51,30 +51,32 @@ export class AuthService {
    * but skips INITIAL_SESSION to avoid a duplicate user_profiles query.
    */
   private async initializeAuth(): Promise<void> {
+    // Register listener FIRST — always active, even if getSession() times out
+    this.supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') return;
+
+      if (session?.user) {
+        this.currentUserSignal.set(session.user);
+        await this.loadUserProfile(session.user.id);
+      } else {
+        this.currentUserSignal.set(null);
+        this.userProfileSignal.set(null);
+      }
+    });
+
     try {
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Auth initialization timeout')), 5000)
+      const fallback = new Promise<{ data: { session: null } }>(resolve =>
+        setTimeout(() => resolve({ data: { session: null } }), 5000)
       );
+      // .catch() handles thrown errors (AbortError); fallback handles hangs (navigator.locks blocked)
       const {
         data: { session },
-      } = await Promise.race([this.supabase.auth.getSession(), timeoutPromise]);
+      } = await Promise.race([this.supabase.auth.getSession().catch(() => ({ data: { session: null } })), fallback]);
 
       if (session?.user) {
         this.currentUserSignal.set(session.user);
         await this.loadUserProfile(session.user.id);
       }
-
-      this.supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'INITIAL_SESSION') return;
-
-        if (session?.user) {
-          this.currentUserSignal.set(session.user);
-          await this.loadUserProfile(session.user.id);
-        } else {
-          this.currentUserSignal.set(null);
-          this.userProfileSignal.set(null);
-        }
-      });
     } catch (error) {
       console.error('Error initializing auth:', error);
     } finally {
@@ -292,10 +294,15 @@ export class AuthService {
   async signIn(data: SignInRequest): Promise<{ error: AuthError | null }> {
     const email = this.generateEmailFromUsername(data.username);
 
-    const { error } = await this.supabase.auth.signInWithPassword({
+    const { data: authData, error } = await this.supabase.auth.signInWithPassword({
       email,
       password: data.password,
     });
+
+    if (!error && authData.user) {
+      this.currentUserSignal.set(authData.user);
+      await this.loadUserProfile(authData.user.id);
+    }
 
     return { error };
   }

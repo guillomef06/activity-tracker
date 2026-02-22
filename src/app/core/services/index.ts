@@ -5,3 +5,6 @@ export { AuthService } from './auth.service';
 export { AllianceService } from './alliance.service';
 export { ProgressBarService } from './progress-bar.service';
 export { SnackbarService } from './snackbar.service';
+export { PwaService } from './pwa.service';
+export { ReleaseNotesService } from './release-notes.service';
+export type { ReleaseNote, ReleaseEntry } from './release-notes.service';

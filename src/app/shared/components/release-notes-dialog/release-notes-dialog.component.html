@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>
+  <mat-icon>new_releases</mat-icon>
+  {{ 'releaseNotes.title' | translate }}
+</h2>
+
+<mat-dialog-content>
+  @for (release of releaseNotesService.notes(); track release.version) {
+    <div class="release-section">
+      <div class="release-header">
+        <span class="version">v{{ release.version }}</span>
+        <span class="date">{{ release.date }}</span>
+      </div>
+      <ul class="entry-list">
+        @for (entry of release.entries; track $index) {
+          <li class="entry">
+            <mat-icon [class]="'entry-icon entry-icon--' + entry.type">{{ TYPE_ICONS[entry.type] || 'info' }}</mat-icon>
+            <span>{{ entry.text[languageService.currentLanguage()] || entry.text.en }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">{{ 'common.close' | translate }}</button>
+  @if (releaseNotesService.hasUnseenNotes()) {
+    <button mat-flat-button (click)="markAsSeenAndClose()">
+      {{ 'releaseNotes.markAsSeen' | translate }}
+    </button>
+  }
+</mat-dialog-actions>

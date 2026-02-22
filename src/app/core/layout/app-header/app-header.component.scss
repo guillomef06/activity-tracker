@@ -9,12 +9,35 @@
   display: flex;
   align-items: center;
 
-  .app-logo {
+  .logo-wrapper {
+    position: relative;
     margin-right: 1rem;
     width: 32px;
     height: 32px;
-    object-fit: contain;
-    display: inline-block;
+    flex-shrink: 0;
+
+    .app-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      display: inline-block;
+    }
+
+    .connectivity-dot {
+      position: absolute;
+      bottom: 20px;
+      right: -4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #4caf50;
+      border: 2px solid var(--mat-sys-surface-container);
+      transition: background-color 0.3s ease;
+
+      &.offline {
+        background-color: var(--mat-sys-error-container);
+      }
+    }
   }
 }
 

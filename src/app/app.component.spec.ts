@@ -1,14 +1,35 @@
 import { TestBed } from '@angular/core/testing';
+import { Subject } from 'rxjs';
+import { vi } from 'vitest';
+import { SwUpdate } from '@angular/service-worker';
+import { MatDialog } from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { provideRouter } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+
+const swUpdateMock = {
+  isEnabled: false,
+  versionUpdates: new Subject().asObservable(),
+};
+
+const dialogMock = {
+  open: vi.fn().mockReturnValue({ afterClosed: () => new Subject() }),
+};
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent, TranslateModule.forRoot()],
-      providers: [provideRouter([]), provideHttpClient(), TranslateService],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        TranslateService,
+        { provide: SwUpdate, useValue: swUpdateMock },
+        { provide: MatDialog, useValue: dialogMock },
+      ],
     }).compileComponents();
   });
 

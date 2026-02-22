@@ -16,6 +16,7 @@
     "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
     "deploy": "ng deploy --base-href=/activity-tracker/",
+    "version": "node scripts/update-release-notes.js && git add src/assets/release-notes.json",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -39,6 +40,7 @@
     "@angular/platform-browser": "^20.3.16",
     "@angular/platform-browser-dynamic": "^20.3.16",
     "@angular/router": "^20.3.16",
+    "@angular/service-worker": "^20.3.16",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@supabase/supabase-js": "^2.95.3",

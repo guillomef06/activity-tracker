@@ -258,5 +258,17 @@
   },
   "super_admin": "Super Admin",
   "admin": "Admin",
-  "member": "Member"
+  "member": "Member",
+  "pwa": {
+    "offline": "You are offline",
+    "online": "You are online",
+    "updateAvailable": "A new version is available",
+    "reload": "Reload",
+    "install": "Install the app for a better experience",
+    "installDismiss": "Dismiss install banner"
+  },
+  "releaseNotes": {
+    "title": "What's New",
+    "markAsSeen": "Mark as read"
+  }
 }
