@@ -1,10 +1,12 @@
+import { version } from '../../package.json';
+
 /**
  * Production environment configuration
  * Used when building with --configuration production
  */
 export const environment = {
   production: true,
-  appVersion: '1.0.0',
+  appVersion: version,
   apiUrl: '',
   enableDebug: false,
   storageKey: 'activity-tracker-prod',

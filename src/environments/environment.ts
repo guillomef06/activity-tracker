@@ -1,3 +1,5 @@
+import { version } from '../../package.json';
+
 /**
  * Default environment configuration (Development)
  * This file is used by default when running ng serve
@@ -5,7 +7,7 @@
  */
 export const environment = {
   production: false,
-  appVersion: '1.0.0-dev',
+  appVersion: `${version}-dev`,
   apiUrl: 'http://localhost:8080/api',
   enableDebug: true,
   storageKey: 'activity-tracker-dev',

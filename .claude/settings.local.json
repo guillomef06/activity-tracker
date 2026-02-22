@@ -3,7 +3,6 @@
     "allow": [
       "Bash(test:*)",
       "Bash(node -e:*)",
-      "Bash(node audit-translations.js:*)",
       "WebFetch(domain:localhost)",
       "Bash(npx tsc:*)",
       "WebFetch(domain:material.angular.dev)",
@@ -23,9 +22,15 @@
       "Bash(npm run build:*)",
       "Bash(npx vitest:*)",
       "mcp__angular-cli__get_best_practices",
-      "Bash(cd /d/workplace/activity-tracker/activity-tracker && npm run lint 2>&1)",
       "Bash(tail:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(cd \"D:/workplace/activity-tracker/activity-tracker\" && npm run lint 2>&1)",
+      "Bash(cd \"D:/workplace/activity-tracker/activity-tracker\" && npm run test:ci 2>&1)",
+      "mcp__plugin_supabase_supabase__list_projects",
+      "mcp__plugin_supabase_supabase__list_tables",
+      "mcp__plugin_supabase_supabase__execute_sql",
+      "Bash(npm run test:ci:*)",
+      "Bash(npm run lint:*)"
     ]
   }
 }

@@ -77,9 +77,6 @@ export class LoginPage {
         throw error;
       }
 
-      // Wait a bit for the profile to load
-      await new Promise(resolve => setTimeout(resolve, 100));
-
       // Redirect based on role
       const role = this.authService.userProfile()?.role;
       if (role === 'super_admin') {
