@@ -41,10 +41,11 @@ export class AppComponent {
       }
     });
 
-    // Auto-open release notes dialog when new version is detected (e.g. after SW update reload)
+    // Auto-open release notes dialog when new version is detected, only once the user is authenticated
     effect(() => {
       const notes = this.releaseNotesService.notes();
-      if (notes.length > 0 && this.releaseNotesService.hasUnseenNotes() && !this.autoDialogShown) {
+      const isAuthenticated = !!this.authService.userProfile();
+      if (notes.length > 0 && isAuthenticated && this.releaseNotesService.hasUnseenNotes() && !this.autoDialogShown) {
         this.autoDialogShown = true;
         setTimeout(() => this.dialog.open(ReleaseNotesDialogComponent), 300);
       }

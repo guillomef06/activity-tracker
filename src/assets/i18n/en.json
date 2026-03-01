@@ -3,7 +3,6 @@
     "subtitle": "Track activities and view rolling 6-week scores"
   },
   "auth": {
-    "superAdmin": "Super Admin",
     "login": "Sign In",
     "signup": "Sign Up",
     "logout": "Logout",
@@ -75,8 +74,6 @@
       "title": "Alliance Settings",
       "tabs": {
         "overview": "Alliance",
-        "information": "Information",
-        "members": "Members",
         "invitations": "Invitations",
         "pointRules": "Point Rules",
         "retroactive": "Retroactive Activities"
@@ -86,8 +83,6 @@
       "allianceTag": "Alliance Tag",
       "allianceTagHint": "Optional 3-character identifier (e.g. RgW)",
       "updateName": "Update",
-      "totalMembers": "Total Members",
-      "totalInvitations": "Total Invitations",
       "memberList": "Member List",
       "members": "members",
       "noMembers": "No members yet",
@@ -155,7 +150,6 @@
       "pointsPreview": "Points to be awarded",
       "submit": "Add Activity",
       "submitting": "Adding activity...",
-      "reset": "Reset Form",
       "success": "Activity added successfully!",
       "error": "Failed to add activity. Please try again."
     }
@@ -173,7 +167,6 @@
     "success": "Activity submitted successfully!",
     "error": "Failed to submit activity",
     "participated": "I participated this week",
-    "notParticipated": "Not participated yet",
     "fillAllFields": "Please fill in all required fields"
   },
   "activities": {
@@ -270,5 +263,35 @@
   "releaseNotes": {
     "title": "What's New",
     "markAsSeen": "Mark as read"
+  },
+  "gemCalculator": {
+    "nerdModeButton": "💎 Enter the nerd mode",
+    "title": "💎 Gem Calculator",
+    "back": "Back",
+    "troopType": "Troop Type",
+    "troopTier": "Troop Tier",
+    "legionSize": "Legion Size",
+    "legionSizeHint": "Number of units in your legion (max 500,000)",
+    "healthBonus": "Health Bonus (%)",
+    "mightAttack": "Might Attack (%)",
+    "mightDefense": "Might Defense (%)",
+    "gemType": "Gem Type",
+    "gemHealth": "❤️ Health Gem",
+    "gemCapacity": "👥 Capacity Gem",
+    "gemRarity": "Gem Rarity",
+    "verbose": "Verbose mode (calculation detail)",
+    "analyze": "💎 Analyze",
+    "score": "Gain",
+    "rawBonus": "Raw Bonus",
+    "verboseTitle": "Calculation Detail",
+    "verboseScoreBefore": "Score before",
+    "verboseScoreAfter": "Score after",
+    "verboseGain": "Gain",
+    "verboseLegionSize": "Legion size",
+    "verbosePerUnit": "Per-unit score (before)",
+    "verbosePerUnitAfter": "Per-unit score (after)",
+    "verboseGemValue": "Gem bonus",
+    "verboseNewHealthBonus": "New health bonus",
+    "noResult": "Fill in the form and click Analyze"
   }
 }

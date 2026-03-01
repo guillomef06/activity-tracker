@@ -16,6 +16,7 @@
     "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
     "deploy": "ng deploy --base-href=/activity-tracker/",
+    "i18n:check": "node scripts/check-i18n-unused.js",
     "version": "node scripts/update-release-notes.js && git add src/assets/release-notes.json",
     "prepare": "husky"
   },

@@ -370,12 +370,6 @@ $all-palettes: (
 @media (prefers-color-scheme: dark) {
   :root {
     @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
-
-    // Success color — dark variant
-    --mat-sys-success: #66bb6a;
-    --mat-sys-on-success: #1b5e20;
-    --mat-sys-success-container: #2e7d32;
-    --mat-sys-on-success-container: #c8e6c9;
   }
   html {
     @include mat.all-component-colors($dark-theme);

@@ -3,7 +3,6 @@
     "subtitle": "Suivez les activités et consultez les scores sur 6 semaines"
   },
   "auth": {
-    "superAdmin": "Super Administrateur",
     "login": "Connexion",
     "signup": "Inscription",
     "logout": "Déconnexion",
@@ -75,8 +74,6 @@
       "title": "Paramètres de l'Alliance",
       "tabs": {
         "overview": "Alliance",
-        "information": "Informations",
-        "members": "Membres",
         "invitations": "Invitations",
         "pointRules": "Règles de Points",
         "retroactive": "Activités Rétroactives"
@@ -86,8 +83,6 @@
       "allianceTag": "Tag de l'Alliance",
       "allianceTagHint": "Identifiant optionnel de 3 caractères (ex. RgW)",
       "updateName": "Mettre à Jour",
-      "totalMembers": "Membres Totaux",
-      "totalInvitations": "Invitations Totales",
       "memberList": "Liste des Membres",
       "members": "membres",
       "noMembers": "Aucun membre pour le moment",
@@ -155,7 +150,6 @@
       "pointsPreview": "Points à attribuer",
       "submit": "Ajouter l'activité",
       "submitting": "Ajout en cours...",
-      "reset": "Réinitialiser le formulaire",
       "success": "Activité ajoutée avec succès !",
       "error": "Échec de l'ajout de l'activité. Veuillez réessayer."
     }
@@ -173,7 +167,6 @@
     "success": "Activité soumise avec succès !",
     "error": "Échec de la soumission de l'activité",
     "participated": "J'ai participé cette semaine",
-    "notParticipated": "Pas encore participé",
     "fillAllFields": "Veuillez remplir tous les champs requis"
   },
   "activities": {
@@ -270,5 +263,35 @@
   "releaseNotes": {
     "title": "Nouveautés",
     "markAsSeen": "Marquer comme lu"
+  },
+  "gemCalculator": {
+    "nerdModeButton": "💎 Enter the nerd mode",
+    "title": "💎 Gem Calculator",
+    "back": "Retour",
+    "troopType": "Type de troupe",
+    "troopTier": "Tier de troupe",
+    "legionSize": "Taille de la légion",
+    "legionSizeHint": "Nombre d'unités dans votre légion (max 500 000)",
+    "healthBonus": "Bonus Santé (%)",
+    "mightAttack": "Might Attack (%)",
+    "mightDefense": "Might Defense (%)",
+    "gemType": "Type de gemme",
+    "gemHealth": "❤️ Gemme de Santé",
+    "gemCapacity": "👥 Gemme de Capacité",
+    "gemRarity": "Rareté de la gemme",
+    "verbose": "Mode verbeux (détail du calcul)",
+    "analyze": "💎 Analyser",
+    "score": "Gain",
+    "rawBonus": "Bonus brut",
+    "verboseTitle": "Détail du calcul",
+    "verboseScoreBefore": "Score avant",
+    "verboseScoreAfter": "Score après",
+    "verboseGain": "Gain",
+    "verboseLegionSize": "Taille de la légion",
+    "verbosePerUnit": "Score par unité (avant)",
+    "verbosePerUnitAfter": "Score par unité (après)",
+    "verboseGemValue": "Bonus de la gemme",
+    "verboseNewHealthBonus": "Nouveau bonus santé",
+    "noResult": "Remplissez le formulaire et cliquez sur Analyser"
   }
 }
