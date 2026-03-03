@@ -135,7 +135,9 @@ export class ActivityInputComponent {
 
   protected readonly availableActivities = computed(() => {
     const selectedWeekNumber = getWeekNumberForWeeksAgo(this.weekValue() ?? 0);
-    return APP_CONSTANTS.ACTIVITY_TYPES.filter(type => type.availableWeeks.includes(selectedWeekNumber));
+    return APP_CONSTANTS.ACTIVITY_TYPES.filter(
+      type => type.availableWeeks.includes(selectedWeekNumber) && this.allianceService.isActivityEnabled(type.value)
+    );
   });
 
   constructor() {

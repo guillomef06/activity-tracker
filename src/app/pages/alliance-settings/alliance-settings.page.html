@@ -28,14 +28,14 @@
       />
     </mat-tab>
 
-    <!-- Point Rules Tab -->
+    <!-- Activity Settings Tab -->
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">rule</mat-icon>
-        {{ 'alliance.settings.tabs.pointRules' | translate }}
+        {{ 'alliance.settings.tabs.activitySettings' | translate }}
       </ng-template>
 
-      <app-point-rules-tab
+      <app-activity-settings-tab
         [pointRules]="pointRules()"
         [isLoading]="progressBarService.isLoading()"
         (ruleCreated)="handleRuleCreated()"

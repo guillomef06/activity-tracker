@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 21 février 2026
+**Dernière mise à jour:** 1er mars 2026
 
 ## 📋 Résumé
 
@@ -214,6 +214,7 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 | **KvK Cross Border** | 2, 4 | 2 fois par cycle |
 | **Desolate Desert** | 5 | 1 fois par cycle |
 | **Legion** | 1, 2, 3, 4, 5, 6 | Toujours disponible |
+| **Stellar Glory** | 1, 2, 3, 4, 5, 6 | Toujours disponible |
 
 ### Fonctionnement
 
@@ -248,6 +249,46 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 
 ---
 
+---
+
+## 🏆 Activité Tiebreaker ✅
+
+### Fonctionnalité
+Permet à l'admin de désigner **une seule activité** comme "tiebreaker" (départageur) : à égalité de score total sur 6 semaines, le joueur ayant accumulé le plus de points dans cette activité est classé devant.
+
+**Comportement :**
+- Une seule activité peut être tiebreaker à la fois (valeur unique `tiebreaker_activity_type` sur la table `alliances`)
+- Cocher une nouvelle activité tiebreaker désactive automatiquement l'ancienne
+- Décocher → `null`, plus de départage
+- Si l'activité tiebreaker est désactivée (toggle enabled), le champ est automatiquement remis à `null`
+- Pas de tiebreaker configuré → tri stable (comportement actuel inchangé)
+
+**Configuration admin** (`Alliance Settings` → `Paramètres des Activités`) :
+- Toggle "Tiebreaker" visible uniquement si l'activité est activée (`@if enabled`)
+- Cocher une activité comme tiebreaker décoche automatiquement l'ancienne en base
+
+**Fichiers clés :**
+- `supabase/13-add-tiebreaker-activity.sql` — `ADD COLUMN tiebreaker_activity_type TEXT NULL` sur `alliances`
+- `src/app/shared/models/alliance.model.ts` — `tiebreaker_activity_type: string | null` dans `Alliance` et `UpdateAllianceRequest`
+- `src/app/core/services/alliance.service.ts` — `setTiebreakerActivity(activityType: string | null)`
+- `src/app/core/services/activity.service.ts` — tri secondaire dans `getUserScores()`
+- `activity-settings-tab.component.ts` — `tiebreakerActivity` computed + `toggleTiebreakerActivity()`
+
+---
+
+## ⛔ Activités Désactivables par Alliance ✅
+
+### Fonctionnalité
+Les admins peuvent désactiver certaines activités pour leur alliance. Les activités désactivées n'apparaissent plus dans les formulaires de saisie, l'entrée rétroactive, et ne sont plus disponibles dans le dropdown "Ajouter une règle".
+
+**Fichiers clés :**
+- `supabase/12-add-activity-enabled-column.sql` — `ADD COLUMN enabled BOOLEAN DEFAULT TRUE` sur `alliance_activity_settings`
+- `src/app/shared/models/alliance-activity-settings.model.ts` — champ `enabled: boolean`
+- `src/app/core/services/alliance.service.ts` — `isActivityEnabled(activityType)`
+- `activity-settings-tab.component` — toggle par activité avec snackbar d'erreur
+
+---
+
 ## 🚧 Prochaines Fonctionnalités
 
 ### Améliorations Possibles
@@ -270,6 +311,8 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 - ✅ Système de points configurables par position
 - ✅ Mode participation par activité (toggle sans position)
 - ✅ Alliance tag (identifiant 3 caractères, affiché dans le header)
+- ✅ Désactivation par activité (admin peut masquer des activités pour son alliance)
+- ✅ Activité tiebreaker (départage à égalité de score total)
 - ✅ Dashboards avec graphiques et statistiques
 - ✅ Interface responsive (mobile-first)
 - ✅ Internationalisation (EN, FR, ES, IT)
@@ -300,7 +343,7 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 ## 🔗 Fichiers Clés
 
 **Backend:**
-- `supabase/01-initial-schema.sql` → `11-alliance-tag.sql`
+- `supabase/01-initial-schema.sql` → `13-add-tiebreaker-activity.sql`
 - `supabase/MIGRATIONS.md` - Guide exécution migrations
 - `supabase/README.md` - Configuration complète
 

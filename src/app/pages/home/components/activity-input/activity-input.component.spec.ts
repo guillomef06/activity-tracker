@@ -22,6 +22,7 @@ describe('ActivityInputComponent', () => {
     getParticipationPoints: vi.fn().mockReturnValue(5),
     calculatePoints: vi.fn().mockReturnValue({ points: 10 }),
     loadSettings: vi.fn().mockResolvedValue(undefined),
+    isActivityEnabled: vi.fn().mockReturnValue(true),
   };
 
   const mockAuthService = {
@@ -71,5 +72,19 @@ describe('ActivityInputComponent', () => {
     component['activityForm'].patchValue({ activityType: 'kvk-prep', position: 3 });
     await component['onSubmit']();
     expect(mockActivityService.addActivity).toHaveBeenCalled();
+  });
+
+  it('should exclude disabled activities from availableActivities', () => {
+    mockAllianceService.isActivityEnabled.mockReturnValue(false);
+    // Change week to force the computed signal to re-evaluate
+    component['activityForm'].patchValue({ week: 1 });
+    expect(component['availableActivities']().length).toBe(0);
+  });
+
+  it('should include enabled activities in availableActivities', () => {
+    mockAllianceService.isActivityEnabled.mockReturnValue(true);
+    // Change week to force the computed signal to re-evaluate with updated mock
+    component['activityForm'].patchValue({ week: 1 });
+    expect(component['availableActivities']().length).toBeGreaterThan(0);
   });
 });

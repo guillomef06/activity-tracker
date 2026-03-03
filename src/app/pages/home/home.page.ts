@@ -33,8 +33,8 @@ export class HomePage implements OnInit {
   protected readonly nerdModeActive = signal(false);
 
   async ngOnInit(): Promise<void> {
-    await this.progressBarService.withProgress(async () => {
-      await Promise.all([this.allianceService.loadSettings(), this.activityService.initialize()]);
-    });
+    await this.progressBarService.withProgress(() =>
+      Promise.all([this.allianceService.loadSettings(), this.activityService.initialize()])
+    );
   }
 }

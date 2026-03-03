@@ -75,7 +75,7 @@
       "tabs": {
         "overview": "Alleanza",
         "invitations": "Inviti",
-        "pointRules": "Regole Punti",
+        "activitySettings": "Impostazioni Attività",
         "retroactive": "Attività Retroattive"
       },
       "allianceInfo": "Informazioni Alleanza",
@@ -108,8 +108,6 @@
       "invitationRevokeFailed": "Impossibile revocare l'invito",
       "invitationLinkCopied": "Link dell'invito copiato negli appunti!",
       "pointRules": {
-        "title": "Configurazione regole punti",
-        "subtitle": "Configura regole personalizzate per il calcolo dei punti basate sulla posizione/classifica",
         "addRule": "Aggiungi nuova regola",
         "currentRules": "Regole attuali",
         "activityType": "Tipo di attività",
@@ -130,7 +128,11 @@
         "deleted": "Regola punti eliminata con successo",
         "deleteFailed": "Impossibile eliminare la regola punti",
         "participationModeFailed": "Impossibile aggiornare la modalità partecipazione",
-        "participationPointsFailed": "Impossibile aggiornare i punti partecipazione"
+        "participationPointsFailed": "Impossibile aggiornare i punti partecipazione",
+        "activityEnabled": "Attività abilitata",
+        "activityEnabledFailed": "Impossibile aggiornare lo stato dell'attività",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Impossibile aggiornare lo spareggio"
       }
     },
     "retroactive": {
@@ -175,7 +177,8 @@
       "kvk-cross-border": "KvK Cross Border",
       "legion": "Legione",
       "desolate-desert": "Deserto Desolato",
-      "golden-expedition": "Spedizione Dorata"
+      "golden-expedition": "Spedizione Dorata",
+      "stellar-glory": "Gloria Stellare"
     }
   },
   "dashboard": {

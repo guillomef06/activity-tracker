@@ -75,7 +75,7 @@
       "tabs": {
         "overview": "Alianza",
         "invitations": "Invitaciones",
-        "pointRules": "Reglas de Puntos",
+        "activitySettings": "Configuración de Actividades",
         "retroactive": "Actividades Retroactivas"
       },
       "allianceInfo": "Información de la Alianza",
@@ -108,8 +108,6 @@
       "invitationRevokeFailed": "Error al revocar la invitación",
       "invitationLinkCopied": "¡Enlace de invitación copiado al portapapeles!",
       "pointRules": {
-        "title": "Configuración de reglas de puntos",
-        "subtitle": "Configure reglas personalizadas de cálculo de puntos basadas en la posición/clasificación",
         "addRule": "Agregar nueva regla",
         "currentRules": "Reglas actuales",
         "activityType": "Tipo de actividad",
@@ -130,7 +128,11 @@
         "deleted": "Regla de puntos eliminada con éxito",
         "deleteFailed": "Error al eliminar la regla de puntos",
         "participationModeFailed": "Error al actualizar el modo de participación",
-        "participationPointsFailed": "Error al actualizar los puntos de participación"
+        "participationPointsFailed": "Error al actualizar los puntos de participación",
+        "activityEnabled": "Actividad activa",
+        "activityEnabledFailed": "Error al actualizar el estado de la actividad",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Error al actualizar el tiebreaker"
       }
     },
     "retroactive": {
@@ -175,7 +177,8 @@
       "kvk-cross-border": "KvK Cross Border",
       "legion": "Legión",
       "desolate-desert": "Desierto Desolado",
-      "golden-expedition": "Expedición Dorada"
+      "golden-expedition": "Expedición Dorada",
+      "stellar-glory": "Gloria Estelar"
     }
   },
   "dashboard": {

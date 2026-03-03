@@ -242,7 +242,23 @@ export class ActivityService {
       }
     }
 
-    return userScores.sort((a, b) => b.sixWeekTotal - a.sixWeekTotal);
+    return userScores.sort((a, b) => {
+      const diff = b.sixWeekTotal - a.sixWeekTotal;
+      if (diff !== 0) return diff;
+
+      const tiebreaker = this.allianceService.alliance()?.tiebreaker_activity_type;
+      if (!tiebreaker) return 0;
+
+      const tiebreakerScore = (u: UserScore) =>
+        u.weeklyScores.reduce(
+          (total, week) =>
+            total +
+            week.activities.filter(act => act.activityType === tiebreaker).reduce((sum, act) => sum + act.points, 0),
+          0
+        );
+
+      return tiebreakerScore(b) - tiebreakerScore(a);
+    });
   }
 
   private calculateWeeklyScores(activities: Activity[]): WeeklyScore[] {

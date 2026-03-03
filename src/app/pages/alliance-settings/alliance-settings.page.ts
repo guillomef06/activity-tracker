@@ -10,7 +10,7 @@ import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/s
 
 // Child components
 import { AllianceOverviewTabComponent } from './components/alliance-overview-tab/alliance-overview-tab.component';
-import { PointRulesTabComponent } from './components/point-rules-tab/point-rules-tab.component';
+import { ActivitySettingsTabComponent } from './components/activity-settings-tab/activity-settings-tab.component';
 import { RetroactiveActivitiesTabComponent } from './components/retroactive-activities-tab/retroactive-activities-tab.component';
 
 @Component({
@@ -22,7 +22,7 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
     MatTabsModule,
     TranslateModule,
     AllianceOverviewTabComponent,
-    PointRulesTabComponent,
+    ActivitySettingsTabComponent,
     RetroactiveActivitiesTabComponent,
   ],
   templateUrl: './alliance-settings.page.html',

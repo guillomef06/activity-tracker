@@ -47,13 +47,16 @@ export class AuthService {
    * Initialize authentication state on app load.
    * getSession() handles the initial state (reads from local cache, no network round-trip)
    * and drives the loadingSignal so guards are unblocked only after the profile is ready.
-   * onAuthStateChange handles all subsequent events (SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED…)
-   * but skips INITIAL_SESSION to avoid a duplicate user_profiles query.
+   * onAuthStateChange handles SIGNED_OUT and USER_UPDATED events only.
+   * INITIAL_SESSION, SIGNED_IN and TOKEN_REFRESHED are skipped (handled elsewhere or irrelevant).
    */
   private async initializeAuth(): Promise<void> {
     // Register listener FIRST — always active, even if getSession() times out
     this.supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') return;
+      // INITIAL_SESSION: handled by getSession() below to avoid duplicate query
+      // SIGNED_IN: handled manually in signIn() / signUpAdmin() / signUpMember()
+      // TOKEN_REFRESHED: only the JWT changes, the user profile in DB is unchanged
+      if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') return;
 
       if (session?.user) {
         this.currentUserSignal.set(session.user);

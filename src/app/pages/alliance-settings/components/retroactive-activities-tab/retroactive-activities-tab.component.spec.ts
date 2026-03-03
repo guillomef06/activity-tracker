@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { RetroactiveActivitiesTabComponent } from './retroactive-activities-tab.component';
 import { ActivityService } from '@app/core/services';
+import { AllianceService } from '@app/core/services/alliance.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,16 +11,27 @@ describe('RetroactiveActivitiesTabComponent', () => {
   let component: RetroactiveActivitiesTabComponent;
   let fixture: ComponentFixture<RetroactiveActivitiesTabComponent>;
   let activityServiceSpy: { addActivityForMember: ReturnType<typeof vi.fn> };
+  let allianceServiceSpy: {
+    isActivityEnabled: ReturnType<typeof vi.fn>;
+    isParticipationMode: ReturnType<typeof vi.fn>;
+    getParticipationPoints: ReturnType<typeof vi.fn>;
+  };
   let snackBarSpy: { open: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     activityServiceSpy = { addActivityForMember: vi.fn() };
+    allianceServiceSpy = {
+      isActivityEnabled: vi.fn().mockReturnValue(true),
+      isParticipationMode: vi.fn().mockReturnValue(false),
+      getParticipationPoints: vi.fn().mockReturnValue(5),
+    };
     snackBarSpy = { open: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [RetroactiveActivitiesTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
         { provide: ActivityService, useValue: activityServiceSpy },
+        { provide: AllianceService, useValue: allianceServiceSpy },
         { provide: MatSnackBar, useValue: snackBarSpy },
       ],
     }).compileComponents();
@@ -60,6 +72,15 @@ describe('RetroactiveActivitiesTabComponent', () => {
     const activities = component.availableActivities();
     expect(activities.length).toBeGreaterThan(0);
     expect(activities.every(a => a.availableWeeks)).toBeTruthy();
+  });
+
+  it('should exclude disabled activities from availableActivities', () => {
+    allianceServiceSpy.isActivityEnabled.mockReturnValue(false);
+    // Use week: 1 (different from initial 0) to force the computed signal to re-evaluate
+    component['retroactiveForm'].patchValue({ week: 1 });
+
+    const activities = component.availableActivities();
+    expect(activities.length).toBe(0);
   });
 
   it('should calculate points correctly', () => {

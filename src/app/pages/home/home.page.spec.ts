@@ -31,6 +31,8 @@ describe('HomePage', () => {
     loadSettings: vi.fn().mockResolvedValue({ error: null }),
     isParticipationMode: vi.fn().mockReturnValue(false),
     getParticipationPoints: vi.fn().mockReturnValue(5),
+    isActivityEnabled: vi.fn().mockReturnValue(true),
+    alliance: signal(null),
     rules: signal([]),
     settings: signal([]),
   };

@@ -75,7 +75,7 @@
       "tabs": {
         "overview": "Alliance",
         "invitations": "Invitations",
-        "pointRules": "Règles de Points",
+        "activitySettings": "Paramètres des Activités",
         "retroactive": "Activités Rétroactives"
       },
       "allianceInfo": "Informations de l'Alliance",
@@ -108,8 +108,6 @@
       "invitationRevokeFailed": "Échec de la révocation de l'invitation",
       "invitationLinkCopied": "Lien d'invitation copié dans le presse-papiers !",
       "pointRules": {
-        "title": "Configuration des règles de points",
-        "subtitle": "Configurez des règles de calcul de points personnalisées basées sur la position/classement",
         "addRule": "Ajouter une nouvelle règle",
         "currentRules": "Règles actuelles",
         "activityType": "Type d'activité",
@@ -130,7 +128,11 @@
         "deleted": "Règle de points supprimée avec succès",
         "deleteFailed": "Échec de la suppression de la règle de points",
         "participationModeFailed": "Échec de la mise à jour du mode participation",
-        "participationPointsFailed": "Échec de la mise à jour des points de participation"
+        "participationPointsFailed": "Échec de la mise à jour des points de participation",
+        "activityEnabled": "Activité active",
+        "activityEnabledFailed": "Échec de la mise à jour du statut de l'activité",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Échec de la mise à jour du tiebreaker"
       }
     },
     "retroactive": {
@@ -175,7 +177,8 @@
       "kvk-cross-border": "KvK Cross Border",
       "legion": "Légion",
       "desolate-desert": "Désert Désolé",
-      "golden-expedition": "Expédition Dorée"
+      "golden-expedition": "Expédition Dorée",
+      "stellar-glory": "Gloire Stellaire"
     }
   },
   "dashboard": {

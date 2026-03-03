@@ -75,7 +75,7 @@
       "tabs": {
         "overview": "Alliance",
         "invitations": "Invitations",
-        "pointRules": "Point Rules",
+        "activitySettings": "Activity Settings",
         "retroactive": "Retroactive Activities"
       },
       "allianceInfo": "Alliance Information",
@@ -108,8 +108,6 @@
       "invitationRevokeFailed": "Failed to revoke invitation",
       "invitationLinkCopied": "Invitation link copied to clipboard!",
       "pointRules": {
-        "title": "Point Rules Configuration",
-        "subtitle": "Configure custom point calculation rules based on position/rank",
         "addRule": "Add New Rule",
         "currentRules": "Current Rules",
         "activityType": "Activity Type",
@@ -130,7 +128,11 @@
         "deleted": "Point rule deleted successfully",
         "deleteFailed": "Failed to delete point rule",
         "participationModeFailed": "Failed to update participation mode",
-        "participationPointsFailed": "Failed to update participation points"
+        "participationPointsFailed": "Failed to update participation points",
+        "activityEnabled": "Activity enabled",
+        "activityEnabledFailed": "Failed to update activity status",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Failed to update tiebreaker"
       }
     },
     "retroactive": {
@@ -175,7 +177,8 @@
       "kvk-cross-border": "KvK Cross Border",
       "legion": "Legion",
       "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition"
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
     }
   },
   "dashboard": {

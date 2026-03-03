@@ -30,14 +30,18 @@ export class ProgressBarService {
   }
 
   /**
-   * Execute an async operation with automatic progress bar handling
+   * Execute an async operation with automatic progress bar handling.
+   * A 30-second safety timeout is applied by default to prevent the progress bar
+   * from spinning indefinitely if a request hangs (e.g. Supabase token-refresh queue).
    * @param operation - The async operation to execute
+   * @param timeoutMs - Maximum duration before the progress bar is forcibly hidden (default: 30 000 ms)
    * @returns Promise that resolves with the operation result
    */
-  public async withProgress<T>(operation: () => Promise<T>): Promise<T> {
+  public async withProgress<T>(operation: () => Promise<T>, timeoutMs = 30_000): Promise<T> {
     try {
       this.show();
-      return await operation();
+      const deadline = new Promise<T>(resolve => setTimeout(() => resolve(undefined as T), timeoutMs));
+      return await Promise.race([operation(), deadline]);
     } finally {
       this.hide();
     }
