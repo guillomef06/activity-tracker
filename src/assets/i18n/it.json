@@ -3,7 +3,6 @@
     "subtitle": "Traccia le attività e visualizza i punteggi delle ultime 6 settimane"
   },
   "auth": {
-    "superAdmin": "Super Amministratore",
     "login": "Accedi",
     "signup": "Registrati",
     "logout": "Esci",
@@ -75,19 +74,16 @@
       "title": "Impostazioni Alleanza",
       "tabs": {
         "overview": "Alleanza",
-        "information": "Informazioni",
-        "members": "Membri",
         "invitations": "Inviti",
-        "pointRules": "Regole Punti",
-        "retroactive": "Attività Retroattive"
+        "activitySettings": "Impostazioni Attività",
+        "retroactive": "Attività Retroattive",
+        "importExcel": "Importa Excel"
       },
       "allianceInfo": "Informazioni Alleanza",
       "allianceName": "Nome Alleanza",
       "allianceTag": "Tag Alleanza",
       "allianceTagHint": "Identificatore opzionale di 3 caratteri (es. RgW)",
       "updateName": "Aggiorna",
-      "totalMembers": "Membri Totali",
-      "totalInvitations": "Inviti Totali",
       "memberList": "Elenco Membri",
       "members": "membri",
       "noMembers": "Nessun membro ancora",
@@ -113,8 +109,6 @@
       "invitationRevokeFailed": "Impossibile revocare l'invito",
       "invitationLinkCopied": "Link dell'invito copiato negli appunti!",
       "pointRules": {
-        "title": "Configurazione regole punti",
-        "subtitle": "Configura regole personalizzate per il calcolo dei punti basate sulla posizione/classifica",
         "addRule": "Aggiungi nuova regola",
         "currentRules": "Regole attuali",
         "activityType": "Tipo di attività",
@@ -135,7 +129,11 @@
         "deleted": "Regola punti eliminata con successo",
         "deleteFailed": "Impossibile eliminare la regola punti",
         "participationModeFailed": "Impossibile aggiornare la modalità partecipazione",
-        "participationPointsFailed": "Impossibile aggiornare i punti partecipazione"
+        "participationPointsFailed": "Impossibile aggiornare i punti partecipazione",
+        "activityEnabled": "Attività abilitata",
+        "activityEnabledFailed": "Impossibile aggiornare lo stato dell'attività",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Impossibile aggiornare lo spareggio"
       }
     },
     "retroactive": {
@@ -155,9 +153,55 @@
       "pointsPreview": "Punti da assegnare",
       "submit": "Aggiungi attività",
       "submitting": "Aggiunta in corso...",
-      "reset": "Reimposta modulo",
       "success": "Attività aggiunta con successo!",
       "error": "Errore nell'aggiunta dell'attività. Riprova."
+    },
+    "import": {
+      "title": "Importa attività da Excel",
+      "description": "Carica un modello compilato per importare in batch attività retroattive per i membri della tua alleanza.",
+      "templateHint": "Prima, scarica e compila il modello di importazione.",
+      "downloadTemplate": "Scarica modello",
+      "activityFilter": "Filtra per attività",
+      "activityFilterAll": "Tutte le attività",
+      "uploadFile": "Scegli file",
+      "fileHint": "Accetta .xlsx, .xls, .csv",
+      "back": "Indietro",
+      "preview": {
+        "title": "Anteprima",
+        "rowsFound": "{{count}} riga/e trovata/e",
+        "playerColumn": "Giocatore",
+        "activityColumn": "Attività",
+        "positionColumn": "Posizione",
+        "weekColumn": "Settimana",
+        "pointsColumn": "Punti",
+        "statusColumn": "Stato",
+        "updateColumn": "Aggiornare?",
+        "selectPlayer": "Seleziona giocatore",
+        "updateAll": "Aggiorna tutti gli esistenti"
+      },
+      "status": {
+        "ready": "Pronto per l'inserimento",
+        "willUpdate": "Aggiornerà la voce esistente",
+        "unmatched": "Giocatore non trovato — seleziona manualmente",
+        "invalid": {
+          "invalid_activity": "Tipo di attività sconosciuto o disabilitato",
+          "disabled_activity": "Questo tipo di attività è disabilitato",
+          "invalid_date": "Data non valida o mancante",
+          "invalid_position": "Posizione non valida (deve essere ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "Importa",
+        "importing": "Importazione in corso..."
+      },
+      "result": {
+        "title": "Importazione completata",
+        "inserted": "inserito/i",
+        "updated": "aggiornato/i",
+        "skipped": "saltato/i",
+        "error": "Importazione fallita. Riprova."
+      },
+      "reset": "Importa un altro file"
     }
   },
   "activityInput": {
@@ -173,7 +217,6 @@
     "success": "Attività inviata con successo!",
     "error": "Invio dell'attività non riuscito",
     "participated": "Ho partecipato questa settimana",
-    "notParticipated": "Non ancora partecipato",
     "fillAllFields": "Si prega di compilare tutti i campi obbligatori"
   },
   "activities": {
@@ -182,7 +225,8 @@
       "kvk-cross-border": "KvK Cross Border",
       "legion": "Legione",
       "desolate-desert": "Deserto Desolato",
-      "golden-expedition": "Spedizione Dorata"
+      "golden-expedition": "Spedizione Dorata",
+      "stellar-glory": "Gloria Stellare"
     }
   },
   "dashboard": {
@@ -270,5 +314,35 @@
   "releaseNotes": {
     "title": "Novità",
     "markAsSeen": "Segna come letto"
+  },
+  "gemCalculator": {
+    "nerdModeButton": "💎 Enter the nerd mode",
+    "title": "💎 Calcolatore di Gemme",
+    "back": "Indietro",
+    "troopType": "Tipo di truppa",
+    "troopTier": "Tier truppa",
+    "legionSize": "Dimensione della legione",
+    "legionSizeHint": "Numero di unità nella tua legione (max 500 000)",
+    "healthBonus": "Bonus Salute (%)",
+    "mightAttack": "Might Attack (%)",
+    "mightDefense": "Might Defense (%)",
+    "gemType": "Tipo di gemma",
+    "gemHealth": "❤️ Gemma della Salute",
+    "gemCapacity": "👥 Gemma di Capacità",
+    "gemRarity": "Rarità della gemma",
+    "verbose": "Modalità dettagliata (dettaglio calcolo)",
+    "analyze": "💎 Analizza",
+    "score": "Guadagno",
+    "rawBonus": "Bonus grezzo",
+    "verboseTitle": "Dettaglio del calcolo",
+    "verboseScoreBefore": "Punteggio prima",
+    "verboseScoreAfter": "Punteggio dopo",
+    "verboseGain": "Guadagno",
+    "verboseLegionSize": "Dimensione della legione",
+    "verbosePerUnit": "Punteggio per unità (prima)",
+    "verbosePerUnitAfter": "Punteggio per unità (dopo)",
+    "verboseGemValue": "Bonus gemma",
+    "verboseNewHealthBonus": "Nuovo bonus salute",
+    "noResult": "Compila il modulo e clicca su Analizza"
   }
 }

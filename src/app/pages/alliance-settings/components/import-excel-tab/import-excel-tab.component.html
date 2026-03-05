@@ -1,0 +1,271 @@
+<div class="import-tab">
+  <!-- ─── STEP 1: UPLOAD ─── -->
+  @if (step() === 'upload') {
+    <mat-card class="import-card">
+      <mat-card-header>
+        <mat-icon class="header-icon">upload_file</mat-icon>
+        <div class="header-content">
+          <mat-card-title>{{ 'alliance.import.title' | translate }}</mat-card-title>
+          <mat-card-subtitle>{{ 'alliance.import.description' | translate }}</mat-card-subtitle>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Template download -->
+        <div class="template-section">
+          <p class="template-hint">{{ 'alliance.import.templateHint' | translate }}</p>
+          <button mat-stroked-button (click)="downloadTemplate()">
+            <mat-icon>download</mat-icon>
+            {{ 'alliance.import.downloadTemplate' | translate }}
+          </button>
+        </div>
+
+        <mat-divider />
+
+        <!-- Activity filter -->
+        <div class="filter-section">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'alliance.import.activityFilter' | translate }}</mat-label>
+            <mat-select [value]="activityFilter()" (selectionChange)="activityFilter.set($event.value)">
+              <mat-option value="all">{{ 'alliance.import.activityFilterAll' | translate }}</mat-option>
+              @for (type of activityTypes; track type.value) {
+                <mat-option [value]="type.value">{{ type.labelKey | translate }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- File upload -->
+        <div class="upload-zone">
+          <input #fileInput type="file" accept=".xlsx,.xls,.csv" (change)="onFileSelect($event)" hidden />
+          <button mat-raised-button color="primary" (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon>
+            {{ 'alliance.import.uploadFile' | translate }}
+          </button>
+          <p class="file-hint">{{ 'alliance.import.fileHint' | translate }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- ─── STEP 2: PREVIEW ─── -->
+  @if (step() === 'preview') {
+    <mat-card class="import-card">
+      <mat-card-header>
+        <mat-icon class="header-icon">preview</mat-icon>
+        <div class="header-content">
+          <mat-card-title>{{ 'alliance.import.preview.title' | translate }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ 'alliance.import.preview.rowsFound' | translate: { count: filteredRows().length } }}
+          </mat-card-subtitle>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Summary chips + update-all toggle -->
+        <div class="preview-toolbar">
+          <div class="status-summary">
+            <span class="chip chip-ready">✓ {{ rowsToInsert().length }}</span>
+            <span class="chip chip-update">🔄 {{ rowsToUpdate().length }}</span>
+            <span class="chip chip-skip">⚠ {{ skippedRows().length }}</span>
+          </div>
+
+          @if (hasExistingRows()) {
+            <div class="update-all">
+              <mat-checkbox
+                [checked]="existingRows().length > 0 && rowsToUpdate().length === existingRows().length"
+                [indeterminate]="rowsToUpdate().length > 0 && rowsToUpdate().length < existingRows().length"
+                (change)="toggleUpdateAll($event.checked)"
+              >
+                {{ 'alliance.import.preview.updateAll' | translate }}
+              </mat-checkbox>
+            </div>
+          }
+        </div>
+
+        <!-- Preview table -->
+        <div class="table-container">
+          <table mat-table [dataSource]="filteredRows()">
+            <!-- Status -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>{{ 'alliance.import.preview.statusColumn' | translate }}</th>
+              <td mat-cell *matCellDef="let row">
+                @switch (row.status) {
+                  @case ('ready') {
+                    <span class="status-icon status-ready" [matTooltip]="'alliance.import.status.ready' | translate"
+                      >✓</span
+                    >
+                  }
+                  @case ('willUpdate') {
+                    <span
+                      class="status-icon status-update"
+                      [matTooltip]="'alliance.import.status.willUpdate' | translate"
+                      >🔄</span
+                    >
+                  }
+                  @case ('unmatched') {
+                    <span class="status-icon status-warn" [matTooltip]="'alliance.import.status.unmatched' | translate"
+                      >⚠</span
+                    >
+                  }
+                  @case ('invalid') {
+                    <span
+                      class="status-icon status-error"
+                      [matTooltip]="'alliance.import.status.invalid.' + row.validationError | translate"
+                      >✗</span
+                    >
+                  }
+                }
+              </td>
+            </ng-container>
+
+            <!-- Player -->
+            <ng-container matColumnDef="player">
+              <th mat-header-cell *matHeaderCellDef>{{ 'alliance.import.preview.playerColumn' | translate }}</th>
+              <td mat-cell *matCellDef="let row">
+                @if (row.matchedMember) {
+                  <span class="matched-player">{{ row.matchedMember.display_name }}</span>
+                  <span class="raw-name">({{ row.rawPlayerName }})</span>
+                } @else {
+                  <div class="unmatched-player">
+                    <span class="raw-name-unmatched">{{ row.rawPlayerName }}</span>
+                    <mat-form-field appearance="outline" class="player-select">
+                      <mat-label>{{ 'alliance.import.preview.selectPlayer' | translate }}</mat-label>
+                      <mat-select (selectionChange)="assignMember(row, $event.value)">
+                        @for (member of members(); track member.id) {
+                          <mat-option [value]="member">{{ member.display_name }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Activity -->
+            <ng-container matColumnDef="activity">
+              <th mat-header-cell *matHeaderCellDef>{{ 'alliance.import.preview.activityColumn' | translate }}</th>
+              <td mat-cell *matCellDef="let row">
+                @if (row.activityLabelKey) {
+                  {{ row.activityLabelKey | translate }}
+                } @else {
+                  <span class="invalid-value">{{ row.activityType }}</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Position -->
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef>{{ 'alliance.import.preview.positionColumn' | translate }}</th>
+              <td mat-cell *matCellDef="let row">
+                {{ row.position ?? '—' }}
+              </td>
+            </ng-container>
+
+            <!-- Week -->
+            <ng-container matColumnDef="week">
+              <th mat-header-cell *matHeaderCellDef>{{ 'alliance.import.preview.weekColumn' | translate }}</th>
+              <td mat-cell *matCellDef="let row">
+                @if (row.weeksAgo === null) {
+                  {{ row.rawEventDate }}
+                } @else if (row.weeksAgo === 0) {
+                  {{ 'alliance.retroactive.currentWeek' | translate }}
+                } @else if (row.weeksAgo > 0) {
+                  {{ 'alliance.retroactive.weeksAgo' | translate: { count: row.weeksAgo } }}
+                } @else {
+                  {{ row.weekStart | date: 'mediumDate' }}
+                }
+              </td>
+            </ng-container>
+
+            <!-- Points -->
+            <ng-container matColumnDef="points">
+              <th mat-header-cell *matHeaderCellDef>{{ 'alliance.import.preview.pointsColumn' | translate }}</th>
+              <td mat-cell *matCellDef="let row">
+                @if (!row.validationError) {
+                  {{ row.points }}
+                } @else {
+                  —
+                }
+              </td>
+            </ng-container>
+
+            <!-- Update? -->
+            <ng-container matColumnDef="update">
+              <th mat-header-cell *matHeaderCellDef>{{ 'alliance.import.preview.updateColumn' | translate }}</th>
+              <td mat-cell *matCellDef="let row">
+                @if (row.status === 'willUpdate') {
+                  <mat-checkbox [checked]="row.includeUpdate" (change)="toggleRowUpdate(row, $event.checked)" />
+                }
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              [class.row-ready]="row.status === 'ready'"
+              [class.row-update]="row.status === 'willUpdate'"
+              [class.row-warn]="row.status === 'unmatched'"
+              [class.row-error]="row.status === 'invalid'"
+            ></tr>
+          </table>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button (click)="reset()">
+          <mat-icon>arrow_back</mat-icon>
+          {{ 'alliance.import.back' | translate }}
+        </button>
+
+        <app-loading-button
+          [text]="'alliance.import.confirm.button' | translate"
+          [loadingText]="'alliance.import.confirm.importing' | translate"
+          [submitting]="isImporting()"
+          [disabled]="!canImport()"
+          icon="upload"
+          (clicked)="confirmImport()"
+        />
+      </mat-card-actions>
+    </mat-card>
+  }
+
+  <!-- ─── STEP 3: DONE ─── -->
+  @if (step() === 'done') {
+    <mat-card class="import-card import-result">
+      <mat-card-header>
+        <mat-icon class="header-icon result-icon">check_circle</mat-icon>
+        <div class="header-content">
+          <mat-card-title>{{ 'alliance.import.result.title' | translate }}</mat-card-title>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (importResult(); as result) {
+          <div class="result-stats">
+            <div class="stat">
+              <span class="stat-number">{{ result.inserted }}</span>
+              <span class="stat-label">{{ 'alliance.import.result.inserted' | translate }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">{{ result.updated }}</span>
+              <span class="stat-label">{{ 'alliance.import.result.updated' | translate }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number stat-skip">{{ result.skipped }}</span>
+              <span class="stat-label">{{ 'alliance.import.result.skipped' | translate }}</span>
+            </div>
+          </div>
+        }
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="reset()">
+          <mat-icon>refresh</mat-icon>
+          {{ 'alliance.import.reset' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>

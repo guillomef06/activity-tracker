@@ -1,0 +1,161 @@
+.scores-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.scores-header {
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+
+  .subtitle {
+    margin: 0.25rem 0 0;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.875rem;
+  }
+}
+
+.scores-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.score-card {
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.score-header {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+
+  .rank-badge {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  mat-card-title {
+    flex: 1;
+  }
+
+  mat-card-subtitle {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+.score-details {
+  padding-top: 0;
+
+  h4 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.points-chip {
+  margin-left: auto !important;
+}
+
+.week-activities {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .activity-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--mat-sys-surface-variant);
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--mat-sys-surface-container-high);
+    }
+
+    .activity-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--mat-sys-primary);
+      flex-shrink: 0;
+    }
+
+    .participation-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--mat-sys-success);
+      flex-shrink: 0;
+    }
+
+    .activity-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .activity-points {
+      font-weight: 500;
+      color: var(--mat-sys-primary);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+.duplicate-position {
+  color: #fff;
+  background: #d32f2f !important;
+  border-radius: 4px;
+  padding: 0 4px;
+  font-weight: bold;
+}
+
+.no-activities {
+  padding: 1rem;
+  text-align: center;
+  color: var(--mat-sys-outline-variant);
+  font-style: italic;
+  margin: 0;
+}
+
+@media (max-width: 599px) {
+  mat-card-subtitle {
+    display: none;
+  }
+
+  mat-panel-description {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .scores-section {
+    padding: 2rem;
+  }
+
+  .scores-header h2 {
+    font-size: 2rem;
+  }
+}

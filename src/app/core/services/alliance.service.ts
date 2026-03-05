@@ -320,6 +320,13 @@ export class AllianceService {
   }
 
   /**
+   * Returns true if the given activity type is enabled for this alliance (default: true)
+   */
+  isActivityEnabled(activityType: string): boolean {
+    return this.settingsSignal().find(s => s.activity_type === activityType)?.enabled ?? true;
+  }
+
+  /**
    * Returns true if the given activity type has participation_mode enabled
    */
   isParticipationMode(activityType: string): boolean {
@@ -355,6 +362,7 @@ export class AllianceService {
       {
         alliance_id: profile.alliance_id,
         activity_type: request.activity_type,
+        enabled: request.enabled,
         participation_mode: request.participation_mode,
         participation_points: request.participation_points,
       },
@@ -522,6 +530,14 @@ export class AllianceService {
       console.error('Error revoking invitation:', error);
       return { error: error as Error };
     }
+  }
+
+  /**
+   * Set or clear the tiebreaker activity for the alliance (admin only)
+   * Only one activity can be tiebreaker at a time — passing null clears it.
+   */
+  async setTiebreakerActivity(activityType: string | null): Promise<{ error: Error | null }> {
+    return this.updateAlliance({ tiebreaker_activity_type: activityType });
   }
 
   /**

@@ -1,0 +1,213 @@
+<div class="gem-calculator">
+  <!-- Header -->
+  <div class="calc-header">
+    <button
+      mat-icon-button
+      (click)="back.emit()"
+      class="back-button"
+      [attr.aria-label]="'gemCalculator.back' | translate"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>{{ 'gemCalculator.title' | translate }}</h2>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="analyze()">
+        <!-- Troop Type & Tier -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-icon matIconPrefix>military_tech</mat-icon>
+            <mat-label>{{ 'gemCalculator.troopType' | translate }}</mat-label>
+            <mat-select formControlName="troopType">
+              @for (type of troopTypes; track type) {
+                <mat-option [value]="type">{{ 'gemCalculator.troop' + (type | titlecase) | translate }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-icon matIconPrefix>layers</mat-icon>
+            <mat-label>{{ 'gemCalculator.troopTier' | translate }}</mat-label>
+            <mat-select formControlName="troopTier">
+              @for (tier of troopTiers; track tier) {
+                <mat-option [value]="tier">T{{ tier }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Legion Size -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>groups</mat-icon>
+          <mat-label>{{ 'gemCalculator.legionSize' | translate }}</mat-label>
+          <input matInput type="number" formControlName="legionSize" min="1" max="500000" />
+          <mat-hint>{{ 'gemCalculator.legionSizeHint' | translate }}</mat-hint>
+        </mat-form-field>
+
+        <!-- Commander Bonuses -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-icon matIconPrefix>favorite</mat-icon>
+            <mat-label>{{ 'gemCalculator.healthBonus' | translate }}</mat-label>
+            <input matInput type="number" formControlName="healthBonus" min="0" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-icon matIconPrefix>flash_on</mat-icon>
+            <mat-label>{{ 'gemCalculator.mightAttack' | translate }}</mat-label>
+            <input matInput type="number" formControlName="mightAttack" min="0" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-icon matIconPrefix>shield</mat-icon>
+            <mat-label>{{ 'gemCalculator.mightDefense' | translate }}</mat-label>
+            <input matInput type="number" formControlName="mightDefense" min="0" />
+          </mat-form-field>
+        </div>
+
+        <!-- Gem Type & Rarity -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-icon matIconPrefix>diamond</mat-icon>
+            <mat-label>{{ 'gemCalculator.gemType' | translate }}</mat-label>
+            <mat-select formControlName="gemType">
+              <mat-option value="health">{{ 'gemCalculator.gemHealth' | translate }}</mat-option>
+              <mat-option value="capacity">{{ 'gemCalculator.gemCapacity' | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="flex-1">
+            <mat-icon matIconPrefix>grade</mat-icon>
+            <mat-label>{{ 'gemCalculator.gemRarity' | translate }}</mat-label>
+            <mat-select formControlName="gemTier">
+              @for (rarity of gemRarities; track rarity.tier) {
+                <mat-option [value]="rarity.tier">
+                  <span class="rarity-dot" [style.background]="rarity.color"></span>
+                  {{ rarity.label }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Verbose Toggle -->
+        <div class="verbose-row">
+          <mat-slide-toggle formControlName="verbose">
+            {{ 'gemCalculator.verbose' | translate }}
+          </mat-slide-toggle>
+        </div>
+
+        <!-- Submit -->
+        <button mat-raised-button color="primary" type="submit" class="analyze-btn">
+          {{ 'gemCalculator.analyze' | translate }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Result -->
+  @if (result(); as res) {
+    <mat-card>
+      <mat-card-content>
+        @if (!isVerbose()) {
+          <!-- Normal mode: gain (delta) -->
+          <div class="score-display">
+            <div class="rarity-badge" [style.background]="getRarityColor(res.gemTier)">
+              {{ getRarityLabel(res.gemTier) }}
+            </div>
+            <div class="score-value">
+              <span class="score-label">{{ 'gemCalculator.score' | translate }}</span>
+              <span class="score-number">+{{ res.delta | number: '1.0-0' }}</span>
+            </div>
+            <div class="raw-bonus">
+              {{ 'gemCalculator.rawBonus' | translate }} :
+              @if (res.gemType === 'health') {
+                +{{ res.rawValue }}%
+              } @else {
+                +{{ res.rawValue | number }} units
+              }
+            </div>
+          </div>
+        } @else {
+          <!-- Verbose mode: step-by-step breakdown -->
+          <h3>{{ 'gemCalculator.verboseTitle' | translate }}</h3>
+          <mat-divider />
+
+          @if (res.gemType === 'health') {
+            <dl class="verbose-list">
+              <dt>{{ 'gemCalculator.verboseLegionSize' | translate }}</dt>
+              <dd>{{ res.legionSize | number }}</dd>
+
+              <dt>{{ 'gemCalculator.verbosePerUnit' | translate }}</dt>
+              <dd>{{ res.perUnitScoreBefore | number: '1.2-2' }}</dd>
+
+              <dt>{{ 'gemCalculator.verboseScoreBefore' | translate }}</dt>
+              <dd>
+                <strong>{{ res.scoreBefore | number: '1.0-0' }}</strong>
+              </dd>
+            </dl>
+            <mat-divider />
+            <dl class="verbose-list">
+              <dt>{{ 'gemCalculator.verboseGemValue' | translate }}</dt>
+              <dd>+{{ res.rawValue }}%</dd>
+
+              <dt>{{ 'gemCalculator.verboseNewHealthBonus' | translate }}</dt>
+              <dd>
+                {{ res.healthBonus }}% + {{ res.rawValue }}% = <strong>{{ res.newHealthBonusPct }}%</strong>
+              </dd>
+
+              <dt>{{ 'gemCalculator.verbosePerUnitAfter' | translate }}</dt>
+              <dd>{{ res.perUnitScoreAfter | number: '1.2-2' }}</dd>
+
+              <dt>{{ 'gemCalculator.verboseScoreAfter' | translate }}</dt>
+              <dd>
+                <strong>{{ res.scoreAfter | number: '1.0-0' }}</strong>
+              </dd>
+            </dl>
+            <mat-divider />
+            <dl class="verbose-list">
+              <dt>{{ 'gemCalculator.verboseGain' | translate }}</dt>
+              <dd class="final-score">
+                <strong>+{{ res.delta | number: '1.0-0' }}</strong>
+              </dd>
+            </dl>
+          } @else {
+            <dl class="verbose-list">
+              <dt>{{ 'gemCalculator.verboseLegionSize' | translate }}</dt>
+              <dd>{{ res.legionSize | number }}</dd>
+
+              <dt>{{ 'gemCalculator.verbosePerUnit' | translate }}</dt>
+              <dd>{{ res.perUnitScoreBefore | number: '1.2-2' }}</dd>
+
+              <dt>{{ 'gemCalculator.verboseScoreBefore' | translate }}</dt>
+              <dd>
+                <strong>{{ res.scoreBefore | number: '1.0-0' }}</strong>
+              </dd>
+            </dl>
+            <mat-divider />
+            <dl class="verbose-list">
+              <dt>{{ 'gemCalculator.verboseGemValue' | translate }}</dt>
+              <dd>+{{ res.rawValue | number }} units</dd>
+
+              <dt>{{ 'gemCalculator.verboseScoreAfter' | translate }}</dt>
+              <dd>
+                <strong>{{ res.scoreAfter | number: '1.0-0' }}</strong>
+              </dd>
+            </dl>
+            <mat-divider />
+            <dl class="verbose-list">
+              <dt>{{ 'gemCalculator.verboseGain' | translate }}</dt>
+              <dd class="final-score">
+                <strong>+{{ res.delta | number: '1.0-0' }}</strong>
+              </dd>
+            </dl>
+          }
+        }
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <p class="no-result">{{ 'gemCalculator.noResult' | translate }}</p>
+  }
+</div>

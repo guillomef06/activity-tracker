@@ -30,7 +30,12 @@
       "mcp__plugin_supabase_supabase__list_tables",
       "mcp__plugin_supabase_supabase__execute_sql",
       "Bash(npm run test:ci:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(node scripts/check-i18n-unused.js:*)",
+      "Bash(node_modules/.bin/ng lint)",
+      "Read(//d/workplace/**)",
+      "Read(//d/workplace//**)",
+      "Bash(node:*)"
     ]
   }
 }
