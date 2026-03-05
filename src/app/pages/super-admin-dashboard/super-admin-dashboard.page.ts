@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ interface DashboardStats {
 
 @Component({
   selector: 'app-super-admin-dashboard',
-  imports: [CommonModule, RouterLink, MatCardModule, MatButtonModule, MatIconModule, TranslateModule],
+  imports: [RouterLink, MatCardModule, MatButtonModule, MatIconModule, TranslateModule],
   templateUrl: './super-admin-dashboard.page.html',
   styleUrl: './super-admin-dashboard.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

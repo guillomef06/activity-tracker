@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -17,7 +17,6 @@ import { ImportExcelTabComponent } from './components/import-excel-tab/import-ex
 @Component({
   selector: 'app-alliance-settings',
   imports: [
-    CommonModule,
     MatCardModule,
     MatIconModule,
     MatTabsModule,

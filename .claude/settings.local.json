@@ -35,7 +35,9 @@
       "Bash(node_modules/.bin/ng lint)",
       "Read(//d/workplace/**)",
       "Read(//d/workplace//**)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "mcp__angular-cli__search_documentation",
+      "Bash(sed:*)"
     ]
   }
 }

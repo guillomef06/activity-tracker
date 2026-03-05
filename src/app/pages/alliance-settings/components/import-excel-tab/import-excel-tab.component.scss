@@ -17,7 +17,19 @@
     font-size: 32px;
     width: 32px;
     height: 32px;
+    flex-shrink: 0;
     color: var(--mat-sys-primary);
+  }
+
+  .header-content {
+    flex: 1;
+    min-width: 0;
+
+    mat-card-title,
+    mat-card-subtitle {
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
   }
 
   mat-card-actions {
