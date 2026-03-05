@@ -1,6 +1,6 @@
 {
   "name": "activity-tracker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Activity tracking app with rolling 6-week scores for management",
   "scripts": {
     "ng": "ng",
@@ -16,6 +16,7 @@
     "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
     "deploy": "ng deploy --base-href=/activity-tracker/",
+    "i18n:check": "node scripts/check-i18n-unused.js",
     "version": "node scripts/update-release-notes.js && git add src/assets/release-notes.json",
     "prepare": "husky"
   },
@@ -46,6 +47,7 @@
     "@supabase/supabase-js": "^2.95.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {

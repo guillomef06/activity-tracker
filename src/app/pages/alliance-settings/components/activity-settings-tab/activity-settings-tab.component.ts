@@ -25,7 +25,7 @@ import { APP_CONSTANTS } from '@app/shared/constants/constants';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-point-rules-tab',
+  selector: 'app-activity-settings-tab',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -44,11 +44,11 @@ import { firstValueFrom } from 'rxjs';
     PositionRangePipe,
     LoadingButtonComponent,
   ],
-  templateUrl: './point-rules-tab.component.html',
-  styleUrl: './point-rules-tab.component.scss',
+  templateUrl: './activity-settings-tab.component.html',
+  styleUrl: './activity-settings-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PointRulesTabComponent {
+export class ActivitySettingsTabComponent {
   private readonly allianceService = inject(AllianceService);
   private readonly fb = inject(FormBuilder);
   private readonly snackbarService = inject(SnackbarService);
@@ -67,8 +67,14 @@ export class PointRulesTabComponent {
   // State
   protected readonly isSubmitting = signal(false);
   protected readonly isUpdatingSetting = signal<string | null>(null);
+  protected readonly isUpdatingTiebreaker = signal(false);
   protected readonly activityTypes = APP_CONSTANTS.ACTIVITY_TYPES;
   protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
+
+  // Current tiebreaker activity (derived from alliance signal)
+  protected readonly tiebreakerActivity = computed(
+    () => this.allianceService.alliance()?.tiebreaker_activity_type ?? null
+  );
 
   // Merged list of activity types with their current settings for the participation section
   protected readonly activitySettingsList = computed(() => {
@@ -78,6 +84,13 @@ export class PointRulesTabComponent {
       type,
       setting: settingsMap.get(type.value),
     }));
+  });
+
+  // Only enabled activity types — used in the "Add rule" dropdown
+  // Depends on settings() signal to stay reactive to admin toggles
+  protected readonly enabledActivityTypes = computed(() => {
+    const settings = this.allianceService.settings();
+    return this.activityTypes.filter(type => settings.find(s => s.activity_type === type.value)?.enabled ?? true);
   });
 
   protected readonly pointRuleForm: FormGroup = this.fb.group({
@@ -177,12 +190,36 @@ export class PointRulesTabComponent {
     }
   }
 
+  protected async toggleActivityEnabled(activityType: string, event: MatSlideToggleChange): Promise<void> {
+    this.isUpdatingSetting.set(activityType);
+    try {
+      const { error } = await this.allianceService.upsertSetting({
+        activity_type: activityType,
+        enabled: event.checked,
+        participation_mode: this.allianceService.isParticipationMode(activityType),
+        participation_points: this.allianceService.getParticipationPoints(activityType),
+      });
+      if (error) throw error;
+
+      // If the activity is being disabled and it was the tiebreaker, clear it
+      if (!event.checked && this.tiebreakerActivity() === activityType) {
+        await this.allianceService.setTiebreakerActivity(null);
+      }
+    } catch (error) {
+      console.error('Error toggling activity enabled:', error);
+      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.activityEnabledFailed'));
+    } finally {
+      this.isUpdatingSetting.set(null);
+    }
+  }
+
   protected async toggleParticipationMode(activityType: string, event: MatSlideToggleChange): Promise<void> {
     this.isUpdatingSetting.set(activityType);
     try {
       const currentPoints = this.allianceService.getParticipationPoints(activityType);
       const { error } = await this.allianceService.upsertSetting({
         activity_type: activityType,
+        enabled: this.allianceService.isActivityEnabled(activityType),
         participation_mode: event.checked,
         participation_points: currentPoints,
       });
@@ -207,6 +244,7 @@ export class PointRulesTabComponent {
     try {
       const { error } = await this.allianceService.upsertSetting({
         activity_type: activityType,
+        enabled: this.allianceService.isActivityEnabled(activityType),
         participation_mode: true,
         participation_points: points,
       });
@@ -216,6 +254,20 @@ export class PointRulesTabComponent {
       this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.participationPointsFailed'));
     } finally {
       this.isUpdatingSetting.set(null);
+    }
+  }
+
+  protected async toggleTiebreakerActivity(activityType: string, event: MatSlideToggleChange): Promise<void> {
+    this.isUpdatingTiebreaker.set(true);
+    try {
+      const newValue = event.checked ? activityType : null;
+      const { error } = await this.allianceService.setTiebreakerActivity(newValue);
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error updating tiebreaker activity:', error);
+      this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.tiebreakerFailed'));
+    } finally {
+      this.isUpdatingTiebreaker.set(false);
     }
   }
 

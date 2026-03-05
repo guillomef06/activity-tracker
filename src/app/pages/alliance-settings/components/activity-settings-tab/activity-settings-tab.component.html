@@ -1,9 +1,4 @@
 <mat-card class="tab-content">
-  <mat-card-header>
-    <mat-card-title>{{ 'alliance.settings.pointRules.title' | translate }}</mat-card-title>
-    <mat-card-subtitle>{{ 'alliance.settings.pointRules.subtitle' | translate }}</mat-card-subtitle>
-  </mat-card-header>
-
   <mat-card-content>
     <!-- Participation Mode Section -->
     <div class="section">
@@ -19,24 +14,44 @@
             <span class="activity-name">{{ item.type.labelKey | translate }}</span>
 
             <mat-slide-toggle
-              [checked]="item.setting?.participation_mode ?? false"
+              [checked]="item.setting?.enabled ?? true"
               [disabled]="isUpdatingSetting() === item.type.value"
-              (change)="toggleParticipationMode(item.type.value, $event)"
-            ></mat-slide-toggle>
+              (change)="toggleActivityEnabled(item.type.value, $event)"
+            >
+              {{ 'alliance.settings.pointRules.activityEnabled' | translate }}
+            </mat-slide-toggle>
 
-            @if (item.setting?.participation_mode) {
-              <mat-form-field appearance="outline" class="points-field" subscriptSizing="dynamic">
-                <mat-icon matIconSuffix>star</mat-icon>
-                <mat-label>{{ 'alliance.settings.pointRules.participationPoints' | translate }}</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  [value]="item.setting?.participation_points ?? 5"
-                  min="0"
-                  [disabled]="isUpdatingSetting() === item.type.value"
-                  (change)="onPointsChange(item.type.value, $event)"
-                />
-              </mat-form-field>
+            @if (item.setting?.enabled ?? true) {
+              <mat-slide-toggle
+                [checked]="item.setting?.participation_mode ?? false"
+                [disabled]="isUpdatingSetting() === item.type.value"
+                (change)="toggleParticipationMode(item.type.value, $event)"
+              >
+                {{ 'alliance.settings.pointRules.participationMode' | translate }}
+              </mat-slide-toggle>
+
+              @if (item.setting?.participation_mode) {
+                <mat-form-field appearance="outline" class="points-field" subscriptSizing="dynamic">
+                  <mat-icon matIconSuffix>star</mat-icon>
+                  <mat-label>{{ 'alliance.settings.pointRules.participationPoints' | translate }}</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    [value]="item.setting?.participation_points ?? 5"
+                    min="0"
+                    [disabled]="isUpdatingSetting() === item.type.value"
+                    (change)="onPointsChange(item.type.value, $event)"
+                  />
+                </mat-form-field>
+              }
+
+              <mat-slide-toggle
+                [checked]="tiebreakerActivity() === item.type.value"
+                [disabled]="isUpdatingTiebreaker()"
+                (change)="toggleTiebreakerActivity(item.type.value, $event)"
+              >
+                {{ 'alliance.settings.pointRules.tiebreaker' | translate }}
+              </mat-slide-toggle>
             }
           </div>
         }
@@ -55,7 +70,7 @@
           <mat-label>{{ 'alliance.settings.pointRules.activityType' | translate }}</mat-label>
           <mat-icon matIconPrefix>category</mat-icon>
           <mat-select formControlName="activity_type">
-            @for (type of activityTypes; track type.value) {
+            @for (type of enabledActivityTypes(); track type.value) {
               <mat-option [value]="type.value">
                 {{ type.labelKey | translate }}
               </mat-option>

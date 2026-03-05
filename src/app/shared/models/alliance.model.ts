@@ -11,6 +11,7 @@ export interface Alliance {
   name: string;
   tag: string | null;
   owner_id: string | null;
+  tiebreaker_activity_type: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -29,6 +30,7 @@ export interface CreateAllianceRequest {
 export interface UpdateAllianceRequest {
   name?: string;
   tag?: string | null;
+  tiebreaker_activity_type?: string | null;
 }
 
 /**

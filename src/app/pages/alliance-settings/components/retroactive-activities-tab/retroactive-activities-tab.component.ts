@@ -128,7 +128,10 @@ export class RetroactiveActivitiesTabComponent {
 
   availableActivities = computed(() => {
     const weekNumber = getWeekNumberForWeeksAgo(this.weekValue() ?? 0);
-    return APP_CONSTANTS.ACTIVITY_TYPES.filter((type: ActivityType) => type.availableWeeks.includes(weekNumber));
+    return APP_CONSTANTS.ACTIVITY_TYPES.filter(
+      (type: ActivityType) =>
+        type.availableWeeks.includes(weekNumber) && this.allianceService.isActivityEnabled(type.value)
+    );
   });
 
   calculatedPoints = computed(() => {
