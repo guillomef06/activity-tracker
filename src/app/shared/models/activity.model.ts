@@ -70,3 +70,14 @@ export interface UserScore {
   weeklyScores: WeeklyScore[];
   sixWeekTotal: number;
 }
+
+/**
+ * Single entry for batch import (admin Excel import)
+ */
+export interface BatchImportEntry {
+  userId: string;
+  activityType: string;
+  position: number | null;
+  points: number;
+  date: Date;
+}

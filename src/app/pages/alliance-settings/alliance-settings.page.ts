@@ -12,6 +12,7 @@ import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/s
 import { AllianceOverviewTabComponent } from './components/alliance-overview-tab/alliance-overview-tab.component';
 import { ActivitySettingsTabComponent } from './components/activity-settings-tab/activity-settings-tab.component';
 import { RetroactiveActivitiesTabComponent } from './components/retroactive-activities-tab/retroactive-activities-tab.component';
+import { ImportExcelTabComponent } from './components/import-excel-tab/import-excel-tab.component';
 
 @Component({
   selector: 'app-alliance-settings',
@@ -24,6 +25,7 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
     AllianceOverviewTabComponent,
     ActivitySettingsTabComponent,
     RetroactiveActivitiesTabComponent,
+    ImportExcelTabComponent,
   ],
   templateUrl: './alliance-settings.page.html',
   styleUrl: './alliance-settings.page.scss',

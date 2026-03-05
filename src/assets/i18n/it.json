@@ -76,7 +76,8 @@
         "overview": "Alleanza",
         "invitations": "Inviti",
         "activitySettings": "Impostazioni Attività",
-        "retroactive": "Attività Retroattive"
+        "retroactive": "Attività Retroattive",
+        "importExcel": "Importa Excel"
       },
       "allianceInfo": "Informazioni Alleanza",
       "allianceName": "Nome Alleanza",
@@ -154,6 +155,53 @@
       "submitting": "Aggiunta in corso...",
       "success": "Attività aggiunta con successo!",
       "error": "Errore nell'aggiunta dell'attività. Riprova."
+    },
+    "import": {
+      "title": "Importa attività da Excel",
+      "description": "Carica un modello compilato per importare in batch attività retroattive per i membri della tua alleanza.",
+      "templateHint": "Prima, scarica e compila il modello di importazione.",
+      "downloadTemplate": "Scarica modello",
+      "activityFilter": "Filtra per attività",
+      "activityFilterAll": "Tutte le attività",
+      "uploadFile": "Scegli file",
+      "fileHint": "Accetta .xlsx, .xls, .csv",
+      "back": "Indietro",
+      "preview": {
+        "title": "Anteprima",
+        "rowsFound": "{{count}} riga/e trovata/e",
+        "playerColumn": "Giocatore",
+        "activityColumn": "Attività",
+        "positionColumn": "Posizione",
+        "weekColumn": "Settimana",
+        "pointsColumn": "Punti",
+        "statusColumn": "Stato",
+        "updateColumn": "Aggiornare?",
+        "selectPlayer": "Seleziona giocatore",
+        "updateAll": "Aggiorna tutti gli esistenti"
+      },
+      "status": {
+        "ready": "Pronto per l'inserimento",
+        "willUpdate": "Aggiornerà la voce esistente",
+        "unmatched": "Giocatore non trovato — seleziona manualmente",
+        "invalid": {
+          "invalid_activity": "Tipo di attività sconosciuto o disabilitato",
+          "disabled_activity": "Questo tipo di attività è disabilitato",
+          "invalid_date": "Data non valida o mancante",
+          "invalid_position": "Posizione non valida (deve essere ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "Importa",
+        "importing": "Importazione in corso..."
+      },
+      "result": {
+        "title": "Importazione completata",
+        "inserted": "inserito/i",
+        "updated": "aggiornato/i",
+        "skipped": "saltato/i",
+        "error": "Importazione fallita. Riprova."
+      },
+      "reset": "Importa un altro file"
     }
   },
   "activityInput": {

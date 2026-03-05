@@ -5,7 +5,7 @@ import { ActivityService } from './activity.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { AllianceService } from './alliance.service';
-import type { UserScore } from '@app/shared/models';
+import type { UserScore, BatchImportEntry } from '@app/shared/models';
 import type { Alliance } from '@app/shared/models/alliance.model';
 
 interface ActivityRow {
@@ -47,6 +47,7 @@ describe('ActivityService', () => {
         select: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
+        upsert: vi.fn().mockReturnThis(),
         then: vi.fn().mockResolvedValue({ data: [], error: null }),
       }),
     };
@@ -146,6 +147,100 @@ describe('ActivityService', () => {
       // No reordering when no tiebreaker configured
       expect(sorted[0].userId).toBe('a');
       expect(sorted[1].userId).toBe('b');
+    });
+  });
+
+  describe('batchImportActivities', () => {
+    let upsertMock: ReturnType<typeof vi.fn>;
+    let adminService: ActivityService;
+
+    beforeEach(() => {
+      upsertMock = vi.fn().mockReturnValue({
+        then: vi.fn().mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: null })),
+      });
+
+      const supabaseWithUpsert = {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnThis(),
+          order: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          upsert: upsertMock,
+          // mockImplementation is required: await calls then(onFulfilled, onRejected)
+          // and expects onFulfilled to be invoked — mockResolvedValue() would never call it
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => void) => resolve({ data: [], error: null })),
+        }),
+      };
+
+      const adminAuthMock = {
+        getAllianceId: vi.fn().mockReturnValue('alliance-1'),
+        getUserId: vi.fn().mockReturnValue('user-1'),
+        userProfile: signal({ id: 'user-1', role: 'admin' as const, display_name: 'Admin', username: 'admin' }),
+      };
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          ActivityService,
+          { provide: SupabaseService, useValue: supabaseWithUpsert },
+          { provide: AuthService, useValue: adminAuthMock },
+          { provide: AllianceService, useValue: allianceServiceMock },
+        ],
+      });
+
+      adminService = TestBed.inject(ActivityService);
+    });
+
+    const makeEntry = (overrides: Partial<BatchImportEntry> = {}): BatchImportEntry => ({
+      userId: 'user-1',
+      activityType: 'legion',
+      position: 3,
+      points: 17,
+      date: new Date('2026-03-03'),
+      ...overrides,
+    });
+
+    it('should return unauthorized error when user is not admin', async () => {
+      // Use the non-admin service from outer beforeEach (userProfile is null)
+      const result = await service.batchImportActivities([makeEntry()]);
+      expect(result.error).toBeTruthy();
+      expect(result.error?.message).toContain('Unauthorized');
+    });
+
+    it('should call supabase upsert with mapped records', async () => {
+      const entries = [makeEntry(), makeEntry({ userId: 'user-2', position: 5, points: 15 })];
+      await adminService.batchImportActivities(entries);
+
+      expect(upsertMock).toHaveBeenCalledOnce();
+      const [records] = upsertMock.mock.calls[0];
+      expect(records).toHaveLength(2);
+      expect(records[0]).toMatchObject({
+        user_id: 'user-1',
+        activity_type: 'legion',
+        position: 3,
+        points: 17,
+      });
+    });
+
+    it('should return null error on successful upsert', async () => {
+      const result = await adminService.batchImportActivities([makeEntry()]);
+      expect(result.error).toBeNull();
+    });
+
+    it('should return error when supabase upsert fails', async () => {
+      upsertMock.mockReturnValue({
+        then: vi
+          .fn()
+          .mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: new Error('DB error') })),
+      });
+
+      const result = await adminService.batchImportActivities([makeEntry()]);
+      expect(result.error).toBeTruthy();
+    });
+
+    it('should handle empty entries array', async () => {
+      const result = await adminService.batchImportActivities([]);
+      expect(result.error).toBeNull();
+      expect(upsertMock).toHaveBeenCalledWith([], { onConflict: 'user_id,activity_type,date' });
     });
   });
 });

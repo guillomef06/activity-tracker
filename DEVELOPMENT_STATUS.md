@@ -289,6 +289,28 @@ Les admins peuvent désactiver certaines activités pour leur alliance. Les acti
 
 ---
 
+## 📥 Import Excel (Batch Retroactive Activities) ✅
+
+### Fonctionnalité
+Permet aux admins d'importer en batch des activités rétroactives depuis un fichier Excel/CSV. Wizard 3 étapes : upload → preview → done.
+
+**Workflow :**
+1. Télécharger le modèle (2 feuilles : "Import" + "Reference")
+2. Remplir les colonnes `player_name | activity_type | position | event_date`
+3. Uploader → preview avec statuts par ligne : ✓ Ready / 🔄 Will update / ⚠ Unmatched / ✗ Invalid
+4. Pour les joueurs non trouvés automatiquement : sélection manuelle dans un dropdown
+5. Toggle "Update all" + checkboxes par ligne pour les entrées existantes
+6. Import → upsert Supabase batch
+
+**Fichiers clés :**
+- `src/app/pages/alliance-settings/components/import-excel-tab/` (4 fichiers)
+- `src/app/shared/models/activity.model.ts` — `BatchImportEntry` interface
+- `src/app/core/services/activity.service.ts` — `batchImportActivities()`
+- `src/assets/i18n/*.json` — clés `alliance.import.*` (4 langues)
+- Dépendance : `xlsx` (SheetJS)
+
+---
+
 ## 🚧 Prochaines Fonctionnalités
 
 ### Améliorations Possibles
@@ -313,6 +335,7 @@ Les admins peuvent désactiver certaines activités pour leur alliance. Les acti
 - ✅ Alliance tag (identifiant 3 caractères, affiché dans le header)
 - ✅ Désactivation par activité (admin peut masquer des activités pour son alliance)
 - ✅ Activité tiebreaker (départage à égalité de score total)
+- ✅ Import Excel batch (admin — wizard upload/preview/done, matching joueur, upsert Supabase)
 - ✅ Dashboards avec graphiques et statistiques
 - ✅ Interface responsive (mobile-first)
 - ✅ Internationalisation (EN, FR, ES, IT)

@@ -1,5 +1,12 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { Activity, ActivityRequest, ActivityWithUser, UserScore, WeeklyScore } from '../../shared/models';
+import {
+  Activity,
+  ActivityRequest,
+  ActivityWithUser,
+  BatchImportEntry,
+  UserScore,
+  WeeklyScore,
+} from '../../shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { AllianceService } from './alliance.service';
@@ -186,6 +193,39 @@ export class ActivityService {
       return { error: null };
     } catch (error) {
       console.error('Error upserting activity for member to Supabase:', error);
+      return { error: error as Error };
+    }
+  }
+
+  /**
+   * Batch-import activities for multiple members (admin only).
+   * Uses a single Supabase upsert for efficiency, then reloads the local signal.
+   */
+  async batchImportActivities(entries: BatchImportEntry[]): Promise<{ error: Error | null }> {
+    const profile = this.authService.userProfile();
+    if (!profile || (profile.role !== 'admin' && profile.role !== 'super_admin')) {
+      return { error: new Error('Unauthorized: Only admins can batch import activities') };
+    }
+
+    const records = entries.map(e => ({
+      user_id: e.userId,
+      activity_type: e.activityType,
+      position: e.position,
+      points: e.points,
+      date: e.date.toISOString(),
+    }));
+
+    try {
+      const { error } = await this.supabase
+        .from('activities')
+        .upsert(records, { onConflict: 'user_id,activity_type,date' });
+
+      if (error) throw error;
+
+      await this.loadFromSupabase();
+      return { error: null };
+    } catch (error) {
+      console.error('Error batch-importing activities:', error);
       return { error: error as Error };
     }
   }

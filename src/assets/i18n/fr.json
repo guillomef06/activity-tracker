@@ -76,7 +76,8 @@
         "overview": "Alliance",
         "invitations": "Invitations",
         "activitySettings": "Paramètres des Activités",
-        "retroactive": "Activités Rétroactives"
+        "retroactive": "Activités Rétroactives",
+        "importExcel": "Import Excel"
       },
       "allianceInfo": "Informations de l'Alliance",
       "allianceName": "Nom de l'Alliance",
@@ -154,6 +155,53 @@
       "submitting": "Ajout en cours...",
       "success": "Activité ajoutée avec succès !",
       "error": "Échec de l'ajout de l'activité. Veuillez réessayer."
+    },
+    "import": {
+      "title": "Importer des activités depuis Excel",
+      "description": "Téléchargez un modèle rempli pour importer des activités rétroactives en lot pour les membres de votre alliance.",
+      "templateHint": "Commencez par télécharger et remplir le modèle d'import.",
+      "downloadTemplate": "Télécharger le modèle",
+      "activityFilter": "Filtrer par activité",
+      "activityFilterAll": "Toutes les activités",
+      "uploadFile": "Choisir un fichier",
+      "fileHint": "Accepte .xlsx, .xls, .csv",
+      "back": "Retour",
+      "preview": {
+        "title": "Aperçu",
+        "rowsFound": "{{count}} ligne(s) trouvée(s)",
+        "playerColumn": "Joueur",
+        "activityColumn": "Activité",
+        "positionColumn": "Position",
+        "weekColumn": "Semaine",
+        "pointsColumn": "Points",
+        "statusColumn": "Statut",
+        "updateColumn": "Mettre à jour ?",
+        "selectPlayer": "Sélectionner un joueur",
+        "updateAll": "Mettre à jour tous les existants"
+      },
+      "status": {
+        "ready": "Prêt à insérer",
+        "willUpdate": "Mettra à jour l'entrée existante",
+        "unmatched": "Joueur introuvable — sélectionner manuellement",
+        "invalid": {
+          "invalid_activity": "Type d'activité inconnu ou désactivé",
+          "disabled_activity": "Ce type d'activité est désactivé",
+          "invalid_date": "Date invalide ou manquante",
+          "invalid_position": "Position invalide (doit être ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "Importer",
+        "importing": "Importation en cours..."
+      },
+      "result": {
+        "title": "Import terminé",
+        "inserted": "inséré(s)",
+        "updated": "mis à jour",
+        "skipped": "ignoré(s)",
+        "error": "L'import a échoué. Veuillez réessayer."
+      },
+      "reset": "Importer un autre fichier"
     }
   },
   "activityInput": {

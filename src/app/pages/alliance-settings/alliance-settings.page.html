@@ -52,5 +52,15 @@
 
       <app-retroactive-activities-tab [members]="members()" />
     </mat-tab>
+
+    <!-- Import Excel Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">upload_file</mat-icon>
+        {{ 'alliance.settings.tabs.importExcel' | translate }}
+      </ng-template>
+
+      <app-import-excel-tab [members]="members()" />
+    </mat-tab>
   </mat-tab-group>
 </div>

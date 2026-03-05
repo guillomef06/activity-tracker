@@ -76,7 +76,8 @@
         "overview": "Alianza",
         "invitations": "Invitaciones",
         "activitySettings": "Configuración de Actividades",
-        "retroactive": "Actividades Retroactivas"
+        "retroactive": "Actividades Retroactivas",
+        "importExcel": "Importar Excel"
       },
       "allianceInfo": "Información de la Alianza",
       "allianceName": "Nombre de la Alianza",
@@ -154,6 +155,53 @@
       "submitting": "Agregando actividad...",
       "success": "¡Actividad agregada con éxito!",
       "error": "Error al agregar la actividad. Por favor inténtalo de nuevo."
+    },
+    "import": {
+      "title": "Importar actividades desde Excel",
+      "description": "Sube una plantilla rellenada para importar actividades retroactivas en lote para los miembros de tu alianza.",
+      "templateHint": "Primero, descarga y rellena la plantilla de importación.",
+      "downloadTemplate": "Descargar plantilla",
+      "activityFilter": "Filtrar por actividad",
+      "activityFilterAll": "Todas las actividades",
+      "uploadFile": "Elegir archivo",
+      "fileHint": "Acepta .xlsx, .xls, .csv",
+      "back": "Volver",
+      "preview": {
+        "title": "Vista previa",
+        "rowsFound": "{{count}} fila(s) encontrada(s)",
+        "playerColumn": "Jugador",
+        "activityColumn": "Actividad",
+        "positionColumn": "Posición",
+        "weekColumn": "Semana",
+        "pointsColumn": "Puntos",
+        "statusColumn": "Estado",
+        "updateColumn": "¿Actualizar?",
+        "selectPlayer": "Seleccionar jugador",
+        "updateAll": "Actualizar todos los existentes"
+      },
+      "status": {
+        "ready": "Listo para insertar",
+        "willUpdate": "Actualizará la entrada existente",
+        "unmatched": "Jugador no encontrado — seleccionar manualmente",
+        "invalid": {
+          "invalid_activity": "Tipo de actividad desconocido o desactivado",
+          "disabled_activity": "Este tipo de actividad está desactivado",
+          "invalid_date": "Fecha inválida o faltante",
+          "invalid_position": "Posición inválida (debe ser ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "Importar",
+        "importing": "Importando..."
+      },
+      "result": {
+        "title": "Importación completa",
+        "inserted": "insertado(s)",
+        "updated": "actualizado(s)",
+        "skipped": "omitido(s)",
+        "error": "La importación falló. Por favor inténtalo de nuevo."
+      },
+      "reset": "Importar otro archivo"
     }
   },
   "activityInput": {

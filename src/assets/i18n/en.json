@@ -76,7 +76,8 @@
         "overview": "Alliance",
         "invitations": "Invitations",
         "activitySettings": "Activity Settings",
-        "retroactive": "Retroactive Activities"
+        "retroactive": "Retroactive Activities",
+        "importExcel": "Import Excel"
       },
       "allianceInfo": "Alliance Information",
       "allianceName": "Alliance Name",
@@ -154,6 +155,53 @@
       "submitting": "Adding activity...",
       "success": "Activity added successfully!",
       "error": "Failed to add activity. Please try again."
+    },
+    "import": {
+      "title": "Import Activities from Excel",
+      "description": "Upload a filled-in template to batch-import retroactive activities for your alliance members.",
+      "templateHint": "First, download and fill in the import template.",
+      "downloadTemplate": "Download Template",
+      "activityFilter": "Filter by activity",
+      "activityFilterAll": "All activities",
+      "uploadFile": "Choose file",
+      "fileHint": "Accepts .xlsx, .xls, .csv",
+      "back": "Back",
+      "preview": {
+        "title": "Preview",
+        "rowsFound": "{{count}} rows found",
+        "playerColumn": "Player",
+        "activityColumn": "Activity",
+        "positionColumn": "Position",
+        "weekColumn": "Week",
+        "pointsColumn": "Points",
+        "statusColumn": "Status",
+        "updateColumn": "Update?",
+        "selectPlayer": "Select player",
+        "updateAll": "Update all existing"
+      },
+      "status": {
+        "ready": "Ready to insert",
+        "willUpdate": "Will update existing entry",
+        "unmatched": "Player not found — select manually",
+        "invalid": {
+          "invalid_activity": "Unknown or disabled activity type",
+          "disabled_activity": "This activity type is disabled",
+          "invalid_date": "Invalid or missing date",
+          "invalid_position": "Invalid position (must be ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "Import",
+        "importing": "Importing..."
+      },
+      "result": {
+        "title": "Import complete",
+        "inserted": "inserted",
+        "updated": "updated",
+        "skipped": "skipped",
+        "error": "Import failed. Please try again."
+      },
+      "reset": "Import another file"
     }
   },
   "activityInput": {
