@@ -1,6 +1,6 @@
 import { environment } from './../../../../environments/environment';
 import { Component, inject, effect, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +22,6 @@ import { ReleaseNotesDialogComponent } from '@app/shared/components/release-note
 @Component({
   selector: 'app-header',
   imports: [
-    CommonModule,
     RouterLink,
     RouterLinkActive,
     MatToolbarModule,

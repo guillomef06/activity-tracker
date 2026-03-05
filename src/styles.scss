@@ -335,9 +335,11 @@ $mat-sys-vars-dark: (
   @each $var, $info in $vars {
     $palette: map.get($palettes, map.get($info, palette));
     $idx: map.get($info, idx);
-    $color: if($palette, map.get($palette, $idx), null);
-    @if $color != null {
-      --#{$var}: #{$color};
+    @if $palette {
+      $color: map.get($palette, $idx);
+      @if $color != null {
+        --#{$var}: #{$color};
+      }
     }
   }
 }
