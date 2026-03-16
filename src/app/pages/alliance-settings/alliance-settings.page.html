@@ -62,5 +62,15 @@
 
       <app-import-excel-tab [members]="members()" />
     </mat-tab>
+
+    <!-- Discord Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">forum</mat-icon>
+        {{ 'alliance.settings.tabs.discord' | translate }}
+      </ng-template>
+
+      <app-discord-tab />
+    </mat-tab>
   </mat-tab-group>
 </div>
