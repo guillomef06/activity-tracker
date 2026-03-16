@@ -77,7 +77,8 @@
         "invitations": "Inviti",
         "activitySettings": "Impostazioni Attività",
         "retroactive": "Attività Retroattive",
-        "importExcel": "Importa Excel"
+        "importExcel": "Importa Excel",
+        "discord": "Discord"
       },
       "allianceInfo": "Informazioni Alleanza",
       "allianceName": "Nome Alleanza",
@@ -249,7 +250,9 @@
     "delete": "Elimina",
     "confirm": "Conferma",
     "cancel": "Annulla",
-    "saving": "Salvataggio..."
+    "save": "Salva",
+    "saving": "Salvataggio...",
+    "update": "Aggiorna"
   },
   "superAdmin": {
     "dashboard": {
@@ -348,5 +351,42 @@
     "verboseGemValue": "Bonus gemma",
     "verboseNewHealthBonus": "Nuovo bonus salute",
     "noResult": "Compila il modulo e clicca su Analizza"
+  },
+  "discord": {
+    "channelsTitle": "Canali Discord",
+    "channelsSubtitle": "Configura i webhook Discord per inviare messaggi",
+    "channelName": "Nome del canale",
+    "channelNamePlaceholder": "es. promemoria-generale",
+    "webhookUrl": "URL del webhook",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "URL del webhook Discord dalle Impostazioni server > Integrazioni",
+    "defaultMessage": "Messaggio predefinito (opzionale)",
+    "defaultMessagePlaceholder": "⏰ Promemoria: Inserisci il tuo ranking GE",
+    "defaultMessageHint": "Precaricato quando si seleziona il canale — modificabile prima dell'invio",
+    "addChannel": "Aggiungi canale",
+    "deleteChannel": "Elimina canale",
+    "deleteConfirm": "Sei sicuro di voler eliminare il canale \"{{name}}\"?",
+    "noChannels": "Nessun canale Discord configurato",
+    "noChannelsForMessage": "Aggiungi almeno un canale per inviare messaggi",
+    "channelAdded": "Canale Discord aggiunto con successo",
+    "channelAddFailed": "Impossibile aggiungere il canale Discord",
+    "channelUpdated": "Canale Discord aggiornato con successo",
+    "channelUpdateFailed": "Impossibile aggiornare il canale Discord",
+    "channelDeleted": "Canale Discord eliminato con successo",
+    "channelDeleteFailed": "Impossibile eliminare il canale Discord",
+    "editChannel": "Modifica canale",
+    "editChannelTitle": "Modifica del canale:",
+    "loadFailed": "Impossibile caricare i canali Discord",
+    "sendMessageTitle": "Invia messaggio",
+    "sendMessageSubtitle": "Seleziona un canale, modifica il messaggio se necessario, poi invia",
+    "selectChannel": "Seleziona canale",
+    "messageContent": "Messaggio",
+    "messageContentPlaceholder": "⏰ Promemoria: Inserisci il tuo ranking GE",
+    "sendMessage": "Invia su Discord",
+    "messageSent": "Messaggio inviato su Discord con successo",
+    "messageSendFailed": "Impossibile inviare il messaggio su Discord",
+    "errors": {
+      "invalidWebhookUrl": "Deve essere un URL webhook Discord valido (https://discord.com/api/webhooks/...)"
+    }
   }
 }

@@ -77,7 +77,8 @@
         "invitations": "Invitations",
         "activitySettings": "Activity Settings",
         "retroactive": "Retroactive Activities",
-        "importExcel": "Import Excel"
+        "importExcel": "Import Excel",
+        "discord": "Discord"
       },
       "allianceInfo": "Alliance Information",
       "allianceName": "Alliance Name",
@@ -249,7 +250,9 @@
     "delete": "Delete",
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "saving": "Saving..."
+    "save": "Save",
+    "saving": "Saving...",
+    "update": "Update"
   },
   "superAdmin": {
     "dashboard": {
@@ -348,5 +351,42 @@
     "verboseGemValue": "Gem bonus",
     "verboseNewHealthBonus": "New health bonus",
     "noResult": "Fill in the form and click Analyze"
+  },
+  "discord": {
+    "channelsTitle": "Discord Channels",
+    "channelsSubtitle": "Configure Discord webhook channels to send messages to",
+    "channelName": "Channel Name",
+    "channelNamePlaceholder": "e.g. general-reminder",
+    "webhookUrl": "Webhook URL",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "Discord webhook URL from Server Settings > Integrations",
+    "defaultMessage": "Default Message (optional)",
+    "defaultMessagePlaceholder": "⏰ Reminder: Enter your GE ranking",
+    "defaultMessageHint": "Pre-loaded when you select this channel — editable before sending",
+    "addChannel": "Add Channel",
+    "deleteChannel": "Delete channel",
+    "deleteConfirm": "Are you sure you want to delete the channel \"{{name}}\"?",
+    "noChannels": "No Discord channels configured yet",
+    "noChannelsForMessage": "Add at least one channel to send messages",
+    "channelAdded": "Discord channel added successfully",
+    "channelAddFailed": "Failed to add Discord channel",
+    "channelUpdated": "Discord channel updated successfully",
+    "channelUpdateFailed": "Failed to update Discord channel",
+    "channelDeleted": "Discord channel deleted successfully",
+    "channelDeleteFailed": "Failed to delete Discord channel",
+    "editChannel": "Edit channel",
+    "editChannelTitle": "Editing channel:",
+    "loadFailed": "Failed to load Discord channels",
+    "sendMessageTitle": "Send Message",
+    "sendMessageSubtitle": "Select a channel, adjust the message if needed, then send",
+    "selectChannel": "Select Channel",
+    "messageContent": "Message",
+    "messageContentPlaceholder": "⏰ Reminder: Enter your GE ranking",
+    "sendMessage": "Send to Discord",
+    "messageSent": "Message sent to Discord successfully",
+    "messageSendFailed": "Failed to send message to Discord",
+    "errors": {
+      "invalidWebhookUrl": "Must be a valid Discord webhook URL (https://discord.com/api/webhooks/...)"
+    }
   }
 }

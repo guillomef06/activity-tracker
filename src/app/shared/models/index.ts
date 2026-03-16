@@ -46,3 +46,6 @@ export type {
 
 // Alliance Activity Settings models
 export type { AllianceActivitySettings, UpsertActivitySettingsRequest } from './alliance-activity-settings.model';
+
+// Discord Webhook models
+export type { DiscordWebhook, CreateDiscordWebhookRequest } from './discord-webhook.model';
