@@ -59,15 +59,24 @@ function collectFiles(dir, extensions) {
 /** Find dynamic key prefixes — e.g. `'activities.types.' + variable`. */
 function findDynamicPrefixes(content) {
   const prefixes = new Set();
-  // Matches: 'some.prefix.' + ... or `some.prefix.${...}`
+  // Matches:
+  //   'some.prefix.' + var   (string literal with closing quote before +)
+  //   'some.prefix' + var    (string literal without trailing dot, e.g. 'gemCalculator.troop' + titlecase)
+  //   `some.prefix.${var}`   (template literal)
   const patterns = [
-    /['"`]([\w.-]+\.)\s*\+/g,
+    /['"`]([\w.-]+)['"`]\s*\+/g,
     /`([\w.-]+\.)\$\{/g,
   ];
   for (const regex of patterns) {
     let m;
     while ((m = regex.exec(content)) !== null) {
-      prefixes.add(m[1]);
+      const raw = m[1];
+      // Only keep if it looks like a translation key prefix (contains at least one dot)
+      if (!raw.includes('.')) continue;
+      // Normalize: strip trailing dot so key.startsWith(prefix + '.') works uniformly,
+      // but also keep the raw form for cases where the prefix already includes the separator.
+      const normalized = raw.replace(/\.$/, '');
+      prefixes.add(normalized);
     }
   }
   return prefixes;
@@ -117,7 +126,9 @@ for (const locale of locales) {
   const skippedDynamic = [];
 
   for (const key of allKeys) {
-    const coveredByDynamicPrefix = [...dynamicPrefixes].some((prefix) => key.startsWith(prefix));
+    const coveredByDynamicPrefix = [...dynamicPrefixes].some(
+      (prefix) => key.startsWith(prefix + '.') || key.startsWith(prefix)
+    );
     if (coveredByDynamicPrefix) {
       skippedDynamic.push(key);
     } else if (!sourceContent.includes(key)) {

@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 1er mars 2026
+**Dernière mise à jour:** 15 mars 2026
 
 ## 📋 Résumé
 
@@ -311,14 +311,37 @@ Permet aux admins d'importer en batch des activités rétroactives depuis un fic
 
 ---
 
+## 💬 Messages Discord ✅
+
+### Fonctionnalité
+Permet aux admins d'envoyer des messages directement vers des channels Discord depuis l'application, via les webhooks Discord.
+
+**Workflow :**
+1. Configurer un ou plusieurs canaux (nom + URL webhook Discord)
+2. Composer un message et sélectionner le canal cible
+3. Cliquer "Envoyer sur Discord" → message posté instantanément dans le channel
+
+**Détails techniques :**
+- Envoi direct depuis le client via `fetch` vers l'API webhook Discord (aucun serveur intermédiaire)
+- URL webhook validée (`https://discord.com/api/webhooks/...`)
+- Message limité à 2000 caractères (limite Discord)
+- Chaque webhook stocke un `default_message` optionnel pré-chargé dans la textarea (modifiable avant envoi)
+- Édition inline par ligne : nom du canal + message par défaut (URL webhook non modifiable)
+- Migration 15 : nettoyage de la table temporaire `discord_message_templates` (obsolète)
+
+**Fichiers clés :**
+- `supabase/14-discord-webhooks.sql` — table `discord_webhooks` (+ `default_message`) + RLS
+- `src/app/shared/models/discord-webhook.model.ts` — interfaces `DiscordWebhook` + `CreateDiscordWebhookRequest`
+- `src/app/core/services/discord.service.ts` — CRUD webhooks (createWebhook, updateWebhook, deleteWebhook) + envoi via fetch
+- `src/app/pages/alliance-settings/components/discord-tab/` — onglet "Discord" dans Alliance Settings (4 fichiers)
+- `src/assets/i18n/*.json` — clés `discord.*` + `common.save` (4 langues)
+
+---
+
 ## 🚧 Prochaines Fonctionnalités
 
 ### Améliorations Possibles
 - Internationalisation étendue (langues supplémentaires)
-- Statistiques avancées et graphiques
-- Notifications en temps réel
-- Export de données (CSV, PDF)
-- Mode hors ligne (PWA)
 - Thèmes personnalisables par alliance
 
 ---
@@ -336,6 +359,7 @@ Permet aux admins d'importer en batch des activités rétroactives depuis un fic
 - ✅ Désactivation par activité (admin peut masquer des activités pour son alliance)
 - ✅ Activité tiebreaker (départage à égalité de score total)
 - ✅ Import Excel batch (admin — wizard upload/preview/done, matching joueur, upsert Supabase)
+- ✅ Messages Discord (admin — webhooks configurables, envoi direct vers channels Discord)
 - ✅ Dashboards avec graphiques et statistiques
 - ✅ Interface responsive (mobile-first)
 - ✅ Internationalisation (EN, FR, ES, IT)
@@ -366,7 +390,7 @@ Permet aux admins d'importer en batch des activités rétroactives depuis un fic
 ## 🔗 Fichiers Clés
 
 **Backend:**
-- `supabase/01-initial-schema.sql` → `13-add-tiebreaker-activity.sql`
+- `supabase/01-initial-schema.sql` → `14-discord-webhooks.sql`
 - `supabase/MIGRATIONS.md` - Guide exécution migrations
 - `supabase/README.md` - Configuration complète
 

@@ -1,0 +1,207 @@
+<div class="discord-tab">
+  <!-- Webhook Channels Section -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="section-icon">webhook</mat-icon>
+      <mat-card-title>{{ 'discord.channelsTitle' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'discord.channelsSubtitle' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Webhooks table -->
+      @if (webhooks().length > 0) {
+        <table mat-table [dataSource]="webhooks()" class="data-table">
+          <ng-container matColumnDef="channelName">
+            <th mat-header-cell *matHeaderCellDef>{{ 'discord.channelName' | translate }}</th>
+            <td mat-cell *matCellDef="let w">
+              <div class="channel-info">
+                <span class="channel-name">
+                  <mat-icon class="discord-icon">tag</mat-icon>
+                  {{ w.channel_name }}
+                </span>
+                @if (w.default_message) {
+                  <span class="default-message-preview">{{ w.default_message }}</span>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+            <td mat-cell *matCellDef="let w">
+              <div class="row-actions">
+                <button mat-icon-button (click)="quickSend(w)" [matTooltip]="'discord.sendMessage' | translate">
+                  <mat-icon>send</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  (click)="startEdit(w)"
+                  [matTooltip]="'discord.editChannel' | translate"
+                  [color]="editingWebhook()?.id === w.id ? 'primary' : undefined"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteWebhook(w)"
+                  [matTooltip]="'discord.deleteChannel' | translate"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="webhookColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: webhookColumns"
+            [class.editing-row]="editingWebhook()?.id === row.id"
+          ></tr>
+        </table>
+      } @else if (!isLoading()) {
+        <p class="no-data">{{ 'discord.noChannels' | translate }}</p>
+      }
+
+      <!-- Add / Edit form (shown when adding or editing) -->
+      @if (isAddingChannel() || editingWebhook()) {
+        <div class="form-container">
+          @if (editingWebhook()) {
+            <p class="edit-title">
+              <mat-icon>edit</mat-icon>
+              {{ 'discord.editChannelTitle' | translate }} <strong>{{ editingWebhook()!.channel_name }}</strong>
+            </p>
+          }
+
+          <form [formGroup]="webhookForm" (ngSubmit)="handleFormSubmit()" class="webhook-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>{{ 'discord.channelName' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="channel_name"
+                  [placeholder]="'discord.channelNamePlaceholder' | translate"
+                />
+                @if (channelNameError()) {
+                  <mat-error>{{ channelNameError() | translate }}</mat-error>
+                }
+              </mat-form-field>
+
+              @if (!editingWebhook()) {
+                <mat-form-field appearance="outline" class="form-field form-field--wide">
+                  <mat-label>{{ 'discord.webhookUrl' | translate }}</mat-label>
+                  <input
+                    matInput
+                    formControlName="webhook_url"
+                    [placeholder]="'discord.webhookUrlPlaceholder' | translate"
+                  />
+                  <mat-hint>{{ 'discord.webhookUrlHint' | translate }}</mat-hint>
+                  @if (webhookUrlError()) {
+                    <mat-error>{{ webhookUrlError() | translate }}</mat-error>
+                  }
+                </mat-form-field>
+              }
+            </div>
+
+            <mat-form-field appearance="outline" class="form-field form-field--full">
+              <mat-label>{{ 'discord.defaultMessage' | translate }}</mat-label>
+              <textarea
+                matInput
+                formControlName="default_message"
+                rows="3"
+                [placeholder]="'discord.defaultMessagePlaceholder' | translate"
+              ></textarea>
+              <mat-hint>{{ 'discord.defaultMessageHint' | translate }}</mat-hint>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-button type="button" (click)="closeForm()">
+                {{ 'common.cancel' | translate }}
+              </button>
+              @if (editingWebhook()) {
+                <app-loading-button
+                  type="submit"
+                  [submitting]="isUpdatingWebhook()"
+                  [disabled]="webhookForm.invalid"
+                  [text]="'common.update' | translate"
+                  icon="check"
+                  color="primary"
+                />
+              } @else {
+                <app-loading-button
+                  type="submit"
+                  [submitting]="isSubmittingWebhook()"
+                  [disabled]="webhookForm.invalid"
+                  [text]="'common.save' | translate"
+                  icon="add"
+                />
+              }
+            </div>
+          </form>
+        </div>
+      } @else {
+        <div class="add-channel-row">
+          <button mat-stroked-button (click)="startAdd()">
+            <mat-icon>add</mat-icon>
+            {{ 'discord.addChannel' | translate }}
+          </button>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Send Message Section -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="section-icon">send</mat-icon>
+      <mat-card-title>{{ 'discord.sendMessageTitle' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'discord.sendMessageSubtitle' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (webhooks().length === 0) {
+        <p class="no-data">{{ 'discord.noChannelsForMessage' | translate }}</p>
+      } @else {
+        <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="send-form">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>{{ 'discord.selectChannel' | translate }}</mat-label>
+            <mat-select formControlName="webhook_id" (selectionChange)="onChannelSelected($event.value)">
+              @for (webhook of webhooks(); track webhook.id) {
+                <mat-option [value]="webhook.id">
+                  <mat-icon>tag</mat-icon>
+                  {{ webhook.channel_name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          @if (selectedWebhookId()) {
+            <mat-form-field appearance="outline" class="form-field form-field--full">
+              <mat-label>{{ 'discord.messageContent' | translate }}</mat-label>
+              <textarea
+                matInput
+                formControlName="content"
+                rows="4"
+                [placeholder]="'discord.messageContentPlaceholder' | translate"
+              ></textarea>
+              <mat-hint align="end">{{ messageForm.controls['content'].value?.length || 0 }} / 2000</mat-hint>
+              @if (messageContentError()) {
+                <mat-error>{{ messageContentError() | translate }}</mat-error>
+              }
+            </mat-form-field>
+
+            <app-loading-button
+              type="submit"
+              [submitting]="isSendingMessage()"
+              [disabled]="messageForm.invalid"
+              [text]="'discord.sendMessage' | translate"
+              icon="send"
+              color="primary"
+            />
+          }
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
