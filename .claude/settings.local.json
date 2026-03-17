@@ -43,7 +43,8 @@
       "mcp__plugin_supabase_supabase__list_migrations",
       "mcp__plugin_supabase_supabase__get_project",
       "Bash(cd \"D:\\\\workplace\\\\activity-tracker\\\\activity-tracker\" && npm run i18n:check 2>&1)",
-      "Bash(node -e \"\nconst content = \\\\\"[matTooltip]=\\\\\\\\\\\\\"'alliance.import.status.invalid.' + row.validationError | translate\\\\\\\\\\\\\"\\\\\";\nconsole.log\\('Content:', content\\);\nconst patterns = [/[''\\\\\"\\\\`]\\([\\\\w.-]+\\\\.\\)\\\\s*\\\\+/g, /\\\\`\\([\\\\w.-]+\\\\.\\)\\\\\\\\\\\\$\\\\{/g];\nfor \\(const regex of patterns\\) {\n  let m;\n  while \\(\\(m = regex.exec\\(content\\)\\) !== null\\) {\n    console.log\\('Match:', m[1]\\);\n  }\n}\n\")"
+      "Bash(node -e \"\nconst content = \\\\\"[matTooltip]=\\\\\\\\\\\\\"'alliance.import.status.invalid.' + row.validationError | translate\\\\\\\\\\\\\"\\\\\";\nconsole.log\\('Content:', content\\);\nconst patterns = [/[''\\\\\"\\\\`]\\([\\\\w.-]+\\\\.\\)\\\\s*\\\\+/g, /\\\\`\\([\\\\w.-]+\\\\.\\)\\\\\\\\\\\\$\\\\{/g];\nfor \\(const regex of patterns\\) {\n  let m;\n  while \\(\\(m = regex.exec\\(content\\)\\) !== null\\) {\n    console.log\\('Match:', m[1]\\);\n  }\n}\n\")",
+      "Skill(playwright-cli)"
     ]
   }
 }

@@ -54,7 +54,11 @@
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field
+          appearance="outline"
+          class="full-width"
+          [class.field-valid]="signupForm.get('password')?.valid && signupForm.get('password')?.dirty"
+        >
           <mat-icon matIconPrefix>lock</mat-icon>
           <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
@@ -80,7 +84,7 @@
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" [class.field-valid]="confirmPasswordValid()">
           <mat-icon matIconPrefix>lock_outline</mat-icon>
           <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
           <input

@@ -32,8 +32,8 @@
     "displayNameHint": "Votre nom tel qu'il apparaîtra aux autres",
     "allianceNamePlaceholder": "Entrez le nom de votre alliance",
     "allianceNameHint": "Choisissez un nom pour votre nouvelle alliance",
-    "passwordPlaceholder": "Créez un mot de passe sécurisé",
-    "passwordHint": "Au moins 6 caractères alphanumériques",
+    "passwordPlaceholder": "ex. MonPass123!",
+    "passwordHint": "Min. 6 caractères, doit contenir au moins une lettre et un chiffre",
     "confirmPasswordPlaceholder": "Ressaisissez votre mot de passe",
     "tokenPlaceholder": "Entrez le jeton d'invitation",
     "tokenHint": "Fourni par l'administrateur de votre alliance",
@@ -322,6 +322,8 @@
     "updateAvailable": "Une nouvelle version est disponible",
     "reload": "Recharger",
     "install": "Installez l'application pour une meilleure expérience",
+    "installButton": "Installer",
+    "iosInstruction": "Appuyez sur Partager puis 'Sur l'écran d'accueil'",
     "installDismiss": "Fermer la bannière d'installation"
   },
   "releaseNotes": {

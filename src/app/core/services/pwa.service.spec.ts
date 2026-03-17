@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { PwaService } from './pwa.service';
 import { SnackbarService } from './snackbar.service';
+import { StorageService } from './storage.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 describe('PwaService', () => {
@@ -28,6 +29,7 @@ describe('PwaService', () => {
       imports: [TranslateModule.forRoot()],
       providers: [
         PwaService,
+        StorageService,
         { provide: SwUpdate, useValue: swUpdateMock },
         { provide: SnackbarService, useValue: snackbarMock },
       ],
@@ -117,6 +119,63 @@ describe('PwaService', () => {
     it('should not throw when called without a deferred prompt', async () => {
       createService();
       await expect(service.promptInstall()).resolves.toBeUndefined();
+    });
+  });
+
+  describe('dismissBanner()', () => {
+    it('should set showInstallBanner to false after dismiss', () => {
+      createService();
+      // Force showInstallBanner to be potentially visible by simulating beforeinstallprompt
+      const promptEvent = Object.assign(new Event('beforeinstallprompt'), {
+        prompt: vi.fn().mockResolvedValue(undefined),
+        userChoice: Promise.resolve({ outcome: 'accepted' }),
+      });
+      window.dispatchEvent(promptEvent);
+
+      service.dismissBanner();
+      expect(service.showInstallBanner()).toBe(false);
+    });
+
+    it('should store timestamp in localStorage on dismiss', () => {
+      createService();
+      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+      service.dismissBanner();
+
+      expect(setItemSpy).toHaveBeenCalledWith('pwa-install-dismissed-at', expect.stringMatching(/^\d+$/));
+      setItemSpy.mockRestore();
+    });
+  });
+
+  describe('showInstallBanner()', () => {
+    it('should be false when banner was dismissed less than 24h ago', () => {
+      const recentTimestamp = JSON.stringify(Date.now() - 1000); // 1 second ago
+      vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(recentTimestamp);
+
+      createService();
+      const promptEvent = Object.assign(new Event('beforeinstallprompt'), {
+        prompt: vi.fn().mockResolvedValue(undefined),
+        userChoice: Promise.resolve({ outcome: 'accepted' }),
+      });
+      window.dispatchEvent(promptEvent);
+
+      expect(service.showInstallBanner()).toBe(false);
+      vi.restoreAllMocks();
+    });
+
+    it('should be true when banner was dismissed more than 24h ago', () => {
+      const oldTimestamp = JSON.stringify(Date.now() - 25 * 60 * 60 * 1000); // 25 hours ago
+      vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(oldTimestamp);
+
+      createService();
+      const promptEvent = Object.assign(new Event('beforeinstallprompt'), {
+        prompt: vi.fn().mockResolvedValue(undefined),
+        userChoice: Promise.resolve({ outcome: 'accepted' }),
+      });
+      window.dispatchEvent(promptEvent);
+
+      expect(service.showInstallBanner()).toBe(true);
+      vi.restoreAllMocks();
     });
   });
 });
