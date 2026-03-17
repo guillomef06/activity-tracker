@@ -181,7 +181,7 @@ export class ActivityInputComponent {
     const formValue = this.activityForm.value;
     const currentWeekStart = getWeekStart(new Date());
     const activityDate = new Date(currentWeekStart);
-    activityDate.setDate(currentWeekStart.getDate() - formValue.week * 7);
+    activityDate.setUTCDate(currentWeekStart.getUTCDate() - formValue.week * 7);
 
     const { error } = this.isParticipationMode()
       ? await this.activityService.addActivity({
