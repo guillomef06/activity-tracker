@@ -121,6 +121,8 @@
         "noRules": "No hay reglas de puntos configuradas",
         "noRulesHint": "Cree reglas para calcular puntos según la posición/clasificación. Sin reglas, se utilizarán los puntos predeterminados.",
         "deleteConfirm": "¿Está seguro de que desea eliminar esta regla?",
+        "activityConfiguration": "Configuración de actividades",
+        "activityConfigurationHint": "Activa o desactiva cada actividad, configura el modo participación y el desempate",
         "participationMode": "Modo Participación",
         "participationModeHint": "Los jugadores simplemente confirman su participación, sin posición requerida",
         "participationPoints": "Puntos por participación",
@@ -135,6 +137,14 @@
         "activityEnabledFailed": "Error al actualizar el estado de la actividad",
         "tiebreaker": "Tiebreaker",
         "tiebreakerFailed": "Error al actualizar el tiebreaker"
+      },
+      "dangerZone": {
+        "title": "Zona de peligro",
+        "deleteAllActivities": "Eliminar todas las actividades",
+        "deleteAllActivitiesDescription": "Elimina permanentemente todas las actividades enviadas por los miembros de la alianza. Esta acción no se puede deshacer.",
+        "deleteAllActivitiesConfirm": "¿Está seguro de que desea eliminar TODAS las actividades? Esto borrará permanentemente el historial completo de todos los miembros.",
+        "deleteAllActivitiesSuccess": "Todas las actividades han sido eliminadas",
+        "deleteAllActivitiesFailed": "Error al eliminar las actividades"
       }
     },
     "retroactive": {

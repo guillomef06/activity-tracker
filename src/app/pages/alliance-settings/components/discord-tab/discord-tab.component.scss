@@ -49,6 +49,20 @@
   }
 }
 
+@media (max-width: 600px) {
+  .data-table .mat-column-actions {
+    width: 96px;
+  }
+
+  .action-send {
+    display: none;
+  }
+
+  .default-message-preview {
+    display: none;
+  }
+}
+
 .row-actions {
   display: flex;
   justify-content: flex-end;
