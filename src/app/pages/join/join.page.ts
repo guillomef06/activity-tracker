@@ -12,7 +12,11 @@ import { AuthService } from '@app/core/services/auth.service';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { MemberSignUpRequest } from '@app/shared/models';
-import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import {
+  passwordMatchValidator,
+  createFieldErrorSignal,
+  createFieldValidSignal,
+} from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-join',
@@ -52,7 +56,7 @@ export class JoinPage implements OnInit {
       token: ['', [Validators.required, Validators.minLength(6)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: passwordMatchValidator }
@@ -81,6 +85,7 @@ export class JoinPage implements OnInit {
   protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName', this.destroyRef);
   protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef);
   protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
+  protected readonly confirmPasswordValid = createFieldValidSignal(this.joinForm, 'confirmPassword', this.destroyRef);
 
   protected async validateToken(token?: string): Promise<void> {
     const tokenValue = token || this.joinForm.get('token')?.value;
