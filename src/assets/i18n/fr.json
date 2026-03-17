@@ -121,6 +121,8 @@
         "noRules": "Aucune règle de points configurée",
         "noRulesHint": "Créez des règles pour calculer les points selon la position/classement. Sans règles, les points par défaut seront utilisés.",
         "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette règle ?",
+        "activityConfiguration": "Configuration des activités",
+        "activityConfigurationHint": "Activez ou désactivez chaque activité, configurez le mode participation et le tiebreaker",
         "participationMode": "Mode Participation",
         "participationModeHint": "Les joueurs confirment simplement leur participation, sans position requise",
         "participationPoints": "Points pour la participation",
@@ -135,6 +137,14 @@
         "activityEnabledFailed": "Échec de la mise à jour du statut de l'activité",
         "tiebreaker": "Tiebreaker",
         "tiebreakerFailed": "Échec de la mise à jour du tiebreaker"
+      },
+      "dangerZone": {
+        "title": "Zone de danger",
+        "deleteAllActivities": "Supprimer toutes les activités",
+        "deleteAllActivitiesDescription": "Supprime définitivement toutes les activités soumises par les membres de l'alliance. Cette action est irréversible.",
+        "deleteAllActivitiesConfirm": "Êtes-vous sûr de vouloir supprimer TOUTES les activités ? Cela effacera définitivement l'historique complet pour tous les membres.",
+        "deleteAllActivitiesSuccess": "Toutes les activités ont été supprimées",
+        "deleteAllActivitiesFailed": "Échec de la suppression des activités"
       }
     },
     "retroactive": {

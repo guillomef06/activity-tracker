@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, Mocked } from 'vitest';
 import { ActivitySettingsTabComponent } from './activity-settings-tab.component';
 import { AllianceService } from '@app/core/services/alliance.service';
+import { ActivityService } from '@app/core/services/activity.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { signal, WritableSignal } from '@angular/core';
@@ -25,9 +26,16 @@ describe('ActivitySettingsTabComponent', () => {
       settings: signal([]),
     };
 
+    const activityServiceSpy = {
+      deleteAllActivities: vi.fn().mockResolvedValue({ error: null }),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ActivitySettingsTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
-      providers: [{ provide: AllianceService, useValue: allianceServiceSpy }],
+      providers: [
+        { provide: AllianceService, useValue: allianceServiceSpy },
+        { provide: ActivityService, useValue: activityServiceSpy },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActivitySettingsTabComponent);
@@ -152,6 +160,15 @@ describe('ActivitySettingsTabComponent', () => {
     await component['toggleActivityEnabled']('legion', event);
 
     expect(allianceService.setTiebreakerActivity).toHaveBeenCalledWith(null);
+  });
+
+  it('should have isDeletingAll signal initialized to false', () => {
+    expect(component['isDeletingAll']()).toBe(false);
+  });
+
+  it('should expose deleteAllActivities method and isDeletingAll signal', () => {
+    expect(typeof component['deleteAllActivities']).toBe('function');
+    expect(component['isDeletingAll']()).toBe(false);
   });
 
   it('should not clear tiebreaker when disabling a non-tiebreaker activity', async () => {

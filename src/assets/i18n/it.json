@@ -121,6 +121,8 @@
         "noRules": "Nessuna regola punti configurata",
         "noRulesHint": "Crea regole per calcolare i punti in base alla posizione/classifica. Senza regole, verranno utilizzati i punti predefiniti.",
         "deleteConfirm": "Sei sicuro di voler eliminare questa regola?",
+        "activityConfiguration": "Configurazione attività",
+        "activityConfigurationHint": "Abilita o disabilita ogni attività, configura la modalità partecipazione e il tiebreaker",
         "participationMode": "Modalità Partecipazione",
         "participationModeHint": "I giocatori confermano semplicemente la partecipazione, senza posizione richiesta",
         "participationPoints": "Punti per la partecipazione",
@@ -135,6 +137,14 @@
         "activityEnabledFailed": "Impossibile aggiornare lo stato dell'attività",
         "tiebreaker": "Tiebreaker",
         "tiebreakerFailed": "Impossibile aggiornare lo spareggio"
+      },
+      "dangerZone": {
+        "title": "Zona di pericolo",
+        "deleteAllActivities": "Elimina tutte le attività",
+        "deleteAllActivitiesDescription": "Elimina definitivamente tutte le attività inviate dai membri dell'alleanza. Questa azione non può essere annullata.",
+        "deleteAllActivitiesConfirm": "Sei sicuro di voler eliminare TUTTE le attività? Questo cancellerà definitivamente la cronologia completa per tutti i membri.",
+        "deleteAllActivitiesSuccess": "Tutte le attività sono state eliminate",
+        "deleteAllActivitiesFailed": "Impossibile eliminare le attività"
       }
     },
     "retroactive": {

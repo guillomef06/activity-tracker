@@ -17,6 +17,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { AllianceService } from '@app/core/services/alliance.service';
+import { ActivityService } from '@app/core/services/activity.service';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { PositionRangePipe } from '@app/shared/pipes/position-range.pipe';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
@@ -49,6 +50,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class ActivitySettingsTabComponent {
   private readonly allianceService = inject(AllianceService);
+  private readonly activityService = inject(ActivityService);
   private readonly fb = inject(FormBuilder);
   private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
@@ -67,6 +69,7 @@ export class ActivitySettingsTabComponent {
   protected readonly isSubmitting = signal(false);
   protected readonly isUpdatingSetting = signal<string | null>(null);
   protected readonly isUpdatingTiebreaker = signal(false);
+  protected readonly isDeletingAll = signal(false);
   protected readonly activityTypes = APP_CONSTANTS.ACTIVITY_TYPES;
   protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
 
@@ -267,6 +270,35 @@ export class ActivitySettingsTabComponent {
       this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.tiebreakerFailed'));
     } finally {
       this.isUpdatingTiebreaker.set(false);
+    }
+  }
+
+  protected async deleteAllActivities(): Promise<void> {
+    const confirmed = await firstValueFrom(
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            title: this.translate.instant('alliance.settings.dangerZone.title'),
+            message: this.translate.instant('alliance.settings.dangerZone.deleteAllActivitiesConfirm'),
+            confirmText: this.translate.instant('alliance.settings.dangerZone.deleteAllActivities'),
+            cancelText: this.translate.instant('common.cancel'),
+          },
+        })
+        .afterClosed()
+    );
+
+    if (!confirmed) return;
+
+    this.isDeletingAll.set(true);
+    try {
+      const { error } = await this.activityService.deleteAllActivities();
+      if (error) throw error;
+      this.snackbarService.success(this.translate.instant('alliance.settings.dangerZone.deleteAllActivitiesSuccess'));
+    } catch (error) {
+      console.error('Error deleting all activities:', error);
+      this.snackbarService.error(this.translate.instant('alliance.settings.dangerZone.deleteAllActivitiesFailed'));
+    } finally {
+      this.isDeletingAll.set(false);
     }
   }
 
