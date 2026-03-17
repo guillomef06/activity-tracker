@@ -1,4 +1,9 @@
 .pwa-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -6,6 +11,7 @@
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
   min-height: 52px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .banner-icon {
