@@ -11,7 +11,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { AdminSignUpRequest } from '@app/shared/models';
-import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import {
+  passwordMatchValidator,
+  createFieldErrorSignal,
+  createFieldValidSignal,
+} from '@app/shared/utils/form-validation.utils';
 
 @Component({
   selector: 'app-signup',
@@ -46,7 +50,7 @@ export class SignupPage {
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: passwordMatchValidator }
@@ -66,6 +70,7 @@ export class SignupPage {
   protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName', this.destroyRef);
   protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
   protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
+  protected readonly confirmPasswordValid = createFieldValidSignal(this.signupForm, 'confirmPassword', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {
     if (this.signupForm.invalid || this.isLoading()) {

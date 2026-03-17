@@ -32,8 +32,8 @@
     "displayNameHint": "Il tuo nome come apparirà agli altri",
     "allianceNamePlaceholder": "Inserisci il nome della tua alleanza",
     "allianceNameHint": "Scegli un nome per la tua nuova alleanza",
-    "passwordPlaceholder": "Crea una password sicura",
-    "passwordHint": "Almeno 6 caratteri alfanumerici",
+    "passwordPlaceholder": "es. MiaPass123!",
+    "passwordHint": "Min. 6 caratteri, deve includere almeno una lettera e un numero",
     "confirmPasswordPlaceholder": "Reinserisci la tua password",
     "tokenPlaceholder": "Inserisci il token di invito",
     "tokenHint": "Fornito dall'amministratore della tua alleanza",
@@ -322,6 +322,8 @@
     "updateAvailable": "È disponibile una nuova versione",
     "reload": "Ricarica",
     "install": "Installa l'app per una migliore esperienza",
+    "installButton": "Installa",
+    "iosInstruction": "Tocca il pulsante Condividi poi 'Aggiungi a Home'",
     "installDismiss": "Chiudi il banner di installazione"
   },
   "releaseNotes": {

@@ -32,8 +32,8 @@
     "displayNameHint": "Your name as it will appear to others",
     "allianceNamePlaceholder": "Enter your alliance name",
     "allianceNameHint": "Choose a name for your new alliance",
-    "passwordPlaceholder": "Create a secure password",
-    "passwordHint": "At least 6 alphanumeric characters",
+    "passwordPlaceholder": "e.g. MyPass123!",
+    "passwordHint": "Min. 6 characters, must include at least one letter and one number",
     "confirmPasswordPlaceholder": "Re-enter your password",
     "tokenPlaceholder": "Enter invitation token",
     "tokenHint": "Provided by your alliance administrator",
@@ -322,6 +322,8 @@
     "updateAvailable": "A new version is available",
     "reload": "Reload",
     "install": "Install the app for a better experience",
+    "installButton": "Install",
+    "iosInstruction": "Tap the share button then 'Add to Home Screen'",
     "installDismiss": "Dismiss install banner"
   },
   "releaseNotes": {

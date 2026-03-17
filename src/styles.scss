@@ -368,6 +368,20 @@ $all-palettes: (
   --mat-sys-on-success-container: #1b5e20;
 }
 
+/* Password field valid state — green outline */
+.mat-mdc-form-field.field-valid {
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--mat-sys-success) !important;
+  }
+
+  .mdc-floating-label,
+  .mat-mdc-floating-label {
+    color: var(--mat-sys-success) !important;
+  }
+}
+
 // Import Excel tab — hide subscript wrapper on inline player-select form fields
 .player-select .mat-mdc-form-field-subscript-wrapper {
   display: none;

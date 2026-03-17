@@ -61,6 +61,25 @@ export function passwordMatchValidator(form: FormGroup): ValidationErrors | null
 }
 
 /**
+ * Creates a reactive boolean signal that is true when a form field is valid and dirty.
+ * Useful for showing success indicators (e.g. green border) when a field is correctly filled.
+ */
+export function createFieldValidSignal(form: FormGroup, fieldName: string, destroyRef: DestroyRef): Signal<boolean> {
+  const control = form.get(fieldName);
+  if (!control) return signal(false).asReadonly();
+
+  const controlChanges = toSignal(
+    merge(control.valueChanges, control.statusChanges).pipe(takeUntilDestroyed(destroyRef)),
+    { initialValue: control.value }
+  );
+
+  return computed(() => {
+    controlChanges();
+    return control.valid && control.dirty;
+  });
+}
+
+/**
  * Creates a reactive error signal for a form field.
  * Automatically maps Angular validator error names to i18n translation keys.
  *

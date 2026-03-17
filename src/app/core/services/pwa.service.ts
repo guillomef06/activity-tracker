@@ -1,9 +1,10 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { fromEvent } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
+import { StorageService } from './storage.service';
 import { TranslateService } from '@ngx-translate/core';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -15,16 +16,29 @@ interface BeforeInstallPromptEvent extends Event {
   providedIn: 'root',
 })
 export class PwaService {
+  private static readonly DISMISS_KEY = 'pwa-install-dismissed-at';
+  private static readonly DISMISS_DURATION_MS = 24 * 60 * 60 * 1000;
+
   private readonly swUpdate = inject(SwUpdate);
   private readonly snackbarService = inject(SnackbarService);
+  private readonly storageService = inject(StorageService);
   private readonly translate = inject(TranslateService);
 
   private readonly _isOnline = signal<boolean>(navigator.onLine);
   private readonly _canInstall = signal<boolean>(false);
+  private readonly _bannerDismissed = signal<boolean>(this.isBannerDismissed());
   private _deferredInstallPrompt: BeforeInstallPromptEvent | null = null;
 
   readonly isOnline = this._isOnline.asReadonly();
   readonly canInstall = this._canInstall.asReadonly();
+  readonly isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  private readonly isStandalone =
+    (typeof window.matchMedia === 'function' && window.matchMedia('(display-mode: standalone)').matches) ||
+    (navigator as { standalone?: boolean }).standalone === true;
+
+  readonly showInstallBanner = computed(
+    () => !this.isStandalone && !this._bannerDismissed() && (this.isIos || this._canInstall())
+  );
 
   constructor() {
     fromEvent(window, 'online')
@@ -71,5 +85,16 @@ export class PwaService {
     await this._deferredInstallPrompt.prompt();
     this._deferredInstallPrompt = null;
     this._canInstall.set(false);
+  }
+
+  dismissBanner(): void {
+    this.storageService.set(PwaService.DISMISS_KEY, Date.now());
+    this._bannerDismissed.set(true);
+  }
+
+  private isBannerDismissed(): boolean {
+    const stored = this.storageService.get<number>(PwaService.DISMISS_KEY);
+    if (!stored) return false;
+    return Date.now() - stored < PwaService.DISMISS_DURATION_MS;
   }
 }

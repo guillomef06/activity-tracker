@@ -1,0 +1,30 @@
+@if (pwaService.showInstallBanner()) {
+  <div class="pwa-banner">
+    <mat-icon class="banner-icon">install_mobile</mat-icon>
+
+    <div class="banner-content">
+      <span class="banner-text">{{ 'pwa.install' | translate }}</span>
+      @if (pwaService.isIos) {
+        <span class="banner-instruction">
+          <mat-icon class="share-icon">ios_share</mat-icon>
+          {{ 'pwa.iosInstruction' | translate }}
+        </span>
+      }
+    </div>
+
+    @if (!pwaService.isIos) {
+      <button mat-flat-button class="install-btn" (click)="install()">
+        {{ 'pwa.installButton' | translate }}
+      </button>
+    }
+
+    <button
+      mat-icon-button
+      class="dismiss-btn"
+      (click)="dismiss()"
+      [attr.aria-label]="'pwa.installDismiss' | translate"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+}
