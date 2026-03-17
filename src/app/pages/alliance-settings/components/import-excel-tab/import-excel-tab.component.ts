@@ -190,7 +190,7 @@ export class ImportExcelTabComponent {
           // Excel date serial fallback
           const parsed = XLSX.SSF.parse_date_code(rawDate);
           if (parsed) {
-            eventDate = new Date(parsed.y, parsed.m - 1, parsed.d);
+            eventDate = new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d));
           }
         }
 

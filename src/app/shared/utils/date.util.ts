@@ -24,26 +24,29 @@ export function getWeekLabel(weekIndex: number, translate: TranslateService): st
 }
 
 /**
- * Get the start of a week (Monday) for a given date
+ * Get the start of a week (Monday) for a given date.
+ * All calculations are done in UTC to avoid timezone-dependent results —
+ * a user in UTC+3 and a user in UTC-5 will get the same Monday midnight UTC.
  */
 export function getWeekStart(date: Date): Date {
   const result = new Date(date);
-  const day = result.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
-  const diff = result.getDate() - ((day + 6) % 7); // Adjust so Monday = 0 offset
-  result.setDate(diff);
-  result.setHours(0, 0, 0, 0);
+  const day = result.getUTCDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+  const diff = result.getUTCDate() - ((day + 6) % 7); // Adjust so Monday = 0 offset
+  result.setUTCDate(diff);
+  result.setUTCHours(0, 0, 0, 0);
   return result;
 }
 
 /**
- * Get the end of a week (Sunday) for a given date
+ * Get the end of a week (Sunday) for a given date.
+ * All calculations are done in UTC.
  */
 export function getWeekEnd(date: Date): Date {
   const result = new Date(date);
-  const day = result.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+  const day = result.getUTCDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
   const daysUntilSunday = (7 - day) % 7; // 0 for Sunday, 6 for Monday, ..., 1 for Saturday
-  result.setDate(result.getDate() + daysUntilSunday);
-  result.setHours(23, 59, 59, 999);
+  result.setUTCDate(result.getUTCDate() + daysUntilSunday);
+  result.setUTCHours(23, 59, 59, 999);
   return result;
 }
 
@@ -51,8 +54,9 @@ export function getWeekEnd(date: Date): Date {
  * Reference date for the 6-week cycle (must be a Monday)
  * Current setting: Monday January 26, 2026 = Start of Week 1
  * Cycle: W1 Jan 26–Feb 1 | W2 Feb 2–8 | W3 Feb 9–15 | W4 Feb 16–22 | W5 Feb 23–Mar 1 | W6 Mar 2–8
+ * Stored as UTC to avoid timezone-dependent parsing.
  */
-const CYCLE_REFERENCE_DATE = new Date('2026-01-26T00:00:00');
+const CYCLE_REFERENCE_DATE = new Date('2026-01-26T00:00:00Z');
 
 /**
  * Get the current week number in the repeating 6-week cycle
@@ -85,7 +89,7 @@ export function getCurrentWeekNumber(): number {
 export function getWeekNumberForWeeksAgo(weeksAgo: number): number {
   const currentWeekStart = getWeekStart(new Date());
   const targetWeekStart = new Date(currentWeekStart);
-  targetWeekStart.setDate(currentWeekStart.getDate() - weeksAgo * 7);
+  targetWeekStart.setUTCDate(currentWeekStart.getUTCDate() - weeksAgo * 7);
 
   const referenceWeekStart = getWeekStart(CYCLE_REFERENCE_DATE);
   const diffInMs = targetWeekStart.getTime() - referenceWeekStart.getTime();
@@ -103,7 +107,7 @@ export function getWeekNumberForWeeksAgo(weeksAgo: number): number {
 export function getDateForWeeksAgo(weeksAgo: number): Date {
   const currentWeekStart = getWeekStart(new Date());
   const targetDate = new Date(currentWeekStart);
-  targetDate.setDate(currentWeekStart.getDate() - weeksAgo * 7);
+  targetDate.setUTCDate(currentWeekStart.getUTCDate() - weeksAgo * 7);
   return targetDate;
 }
 
@@ -121,7 +125,7 @@ export function getWeekDateRange(weekNumber: number): { start: Date; end: Date }
   const weeksAgo = 6 - weekNumber;
 
   const weekStart = new Date(currentWeekStart);
-  weekStart.setDate(currentWeekStart.getDate() - weeksAgo * 7);
+  weekStart.setUTCDate(currentWeekStart.getUTCDate() - weeksAgo * 7);
 
   const weekEnd = getWeekEnd(weekStart);
 
