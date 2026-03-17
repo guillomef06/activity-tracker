@@ -243,4 +243,75 @@ describe('ActivityService', () => {
       expect(upsertMock).toHaveBeenCalledWith([], { onConflict: 'user_id,activity_type,date' });
     });
   });
+
+  describe('deleteAllActivities', () => {
+    let deleteMock: ReturnType<typeof vi.fn>;
+    let deleteService: ActivityService;
+
+    beforeEach(() => {
+      deleteMock = vi.fn().mockReturnValue({
+        not: vi.fn().mockReturnValue({
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: null })),
+        }),
+      });
+
+      const supabaseWithDelete = {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnThis(),
+          order: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          delete: deleteMock,
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => void) => resolve({ data: [], error: null })),
+        }),
+      };
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          ActivityService,
+          { provide: SupabaseService, useValue: supabaseWithDelete },
+          {
+            provide: AuthService,
+            useValue: {
+              getAllianceId: vi.fn().mockReturnValue(null),
+              getUserId: vi.fn().mockReturnValue(null),
+              userProfile: signal(null),
+            },
+          },
+          { provide: AllianceService, useValue: allianceServiceMock },
+        ],
+      });
+
+      deleteService = TestBed.inject(ActivityService);
+    });
+
+    it('should call supabase delete with not filter', async () => {
+      await deleteService.deleteAllActivities();
+      expect(deleteMock).toHaveBeenCalledOnce();
+    });
+
+    it('should return null error on success', async () => {
+      const result = await deleteService.deleteAllActivities();
+      expect(result.error).toBeNull();
+    });
+
+    it('should clear the activities signal on success', async () => {
+      const result = await deleteService.deleteAllActivities();
+      expect(result.error).toBeNull();
+      expect(deleteService.activities()).toEqual([]);
+    });
+
+    it('should return error when supabase delete fails', async () => {
+      deleteMock.mockReturnValue({
+        not: vi.fn().mockReturnValue({
+          then: vi
+            .fn()
+            .mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: new Error('DB error') })),
+        }),
+      });
+
+      const result = await deleteService.deleteAllActivities();
+      expect(result.error).toBeTruthy();
+    });
+  });
 });

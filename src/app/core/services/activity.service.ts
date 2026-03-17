@@ -230,6 +230,18 @@ export class ActivityService {
     }
   }
 
+  async deleteAllActivities(): Promise<{ error: Error | null }> {
+    try {
+      const { error } = await this.supabase.from('activities').delete().not('id', 'is', null);
+      if (error) throw error;
+      this.activitiesSignal.set([]);
+      return { error: null };
+    } catch (error) {
+      console.error('Error deleting all activities:', error);
+      return { error: error as Error };
+    }
+  }
+
   getUserScores(): UserScore[] {
     const activities = this.activitiesSignal();
     const oldestWeekStart = getDateForWeeksAgo(APP_CONSTANTS.SCORING.WEEKS_TO_TRACK - 1);

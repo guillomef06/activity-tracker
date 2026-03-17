@@ -106,8 +106,44 @@
   }
 }
 
+.danger-zone {
+  border: 1px solid var(--mat-sys-error);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: color-mix(in srgb, var(--mat-sys-error) 6%, transparent);
+}
+
+.danger-title {
+  color: var(--mat-sys-error);
+
+  mat-icon {
+    color: var(--mat-sys-error);
+  }
+}
+
+.danger-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+
+  .danger-description {
+    flex: 1;
+    min-width: 200px;
+
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
+
 .table-container {
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 400px;
   margin-top: 1rem;
 }
 

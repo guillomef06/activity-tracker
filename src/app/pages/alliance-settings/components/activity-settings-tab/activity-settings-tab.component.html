@@ -1,12 +1,12 @@
 <mat-card class="tab-content">
   <mat-card-content>
-    <!-- Participation Mode Section -->
+    <!-- Configuration Section -->
     <div class="section">
       <h3 class="section-title">
-        <mat-icon>how_to_reg</mat-icon>
-        {{ 'alliance.settings.pointRules.participationMode' | translate }}
+        <mat-icon>tune</mat-icon>
+        {{ 'alliance.settings.pointRules.activityConfiguration' | translate }}
       </h3>
-      <p class="section-hint">{{ 'alliance.settings.pointRules.participationModeHint' | translate }}</p>
+      <p class="section-hint">{{ 'alliance.settings.pointRules.activityConfigurationHint' | translate }}</p>
 
       <div class="participation-table">
         @for (item of activitySettingsList(); track item.type.value) {
@@ -55,6 +55,27 @@
             }
           </div>
         }
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="section danger-zone">
+      <h3 class="section-title danger-title">
+        <mat-icon>warning</mat-icon>
+        {{ 'alliance.settings.dangerZone.title' | translate }}
+      </h3>
+
+      <div class="danger-action">
+        <div class="danger-description">
+          <p>{{ 'alliance.settings.dangerZone.deleteAllActivitiesDescription' | translate }}</p>
+        </div>
+        <app-loading-button
+          color="warn"
+          icon="delete_forever"
+          [text]="'alliance.settings.dangerZone.deleteAllActivities' | translate"
+          [submitting]="isDeletingAll()"
+          (clicked)="deleteAllActivities()"
+        />
       </div>
     </div>
 
