@@ -3,6 +3,7 @@ import { ActivitiesDetailsComponent } from './activities-details.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UserScore } from '../../../../shared/models/activity.model';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 const mockUserScores: UserScore[] = [
   {
@@ -38,6 +39,7 @@ describe('ActivitiesDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ActivitiesDetailsComponent, TranslateModule.forRoot(), NoopAnimationsModule],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActivitiesDetailsComponent);

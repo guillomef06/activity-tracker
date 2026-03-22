@@ -7,10 +7,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { AdminSignUpRequest } from '@app/shared/models';
+import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
 import {
   passwordMatchValidator,
   createFieldErrorSignal,
@@ -27,6 +29,7 @@ import {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatSelectModule,
     TranslateModule,
     LoadingButtonComponent,
   ],
@@ -40,6 +43,7 @@ export class SignupPage {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
+  protected readonly recoveryQuestions = RECOVERY_QUESTIONS;
   protected readonly hidePassword = signal(true);
   protected readonly hideConfirmPassword = signal(true);
   protected readonly isLoading = signal(false);
@@ -52,6 +56,8 @@ export class SignupPage {
       allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
+      recoveryQuestionId: [null, [Validators.required]],
+      recoveryAnswer: ['', [Validators.required, Validators.minLength(2)]],
     },
     { validators: passwordMatchValidator }
   );
@@ -71,6 +77,12 @@ export class SignupPage {
   protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
   protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
   protected readonly confirmPasswordValid = createFieldValidSignal(this.signupForm, 'confirmPassword', this.destroyRef);
+  protected readonly recoveryQuestionIdError = createFieldErrorSignal(
+    this.signupForm,
+    'recoveryQuestionId',
+    this.destroyRef
+  );
+  protected readonly recoveryAnswerError = createFieldErrorSignal(this.signupForm, 'recoveryAnswer', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {
     if (this.signupForm.invalid || this.isLoading()) {
@@ -82,13 +94,16 @@ export class SignupPage {
     this.errorMessage.set(null);
 
     try {
-      const { username, displayName, allianceName, password } = this.signupForm.value;
+      const { username, displayName, allianceName, password, recoveryQuestionId, recoveryAnswer } =
+        this.signupForm.value;
 
       const request: AdminSignUpRequest = {
         username,
         password,
         displayName,
         allianceName,
+        recoveryQuestionId,
+        recoveryAnswer,
       };
 
       await this.authService.signUpAdmin(request);

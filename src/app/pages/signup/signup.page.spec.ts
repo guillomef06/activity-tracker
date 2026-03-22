@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('SignupPage', () => {
   let component: SignupPage;
@@ -21,6 +22,7 @@ describe('SignupPage', () => {
         provideRouter([]),
         provideHttpClient(),
         provideAnimations(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 
@@ -42,9 +44,23 @@ describe('SignupPage', () => {
       confirmPassword: 'SecurePassword123',
       displayName: 'New Admin',
       allianceName: 'Test Alliance',
+      recoveryQuestionId: 1,
+      recoveryAnswer: 'Fluffy',
     });
 
     expect(component['signupForm'].valid).toBe(true);
+  });
+
+  it('should be invalid without recovery question and answer', () => {
+    component['signupForm'].patchValue({
+      username: 'newadmin',
+      password: 'SecurePassword123',
+      confirmPassword: 'SecurePassword123',
+      displayName: 'New Admin',
+      allianceName: 'Test Alliance',
+    });
+
+    expect(component['signupForm'].valid).toBe(false);
   });
 
   it('should validate password match', () => {

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { PwaBannerComponent } from './pwa-banner.component';
 import { PwaService } from '@app/core/services/pwa.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,7 +22,7 @@ describe('PwaBannerComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [PwaBannerComponent, TranslateModule.forRoot(), NoopAnimationsModule],
-      providers: [{ provide: PwaService, useValue: pwaServiceMock }],
+      providers: [{ provide: PwaService, useValue: pwaServiceMock }, provideZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PwaBannerComponent);

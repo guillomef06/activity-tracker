@@ -6,7 +6,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 
 describe('ActivityInputComponent', () => {
   let component: ActivityInputComponent;
@@ -42,6 +42,7 @@ describe('ActivityInputComponent', () => {
         { provide: AllianceService, useValue: mockAllianceService },
         { provide: AuthService, useValue: mockAuthService },
         { provide: SnackbarService, useValue: mockSnackbarService },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

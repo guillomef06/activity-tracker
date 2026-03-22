@@ -13,11 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { AllianceService } from '@app/core/services/alliance.service';
-import { LanguageService, type SupportedLanguage } from '@app/core/services/language.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import { PwaService } from '@app/core/services';
 import { ReleaseNotesService } from '@app/core/services/release-notes.service';
 import { ReleaseNotesDialogComponent } from '@app/shared/components/release-notes-dialog/release-notes-dialog.component';
+import { UserAccountDialogComponent } from '@app/shared/components/user-account-dialog/user-account-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -40,7 +40,6 @@ import { ReleaseNotesDialogComponent } from '@app/shared/components/release-note
 export class AppHeaderComponent {
   protected readonly authService = inject(AuthService);
   protected readonly allianceService = inject(AllianceService);
-  protected readonly languageService = inject(LanguageService);
   protected readonly progressBarService = inject(ProgressBarService);
   protected readonly pwaService = inject(PwaService);
   protected readonly releaseNotesService = inject(ReleaseNotesService);
@@ -77,11 +76,15 @@ export class AppHeaderComponent {
     await this.authService.signOut();
   }
 
-  protected async changeLanguage(language: SupportedLanguage): Promise<void> {
-    await this.languageService.setLanguage(language);
-  }
-
   protected openReleaseNotes(): void {
     this.dialog.open(ReleaseNotesDialogComponent);
+  }
+
+  protected openAccountSettings(): void {
+    this.dialog.open(UserAccountDialogComponent, {
+      width: '480px',
+      maxWidth: '95vw',
+      panelClass: 'user-account-dialog',
+    });
   }
 }

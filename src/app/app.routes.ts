@@ -24,6 +24,11 @@ export const routes: Routes = [
     canActivate: [guestGuard],
     loadComponent: () => import('./pages/join/join.page').then(m => m.JoinPage),
   },
+  {
+    path: 'account-recovery',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./pages/account-recovery/account-recovery.page').then(m => m.AccountRecoveryPage),
+  },
 
   // Protected routes (require authentication)
   {

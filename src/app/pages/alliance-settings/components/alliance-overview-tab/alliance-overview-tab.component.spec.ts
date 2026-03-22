@@ -5,6 +5,7 @@ import { AllianceService } from '@app/core/services/alliance.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('AllianceOverviewTabComponent', () => {
   let component: AllianceOverviewTabComponent;
@@ -33,6 +34,7 @@ describe('AllianceOverviewTabComponent', () => {
         { provide: AllianceService, useValue: allianceServiceSpy },
         { provide: Clipboard, useValue: clipboardSpy },
         provideAnimations(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

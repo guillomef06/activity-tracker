@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('SuperAdminDashboardPage', () => {
   let component: SuperAdminDashboardPage;
@@ -41,6 +42,7 @@ describe('SuperAdminDashboardPage', () => {
         provideRouter([]),
         provideHttpClient(),
         provideAnimations(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

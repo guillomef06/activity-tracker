@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { ImportExcelTabComponent } from './import-excel-tab.component';
 import { ActivityService, SnackbarService } from '@app/core/services';
 import { AllianceService } from '@app/core/services/alliance.service';
@@ -51,10 +51,10 @@ const MEMBERS: UserProfile[] = [
   },
 ];
 
-// Use local-time Date constructor to avoid UTC-midnight timezone issues with getWeekStart()
+// Use UTC dates to match getWeekStart() which operates in UTC
 // Feb 25, 2026 (Wednesday) → weekStart = Feb 23, 2026 (Monday)
-const TEST_ACTIVITY_DATE = new Date(2026, 1, 25); // local time
-const TEST_WEEK_START = new Date(2026, 1, 23); // local-time Monday
+const TEST_ACTIVITY_DATE = new Date(Date.UTC(2026, 1, 25)); // UTC Wednesday
+const TEST_WEEK_START = new Date(Date.UTC(2026, 1, 23)); // UTC Monday
 
 function makeRow(activityType: string, status: MockRow['status'] = 'ready', overrides: Partial<MockRow> = {}): MockRow {
   return {
@@ -116,6 +116,7 @@ describe('ImportExcelTabComponent', () => {
         { provide: ActivityService, useValue: activityServiceSpy },
         { provide: AllianceService, useValue: allianceServiceSpy },
         { provide: SnackbarService, useValue: snackbarServiceSpy },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 
@@ -255,14 +256,14 @@ describe('ImportExcelTabComponent', () => {
     });
 
     it('should assign a member and set status to willUpdate when existing entry exists', () => {
-      // Use Date constructor (local time) to avoid UTC-midnight timezone shift in getWeekStart()
+      // Use UTC dates to match getWeekStart() which operates in UTC
       // Feb 25, 2026 (Wed) → weekStart = Feb 23, 2026 (Mon)
-      const weekStart = new Date(2026, 1, 23); // local Monday
+      const weekStart = new Date(Date.UTC(2026, 1, 23)); // UTC Monday
       activitiesSignal.set([
         {
           userId: 'user1',
           activityType: 'legion',
-          date: new Date(2026, 1, 25), // same week, local Wednesday
+          date: new Date(Date.UTC(2026, 1, 25)), // UTC Wednesday
           points: 10,
           position: 1,
         },

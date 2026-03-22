@@ -1,3 +1,4 @@
+import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { vi } from 'vitest';
@@ -29,6 +30,7 @@ describe('AppComponent', () => {
         TranslateService,
         { provide: SwUpdate, useValue: swUpdateMock },
         { provide: MatDialog, useValue: dialogMock },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
   });

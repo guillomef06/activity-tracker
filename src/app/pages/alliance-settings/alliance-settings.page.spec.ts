@@ -7,7 +7,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 
 describe('AllianceSettingsPage', () => {
   let component: AllianceSettingsPage;
@@ -51,6 +51,7 @@ describe('AllianceSettingsPage', () => {
         provideRouter([]),
         provideHttpClient(),
         provideAnimations(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

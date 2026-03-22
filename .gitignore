@@ -31,3 +31,8 @@ yarn-error.log*
 # OS files
 Thumbs.db
 node_modules
+
+# playwright
+.playwright/
+.playwright-cli/
+.playwright-mcp/
