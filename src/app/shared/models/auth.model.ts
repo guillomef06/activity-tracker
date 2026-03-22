@@ -11,6 +11,8 @@ export interface AdminSignUpRequest {
   password: string;
   displayName: string;
   allianceName: string;
+  recoveryQuestionId: number;
+  recoveryAnswer: string;
 }
 
 /**
@@ -21,6 +23,8 @@ export interface MemberSignUpRequest {
   password: string;
   displayName: string;
   invitationToken: string;
+  recoveryQuestionId: number;
+  recoveryAnswer: string;
 }
 
 /**

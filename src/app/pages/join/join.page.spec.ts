@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('JoinPage', () => {
   let component: JoinPage;
@@ -21,6 +22,7 @@ describe('JoinPage', () => {
         provideRouter([]),
         provideHttpClient(),
         provideAnimations(),
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 
@@ -42,9 +44,23 @@ describe('JoinPage', () => {
       password: 'SecurePassword123',
       confirmPassword: 'SecurePassword123',
       displayName: 'New Member',
+      recoveryQuestionId: 2,
+      recoveryAnswer: 'Paris',
     });
 
     expect(component['joinForm'].valid).toBe(true);
+  });
+
+  it('should be invalid without recovery question and answer', () => {
+    component['joinForm'].patchValue({
+      token: 'abc123',
+      username: 'newmember',
+      password: 'SecurePassword123',
+      confirmPassword: 'SecurePassword123',
+      displayName: 'New Member',
+    });
+
+    expect(component['joinForm'].valid).toBe(false);
   });
 
   it('should validate password match', () => {

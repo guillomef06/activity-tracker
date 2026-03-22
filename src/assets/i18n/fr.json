@@ -52,6 +52,14 @@
       "superAdminExists": "Le super administrateur existe déjà",
       "allianceCreationFailed": "Échec de la création de l'alliance",
       "invalidToken": "Jeton d'invitation invalide ou expiré"
+    },
+    "recovery": {
+      "forgotPassword": "Mot de passe oublié ?"
+    },
+    "signup": {
+      "recoveryQuestion": "Question secrète",
+      "recoveryAnswer": "Réponse secrète",
+      "recoveryAnswerHint": "La réponse n'est pas sensible à la casse"
     }
   },
   "errors": {
@@ -363,6 +371,83 @@
     "verboseGemValue": "Bonus de la gemme",
     "verboseNewHealthBonus": "Nouveau bonus santé",
     "noResult": "Remplissez le formulaire et cliquez sur Analyser"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "Quel est le nom de votre premier animal de compagnie ?",
+      "q2": "Dans quelle ville êtes-vous né(e) ?",
+      "q3": "Quel est le prénom de votre meilleur(e) ami(e) d'enfance ?",
+      "q4": "Quel était votre surnom d'enfance ?",
+      "q5": "Quel est le nom de jeune fille de votre mère ?",
+      "q6": "Quel est le nom de votre école primaire ?",
+      "q7": "Dans quelle ville avez-vous rencontré votre partenaire ?",
+      "q8": "Quel est votre plat préféré ?",
+      "q9": "Quelle était la marque de votre première voiture ?",
+      "q10": "Quelle était votre destination de premier voyage à l'étranger ?"
+    },
+    "page": {
+      "title": "Récupération de compte",
+      "step1": {
+        "usernamePlaceholder": "Entrez votre nom d'utilisateur",
+        "submit": "Trouver mon compte"
+      },
+      "step2": {
+        "answerPlaceholder": "Votre réponse",
+        "newPassword": "Nouveau mot de passe",
+        "confirmPassword": "Confirmer le mot de passe",
+        "submit": "Réinitialiser le mot de passe"
+      },
+      "step3": {
+        "success": "Mot de passe réinitialisé avec succès !"
+      },
+      "backToLogin": "Retour à la connexion"
+    },
+    "errors": {
+      "userNotFound": "Aucun compte trouvé pour ce nom d'utilisateur.",
+      "wrongAnswer": "Réponse incorrecte.",
+      "wrongAnswerRemaining": "{{count}} tentative(s) restante(s).",
+      "locked": "Compte bloqué jusqu'à {{time}}.",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas."
+    }
+  },
+  "accountSettings": {
+    "title": "Mon Compte",
+    "tabAccount": "Mon Compte",
+    "tabPreferences": "Mes Préférences",
+    "displayName": {
+      "title": "Nom d'affichage",
+      "save": "Enregistrer",
+      "success": "Nom d'affichage mis à jour",
+      "error": "Échec de la mise à jour du nom"
+    },
+    "password": {
+      "title": "Changer le mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "save": "Changer le mot de passe",
+      "success": "Mot de passe mis à jour avec succès",
+      "error": "Échec de la mise à jour du mot de passe"
+    },
+    "recovery": {
+      "title": "Question de récupération",
+      "question": "Question secrète",
+      "answer": "Nouvelle réponse",
+      "answerHint": "La réponse n'est pas sensible à la casse",
+      "save": "Mettre à jour",
+      "success": "Question de récupération mise à jour",
+      "error": "Échec de la mise à jour de la question"
+    },
+    "language": {
+      "title": "Langue de l'application"
+    },
+    "colorScheme": {
+      "title": "Apparence",
+      "light": "Clair",
+      "dark": "Sombre",
+      "auto": "Auto (système)",
+      "success": "Apparence mise à jour"
+    }
   },
   "discord": {
     "channelsTitle": "Canaux Discord",

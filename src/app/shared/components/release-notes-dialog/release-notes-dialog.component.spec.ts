@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { signal, computed } from '@angular/core';
+import { provideZonelessChangeDetection, signal, computed } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
@@ -52,6 +52,7 @@ describe('ReleaseNotesDialogComponent', () => {
         { provide: ReleaseNotesService, useValue: releaseNotesServiceMock },
         { provide: LanguageService, useValue: languageServiceMock },
         { provide: MatDialogRef, useValue: dialogRefMock },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

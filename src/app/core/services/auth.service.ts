@@ -94,7 +94,13 @@ export class AuthService {
   private async loadUserProfile(userId: string, retries = 3): Promise<void> {
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        const { data, error } = await this.supabase.from('user_profiles').select('*').eq('id', userId).single();
+        const { data, error } = await this.supabase
+          .from('user_profiles')
+          .select(
+            'id, alliance_id, invitation_token_id, display_name, username, role, preferences, created_at, updated_at, recovery_question_id'
+          )
+          .eq('id', userId)
+          .single();
 
         if (error) throw error;
         this.userProfileSignal.set(data);
@@ -160,13 +166,26 @@ export class AuthService {
         updated_at: now,
       };
 
-      const { error: profileError } = await this.supabase.from('user_profiles').insert(newProfile);
+      const { error: profileError } = await this.supabase.from('user_profiles').insert({
+        ...newProfile,
+        recovery_question_id: data.recoveryQuestionId,
+      });
 
       if (profileError) {
         return { error: profileError };
       }
 
-      this.userProfileSignal.set(newProfile);
+      // Set recovery answer (trigger will hash it)
+      const { error: recoveryError } = await this.supabase
+        .from('user_profiles')
+        .update({ recovery_answer_hash: data.recoveryAnswer })
+        .eq('id', authData.user.id);
+
+      if (recoveryError) {
+        console.error('Failed to set recovery answer:', recoveryError);
+      }
+
+      this.userProfileSignal.set({ ...newProfile, recovery_question_id: data.recoveryQuestionId });
 
       return { error: null };
     } catch (error) {
@@ -276,13 +295,26 @@ export class AuthService {
         updated_at: now,
       };
 
-      const { error: profileError } = await this.supabase.from('user_profiles').insert(newProfile);
+      const { error: profileError } = await this.supabase.from('user_profiles').insert({
+        ...newProfile,
+        recovery_question_id: data.recoveryQuestionId,
+      });
 
       if (profileError) {
         return { error: profileError };
       }
 
-      this.userProfileSignal.set(newProfile);
+      // Set recovery answer (trigger will hash it)
+      const { error: recoveryError } = await this.supabase
+        .from('user_profiles')
+        .update({ recovery_answer_hash: data.recoveryAnswer })
+        .eq('id', authData.user.id);
+
+      if (recoveryError) {
+        console.error('Failed to set recovery answer:', recoveryError);
+      }
+
+      this.userProfileSignal.set({ ...newProfile, recovery_question_id: data.recoveryQuestionId });
 
       return { error: null };
     } catch (error) {
@@ -318,6 +350,123 @@ export class AuthService {
     this.currentUserSignal.set(null);
     this.userProfileSignal.set(null);
     this.router.navigate(['/login']);
+  }
+
+  /**
+   * Get the recovery question ID for a given username
+   */
+  async getRecoveryQuestion(username: string): Promise<{ questionId: number | null; error: string | null }> {
+    try {
+      const { data, error } = await this.supabase.rpc('get_recovery_question', { p_username: username });
+      if (error || !data || data.error) {
+        return { questionId: null, error: 'recovery.errors.userNotFound' };
+      }
+      return { questionId: data.question_id as number, error: null };
+    } catch {
+      return { questionId: null, error: 'recovery.errors.userNotFound' };
+    }
+  }
+
+  /**
+   * Reset password using secret question/answer recovery flow
+   */
+  async resetPasswordWithRecovery(
+    username: string,
+    answer: string,
+    newPassword: string
+  ): Promise<{ error: string | null; remaining?: number; until?: string }> {
+    try {
+      const { data, error } = await this.supabase.rpc('reset_password_with_recovery', {
+        p_username: username,
+        p_answer: answer,
+        p_new_password: newPassword,
+      });
+
+      if (error || !data) {
+        return { error: 'recovery.errors.userNotFound' };
+      }
+
+      if (data.success) {
+        return { error: null };
+      }
+
+      switch (data.error) {
+        case 'wrong_answer':
+          return { error: 'recovery.errors.wrongAnswer', remaining: data.remaining as number };
+        case 'locked':
+          return { error: 'recovery.errors.locked', until: data.until as string };
+        case 'password_too_short':
+          return { error: 'recovery.errors.passwordTooShort' };
+        default:
+          return { error: 'recovery.errors.userNotFound' };
+      }
+    } catch {
+      return { error: 'recovery.errors.userNotFound' };
+    }
+  }
+
+  /**
+   * Update the current user's display name
+   */
+  async updateDisplayName(displayName: string): Promise<{ error: string | null }> {
+    try {
+      const userId = this.getUserId();
+      if (!userId) return { error: 'Not authenticated' };
+
+      const { error } = await this.supabase
+        .from('user_profiles')
+        .update({ display_name: displayName })
+        .eq('id', userId);
+
+      if (error) return { error: error.message };
+
+      const profile = this.userProfileSignal();
+      if (profile) {
+        this.userProfileSignal.set({ ...profile, display_name: displayName });
+      }
+      return { error: null };
+    } catch (err) {
+      return { error: (err as Error).message };
+    }
+  }
+
+  /**
+   * Update the current user's password (authenticated context — no old password required)
+   */
+  async updatePassword(newPassword: string): Promise<{ error: string | null }> {
+    try {
+      const { error } = await this.supabase.auth.updateUser({ password: newPassword });
+      if (error) return { error: error.message };
+      return { error: null };
+    } catch (err) {
+      return { error: (err as Error).message };
+    }
+  }
+
+  /**
+   * Update the current user's recovery question and answer
+   * Answer is stored in plain text; the DB trigger hashes it
+   */
+  async updateRecovery(questionId: number, answer: string): Promise<{ error: string | null }> {
+    try {
+      const userId = this.getUserId();
+      if (!userId) return { error: 'Not authenticated' };
+
+      const { error } = await this.supabase
+        .from('user_profiles')
+        .update({ recovery_question_id: questionId, recovery_answer_hash: answer })
+        .eq('id', userId);
+
+      if (error) return { error: error.message };
+
+      const profile = this.userProfileSignal();
+      if (profile) {
+        this.userProfileSignal.set({ ...profile, recovery_question_id: questionId });
+      }
+      return { error: null };
+    } catch (err) {
+      return { error: (err as Error).message };
+    }
   }
 
   /**
