@@ -46,4 +46,13 @@ export class SupabaseService {
   from(table: string) {
     return this.supabase.from(table);
   }
+
+  /**
+   * Call a Postgres function via RPC
+   * Shortcut for this.client.rpc()
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  rpc(fn: string, args?: Record<string, unknown>): any {
+    return this.supabase.rpc(fn, args);
+  }
 }

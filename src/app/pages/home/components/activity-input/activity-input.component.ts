@@ -121,7 +121,7 @@ export class ActivityInputComponent {
       const date = getDateForWeeksAgo(i);
       const weekStart = getWeekStart(date);
       const weekEnd = getWeekEnd(date);
-      const dateRange = `${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()}`;
+      const dateRange = `${weekStart.toLocaleDateString('en-US', { timeZone: 'UTC' })} - ${weekEnd.toLocaleDateString('en-US', { timeZone: 'UTC' })}`;
 
       options.push({
         value: i,

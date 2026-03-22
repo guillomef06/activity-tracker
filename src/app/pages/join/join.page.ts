@@ -7,11 +7,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { AllianceService } from '@app/core/services/alliance.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { MemberSignUpRequest } from '@app/shared/models';
+import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
 import {
   passwordMatchValidator,
   createFieldErrorSignal,
@@ -28,6 +30,7 @@ import {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatSelectModule,
     TranslateModule,
     LoadingButtonComponent,
   ],
@@ -43,6 +46,7 @@ export class JoinPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
+  protected readonly recoveryQuestions = RECOVERY_QUESTIONS;
   protected readonly hidePassword = signal(true);
   protected readonly hideConfirmPassword = signal(true);
   protected readonly isLoading = signal(false);
@@ -58,6 +62,8 @@ export class JoinPage implements OnInit {
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
+      recoveryQuestionId: [null, [Validators.required]],
+      recoveryAnswer: ['', [Validators.required, Validators.minLength(2)]],
     },
     { validators: passwordMatchValidator }
   );
@@ -86,6 +92,12 @@ export class JoinPage implements OnInit {
   protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef);
   protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
   protected readonly confirmPasswordValid = createFieldValidSignal(this.joinForm, 'confirmPassword', this.destroyRef);
+  protected readonly recoveryQuestionIdError = createFieldErrorSignal(
+    this.joinForm,
+    'recoveryQuestionId',
+    this.destroyRef
+  );
+  protected readonly recoveryAnswerError = createFieldErrorSignal(this.joinForm, 'recoveryAnswer', this.destroyRef);
 
   protected async validateToken(token?: string): Promise<void> {
     const tokenValue = token || this.joinForm.get('token')?.value;
@@ -131,13 +143,15 @@ export class JoinPage implements OnInit {
     this.errorMessage.set(null);
 
     try {
-      const { token, username, displayName, password } = this.joinForm.value;
+      const { token, username, displayName, password, recoveryQuestionId, recoveryAnswer } = this.joinForm.value;
 
       const request: MemberSignUpRequest = {
         username,
         password,
         displayName,
         invitationToken: token,
+        recoveryQuestionId,
+        recoveryAnswer,
       };
 
       await this.authService.signUpMember(request);

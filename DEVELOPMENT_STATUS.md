@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 15 mars 2026
+**Dernière mise à jour:** 22 mars 2026
 
 ## 📋 Résumé
 
@@ -99,11 +99,25 @@ Application Angular de gestion d'activités avec backend Supabase et système mu
 ## 🌍 Système de Préférences Linguistiques ✅
 - **Persistance DB:** Colonne JSONB `preferences` dans `user_profiles` (migration 08)
 - **LanguageService:** Gestion centralisée avec priorité (DB → Browser → Fallback)
-- **UI:** Sélecteur de langue intégré dans le menu utilisateur avec drapeaux emoji
+- **UI:** Sélecteur de langue migré dans la dialog "Mon Compte" (onglet Mes Préférences)
 - **4 langues:** 🇬🇧 English, 🇫🇷 Français, 🇪🇸 Español, 🇮🇹 Italiano
 - **Réactivité:** Pipe `ActivityLabelPipe` pour traduction dynamique des activités
-- **Corrections i18n:** Suppression de `translate.instant()` au profit du pipe `translate` pour mise à jour temps réel
 - **Architecture extensible:** Structure JSON permet ajout futur de thème, notifications, etc.
+
+---
+
+## 👤 Dialog "Mon Compte" ✅
+
+- **Composant:** `src/app/shared/components/user-account-dialog/`
+- **Ouverture:** Bouton "Mon Compte" dans le menu utilisateur du header (icône `manage_accounts`)
+- **Onglet "Mon Compte" :** 3 sections indépendantes (chacune avec son propre bouton Save)
+  - Modifier le display name
+  - Changer le mot de passe (via `supabase.auth.updateUser`)
+  - Mettre à jour la question/réponse de récupération (trigger DB hache la réponse)
+- **Onglet "Mes Préférences" :** Sélecteur de langue (sauvegarde instantanée, comme avant)
+- **Nouveaux méthodes AuthService:** `updateDisplayName()`, `updatePassword()`, `updateRecovery()`
+- **i18n:** Clé `accountSettings` ajoutée dans les 4 langues (EN, FR, ES, IT)
+- **Limitation connue:** Le thème et les notifications (champs DB existants) ne sont pas encore exposés dans la dialog — prévu pour une prochaine feature
 
 ---
 
@@ -338,6 +352,16 @@ Permet aux admins d'envoyer des messages directement vers des channels Discord d
 
 ---
 
+## 🔐 Account Recovery ✅
+
+- **Page:** `src/app/pages/account-recovery/` — accessible sans authentification via `/account-recovery`
+- **Flux:** saisie du username → vérification question secrète → réinitialisation du mot de passe
+- **Sécurité:** réponse hashée en base (trigger DB), rate limiting custom (`recovery_attempts` + `recovery_locked_until` dans `user_profiles`)
+- **Migrations:** `supabase/16-` à `supabase/20-` — colonnes recovery, trigger hash, RPCs, grant
+- **Limitation connue:** pas d'Edge Function, le rate limiting repose sur les RPCs custom (non couvert par le rate limit Supabase Auth natif)
+
+---
+
 ## 🚧 Prochaines Fonctionnalités
 
 ### Améliorations Possibles
@@ -360,6 +384,8 @@ Permet aux admins d'envoyer des messages directement vers des channels Discord d
 - ✅ Activité tiebreaker (départage à égalité de score total)
 - ✅ Import Excel batch (admin — wizard upload/preview/done, matching joueur, upsert Supabase)
 - ✅ Messages Discord (admin — webhooks configurables, envoi direct vers channels Discord)
+- ✅ Dialog "Mon Compte" (modifier display name, mot de passe, question de récupération + préférences langue)
+- ✅ Account recovery (récupération de compte par question secrète sans email)
 - ✅ Dashboards avec graphiques et statistiques
 - ✅ Interface responsive (mobile-first)
 - ✅ Internationalisation (EN, FR, ES, IT)

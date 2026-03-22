@@ -109,6 +109,35 @@
           }
         </mat-form-field>
 
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>help_outline</mat-icon>
+          <mat-label>{{ 'auth.signup.recoveryQuestion' | translate }}</mat-label>
+          <mat-select formControlName="recoveryQuestionId">
+            @for (q of recoveryQuestions; track q.id) {
+              <mat-option [value]="q.id">{{ q.key | translate }}</mat-option>
+            }
+          </mat-select>
+          @if (recoveryQuestionIdError()) {
+            <mat-error>{{ recoveryQuestionIdError() | translate }}</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matIconPrefix>lock_person</mat-icon>
+          <mat-label>{{ 'auth.signup.recoveryAnswer' | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="recoveryAnswer"
+            type="password"
+            autocomplete="off"
+            [placeholder]="'auth.signup.recoveryAnswer' | translate"
+          />
+          <mat-hint>{{ 'auth.signup.recoveryAnswerHint' | translate }}</mat-hint>
+          @if (recoveryAnswerError()) {
+            <mat-error>{{ recoveryAnswerError() | translate }}</mat-error>
+          }
+        </mat-form-field>
+
         @if (errorMessage()) {
           <div class="error-message">
             <mat-icon>error</mat-icon>

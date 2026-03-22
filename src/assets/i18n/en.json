@@ -52,6 +52,14 @@
       "superAdminExists": "Super admin already exists",
       "allianceCreationFailed": "Failed to create alliance",
       "invalidToken": "Invalid or expired invitation token"
+    },
+    "recovery": {
+      "forgotPassword": "Forgot password?"
+    },
+    "signup": {
+      "recoveryQuestion": "Secret question",
+      "recoveryAnswer": "Secret answer",
+      "recoveryAnswerHint": "Answer is case-insensitive"
     }
   },
   "errors": {
@@ -363,6 +371,83 @@
     "verboseGemValue": "Gem bonus",
     "verboseNewHealthBonus": "New health bonus",
     "noResult": "Fill in the form and click Analyze"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "What is the name of your first pet?",
+      "q2": "In what city were you born?",
+      "q3": "What is the first name of your childhood best friend?",
+      "q4": "What was your childhood nickname?",
+      "q5": "What is your mother's maiden name?",
+      "q6": "What is the name of your primary school?",
+      "q7": "In what city did you meet your partner?",
+      "q8": "What is your favorite food?",
+      "q9": "What was the brand of your first car?",
+      "q10": "What was your first foreign travel destination?"
+    },
+    "page": {
+      "title": "Account Recovery",
+      "step1": {
+        "usernamePlaceholder": "Enter your username",
+        "submit": "Find my account"
+      },
+      "step2": {
+        "answerPlaceholder": "Your answer",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password",
+        "submit": "Reset password"
+      },
+      "step3": {
+        "success": "Password successfully reset!"
+      },
+      "backToLogin": "Back to login"
+    },
+    "errors": {
+      "userNotFound": "No account found for this username.",
+      "wrongAnswer": "Incorrect answer.",
+      "wrongAnswerRemaining": "{{count}} attempt(s) remaining.",
+      "locked": "Account locked until {{time}}.",
+      "passwordTooShort": "Password must be at least 6 characters.",
+      "passwordMismatch": "Passwords do not match."
+    }
+  },
+  "accountSettings": {
+    "title": "My Account",
+    "tabAccount": "My Account",
+    "tabPreferences": "My Preferences",
+    "displayName": {
+      "title": "Display Name",
+      "save": "Save",
+      "success": "Display name updated",
+      "error": "Failed to update display name"
+    },
+    "password": {
+      "title": "Change Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "save": "Change Password",
+      "success": "Password updated successfully",
+      "error": "Failed to update password"
+    },
+    "recovery": {
+      "title": "Recovery Question",
+      "question": "Secret Question",
+      "answer": "New Answer",
+      "answerHint": "Answer is not case-sensitive",
+      "save": "Update",
+      "success": "Recovery question updated",
+      "error": "Failed to update recovery question"
+    },
+    "language": {
+      "title": "Application Language"
+    },
+    "colorScheme": {
+      "title": "Appearance",
+      "light": "Light",
+      "dark": "Dark",
+      "auto": "Auto (system)",
+      "success": "Appearance updated"
+    }
   },
   "discord": {
     "channelsTitle": "Discord Channels",

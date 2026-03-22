@@ -387,12 +387,31 @@ $all-palettes: (
   display: none;
 }
 
-// Apply dark theme when browser/OS is in dark mode
-@media (prefers-color-scheme: dark) {
-  :root {
-    @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
+// User account dialog
+.user-account-dialog {
+  // Fixed height — single scroller, no jump on tab switch
+  .mat-mdc-dialog-content {
+    height: 620px;
+    overflow-y: auto;
   }
-  html {
+
+  // height: auto so content pushes mat-dialog-content, overflow: hidden to suppress inner scrollbar
+  .mat-mdc-tab-body-content {
+    height: auto;
+    overflow: hidden;
+  }
+}
+
+// Auto: dark theme follows OS preference (no JS needed, zero flash)
+@media (prefers-color-scheme: dark) {
+  html:not(.theme-light) {
+    @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
     @include mat.all-component-colors($dark-theme);
   }
+}
+
+// Explicit dark override (user preference)
+html.theme-dark {
+  @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
+  @include mat.all-component-colors($dark-theme);
 }

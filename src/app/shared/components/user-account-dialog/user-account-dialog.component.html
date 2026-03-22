@@ -1,0 +1,170 @@
+<h2 mat-dialog-title>{{ 'accountSettings.title' | translate }}</h2>
+
+<mat-dialog-content>
+  <mat-tab-group animationDuration="200ms">
+    <!-- ===== TAB : MON COMPTE ===== -->
+    <mat-tab [label]="'accountSettings.tabAccount' | translate">
+      <div class="tab-content">
+        <!-- Display Name -->
+        <section class="account-section">
+          <h3 class="section-title">{{ 'accountSettings.displayName.title' | translate }}</h3>
+          <form [formGroup]="displayNameForm" (ngSubmit)="onSaveDisplayName()" class="section-form">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'auth.displayName' | translate }}</mat-label>
+              <input matInput formControlName="displayName" autocomplete="name" />
+              @if (displayNameError()) {
+                <mat-error>{{ displayNameError() | translate }}</mat-error>
+              }
+            </mat-form-field>
+            <app-loading-button
+              [submitting]="loadingDisplayName()"
+              [disabled]="displayNameForm.pristine"
+              [text]="'accountSettings.displayName.save' | translate"
+              [loadingText]="'common.saving' | translate"
+              type="submit"
+              color="primary"
+            />
+          </form>
+        </section>
+
+        <mat-divider></mat-divider>
+
+        <!-- Password -->
+        <section class="account-section">
+          <h3 class="section-title">{{ 'accountSettings.password.title' | translate }}</h3>
+          <form [formGroup]="passwordForm" (ngSubmit)="onSavePassword()" class="section-form">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'accountSettings.password.newPassword' | translate }}</mat-label>
+              <input
+                matInput
+                [type]="hidePassword() ? 'password' : 'text'"
+                formControlName="password"
+                autocomplete="new-password"
+              />
+              <button mat-icon-button matSuffix type="button" (click)="hidePassword.update(v => !v)">
+                <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              @if (passwordError()) {
+                <mat-error>{{ passwordError() | translate }}</mat-error>
+              }
+              <mat-hint>{{ 'auth.passwordHint' | translate }}</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'accountSettings.password.confirmPassword' | translate }}</mat-label>
+              <input
+                matInput
+                [type]="hideConfirmPassword() ? 'password' : 'text'"
+                formControlName="confirmPassword"
+                autocomplete="new-password"
+              />
+              <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword.update(v => !v)">
+                <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              @if (confirmPasswordError()) {
+                <mat-error>{{ confirmPasswordError() | translate }}</mat-error>
+              }
+            </mat-form-field>
+
+            <app-loading-button
+              [submitting]="loadingPassword()"
+              [disabled]="passwordForm.pristine"
+              [text]="'accountSettings.password.save' | translate"
+              [loadingText]="'common.saving' | translate"
+              type="submit"
+              color="primary"
+            />
+          </form>
+        </section>
+
+        <mat-divider></mat-divider>
+
+        <!-- Recovery Question -->
+        <section class="account-section">
+          <h3 class="section-title">{{ 'accountSettings.recovery.title' | translate }}</h3>
+          <form [formGroup]="recoveryForm" (ngSubmit)="onSaveRecovery()" class="section-form">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'accountSettings.recovery.question' | translate }}</mat-label>
+              <mat-select formControlName="questionId">
+                @for (q of RECOVERY_QUESTIONS; track q.id) {
+                  <mat-option [value]="q.id">{{ q.key | translate }}</mat-option>
+                }
+              </mat-select>
+              @if (questionError()) {
+                <mat-error>{{ questionError() | translate }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'accountSettings.recovery.answer' | translate }}</mat-label>
+              <input matInput [type]="hideAnswer() ? 'password' : 'text'" formControlName="answer" autocomplete="off" />
+              <button mat-icon-button matSuffix type="button" (click)="hideAnswer.update(v => !v)">
+                <mat-icon>{{ hideAnswer() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              @if (answerError()) {
+                <mat-error>{{ answerError() | translate }}</mat-error>
+              }
+              <mat-hint>{{ 'accountSettings.recovery.answerHint' | translate }}</mat-hint>
+            </mat-form-field>
+
+            <app-loading-button
+              [submitting]="loadingRecovery()"
+              [disabled]="recoveryForm.pristine"
+              [text]="'accountSettings.recovery.save' | translate"
+              [loadingText]="'common.saving' | translate"
+              type="submit"
+              color="primary"
+            />
+          </form>
+        </section>
+      </div>
+    </mat-tab>
+
+    <!-- ===== TAB : MES PRÉFÉRENCES ===== -->
+    <mat-tab [label]="'accountSettings.tabPreferences' | translate">
+      <div class="tab-content">
+        <section class="account-section">
+          <h3 class="section-title">{{ 'accountSettings.colorScheme.title' | translate }}</h3>
+          <div class="scheme-grid">
+            @for (scheme of colorSchemes; track scheme.value) {
+              <button
+                mat-stroked-button
+                class="scheme-btn"
+                [class.active]="currentScheme() === scheme.value"
+                (click)="changeColorScheme(scheme.value)"
+              >
+                <span>{{ scheme.labelKey | translate }}</span>
+              </button>
+            }
+          </div>
+        </section>
+
+        <mat-divider></mat-divider>
+
+        <section class="account-section">
+          <h3 class="section-title">{{ 'accountSettings.language.title' | translate }}</h3>
+          <div class="language-grid">
+            @for (lang of availableLanguages; track lang.code) {
+              <button
+                mat-stroked-button
+                class="language-btn"
+                [class.active]="currentLanguage() === lang.code"
+                (click)="changeLanguage(lang.code)"
+              >
+                <span class="lang-flag">{{ lang.flag }}</span>
+                <span class="lang-name">{{ lang.name }}</span>
+                @if (currentLanguage() === lang.code) {
+                  <mat-icon class="lang-check">check</mat-icon>
+                }
+              </button>
+            }
+          </div>
+        </section>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">{{ 'common.close' | translate }}</button>
+</mat-dialog-actions>

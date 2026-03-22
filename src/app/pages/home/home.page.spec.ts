@@ -10,7 +10,7 @@ import { AllianceService } from '../../core/services/alliance.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { PwaService } from '../../core/services/pwa.service';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -55,6 +55,7 @@ describe('HomePage', () => {
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         { provide: AllianceService, useValue: allianceServiceSpy },
         { provide: PwaService, useValue: pwaServiceSpy },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

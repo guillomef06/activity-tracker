@@ -1,0 +1,122 @@
+<div class="recovery-container">
+  <mat-card class="recovery-card">
+    <mat-card-header>
+      <mat-card-title>{{ 'recovery.page.title' | translate }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (step() === 1) {
+        <form [formGroup]="step1Form" (ngSubmit)="onStep1Submit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matIconPrefix>person</mat-icon>
+            <mat-label>{{ 'auth.username' | translate }}</mat-label>
+            <input
+              matInput
+              formControlName="username"
+              type="text"
+              autocomplete="username"
+              [placeholder]="'recovery.page.step1.usernamePlaceholder' | translate"
+            />
+          </mat-form-field>
+
+          @if (errorMessage()) {
+            <div class="error-message">
+              <mat-icon>error</mat-icon>
+              <span>{{ errorMessage() | translate }}</span>
+            </div>
+          }
+
+          <app-loading-button
+            type="submit"
+            [text]="'recovery.page.step1.submit' | translate"
+            [loadingText]="'recovery.page.step1.submit' | translate"
+            [submitting]="isLoading()"
+            buttonClass="submit-button"
+          />
+        </form>
+      }
+
+      @if (step() === 2) {
+        <p class="question-label">{{ currentQuestion?.key | translate }}</p>
+
+        <form [formGroup]="step2Form" (ngSubmit)="onStep2Submit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matIconPrefix>help_outline</mat-icon>
+            <mat-label>{{ 'recovery.page.step2.answerPlaceholder' | translate }}</mat-label>
+            <input matInput formControlName="answer" [type]="hideAnswer() ? 'password' : 'text'" autocomplete="off" />
+            <button mat-icon-button matSuffix type="button" (click)="toggleHideAnswer()">
+              <mat-icon>{{ hideAnswer() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matIconPrefix>lock</mat-icon>
+            <mat-label>{{ 'recovery.page.step2.newPassword' | translate }}</mat-label>
+            <input
+              matInput
+              formControlName="password"
+              [type]="hidePassword() ? 'password' : 'text'"
+              autocomplete="new-password"
+            />
+            <button mat-icon-button matSuffix type="button" (click)="toggleHidePassword()">
+              <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matIconPrefix>lock_outline</mat-icon>
+            <mat-label>{{ 'recovery.page.step2.confirmPassword' | translate }}</mat-label>
+            <input
+              matInput
+              formControlName="confirmPassword"
+              [type]="hideConfirmPassword() ? 'password' : 'text'"
+              autocomplete="new-password"
+            />
+            <button mat-icon-button matSuffix type="button" (click)="toggleHideConfirmPassword()">
+              <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          @if (errorMessage()) {
+            <div class="error-message">
+              <mat-icon>error</mat-icon>
+              <span>{{ errorMessage() | translate }}</span>
+              @if (remainingAttempts() !== null) {
+                <span> {{ 'recovery.errors.wrongAnswerRemaining' | translate: { count: remainingAttempts() } }}</span>
+              }
+              @if (lockedUntil()) {
+                <span> {{ lockedUntil() | date: 'HH:mm' }}</span>
+              }
+            </div>
+          }
+
+          <app-loading-button
+            type="submit"
+            [text]="'recovery.page.step2.submit' | translate"
+            [loadingText]="'recovery.page.step2.submit' | translate"
+            [submitting]="isLoading()"
+            buttonClass="submit-button"
+          />
+        </form>
+      }
+
+      @if (step() === 3) {
+        <div class="success-container">
+          <mat-icon class="success-icon">check_circle</mat-icon>
+          <p>{{ 'recovery.page.step3.success' | translate }}</p>
+          <a mat-raised-button color="primary" routerLink="/login">
+            {{ 'recovery.page.backToLogin' | translate }}
+          </a>
+        </div>
+      }
+
+      @if (step() !== 3) {
+        <div class="footer-links">
+          <p>
+            <a routerLink="/login">{{ 'recovery.page.backToLogin' | translate }}</a>
+          </p>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

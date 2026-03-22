@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '@app/core/services/language.service';
+import { ThemeService } from '@app/core/services/theme.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { PwaService } from '@app/core/services';
 import { ReleaseNotesService } from '@app/core/services/release-notes.service';
@@ -18,6 +19,7 @@ import { ReleaseNotesDialogComponent } from '@app/shared/components/release-note
 export class AppComponent {
   private translate = inject(TranslateService);
   private languageService = inject(LanguageService);
+  private themeService = inject(ThemeService);
   private authService = inject(AuthService);
   private readonly pwaService = inject(PwaService);
   private readonly releaseNotesService = inject(ReleaseNotesService);
@@ -33,11 +35,17 @@ export class AppComponent {
     // Initialize language with user preference priority
     this.languageService.initializeLanguage();
 
-    // Reload language when user logs in or profile changes
+    // Initialize color scheme with user preference priority
+    this.themeService.initializeTheme();
+
+    // Reload language + color scheme when user logs in or profile changes
     effect(() => {
       const userProfile = this.authService.userProfile();
       if (userProfile?.preferences?.language) {
         this.languageService.setLanguage(userProfile.preferences.language, false);
+      }
+      if (userProfile?.preferences?.colorScheme) {
+        void this.themeService.setColorScheme(userProfile.preferences.colorScheme, false);
       }
     });
 

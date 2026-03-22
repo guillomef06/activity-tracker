@@ -1,5 +1,38 @@
 [
   {
+    "version": "1.1.1",
+    "date": "2026-03-22",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Account management dialog — update display name, password, and recovery question",
+          "fr": "Dialog de gestion du compte — modifier le nom affiché, le mot de passe et la question de récupération",
+          "es": "Diálogo de gestión de cuenta — actualizar nombre visible, contraseña y pregunta de recuperación",
+          "it": "Dialogo gestione account — aggiorna nome visualizzato, password e domanda di recupero"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Account recovery — regain access using your secret question if you forget your password",
+          "fr": "Récupération de compte — retrouvez l'accès via votre question secrète en cas d'oubli du mot de passe",
+          "es": "Recuperación de cuenta — recupera el acceso usando tu pregunta secreta si olvidaste la contraseña",
+          "it": "Recupero account — recupera l'accesso tramite domanda segreta in caso di password dimenticata"
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "en": "Week date ranges now display correctly regardless of the user's timezone",
+          "fr": "Les plages de dates par semaine s'affichent désormais correctement quelle que soit la timezone de l'utilisateur",
+          "es": "Los rangos de fechas semanales ahora se muestran correctamente independientemente de la zona horaria del usuario",
+          "it": "Gli intervalli di date settimanali ora vengono visualizzati correttamente indipendentemente dal fuso orario dell'utente"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.1.0",
     "date": "2026-03-05",
     "entries": [

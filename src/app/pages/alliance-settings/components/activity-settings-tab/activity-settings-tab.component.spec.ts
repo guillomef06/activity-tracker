@@ -5,7 +5,7 @@ import { AllianceService } from '@app/core/services/alliance.service';
 import { ActivityService } from '@app/core/services/activity.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { signal, WritableSignal } from '@angular/core';
+import { signal, WritableSignal, provideZonelessChangeDetection } from '@angular/core';
 import type { Alliance } from '@app/shared/models/alliance.model';
 
 describe('ActivitySettingsTabComponent', () => {
@@ -35,6 +35,7 @@ describe('ActivitySettingsTabComponent', () => {
       providers: [
         { provide: AllianceService, useValue: allianceServiceSpy },
         { provide: ActivityService, useValue: activityServiceSpy },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

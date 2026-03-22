@@ -1,0 +1,58 @@
+.recovery-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.recovery-card {
+  width: 100%;
+  max-width: 480px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.question-label {
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--mat-sys-error);
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.success-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: var(--mat-sys-primary);
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.footer-links {
+  text-align: center;
+  margin-top: 1rem;
+}

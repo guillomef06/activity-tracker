@@ -18,7 +18,7 @@ export interface User {
  */
 export interface UserPreferences {
   language?: 'en' | 'fr' | 'es' | 'it';
-  theme?: 'light' | 'dark';
+  colorScheme?: 'light' | 'dark' | 'auto';
   notifications?: {
     email?: boolean;
     push?: boolean;
@@ -37,6 +37,7 @@ export interface UserProfile {
   username: string;
   role: 'super_admin' | 'admin' | 'member';
   preferences?: UserPreferences;
+  recovery_question_id?: number;
   created_at: string;
   updated_at: string;
 }

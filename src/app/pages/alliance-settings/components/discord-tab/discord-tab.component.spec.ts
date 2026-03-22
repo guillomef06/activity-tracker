@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, Mocked } from 'vitest';
-import { signal, WritableSignal } from '@angular/core';
+import { signal, WritableSignal, provideZonelessChangeDetection } from '@angular/core';
 import { DiscordTabComponent } from './discord-tab.component';
 import { DiscordService } from '@app/core/services/discord.service';
 import { SnackbarService } from '@app/core/services';
@@ -47,6 +47,7 @@ describe('DiscordTabComponent', () => {
       providers: [
         { provide: DiscordService, useValue: discordSpy },
         { provide: SnackbarService, useValue: snackbarSpy },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 

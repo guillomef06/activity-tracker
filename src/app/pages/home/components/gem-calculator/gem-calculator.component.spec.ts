@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GemCalculatorComponent } from './gem-calculator.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('GemCalculatorComponent', () => {
   let component: GemCalculatorComponent;
@@ -10,6 +11,7 @@ describe('GemCalculatorComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GemCalculatorComponent, TranslateModule.forRoot(), NoopAnimationsModule],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GemCalculatorComponent);

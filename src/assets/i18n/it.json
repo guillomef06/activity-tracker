@@ -52,6 +52,14 @@
       "superAdminExists": "Il super amministratore esiste già",
       "allianceCreationFailed": "Creazione dell'alleanza non riuscita",
       "invalidToken": "Token di invito non valido o scaduto"
+    },
+    "recovery": {
+      "forgotPassword": "Password dimenticata?"
+    },
+    "signup": {
+      "recoveryQuestion": "Domanda segreta",
+      "recoveryAnswer": "Risposta segreta",
+      "recoveryAnswerHint": "La risposta non è sensibile alle maiuscole"
     }
   },
   "errors": {
@@ -363,6 +371,83 @@
     "verboseGemValue": "Bonus gemma",
     "verboseNewHealthBonus": "Nuovo bonus salute",
     "noResult": "Compila il modulo e clicca su Analizza"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "Qual è il nome del tuo primo animale domestico?",
+      "q2": "In quale città sei nato/a?",
+      "q3": "Qual è il nome del tuo migliore amico/a d'infanzia?",
+      "q4": "Qual era il tuo soprannome da bambino/a?",
+      "q5": "Qual è il cognome da nubile di tua madre?",
+      "q6": "Come si chiama la tua scuola elementare?",
+      "q7": "In quale città hai incontrato il tuo partner?",
+      "q8": "Qual è il tuo cibo preferito?",
+      "q9": "Qual era la marca della tua prima macchina?",
+      "q10": "Qual è stata la tua prima destinazione di viaggio all'estero?"
+    },
+    "page": {
+      "title": "Recupero account",
+      "step1": {
+        "usernamePlaceholder": "Inserisci il tuo nome utente",
+        "submit": "Trova il mio account"
+      },
+      "step2": {
+        "answerPlaceholder": "La tua risposta",
+        "newPassword": "Nuova password",
+        "confirmPassword": "Conferma password",
+        "submit": "Reimposta password"
+      },
+      "step3": {
+        "success": "Password reimpostata con successo!"
+      },
+      "backToLogin": "Torna al login"
+    },
+    "errors": {
+      "userNotFound": "Nessun account trovato per questo nome utente.",
+      "wrongAnswer": "Risposta errata.",
+      "wrongAnswerRemaining": "{{count}} tentativo/i rimanente/i.",
+      "locked": "Account bloccato fino alle {{time}}.",
+      "passwordTooShort": "La password deve contenere almeno 6 caratteri.",
+      "passwordMismatch": "Le password non corrispondono."
+    }
+  },
+  "accountSettings": {
+    "title": "Il Mio Account",
+    "tabAccount": "Il Mio Account",
+    "tabPreferences": "Le Mie Preferenze",
+    "displayName": {
+      "title": "Nome visualizzato",
+      "save": "Salva",
+      "success": "Nome visualizzato aggiornato",
+      "error": "Impossibile aggiornare il nome"
+    },
+    "password": {
+      "title": "Cambia password",
+      "newPassword": "Nuova password",
+      "confirmPassword": "Conferma password",
+      "save": "Cambia password",
+      "success": "Password aggiornata con successo",
+      "error": "Impossibile aggiornare la password"
+    },
+    "recovery": {
+      "title": "Domanda di recupero",
+      "question": "Domanda segreta",
+      "answer": "Nuova risposta",
+      "answerHint": "La risposta non è sensibile alle maiuscole",
+      "save": "Aggiorna",
+      "success": "Domanda di recupero aggiornata",
+      "error": "Impossibile aggiornare la domanda"
+    },
+    "language": {
+      "title": "Lingua dell'applicazione"
+    },
+    "colorScheme": {
+      "title": "Aspetto",
+      "light": "Chiaro",
+      "dark": "Scuro",
+      "auto": "Auto (sistema)",
+      "success": "Aspetto aggiornato"
+    }
   },
   "discord": {
     "channelsTitle": "Canali Discord",

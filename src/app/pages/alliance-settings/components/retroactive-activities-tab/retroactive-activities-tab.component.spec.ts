@@ -6,6 +6,7 @@ import { AllianceService } from '@app/core/services/alliance.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('RetroactiveActivitiesTabComponent', () => {
   let component: RetroactiveActivitiesTabComponent;
@@ -33,6 +34,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
         { provide: ActivityService, useValue: activityServiceSpy },
         { provide: AllianceService, useValue: allianceServiceSpy },
         { provide: MatSnackBar, useValue: snackBarSpy },
+        provideZonelessChangeDetection(),
       ],
     }).compileComponents();
 
