@@ -16,9 +16,11 @@ export interface User {
  * User Preferences model
  * Stored as JSONB in user_profiles.preferences column
  */
+export type ColorScheme = 'light' | 'dark' | 'auto' | 'glass' | 'glass-dark' | 'high-contrast';
+
 export interface UserPreferences {
   language?: 'en' | 'fr' | 'es' | 'it';
-  colorScheme?: 'light' | 'dark' | 'auto';
+  colorScheme?: ColorScheme;
   notifications?: {
     email?: boolean;
     push?: boolean;

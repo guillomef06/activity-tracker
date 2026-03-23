@@ -6,7 +6,7 @@
 
   <div class="scores-container">
     @for (userScore of userScores(); track trackByUserId($index, userScore); let i = $index) {
-      <mat-card class="score-card">
+      <mat-card class="score-card" [class.rank-1]="i === 0" [class.rank-2]="i === 1" [class.rank-3]="i === 2">
         <mat-card-header class="score-header" (click)="toggleUserDetails(userScore.userId)">
           <div class="rank-badge">
             <mat-icon [matBadge]="i + 1" matBadgeColor="accent">emoji_events</mat-icon>

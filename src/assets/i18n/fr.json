@@ -56,7 +56,7 @@
     "recovery": {
       "forgotPassword": "Mot de passe oublié ?"
     },
-    "signup": {
+    "signupForm": {
       "recoveryQuestion": "Question secrète",
       "recoveryAnswer": "Réponse secrète",
       "recoveryAnswerHint": "La réponse n'est pas sensible à la casse"
@@ -446,6 +446,9 @@
       "light": "Clair",
       "dark": "Sombre",
       "auto": "Auto (système)",
+      "glass": "Glass Clair",
+      "glassDark": "Glass Sombre",
+      "highContrast": "Contraste élevé",
       "success": "Apparence mise à jour"
     }
   },

@@ -56,7 +56,7 @@
     "recovery": {
       "forgotPassword": "¿Olvidaste tu contraseña?"
     },
-    "signup": {
+    "signupForm": {
       "recoveryQuestion": "Pregunta secreta",
       "recoveryAnswer": "Respuesta secreta",
       "recoveryAnswerHint": "La respuesta no distingue mayúsculas de minúsculas"
@@ -446,6 +446,9 @@
       "light": "Claro",
       "dark": "Oscuro",
       "auto": "Auto (sistema)",
+      "glass": "Glass Claro",
+      "glassDark": "Glass Oscuro",
+      "highContrast": "Alto Contraste",
       "success": "Apariencia actualizada"
     }
   },

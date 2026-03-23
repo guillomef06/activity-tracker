@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
+import { AuthBackgroundComponent } from '@app/shared/components/auth-background/auth-background.component';
 import type { AdminSignUpRequest } from '@app/shared/models';
 import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
 import {
@@ -27,6 +28,7 @@ import {
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    AuthBackgroundComponent,
     MatButtonModule,
     MatIconModule,
     MatSelectModule,

@@ -1,8 +1,60 @@
+// ── Header color tokens (always dark navy, theme-independent) ──────────────
+$header-bg-start: #001b3f;
+$header-bg-mid: #002f65;
+$header-bg-end: #00458f;
+$header-accent: #438fff;
+$header-accent-dim: #abc7ff;
+$header-shadow: rgba(0, 45, 101, 0.6);
+$header-accent-bar-opacity: 0.8;
+
+$header-text: #ffffff;
+$header-text-muted: rgba(171, 199, 255, 0.85);
+$header-text-user: rgba(171, 199, 255, 0.9);
+$header-btn-bg-hover: rgba(255, 255, 255, 0.1);
+$header-btn-opacity: 0.85;
+
+$header-online-color: #4caf50;
+$header-offline-color: #ef5350;
+$header-online-glow: rgba(76, 175, 80, 0.7);
+$header-offline-glow: rgba(239, 83, 80, 0.7);
+$header-logo-glow: rgba(67, 143, 255, 0.6);
+
+$header-logo-size: 32px;
+$header-dot-size: 10px;
+$header-dot-right: -4px;
+$header-dot-bottom: 20px;
+$header-dot-border: 2px;
+
 .app-header {
+  // Always dark, regardless of light/dark mode
+  --mat-toolbar-container-background-color: transparent;
+  background: linear-gradient(135deg, $header-bg-start 0%, $header-bg-mid 55%, $header-bg-end 100%);
+  color: $header-text;
   padding: 0 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
+  position: relative;
+  box-shadow: 0 2px 16px $header-shadow;
+
+  // Glowing accent line at the bottom
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      $header-accent 30%,
+      $header-accent-dim 50%,
+      $header-accent 70%,
+      transparent 100%
+    );
+    opacity: $header-accent-bar-opacity;
+  }
 }
 
 .app-branding {
@@ -12,40 +64,46 @@
   .logo-wrapper {
     position: relative;
     margin-right: 1rem;
-    width: 32px;
-    height: 32px;
+    width: $header-logo-size;
+    height: $header-logo-size;
     flex-shrink: 0;
 
     .app-logo {
-      width: 32px;
-      height: 32px;
+      width: $header-logo-size;
+      height: $header-logo-size;
       object-fit: contain;
       display: inline-block;
+      filter: drop-shadow(0 0 6px $header-logo-glow);
     }
 
     .connectivity-dot {
       position: absolute;
-      bottom: 20px;
-      right: -4px;
-      width: 12px;
-      height: 12px;
+      bottom: $header-dot-bottom;
+      right: $header-dot-right;
+      width: $header-dot-size;
+      height: $header-dot-size;
       border-radius: 50%;
-      background-color: #4caf50;
-      border: 2px solid var(--mat-sys-surface-container);
+      background-color: $header-online-color;
+      border: $header-dot-border solid $header-bg-mid;
       transition: background-color 0.3s ease;
+      box-shadow: 0 0 6px $header-online-glow;
 
       &.offline {
-        background-color: var(--mat-sys-error-container);
+        background-color: $header-offline-color;
+        box-shadow: 0 0 6px $header-offline-glow;
       }
     }
   }
 }
 
-.header-content h1 {
-  font-size: 1.5rem;
-  font-weight: 500;
-  margin: 0;
-  line-height: 1.2;
+.header-content {
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.2;
+    color: $header-text;
+  }
 }
 
 .subtitle {
@@ -53,6 +111,7 @@
   opacity: 0.9;
   margin: 0;
   line-height: 1;
+  color: $header-text-muted;
 }
 
 .spacer {
@@ -68,8 +127,17 @@
 .user-identity {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--mat-sys-on-surface);
+  color: $header-text-user;
   white-space: nowrap;
+}
+
+.user-section button[mat-icon-button] {
+  color: rgba($header-text, $header-btn-opacity);
+
+  &:hover {
+    color: $header-text;
+    background: $header-btn-bg-hover;
+  }
 }
 
 .user-info {

@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.1.2",
+    "date": "2026-03-23",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "High Contrast theme — new accessibility option available in preferences (6 themes total)",
+          "fr": "Thème Contraste élevé — nouvelle option d'accessibilité disponible dans les préférences (6 thèmes au total)",
+          "es": "Tema Alto Contraste — nueva opción de accesibilidad disponible en las preferencias (6 temas en total)",
+          "it": "Tema Alto Contrasto — nuova opzione di accessibilità disponibile nelle preferenze (6 temi in totale)"
+        }
+      },
+      {
+        "type": "improvement",
+        "text": {
+          "en": "Visual refresh — tinted page backgrounds, card depth shadows, and Inter typography across all themes",
+          "fr": "Rafraîchissement visuel — fonds de page teintés, ombres sur les cards et typographie Inter pour tous les thèmes",
+          "es": "Renovación visual — fondos de página con tinte, sombras en las tarjetas y tipografía Inter en todos los temas",
+          "it": "Aggiornamento visivo — sfondi pagina colorati, ombre sulle card e tipografia Inter per tutti i temi"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.1.1",
     "date": "2026-03-22",
     "entries": [

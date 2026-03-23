@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.auth-background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: visible;
+
+  background: #060d1a;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0, 92, 187, 0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0, 69, 143, 0.2) 0%, transparent 60%),
+    linear-gradient(180deg, #060d1a 0%, #030810 100%);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(67, 143, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(67, 143, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .auth-background {
+    padding: 1rem 0.5rem;
+  }
+}
