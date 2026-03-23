@@ -1,0 +1,75 @@
+// ─── Design tokens ───────────────────────────────────────────────────────────
+// Shared structural SCSS variables used in styles.scss.
+// Expose to components via CSS custom properties when needed.
+
+// ── Breakpoints ───────────────────────────────────────────────────────────────
+$bp-xs-max:             599px;   // mobile-only (max-width)
+$bp-sm:                 600px;   // small and up
+$bp-md:                 768px;   // medium and up
+$bp-lg:                 960px;   // large and up
+$bp-xl:                 1280px;  // xlarge and up
+$bp-header-collapse:    1024px;  // header subtitle hidden below this
+
+// ── Max-widths ────────────────────────────────────────────────────────────────
+$mw-form-sm:    450px;    // login card
+$mw-form-md:    500px;    // signup / join cards
+$mw-form-lg:    600px;    // activity input form
+$mw-container:  720px;    // container @ sm
+$mw-content:    960px;    // container @ md / large content
+$mw-wide:      1200px;    // scores section / xlarge content
+
+// ── Border radii ──────────────────────────────────────────────────────────────
+$radius-sm:   4px;
+$radius-md:   8px;
+$radius-lg:  12px;
+$radius-xl:  16px;
+$radius-2xl: 20px;
+
+// ── Spacing ───────────────────────────────────────────────────────────────────
+$section-padding-mobile:  1rem;
+$section-padding-desktop: 2rem;
+
+// ── Dark mode tinted background ───────────────────────────────────────────────
+// Légèrement navy pour rester cohérent avec le header, plutôt que noir pur
+$dark-bg-tinted:  #0a0c14;
+$light-bg-tinted: #e4ebf9;
+
+// ── Page background gradients ─────────────────────────────────────────────────
+$light-page-bg: linear-gradient(160deg, #e4ebf9 0%, #ece6f8 100%);
+$dark-page-bg:  linear-gradient(160deg, #0a0c14 0%, #0d0a18 100%);
+
+// ── Card depth ────────────────────────────────────────────────────────────────
+$card-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 6px 24px rgba(0, 0, 0, 0.08);
+
+// ── Interactive ───────────────────────────────────────────────────────────────
+$submit-btn-height: 48px;
+
+// ── Typography ────────────────────────────────────────────────────────────────
+$font-xs:   0.75rem;    // 12px
+$font-sm:   0.875rem;   // 14px
+$font-base: 1rem;       // 16px
+$font-lg:   1.25rem;    // 20px
+$font-xl:   1.5rem;     // 24px
+$font-2xl:  1.75rem;    // 28px
+$font-3xl:  2rem;       // 32px
+
+// ── Icon sizes ────────────────────────────────────────────────────────────────
+$icon-sm:   20px;
+$icon-md:   24px;
+$icon-lg:   32px;
+
+// ── Rank / leaderboard colors ─────────────────────────────────────────────────
+$rank-gold:         #F59E0B;
+$rank-gold-glow:    rgba(245, 158, 11, 0.20);
+$rank-silver:            #64748B;   // light mode — plus sombre
+$rank-silver-glow:       rgba(100, 116, 139, 0.20);
+$rank-silver-dark:       #CBD5E1;   // dark mode — plus clair
+$rank-silver-glow-dark:  rgba(203, 213, 225, 0.20);
+$rank-bronze:       #B87333;
+$rank-bronze-glow:  rgba(184, 115, 51, 0.15);
+
+// ── Success (not part of Material 3) ─────────────────────────────────────────
+$success:             #2e7d32;
+$success-on:          #ffffff;
+$success-container:   #c8e6c9;
+$success-on-container: #1b5e20;

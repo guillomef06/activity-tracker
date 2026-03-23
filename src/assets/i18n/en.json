@@ -56,7 +56,7 @@
     "recovery": {
       "forgotPassword": "Forgot password?"
     },
-    "signup": {
+    "signupForm": {
       "recoveryQuestion": "Secret question",
       "recoveryAnswer": "Secret answer",
       "recoveryAnswerHint": "Answer is case-insensitive"
@@ -446,6 +446,9 @@
       "light": "Light",
       "dark": "Dark",
       "auto": "Auto (system)",
+      "glass": "Glass Light",
+      "glassDark": "Glass Dark",
+      "highContrast": "High Contrast",
       "success": "Appearance updated"
     }
   },

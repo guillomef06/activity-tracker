@@ -1,4 +1,4 @@
-<div class="signup-container">
+<app-auth-background>
   <mat-card class="signup-card">
     <mat-card-header>
       <mat-card-title>{{ 'auth.signupTitle' | translate }}</mat-card-title>
@@ -111,7 +111,7 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>help_outline</mat-icon>
-          <mat-label>{{ 'auth.signup.recoveryQuestion' | translate }}</mat-label>
+          <mat-label>{{ 'auth.signupForm.recoveryQuestion' | translate }}</mat-label>
           <mat-select formControlName="recoveryQuestionId">
             @for (q of recoveryQuestions; track q.id) {
               <mat-option [value]="q.id">{{ q.key | translate }}</mat-option>
@@ -124,15 +124,15 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>lock_person</mat-icon>
-          <mat-label>{{ 'auth.signup.recoveryAnswer' | translate }}</mat-label>
+          <mat-label>{{ 'auth.signupForm.recoveryAnswer' | translate }}</mat-label>
           <input
             matInput
             formControlName="recoveryAnswer"
             type="password"
             autocomplete="off"
-            [placeholder]="'auth.signup.recoveryAnswer' | translate"
+            [placeholder]="'auth.signupForm.recoveryAnswer' | translate"
           />
-          <mat-hint>{{ 'auth.signup.recoveryAnswerHint' | translate }}</mat-hint>
+          <mat-hint>{{ 'auth.signupForm.recoveryAnswerHint' | translate }}</mat-hint>
           @if (recoveryAnswerError()) {
             <mat-error>{{ recoveryAnswerError() | translate }}</mat-error>
           }
@@ -164,4 +164,4 @@
       </form>
     </mat-card-content>
   </mat-card>
-</div>
+</app-auth-background>

@@ -1,6 +1,8 @@
 /* Angular Material Core */
 @use '@angular/material' as mat;
 @use '../_theme-colors' as theme-colors;
+@use '../_glass-theme' as glass;
+@use '../_design-tokens' as tokens;
 @use 'sass:map';
 @use 'sass:meta';
 
@@ -17,8 +19,8 @@ $light-theme: mat.define-theme(
       tertiary: theme-colors.$tertiary-palette,
     ),
     typography: (
-      brand-family: 'Roboto, sans-serif',
-      plain-family: 'Roboto, sans-serif',
+      brand-family: 'Inter, sans-serif',
+      plain-family: 'Inter, sans-serif',
       bold-weight: 700,
       medium-weight: 500,
       regular-weight: 400,
@@ -50,9 +52,11 @@ html {
   // M2 retrocompatibility
   //@include mat.color-variants-backwards-compatibility($light-theme);
 
-  // M3 component customizations (shapes only)
+  // M3 component customizations (shapes + depth)
   .mat-mdc-card {
     --mat-card-elevated-container-shape: 16px;
+    // --card-shadow permet aux composants d'overrider sans !important
+    box-shadow: var(--card-shadow) !important;
   }
 
   .mat-mdc-button {
@@ -91,11 +95,11 @@ body {
 }
 
 body {
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--mat-sys-surface);
+  background: #{tokens.$light-page-bg} fixed;
   color: var(--mat-sys-on-surface);
 }
 
@@ -107,22 +111,22 @@ body {
   margin: 0 auto;
 }
 
-@media (min-width: 600px) {
+@media (min-width: tokens.$bp-sm) {
   .container {
     padding: 1rem;
-    max-width: 720px;
+    max-width: tokens.$mw-container;
   }
 }
 
-@media (min-width: 960px) {
+@media (min-width: tokens.$bp-lg) {
   .container {
-    max-width: 960px;
+    max-width: tokens.$mw-content;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: tokens.$bp-xl) {
   .container {
-    max-width: 1200px;
+    max-width: tokens.$mw-wide;
   }
 }
 
@@ -152,7 +156,7 @@ body {
   min-width: 160px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: tokens.$bp-md) {
   .settings-tabs .mat-mdc-tab-label {
     min-width: 80px;
     padding: 0 0.75rem;
@@ -355,17 +359,39 @@ $all-palettes: (
 );
 
 :root {
+  --card-shadow: #{tokens.$card-shadow};
+
   @include mat-sys-css-vars($all-palettes, $mat-sys-vars-light);
+  --mat-sys-surface-container: #{tokens.$light-bg-tinted};
   @include export-palette-css-vars(theme-colors.$primary-palette, 'primary');
   @include export-palette-css-vars(theme-colors.$tertiary-palette, 'tertiary');
   @include export-palette-css-vars(theme-colors.$secondary-palette, 'secondary');
   // Ajoute d'autres palettes si besoin
 
   // Success color (not part of Material 3 spec, added manually)
-  --mat-sys-success: #2e7d32;
-  --mat-sys-on-success: #ffffff;
-  --mat-sys-success-container: #c8e6c9;
-  --mat-sys-on-success-container: #1b5e20;
+  --mat-sys-success: #{tokens.$success};
+  --mat-sys-on-success: #{tokens.$success-on};
+  --mat-sys-success-container: #{tokens.$success-container};
+  --mat-sys-on-success-container: #{tokens.$success-on-container};
+
+  // Rank colors for leaderboard
+  --rank-gold: #{tokens.$rank-gold};
+  --rank-gold-glow: #{tokens.$rank-gold-glow};
+  --rank-silver: #{tokens.$rank-silver};
+  --rank-silver-glow: #{tokens.$rank-silver-glow};
+  --rank-bronze: #{tokens.$rank-bronze};
+  --rank-bronze-glow: #{tokens.$rank-bronze-glow};
+}
+
+/* Override browser autofill background (Chrome/Edge yellow) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--mat-sys-surface-container-highest) inset !important;
+  -webkit-text-fill-color: var(--mat-sys-on-surface) !important;
+  caret-color: var(--mat-sys-on-surface);
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Password field valid state — green outline */
@@ -404,9 +430,16 @@ $all-palettes: (
 
 // Auto: dark theme follows OS preference (no JS needed, zero flash)
 @media (prefers-color-scheme: dark) {
-  html:not(.theme-light) {
+  html:not(.theme-light):not(.theme-glass):not(.theme-high-contrast) {
     @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
     @include mat.all-component-colors($dark-theme);
+    --mat-sys-surface-container: #{tokens.$dark-bg-tinted};
+    --rank-silver: #{tokens.$rank-silver-dark};
+    --rank-silver-glow: #{tokens.$rank-silver-glow-dark};
+
+    body {
+      background: #{tokens.$dark-page-bg} fixed;
+    }
   }
 }
 
@@ -414,4 +447,118 @@ $all-palettes: (
 html.theme-dark {
   @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
   @include mat.all-component-colors($dark-theme);
+  --mat-sys-surface-container: #{tokens.$dark-bg-tinted};
+  --rank-silver: #{tokens.$rank-silver-dark};
+  --rank-silver-glow: #{tokens.$rank-silver-glow-dark};
+
+  body {
+    background: #{tokens.$dark-page-bg} fixed;
+  }
+}
+
+// ─── Glassmorphism theme ───────────────────────────────────────────────────
+// Suit automatiquement le mode light/dark de l'OS — effect verre par-dessus.
+// Tunable via CSS custom properties :
+//   --glass-blur          intensité du flou
+//   --glass-saturation    boost de saturation derrière le verre
+//   --glass-card-bg       fond des cards (rgba)
+//   --glass-card-border   bordure des cards (rgba)
+//   --glass-card-shadow   ombre des cards
+//   --glass-page-bg       fond de page (gradient)
+
+// ── Variant LIGHT (défaut) ─────────────────────────────────────────────────
+html.theme-glass {
+  @include mat-sys-css-vars($all-palettes, $mat-sys-vars-light);
+  @include mat.all-component-colors($light-theme);
+
+  --glass-blur: #{glass.$glass-blur};
+  --glass-saturation: #{glass.$glass-saturation};
+  --glass-card-bg: #{glass.$glass-light-card-bg};
+  --glass-card-border: #{glass.$glass-light-card-border};
+  --glass-card-shadow: #{glass.$glass-light-card-shadow};
+  --glass-dialog-bg: #{glass.$glass-light-dialog-bg};
+  --glass-menu-bg: #{glass.$glass-light-menu-bg};
+  --glass-page-bg: #{glass.$glass-light-page-bg};
+
+  // ── Page background ──────────────────────────────────────────────────────
+  body {
+    background: var(--glass-page-bg);
+    background-attachment: fixed;
+  }
+
+  // ── Cards ────────────────────────────────────────────────────────────────
+  // On alimente --card-shadow avec la valeur glass par défaut.
+  // Les rank cards peuvent toujours overrider --card-shadow localement.
+  .mat-mdc-card {
+    --card-shadow: var(--glass-card-shadow);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    background: var(--glass-card-bg) !important;
+    border: 1px solid var(--glass-card-border) !important;
+  }
+
+  // ── Expansion panels ─────────────────────────────────────────────────────
+  .mat-expansion-panel {
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    background: var(--glass-card-bg) !important;
+    border: 1px solid var(--glass-card-border) !important;
+  }
+
+  // ── Dialogs ──────────────────────────────────────────────────────────────
+  .mat-mdc-dialog-surface.mdc-dialog__surface {
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    background: var(--glass-dialog-bg) !important;
+    border: 1px solid var(--glass-card-border) !important;
+    box-shadow: var(--glass-card-shadow) !important;
+  }
+
+  .cdk-overlay-dark-backdrop {
+    background: #{glass.$glass-light-overlay-backdrop};
+  }
+
+  // ── Menus dropdown ───────────────────────────────────────────────────────
+  .mat-mdc-menu-panel {
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    background: var(--glass-menu-bg) !important;
+    border: 1px solid var(--glass-card-border) !important;
+  }
+}
+
+// ── Variant DARK (explicite) ───────────────────────────────────────────────
+html.theme-glass.theme-glass-dark {
+  @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
+  @include mat.all-component-colors($dark-theme);
+
+  --glass-card-bg: #{glass.$glass-dark-card-bg};
+  --glass-card-border: #{glass.$glass-dark-card-border};
+  --glass-card-shadow: #{glass.$glass-dark-card-shadow};
+  --glass-card-shadow-hover: #{glass.$glass-dark-card-shadow-hover};
+  --glass-dialog-bg: #{glass.$glass-dark-dialog-bg};
+  --glass-menu-bg: #{glass.$glass-dark-menu-bg};
+  --glass-page-bg: #{glass.$glass-dark-page-bg};
+}
+
+// ── High contrast theme ────────────────────────────────────────────────────
+html.theme-high-contrast {
+  @include mat-sys-css-vars($all-palettes, $mat-sys-vars-light);
+  @include mat.all-component-colors($light-theme);
+  @include theme-colors.high-contrast-overrides(light);
+
+  body {
+    background: #ffffff;
+  }
+
+  // Cards : no gradient, strong border
+  .mat-mdc-card {
+    --card-shadow: none;
+    border: 2px solid #000000 !important;
+  }
+
+  // Expansion panels
+  .mat-expansion-panel {
+    border: 2px solid #000000 !important;
+  }
 }

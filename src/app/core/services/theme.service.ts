@@ -1,9 +1,9 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { AuthService } from './auth.service';
 import { SupabaseService } from './supabase.service';
-import type { UserPreferences } from '@app/shared/models/user.model';
+import type { UserPreferences, ColorScheme } from '@app/shared/models/user.model';
 
-export type ColorScheme = 'light' | 'dark' | 'auto';
+export type { ColorScheme };
 
 export interface ColorSchemeInfo {
   value: ColorScheme;
@@ -30,6 +30,9 @@ export class ThemeService {
     { value: 'light', labelKey: 'accountSettings.colorScheme.light', icon: 'light_mode' },
     { value: 'dark', labelKey: 'accountSettings.colorScheme.dark', icon: 'dark_mode' },
     { value: 'auto', labelKey: 'accountSettings.colorScheme.auto', icon: 'brightness_auto' },
+    { value: 'glass', labelKey: 'accountSettings.colorScheme.glass', icon: 'blur_on' },
+    { value: 'glass-dark', labelKey: 'accountSettings.colorScheme.glassDark', icon: 'blur_on' },
+    { value: 'high-contrast', labelKey: 'accountSettings.colorScheme.highContrast', icon: 'contrast' },
   ];
 
   public readonly currentScheme = signal<ColorScheme>('auto');
@@ -54,10 +57,16 @@ export class ThemeService {
     this.currentScheme.set(scheme);
 
     const html = document.documentElement;
-    html.classList.remove('theme-light', 'theme-dark');
+    html.classList.remove('theme-light', 'theme-dark', 'theme-glass', 'theme-glass-dark', 'theme-high-contrast');
 
     if (scheme === 'dark') html.classList.add('theme-dark');
     if (scheme === 'light') html.classList.add('theme-light');
+    if (scheme === 'glass') html.classList.add('theme-glass');
+    if (scheme === 'glass-dark') {
+      html.classList.add('theme-glass');
+      html.classList.add('theme-glass-dark');
+    }
+    if (scheme === 'high-contrast') html.classList.add('theme-high-contrast');
     // 'auto' → no class, CSS @media handles it
 
     if (save && this.authService.isAuthenticated()) {

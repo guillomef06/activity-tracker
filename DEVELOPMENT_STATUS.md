@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 22 mars 2026
+**Dernière mise à jour:** 23 mars 2026
 
 ## 📋 Résumé
 
@@ -263,6 +263,25 @@ Le système utilise un **cycle répétitif de 6 semaines** pour déterminer quel
 
 ---
 
+## ✅ UI Design System (v1.1.2)
+
+### Design "Command Post"
+- **Header:** Gradient marine foncé (`#001b3f → #00458f`) avec ligne lumineuse bleue, logo avec glow, always-dark identity
+- **Leaderboard:** Rank 1 gold, rank 2 silver, rank 3 bronze — ombres colorées + icône trophée; silver adaptatif (plus sombre en light `#64748B`, plus clair en dark `#CBD5E1`)
+- **Activity Input:** Points preview avec gradient primary→tertiary, user-info avec accent
+
+### Tokens & Architecture SCSS
+- **Partials dédiés:** `_glass-theme.scss` (valeurs glassmorphism) + `_design-tokens.scss` (breakpoints, max-widths, radii, typographie, rank colors, success)
+- **Magic numbers éliminés:** variables locales dans `app-header`, `login`, `activities-details`; un seul `!important` global via CSS var `--card-shadow` (rank cards overrident localement)
+- **Typographie:** **Inter** (remplace Roboto — meilleur rendu mobile, chiffres plus lisibles)
+- **Fond de page:** `surface-container` (hiérarchie M3), teinté bleu en light, navy en dark, gradient `160deg` bleu→violet
+
+### Thèmes (6)
+- **Light / Dark / Auto** — base Material 3
+- **Glass Light / Glass Dark** — glassmorphism; dark hover : glow blanc intensifié au lieu de shadow noire
+- **High Contrast** — accessibilité via mixin `high-contrast-overrides(light)` de Material; fond blanc pur, bordures 2px noires sur cards
+- **`ColorScheme` type:** source de vérité dans `user.model.ts`, ré-exporté depuis `theme.service.ts`
+
 ---
 
 ## 🏆 Activité Tiebreaker ✅
@@ -386,6 +405,8 @@ Permet aux admins d'envoyer des messages directement vers des channels Discord d
 - ✅ Messages Discord (admin — webhooks configurables, envoi direct vers channels Discord)
 - ✅ Dialog "Mon Compte" (modifier display name, mot de passe, question de récupération + préférences langue)
 - ✅ Account recovery (récupération de compte par question secrète sans email)
+- ✅ Thème High Contrast (accessibilité — fond blanc pur, bordures marquées, couleurs renforcées Material)
+- ✅ Système de thèmes complet : Light / Dark / Auto / Glass Light / Glass Dark / High Contrast
 - ✅ Dashboards avec graphiques et statistiques
 - ✅ Interface responsive (mobile-first)
 - ✅ Internationalisation (EN, FR, ES, IT)

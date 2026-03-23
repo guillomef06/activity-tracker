@@ -56,7 +56,7 @@
     "recovery": {
       "forgotPassword": "Password dimenticata?"
     },
-    "signup": {
+    "signupForm": {
       "recoveryQuestion": "Domanda segreta",
       "recoveryAnswer": "Risposta segreta",
       "recoveryAnswerHint": "La risposta non è sensibile alle maiuscole"
@@ -446,6 +446,9 @@
       "light": "Chiaro",
       "dark": "Scuro",
       "auto": "Auto (sistema)",
+      "glass": "Glass Chiaro",
+      "glassDark": "Glass Scuro",
+      "highContrast": "Alto Contrasto",
       "success": "Aspetto aggiornato"
     }
   },

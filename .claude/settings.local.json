@@ -63,7 +63,11 @@
       "mcp__plugin_playwright_playwright__browser_close",
       "mcp__plugin_playwright_playwright__browser_evaluate",
       "Bash(grep '\"\"version\"\"' package.json)",
-      "Bash(npm version:*)"
+      "Bash(npm version:*)",
+      "Bash(grep -E \"\\\\.\\(scss|ts\\)$\")",
+      "WebFetch(domain:medium.com)",
+      "Bash(grep:*)",
+      "Bash(python -c \"import json,sys; notes=json.load\\(sys.stdin\\); [print\\(json.dumps\\(v, indent=2, ensure_ascii=False\\)\\) for v in notes[:2]]\")"
     ]
   }
 }
