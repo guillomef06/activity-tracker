@@ -169,20 +169,11 @@ export class AuthService {
       const { error: profileError } = await this.supabase.from('user_profiles').insert({
         ...newProfile,
         recovery_question_id: data.recoveryQuestionId,
+        recovery_answer_hash: data.recoveryAnswer,
       });
 
       if (profileError) {
         return { error: profileError };
-      }
-
-      // Set recovery answer (trigger will hash it)
-      const { error: recoveryError } = await this.supabase
-        .from('user_profiles')
-        .update({ recovery_answer_hash: data.recoveryAnswer })
-        .eq('id', authData.user.id);
-
-      if (recoveryError) {
-        console.error('Failed to set recovery answer:', recoveryError);
       }
 
       this.userProfileSignal.set({ ...newProfile, recovery_question_id: data.recoveryQuestionId });
@@ -298,20 +289,11 @@ export class AuthService {
       const { error: profileError } = await this.supabase.from('user_profiles').insert({
         ...newProfile,
         recovery_question_id: data.recoveryQuestionId,
+        recovery_answer_hash: data.recoveryAnswer,
       });
 
       if (profileError) {
         return { error: profileError };
-      }
-
-      // Set recovery answer (trigger will hash it)
-      const { error: recoveryError } = await this.supabase
-        .from('user_profiles')
-        .update({ recovery_answer_hash: data.recoveryAnswer })
-        .eq('id', authData.user.id);
-
-      if (recoveryError) {
-        console.error('Failed to set recovery answer:', recoveryError);
       }
 
       this.userProfileSignal.set({ ...newProfile, recovery_question_id: data.recoveryQuestionId });
