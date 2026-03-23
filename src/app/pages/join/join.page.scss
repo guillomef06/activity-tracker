@@ -1,12 +1,3 @@
-.join-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
 .join-card {
   width: 100%;
   max-width: 500px;
@@ -120,10 +111,6 @@ button.submit-button {
 
 // Mobile responsiveness
 @media (max-width: 600px) {
-  .join-container {
-    padding: 0.5rem;
-  }
-
   .join-card {
     mat-card-header {
       mat-card-title {

@@ -1,0 +1,33 @@
+// ─── Glass theme tokens ─────────────────────────────────────────────────────
+// All magic values for the glassmorphism theme variants.
+// Only imported by styles.scss — values are exposed as CSS custom properties.
+
+// ── Shared ───────────────────────────────────────────────────────────────────
+$glass-blur:       18px;
+$glass-saturation: 1.6;
+
+// ── Light variant ─────────────────────────────────────────────────────────────
+$glass-light-card-bg:            rgba(255, 255, 255, 0.30);
+$glass-light-card-border:        rgba(255, 255, 255, 0.90);
+$glass-light-card-shadow:        0 8px 32px rgba(31, 38, 135, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+$glass-light-dialog-bg:          rgba(255, 255, 255, 0.82);
+$glass-light-menu-bg:            rgba(255, 255, 255, 0.88);
+$glass-light-overlay-backdrop:   rgba(0, 0, 50, 0.25);
+$glass-light-page-bg:
+  radial-gradient(ellipse at 15% 50%, rgba(0, 92, 187, 0.35) 0%, transparent 55%),
+  radial-gradient(ellipse at 85% 20%, rgba(120, 40, 200, 0.25) 0%, transparent 50%),
+  radial-gradient(ellipse at 60% 90%, rgba(0, 116, 233, 0.20) 0%, transparent 50%),
+  linear-gradient(135deg, #b8cef8 0%, #cbb8f8 50%, #b8cef8 100%);
+
+// ── Dark variant ──────────────────────────────────────────────────────────────
+$glass-dark-card-bg:      rgba(255, 255, 255, 0.10);
+$glass-dark-card-border:  rgba(255, 255, 255, 0.14);
+$glass-dark-card-shadow:       0 8px 32px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+$glass-dark-card-shadow-hover: 0 8px 32px rgba(255, 255, 255, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+$glass-dark-dialog-bg:    rgba(8, 16, 36, 0.78);
+$glass-dark-menu-bg:      rgba(8, 16, 36, 0.82);
+$glass-dark-page-bg:
+  radial-gradient(ellipse at 15% 50%, rgba(0, 92, 187, 0.35) 0%, transparent 55%),
+  radial-gradient(ellipse at 85% 20%, rgba(120, 40, 200, 0.25) 0%, transparent 50%),
+  radial-gradient(ellipse at 60% 90%, rgba(0, 116, 233, 0.20) 0%, transparent 50%),
+  linear-gradient(135deg, #02040a 0%, #06030f 50%, #02040a 100%);

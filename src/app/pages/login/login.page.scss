@@ -1,16 +1,21 @@
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
+// ── Auth card tokens ──────────────────────────────────────────────────────────
+$auth-card-max-width: 450px;
+$auth-accent-blue: #438fff;
+$auth-card-border: rgba(67, 143, 255, 0.2);
+$auth-card-glow-ring: rgba(67, 143, 255, 0.08);
+$auth-card-shadow: 0 32px 64px rgba(0, 0, 0, 0.6);
 
 .login-card {
   width: 100%;
-  max-width: 450px;
+  max-width: $auth-card-max-width;
   padding: 1rem;
+  position: relative;
+  z-index: 1;
+
+  border: 1px solid $auth-card-border !important;
+  box-shadow:
+    $auth-card-shadow,
+    0 0 0 1px $auth-card-glow-ring !important;
 
   mat-card-header {
     display: flex;
@@ -88,10 +93,6 @@ button.submit-button {
 
 // Mobile responsiveness
 @media (max-width: 600px) {
-  .login-container {
-    padding: 0.5rem;
-  }
-
   .login-card {
     mat-card-header {
       mat-card-title {

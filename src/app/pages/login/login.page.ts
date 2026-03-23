@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
+import { AuthBackgroundComponent } from '@app/shared/components/auth-background/auth-background.component';
 import type { SignInRequest } from '@app/shared/models';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 
@@ -23,6 +24,7 @@ import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils'
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    AuthBackgroundComponent,
     TranslateModule,
     LoadingButtonComponent,
   ],
