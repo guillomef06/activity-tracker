@@ -6,17 +6,9 @@
     <base href="/activity-tracker/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
-      // GitHub Pages SPA redirect
-      // This script takes the current URL and converts the path and query
-      // string into just a query string, and then redirects the browser
-      // to the new URL with only a query string and hash fragment
-      (function () {
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== location.href) {
-          history.replaceState(null, null, redirect);
-        }
-      })();
+      // GitHub Pages SPA redirect — step 1: save URL and redirect to app root
+      sessionStorage.redirect = location.href;
+      location.replace('/activity-tracker/');
     </script>
   </head>
   <body>

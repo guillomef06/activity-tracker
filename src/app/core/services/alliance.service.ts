@@ -435,47 +435,32 @@ export class AllianceService {
   }
 
   /**
-   * Validate invitation token
+   * Validate invitation token via RPC (bypasses RLS so anon users can validate)
    * Supports multi-use tokens (no used_at check)
    */
   async validateInvitation(token: string): Promise<ValidateInvitationResponse> {
     try {
-      const { data, error } = await this.supabase
-        .from('invitation_tokens')
-        .select('*, alliances(*)')
-        .eq('token', token)
-        .single();
+      const { data, error } = await this.supabase.rpc('validate_invitation_token', {
+        p_token: token,
+      });
 
-      if (error || !data) {
+      if (error) {
         console.error('Token validation error:', error);
-        return {
-          valid: false,
-          alliance: null,
-          error: 'Invalid invitation token',
-        };
+        return { valid: false, alliance: null, error: 'Invalid invitation token' };
       }
 
-      // Check if expired
-      if (new Date(data.expires_at) < new Date()) {
-        return {
-          valid: false,
-          alliance: null,
-          error: 'Invitation token has expired',
-        };
+      if (!data.valid) {
+        return { valid: false, alliance: null, error: data.error };
       }
 
       return {
         valid: true,
-        alliance: data.alliances as Alliance,
+        alliance: { id: data.alliance_id, name: data.alliance_name } as Alliance,
         error: null,
       };
     } catch (error) {
       console.error('Error validating invitation:', error);
-      return {
-        valid: false,
-        alliance: null,
-        error: 'Error validating invitation',
-      };
+      return { valid: false, alliance: null, error: 'Error validating invitation' };
     }
   }
 
