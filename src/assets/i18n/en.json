@@ -2,6 +2,13 @@
   "app": {
     "subtitle": "Track activities and view rolling 6-week scores"
   },
+  "home": {
+    "tabs": {
+      "submit": "Submit Activity",
+      "leaderboard": "Leaderboard",
+      "tools": "Tools"
+    }
+  },
   "auth": {
     "login": "Sign In",
     "signup": "Sign Up",
@@ -270,7 +277,8 @@
     "cancel": "Cancel",
     "save": "Save",
     "saving": "Saving...",
-    "update": "Update"
+    "update": "Update",
+    "back": "Back"
   },
   "superAdmin": {
     "dashboard": {
@@ -338,9 +346,11 @@
     "title": "What's New",
     "markAsSeen": "Mark as read"
   },
+  "tools": {
+    "gemCalcDesc": "Calculate the score gain from equipping a gem on your commander."
+  },
   "gemCalculator": {
-    "nerdModeButton": "💎 Enter the nerd mode",
-    "title": "💎 Gem Calculator",
+    "title": "Gem Calculator",
     "back": "Back",
     "troopType": "Troop Type",
     "troopSwordsmen": "Swordsmen",
@@ -354,11 +364,11 @@
     "mightAttack": "Might Attack (%)",
     "mightDefense": "Might Defense (%)",
     "gemType": "Gem Type",
-    "gemHealth": "❤️ Health Gem",
-    "gemCapacity": "👥 Capacity Gem",
+    "gemHealth": "Health Gem",
+    "gemCapacity": "Capacity Gem",
     "gemRarity": "Gem Rarity",
     "verbose": "Verbose mode (calculation detail)",
-    "analyze": "💎 Analyze",
+    "analyze": "Analyze",
     "score": "Gain",
     "rawBonus": "Raw Bonus",
     "verboseTitle": "Calculation Detail",
@@ -488,5 +498,55 @@
     "errors": {
       "invalidWebhookUrl": "Must be a valid Discord webhook URL (https://discord.com/api/webhooks/...)"
     }
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "Alliance Activity Tracker",
+      "title1": "Play Smart.",
+      "title2": "Win Together.",
+      "subtitleBefore": "Designed for every active player — not just spenders. Track your alliance activities, earn strategic points, and reach",
+      "subtitleStrong": "Top\u00a010 Mightiest Governor",
+      "subtitleAfter": "with significantly fewer speed-ups and resources.",
+      "ctaLogin": "Login",
+      "ctaJoin": "Join with Invitation"
+    },
+    "steps": {
+      "label": "HOW IT WORKS",
+      "title": "Three steps to the top",
+      "step1": {
+        "title": "Log Your Activities",
+        "description": "Submit KvK battles, Legion fights, Golden Expeditions and more. Every event, every week — your contribution recorded."
+      },
+      "step2": {
+        "title": "Earn Strategic Points",
+        "description": "Points are calculated from your position and performance. Configurable rules reward the players who show up and compete."
+      },
+      "step3": {
+        "title": "Rise in the Rankings",
+        "description": "A 6-week rolling leaderboard keeps competition fresh and rewards consistency over individual bursts."
+      }
+    },
+    "benefits": {
+      "label": "WHY IT MATTERS",
+      "title": "Your whole server wins",
+      "benefit1": {
+        "title": "Built for Active Players",
+        "description": "No pay-to-win. Raw activity and smart participation are what move you up the leaderboard — anyone can compete."
+      },
+      "benefit2": {
+        "title": "Save Resources Alliance-Wide",
+        "description": "Structured tracking optimizes who participates and when, preserving speed-ups and resources for KvK preparation and Mightiest Empire."
+      },
+      "benefit3": {
+        "title": "Reach Top 10 Mightiest Governor",
+        "description": "Claim the strongest heroes with fewer resources. The difference between almost and champion is measured in organized effort."
+      }
+    },
+    "cta": {
+      "title": "Ready to lead your alliance?",
+      "subtitle": "Create your alliance and start tracking your members' progress today.",
+      "button": "Create your Alliance"
+    },
+    "footer": "Activity Tracker — Play smarter, compete stronger."
   }
 }

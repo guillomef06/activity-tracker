@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
-import type { DiscordWebhook, CreateDiscordWebhookRequest } from '../../shared/models';
+import type { DiscordWebhook, CreateDiscordWebhookRequest } from '@shared/models';
 
 /**
  * Discord Service

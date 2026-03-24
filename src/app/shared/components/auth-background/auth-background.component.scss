@@ -34,3 +34,12 @@
     padding: 1rem 0.5rem;
   }
 }
+
+// Page layout variant — fond identique mais sans centrage ni padding fixe
+.auth-background--page {
+  display: block;
+  min-height: unset;
+  padding: 0;
+  align-items: unset;
+  justify-content: unset;
+}

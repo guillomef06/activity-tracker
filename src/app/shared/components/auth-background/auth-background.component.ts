@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 
 @Component({
   selector: 'app-auth-background',
@@ -7,4 +7,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrl: './auth-background.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthBackgroundComponent {}
+export class AuthBackgroundComponent {
+  readonly layout = input<'card' | 'page'>('card');
+}

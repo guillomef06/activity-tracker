@@ -67,7 +67,9 @@
       "Bash(grep -E \"\\\\.\\(scss|ts\\)$\")",
       "WebFetch(domain:medium.com)",
       "Bash(grep:*)",
-      "Bash(python -c \"import json,sys; notes=json.load\\(sys.stdin\\); [print\\(json.dumps\\(v, indent=2, ensure_ascii=False\\)\\) for v in notes[:2]]\")"
+      "Bash(python -c \"import json,sys; notes=json.load\\(sys.stdin\\); [print\\(json.dumps\\(v, indent=2, ensure_ascii=False\\)\\) for v in notes[:2]]\")",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
+      "Bash(grep -r \"from ''''\\\\.\\\\.\" \"D:/workplace/activity-tracker/activity-tracker/src/app\" --include=\"*.ts\" -l)"
     ]
   }
 }

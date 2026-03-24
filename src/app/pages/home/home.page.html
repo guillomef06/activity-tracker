@@ -1,14 +1,31 @@
-@if (pwaService.isOnline()) {
-  <app-activity-input />
-  <app-activities-details [userScores]="userScores()" />
-} @else {
-  @if (!nerdModeActive()) {
-    <div class="nerd-mode-container">
-      <button mat-raised-button color="accent" (click)="nerdModeActive.set(true)">
-        {{ 'gemCalculator.nerdModeButton' | translate }}
-      </button>
-    </div>
-  } @else {
-    <app-gem-calculator (back)="nerdModeActive.set(false)" />
-  }
-}
+<mat-tab-group class="home-tabs" mat-stretch-tabs="false" animationDuration="0ms">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="tab-label">
+        <mat-icon>send</mat-icon>
+        {{ 'home.tabs.submit' | translate }}
+      </span>
+    </ng-template>
+    <app-activity-input />
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="tab-label">
+        <mat-icon>leaderboard</mat-icon>
+        {{ 'home.tabs.leaderboard' | translate }}
+      </span>
+    </ng-template>
+    <app-activities-details [userScores]="userScores()" />
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="tab-label">
+        <mat-icon>construction</mat-icon>
+        {{ 'home.tabs.tools' | translate }}
+      </span>
+    </ng-template>
+    <app-tools-hub />
+  </mat-tab>
+</mat-tab-group>

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, output, signal, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, signal, inject } from '@angular/core';
 import { TitleCasePipe, DecimalPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -132,6 +132,8 @@ export interface GemResult {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GemCalculatorComponent {
+  readonly showBack = input<boolean>(false);
+  readonly showTitle = input<boolean>(false);
   readonly back = output<void>();
 
   private readonly fb = inject(FormBuilder);

@@ -1,17 +1,10 @@
 import { Injectable, signal, inject } from '@angular/core';
-import {
-  Activity,
-  ActivityRequest,
-  ActivityWithUser,
-  BatchImportEntry,
-  UserScore,
-  WeeklyScore,
-} from '../../shared/models';
+import { Activity, ActivityRequest, ActivityWithUser, BatchImportEntry, UserScore, WeeklyScore } from '@shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { AllianceService } from './alliance.service';
-import { APP_CONSTANTS } from '../../shared/constants/constants';
-import { getDateForWeeksAgo, getWeekEnd } from '../../shared/utils/date.util';
+import { APP_CONSTANTS } from '@shared/constants/constants';
+import { getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
 
 @Injectable({
   providedIn: 'root',

@@ -2,7 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, AuthError } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
-import { UserProfile, AdminSignUpRequest, MemberSignUpRequest, SignInRequest } from '../../shared/models';
+import { UserProfile, AdminSignUpRequest, MemberSignUpRequest, SignInRequest } from '@shared/models';
 
 /**
  * Authentication Service

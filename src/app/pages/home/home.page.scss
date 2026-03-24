@@ -1,14 +1,50 @@
-.nerd-mode-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem 1rem;
+// ── Tab navigation ─────────────────────────────────────────────────────────
+//
+// Tous les overrides passent par les CSS tokens Material M3 — aucun ::ng-deep.
+// Les tokens --mat-sys-* s'adaptent automatiquement aux 6 thèmes.
+//
+.home-tabs {
+  // Indicateur actif : 3px, coins arrondis en haut → sentiment de "sélection ferme"
+  --mat-tab-header-active-indicator-color: var(--mat-sys-primary);
+  --mat-tab-header-active-indicator-height: 3px;
+  --mat-tab-header-active-indicator-shape: 3px 3px 0 0;
 
-  button {
-    font-size: 1.125rem;
-    padding: 0.75rem 2rem;
-    letter-spacing: 0.03em;
-    --mat-button-protected-container-color: green;
-    --mat-button-protected-label-text-color: var(--mat-sys-on-success);
+  // Couleurs des labels
+  --mat-tab-header-active-label-text-color: var(--mat-sys-primary);
+  --mat-tab-header-active-focus-label-text-color: var(--mat-sys-primary);
+  --mat-tab-header-active-hover-label-text-color: var(--mat-sys-primary);
+  --mat-tab-header-inactive-label-text-color: var(--mat-sys-on-surface-variant);
+  --mat-tab-header-inactive-focus-label-text-color: var(--mat-sys-on-surface);
+  --mat-tab-header-inactive-hover-label-text-color: var(--mat-sys-on-surface);
+
+  // Typographie : plus affirmée que le défaut Material
+  --mat-tab-header-label-text-weight: 600;
+  --mat-tab-header-label-text-size: 0.875rem;
+  --mat-tab-header-label-text-tracking: 0.04em;
+
+  // Séparateur tab header / contenu
+  --mat-tab-header-divider-color: var(--mat-sys-outline-variant);
+  --mat-tab-header-divider-height: 1px;
+
+  // Fond de la barre d'onglets : légèrement plus sombre que la surface
+  --mat-tab-header-container-color: var(--mat-sys-surface-container-low);
+
+  // Ripple
+  --mat-tab-header-active-ripple-color: var(--mat-sys-primary);
+  --mat-tab-header-inactive-ripple-color: var(--mat-sys-on-surface);
+
+  // ── Label icône + texte ─────────────────────────────────────────────────
+  // .tab-label est dans notre template → encapsulation Angular OK, pas besoin de ::ng-deep
+  .tab-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      font-size: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      // L'icône hérite de la couleur du label via le token CSS parent
+    }
   }
 }

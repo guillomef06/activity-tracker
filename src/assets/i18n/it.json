@@ -2,6 +2,13 @@
   "app": {
     "subtitle": "Traccia le attività e visualizza i punteggi delle ultime 6 settimane"
   },
+  "home": {
+    "tabs": {
+      "submit": "Invia attività",
+      "leaderboard": "Classifica",
+      "tools": "Strumenti"
+    }
+  },
   "auth": {
     "login": "Accedi",
     "signup": "Registrati",
@@ -270,7 +277,8 @@
     "cancel": "Annulla",
     "save": "Salva",
     "saving": "Salvataggio...",
-    "update": "Aggiorna"
+    "update": "Aggiorna",
+    "back": "Indietro"
   },
   "superAdmin": {
     "dashboard": {
@@ -338,9 +346,11 @@
     "title": "Novità",
     "markAsSeen": "Segna come letto"
   },
+  "tools": {
+    "gemCalcDesc": "Calcola il guadagno di punteggio equipaggiando una gemma sul tuo comandante."
+  },
   "gemCalculator": {
-    "nerdModeButton": "💎 Enter the nerd mode",
-    "title": "💎 Calcolatore di Gemme",
+    "title": "Calcolatore di Gemme",
     "back": "Indietro",
     "troopType": "Tipo di truppa",
     "troopSwordsmen": "Spadaccini",
@@ -354,11 +364,11 @@
     "mightAttack": "Might Attack (%)",
     "mightDefense": "Might Defense (%)",
     "gemType": "Tipo di gemma",
-    "gemHealth": "❤️ Gemma della Salute",
-    "gemCapacity": "👥 Gemma di Capacità",
+    "gemHealth": "Gemma della Salute",
+    "gemCapacity": "Gemma di Capacità",
     "gemRarity": "Rarità della gemma",
     "verbose": "Modalità dettagliata (dettaglio calcolo)",
-    "analyze": "💎 Analizza",
+    "analyze": "Analizza",
     "score": "Guadagno",
     "rawBonus": "Bonus grezzo",
     "verboseTitle": "Dettaglio del calcolo",
@@ -488,5 +498,55 @@
     "errors": {
       "invalidWebhookUrl": "Deve essere un URL webhook Discord valido (https://discord.com/api/webhooks/...)"
     }
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "Monitoraggio Attività dell'Alleanza",
+      "title1": "Gioca Furbo.",
+      "title2": "Vinci Insieme.",
+      "subtitleBefore": "Pensato per ogni giocatore attivo — non solo per chi spende di più. Registra le attività della tua alleanza, accumula punti strategici e conquista",
+      "subtitleStrong": "la Top\u00a010 del Governatore Più Potente",
+      "subtitleAfter": "con molti meno acceleratori e risorse.",
+      "ctaLogin": "Accedi",
+      "ctaJoin": "Unisciti con Invito"
+    },
+    "steps": {
+      "label": "COME FUNZIONA",
+      "title": "Tre passi verso la vetta",
+      "step1": {
+        "title": "Registra le tue Attività",
+        "description": "Invia battaglie KvK, combattimenti di Legione, Spedizioni Dorate e altro ancora. Ogni evento, ogni settimana — il tuo contributo registrato."
+      },
+      "step2": {
+        "title": "Accumula Punti Strategici",
+        "description": "I punti vengono calcolati in base alla tua posizione e prestazione. Le regole configurabili premiano i giocatori presenti e costanti."
+      },
+      "step3": {
+        "title": "Scala le Classifiche",
+        "description": "Una classifica rotante di 6 settimane mantiene viva la competizione e premia la regolarità rispetto ai picchi isolati."
+      }
+    },
+    "benefits": {
+      "label": "PERCHÉ È IMPORTANTE",
+      "title": "Tutto il server ci guadagna",
+      "benefit1": {
+        "title": "Fatto per i Giocatori Attivi",
+        "description": "Nessun pay-to-win. Attività costante e partecipazione intelligente sono ciò che ti fa salire in classifica — chiunque può arrivare in cima."
+      },
+      "benefit2": {
+        "title": "Risparmia Risorse in Tutta l'Alleanza",
+        "description": "Il monitoraggio strutturato ottimizza chi partecipa e quando, conservando acceleratori e risorse per il KvK e il Mightiest Empire."
+      },
+      "benefit3": {
+        "title": "Punta alla Top 10 Governatore Più Potente",
+        "description": "Conquista i migliori eroi con meno risorse. Tra quasi e campione, la differenza sta nell'organizzazione."
+      }
+    },
+    "cta": {
+      "title": "Pronto a guidare la tua alleanza verso la vittoria?",
+      "subtitle": "Crea la tua alleanza e inizia a monitorare i progressi dei tuoi membri da oggi.",
+      "button": "Crea la tua Alleanza"
+    },
+    "footer": "Activity Tracker — Gioca furbo, conquista la vittoria."
   }
 }
