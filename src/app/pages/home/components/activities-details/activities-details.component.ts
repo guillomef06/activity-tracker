@@ -5,10 +5,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserScore } from '../../../../shared/models/activity.model';
-import { ActivityLabelPipe } from '../../../../shared/pipes/activity-label.pipe';
-import { WeekLabelPipe } from '../../../../shared/pipes/week-label.pipe';
-import { ShortDatePipe } from '../../../../shared/pipes/short-date.pipe';
+import { UserScore } from '@shared/models/activity.model';
+import { ActivityLabelPipe } from '@shared/pipes/activity-label.pipe';
+import { WeekLabelPipe } from '@shared/pipes/week-label.pipe';
+import { ShortDatePipe } from '@shared/pipes/short-date.pipe';
 
 @Component({
   selector: 'app-activities-details',

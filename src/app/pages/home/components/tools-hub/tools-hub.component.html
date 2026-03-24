@@ -1,0 +1,36 @@
+@if (selectedTool() === null) {
+  <div class="tools-grid">
+    @for (tool of tools; track tool.id) {
+      <mat-card
+        class="tool-card"
+        (click)="selectedTool.set(tool.id)"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="selectedTool.set(tool.id)"
+      >
+        <mat-card-content>
+          <div class="tool-card__icon-wrap">
+            <mat-icon>{{ tool.icon }}</mat-icon>
+          </div>
+          <h3 class="tool-card__title">{{ tool.titleKey | translate }}</h3>
+          <p class="tool-card__desc">{{ tool.descKey | translate }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+} @else {
+  <div class="tool-view">
+    <div class="tool-view__header">
+      <button mat-icon-button (click)="selectedTool.set(null)" [attr.aria-label]="'common.back' | translate">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2 class="tool-view__title">{{ currentTool()?.titleKey | translate }}</h2>
+      <div class="tool-view__spacer" aria-hidden="true"></div>
+    </div>
+    @switch (selectedTool()) {
+      @case ('gem-calculator') {
+        <app-gem-calculator />
+      }
+    }
+  </div>
+}

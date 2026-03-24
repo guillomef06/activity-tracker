@@ -2,6 +2,13 @@
   "app": {
     "subtitle": "Suivez les activités et consultez les scores sur 6 semaines"
   },
+  "home": {
+    "tabs": {
+      "submit": "Soumettre une activité",
+      "leaderboard": "Classement",
+      "tools": "Outils"
+    }
+  },
   "auth": {
     "login": "Connexion",
     "signup": "Inscription",
@@ -270,7 +277,8 @@
     "cancel": "Annuler",
     "save": "Enregistrer",
     "saving": "Enregistrement...",
-    "update": "Mettre à jour"
+    "update": "Mettre à jour",
+    "back": "Retour"
   },
   "superAdmin": {
     "dashboard": {
@@ -338,9 +346,11 @@
     "title": "Nouveautés",
     "markAsSeen": "Marquer comme lu"
   },
+  "tools": {
+    "gemCalcDesc": "Calculez le gain de score obtenu en équipant une gemme sur votre commandant."
+  },
   "gemCalculator": {
-    "nerdModeButton": "💎 Enter the nerd mode",
-    "title": "💎 Gem Calculator",
+    "title": "Gem Calculator",
     "back": "Retour",
     "troopType": "Type de troupe",
     "troopSwordsmen": "Épéistes",
@@ -354,11 +364,11 @@
     "mightAttack": "Might Attack (%)",
     "mightDefense": "Might Defense (%)",
     "gemType": "Type de gemme",
-    "gemHealth": "❤️ Gemme de Santé",
-    "gemCapacity": "👥 Gemme de Capacité",
+    "gemHealth": "Gemme de Santé",
+    "gemCapacity": "Gemme de Capacité",
     "gemRarity": "Rareté de la gemme",
     "verbose": "Mode verbeux (détail du calcul)",
-    "analyze": "💎 Analyser",
+    "analyze": "Analyser",
     "score": "Gain",
     "rawBonus": "Bonus brut",
     "verboseTitle": "Détail du calcul",
@@ -488,5 +498,55 @@
     "errors": {
       "invalidWebhookUrl": "Doit être une URL de webhook Discord valide (https://discord.com/api/webhooks/...)"
     }
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "Suivi d'Activités d'Alliance",
+      "title1": "Jouez Malin.",
+      "title2": "Gagnez Ensemble.",
+      "subtitleBefore": "Conçu pour tous les joueurs actifs — pas seulement les gros dépensiers. Suivez les activités de votre alliance, accumulez des points stratégiques et décrochez",
+      "subtitleStrong": "le Top\u00a010 Gouverneur le Plus Puissant",
+      "subtitleAfter": "avec bien moins d'accélérations et de ressources.",
+      "ctaLogin": "Connexion",
+      "ctaJoin": "Rejoindre avec une Invitation"
+    },
+    "steps": {
+      "label": "COMMENT ÇA MARCHE",
+      "title": "Trois étapes vers le sommet",
+      "step1": {
+        "title": "Déclarez vos Activités",
+        "description": "Soumettez vos batailles KvK, combats de Légion, Expéditions Dorées et plus encore. Chaque événement, chaque semaine — votre contribution enregistrée."
+      },
+      "step2": {
+        "title": "Accumulez des Points Stratégiques",
+        "description": "Les points sont calculés selon votre position et vos performances. Des règles configurables récompensent les joueurs présents et engagés."
+      },
+      "step3": {
+        "title": "Grimpez dans les Classements",
+        "description": "Un classement glissant sur 6 semaines entretient la compétition et récompense la régularité plutôt que les coups d'éclat isolés."
+      }
+    },
+    "benefits": {
+      "label": "POURQUOI C'EST IMPORTANT",
+      "title": "Tout le serveur en profite",
+      "benefit1": {
+        "title": "Pour les Joueurs Actifs Avant Tout",
+        "description": "Pas de pay-to-win. Une activité régulière et une participation intelligente font grimper dans le classement — tout le monde a sa chance."
+      },
+      "benefit2": {
+        "title": "Préservez les Ressources de l'Alliance",
+        "description": "Le suivi structuré optimise qui participe et à quel moment, pour économiser accélérations et ressources avant le KvK et le Mightiest Empire."
+      },
+      "benefit3": {
+        "title": "Visez le Top 10 Gouverneur le Plus Puissant",
+        "description": "Réclamez les meilleurs héros avec moins de ressources. Entre presque et champion, la différence tient à une organisation sans faille."
+      }
+    },
+    "cta": {
+      "title": "Prêt à mener votre alliance au sommet ?",
+      "subtitle": "Créez votre alliance et commencez à suivre les progrès de vos membres dès aujourd'hui.",
+      "button": "Créer votre Alliance"
+    },
+    "footer": "Activity Tracker — Jouez malin, assurez la victoire."
   }
 }

@@ -75,7 +75,9 @@ describe('GemCalculatorComponent', () => {
     expect(res!.delta).toBeCloseTo(243_000, 0);
   });
 
-  it('should emit back event', () => {
+  it('should emit back event when showBack is true', async () => {
+    fixture.componentRef.setInput('showBack', true);
+    fixture.detectChanges();
     const spy = vi.fn();
     component.back.subscribe(spy);
     fixture.nativeElement.querySelector('.back-button')?.click();

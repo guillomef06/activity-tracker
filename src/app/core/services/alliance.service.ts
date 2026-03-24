@@ -14,8 +14,8 @@ import {
   UpdatePointRuleRequest,
   PointCalculationResult,
   UpsertActivitySettingsRequest,
-} from '../../shared/models';
-import { getActivityTypePoints } from '../../shared/constants/constants';
+} from '@shared/models';
+import { getActivityTypePoints } from '@shared/constants/constants';
 
 type AllianceWithRelations = Alliance & {
   user_profiles: UserProfile[];

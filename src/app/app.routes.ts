@@ -2,13 +2,14 @@ import { Routes } from '@angular/router';
 import { authGuard, adminGuard, superAdminGuard, guestGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // Authentication routes (only accessible when not logged in)
-  /* {
-    path: 'super-admin-setup',
+  // Public landing page (redirects authenticated users to /app)
+  {
+    path: '',
     canActivate: [guestGuard],
-    loadComponent: () =>
-      import('./pages/super-admin-setup/super-admin-setup.page').then(m => m.SuperAdminSetupPage),
-  }, */
+    loadComponent: () => import('./pages/landing/landing.page').then(m => m.LandingPage),
+  },
+
+  // Authentication routes (only accessible when not logged in)
   {
     path: 'login',
     canActivate: [guestGuard],
@@ -32,7 +33,7 @@ export const routes: Routes = [
 
   // Protected routes (require authentication)
   {
-    path: '',
+    path: 'app',
     canActivate: [authGuard],
     loadComponent: () => import('./core/layout/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
     children: [
@@ -81,6 +82,6 @@ export const routes: Routes = [
   // Fallback route
   {
     path: '**',
-    redirectTo: 'login',
+    redirectTo: '',
   },
 ];

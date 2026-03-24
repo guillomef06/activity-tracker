@@ -1,0 +1,109 @@
+<app-auth-background layout="page">
+  <!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero__grid-overlay" aria-hidden="true"></div>
+    <div class="hero__glow hero__glow--blue" aria-hidden="true"></div>
+    <div class="hero__glow hero__glow--purple" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <div class="hero__eyebrow">{{ 'landing.hero.eyebrow' | translate }}</div>
+
+      <h1 class="hero__title">
+        {{ 'landing.hero.title1' | translate }}<br />
+        <span class="hero__title--accent">{{ 'landing.hero.title2' | translate }}</span>
+      </h1>
+
+      <p class="hero__subtitle">
+        {{ 'landing.hero.subtitleBefore' | translate }}&nbsp;<strong>{{
+          'landing.hero.subtitleStrong' | translate
+        }}</strong
+        >&nbsp;{{ 'landing.hero.subtitleAfter' | translate }}
+      </p>
+
+      <div class="hero__actions">
+        <a mat-raised-button color="primary" routerLink="/login" class="hero__cta-primary">
+          <mat-icon>login</mat-icon>
+          {{ 'landing.hero.ctaLogin' | translate }}
+        </a>
+        <a mat-stroked-button routerLink="/join" class="hero__cta-secondary">
+          <mat-icon>group_add</mat-icon>
+          {{ 'landing.hero.ctaJoin' | translate }}
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__scroll-hint" aria-hidden="true">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- ── How it works ─────────────────────────────────────────────────────── -->
+  <section class="section steps-section">
+    <div class="section__inner">
+      <div class="section__header">
+        <span class="section__label">{{ 'landing.steps.label' | translate }}</span>
+        <h2 class="section__title">{{ 'landing.steps.title' | translate }}</h2>
+      </div>
+
+      <div class="steps">
+        @for (step of steps; track step.titleKey; let i = $index) {
+          <mat-card class="step" [style.--i]="i">
+            <mat-card-content>
+              <div class="step__number">{{ i + 1 }}</div>
+              <div class="step__icon-wrap">
+                <mat-icon class="step__icon">{{ step.icon }}</mat-icon>
+              </div>
+              <h3 class="step__title">{{ step.titleKey | translate }}</h3>
+              <p class="step__desc">{{ step.descKey | translate }}</p>
+            </mat-card-content>
+            @if (i < steps.length - 1) {
+              <div class="step__connector" aria-hidden="true"></div>
+            }
+          </mat-card>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Benefits ─────────────────────────────────────────────────────────── -->
+  <section class="section benefits-section">
+    <div class="section__inner">
+      <div class="section__header">
+        <span class="section__label">{{ 'landing.benefits.label' | translate }}</span>
+        <h2 class="section__title">{{ 'landing.benefits.title' | translate }}</h2>
+      </div>
+
+      <div class="benefits">
+        @for (benefit of benefits; track benefit.titleKey; let i = $index) {
+          <mat-card class="benefit-card" [style.--i]="i">
+            <mat-card-content>
+              <div class="benefit-card__icon-wrap">
+                <mat-icon class="benefit-card__icon">{{ benefit.icon }}</mat-icon>
+              </div>
+              <h3 class="benefit-card__title">{{ benefit.titleKey | translate }}</h3>
+              <p class="benefit-card__desc">{{ benefit.descKey | translate }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Final CTA ─────────────────────────────────────────────────────────── -->
+  <section class="section cta-section">
+    <div class="cta-section__glow" aria-hidden="true"></div>
+    <div class="section__inner cta-section__inner">
+      <h2 class="cta-section__title">{{ 'landing.cta.title' | translate }}</h2>
+      <p class="cta-section__subtitle">{{ 'landing.cta.subtitle' | translate }}</p>
+      <a mat-raised-button color="primary" routerLink="/signup" class="hero__cta-primary">
+        <mat-icon>add_circle</mat-icon>
+        {{ 'landing.cta.button' | translate }}
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────────── -->
+  <footer class="landing-footer">
+    <span>{{ 'landing.footer' | translate }}</span>
+  </footer>
+</app-auth-background>

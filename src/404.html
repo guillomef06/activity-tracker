@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
       // GitHub Pages SPA redirect — step 1: save URL and redirect to app root
-      sessionStorage.redirect = location.href;
+      try {
+        sessionStorage.redirect = location.href;
+      } catch (e) {}
       location.replace('/activity-tracker/');
     </script>
   </head>
