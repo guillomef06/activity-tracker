@@ -1,0 +1,428 @@
+@use '../../../styles/_design-tokens' as tokens;
+
+// ── Palette locale (cohérente avec auth-background) ───────────────────────
+$text: #e8edf8;
+$text-muted: #b8c2d6;
+$border: rgba(67, 143, 255, 0.2);
+$accent: #438fff;
+$accent-glow: rgba(67, 143, 255, 0.12);
+$blue-mid: rgba(0, 69, 143, 0.2);
+$gold: #f59e0b;
+$gold-bg: rgba(245, 158, 11, 0.12);
+$section-bg: #030810;
+
+// ── Keyframes ─────────────────────────────────────────────────────────────
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes scrollBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 6rem 1.5rem 4rem;
+
+  &__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+
+    &--blue {
+      width: 500px;
+      height: 350px;
+      background: radial-gradient(ellipse, rgba(0, 92, 187, 0.3), transparent 70%);
+      top: -60px;
+      left: -60px;
+      animation: pulseGlow 6s ease-in-out infinite;
+    }
+
+    &--purple {
+      width: 420px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(144, 49, 177, 0.2), transparent 70%);
+      bottom: 0;
+      right: -60px;
+      animation: pulseGlow 6s 3s ease-in-out infinite;
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    text-align: center;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  &__eyebrow {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $accent;
+    background: $accent-glow;
+    border: 1px solid $border;
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  &__title {
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: $text;
+    margin: 0 0 1.5rem;
+    animation: fadeUp 0.7s 0.15s ease both;
+
+    &--accent {
+      color: $accent;
+    }
+  }
+
+  &__subtitle {
+    font-size: clamp(1rem, 2.2vw, 1.1rem);
+    color: $text-muted;
+    line-height: 1.75;
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+    animation: fadeUp 0.7s 0.2s ease both;
+
+    strong {
+      color: $gold;
+      font-weight: 600;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  &__scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+
+    span {
+      display: block;
+      width: 22px;
+      height: 38px;
+      border: 2px solid $border;
+      border-radius: 12px;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 8px;
+        background: $accent;
+        border-radius: 2px;
+        animation: scrollBounce 1.8s ease-in-out infinite;
+      }
+    }
+  }
+}
+
+// ── CTA buttons ───────────────────────────────────────────────────────────
+.hero__cta-primary,
+.hero__cta-secondary {
+  height: 48px;
+  padding: 0 1.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  gap: 0.4rem;
+  vertical-align: middle;
+}
+
+.hero__cta-secondary {
+  color: $text !important;
+  border-color: $border !important;
+
+  &:hover {
+    background: $accent-glow !important;
+    border-color: $accent !important;
+  }
+}
+
+// ── Section base ──────────────────────────────────────────────────────────
+.section {
+  padding: 5rem 1.5rem;
+
+  &__inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: $accent;
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+    font-weight: 700;
+    color: $text;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+}
+
+// ── Steps section ─────────────────────────────────────────────────────────
+.steps-section {
+  background: radial-gradient(ellipse 60% 50% at 50% 80%, $blue-mid 0%, transparent 70%), $section-bg;
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: tokens.$bp-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.step {
+  --mat-card-container-color: rgba(255, 255, 255, 0.02);
+  --mat-card-elevated-container-shape: 16px;
+
+  background-color: transparent;
+  position: relative;
+  text-align: center;
+  border: 1px solid $border;
+  opacity: 0;
+  animation: fadeUp 0.6s calc(0.1s + var(--i, 0) * 0.14s) ease forwards;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    border-color: $accent;
+    box-shadow: 0 4px 24px rgba(67, 143, 255, 0.15);
+  }
+
+  &__number {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: rgba(67, 143, 255, 0.6);
+    line-height: 1;
+    position: absolute;
+    top: 0.75rem;
+    right: 1.25rem;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &__icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(67, 143, 255, 0.1);
+    border: 1px solid $border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+  }
+
+  &__icon {
+    color: $accent !important;
+    font-size: 26px !important;
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text;
+    margin: 0 0 0.6rem;
+  }
+
+  &__desc {
+    font-size: 0.875rem;
+    color: $text-muted;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  &__connector {
+    display: none;
+
+    @media (min-width: tokens.$bp-lg) {
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: -1rem;
+      width: 1rem;
+      height: 1px;
+      background: $border;
+      transform: translateY(-50%);
+    }
+  }
+}
+
+// ── Benefits section ──────────────────────────────────────────────────────
+.benefits-section {
+  background: #060d1a;
+}
+
+.benefits {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: tokens.$bp-md) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.benefit-card {
+  --mat-card-container-color: rgba(255, 255, 255, 0.025);
+  --mat-card-elevated-container-shape: 16px;
+
+  background-color: transparent;
+  border: 1px solid $border;
+  opacity: 0;
+  animation: fadeUp 0.6s calc(0.1s + var(--i, 0) * 0.14s) ease forwards;
+  transition:
+    transform 0.22s,
+    box-shadow 0.22s,
+    border-color 0.22s;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(67, 143, 255, 0.5) !important;
+    box-shadow: 0 12px 40px rgba(0, 92, 187, 0.2) !important;
+  }
+
+  &__icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: $gold-bg;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  &__icon {
+    color: $gold !important;
+    font-size: 24px !important;
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: $text;
+    margin: 0 0 0.6rem;
+  }
+
+  &__desc {
+    font-size: 0.875rem;
+    color: $text-muted;
+    line-height: 1.7;
+    margin: 0;
+  }
+}
+
+// ── Final CTA section ─────────────────────────────────────────────────────
+.cta-section {
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(0, 92, 187, 0.2), transparent 70%), $section-bg;
+  border-top: 1px solid $border;
+  text-align: center;
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__title {
+    font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+    font-weight: 700;
+    color: $text;
+    margin: 0 0 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    font-size: 1rem;
+    color: $text-muted;
+    margin: 0 0 2.5rem;
+    line-height: 1.65;
+  }
+}
+
+// ── Footer ─────────────────────────────────────────────────────────────────
+.landing-footer {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(138, 155, 192, 0.5);
+  border-top: 1px solid $border;
+  background: $section-bg;
+}

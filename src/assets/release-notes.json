@@ -1,5 +1,47 @@
 [
   {
+    "version": "1.1.3",
+    "date": "2026-03-24",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Landing page — the app now has a public welcome page introducing the concept to new members",
+          "fr": "Page d'accueil — l'app dispose désormais d'une page publique de présentation pour les nouveaux membres",
+          "es": "Página de inicio — la app ahora tiene una página pública de presentación para los nuevos miembros",
+          "it": "Pagina di benvenuto — l'app ha ora una pagina pubblica di presentazione per i nuovi membri"
+        }
+      },
+      {
+        "type": "improvement",
+        "text": {
+          "en": "Home page split into 3 tabs: Submit Activity, Leaderboard, and Tools",
+          "fr": "Page principale divisée en 3 onglets : Soumettre une activité, Classement et Outils",
+          "es": "Página principal dividida en 3 pestañas: Enviar actividad, Clasificación y Herramientas",
+          "it": "Pagina principale divisa in 3 schede: Invia attività, Classifica e Strumenti"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Tools tab — Gem Calculator is now available to everyone, no longer hidden as an easter egg",
+          "fr": "Onglet Outils — le Gem Calculator est désormais accessible à tous, plus besoin de le débusquer",
+          "es": "Pestaña Herramientas — la Calculadora de Gemas ya está disponible para todos, sin necesidad de descubrirla",
+          "it": "Scheda Strumenti — il Calcolatore di Gemme è ora disponibile a tutti, non più nascosto come easter egg"
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "en": "Invitation link — fixed an error incorrectly rejecting valid invitation tokens on the join page",
+          "fr": "Lien d'invitation — correction d'une erreur rejetant à tort les tokens d'invitation valides sur la page de rejoindre",
+          "es": "Enlace de invitación — corregido un error que rechazaba incorrectamente tokens de invitación válidos",
+          "it": "Link di invito — corretto un errore che rifiutava erroneamente token di invito validi nella pagina di accesso"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.1.2",
     "date": "2026-03-23",
     "entries": [

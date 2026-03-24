@@ -1,8 +1,8 @@
 /* Angular Material Core */
 @use '@angular/material' as mat;
-@use '../_theme-colors' as theme-colors;
-@use '../_glass-theme' as glass;
-@use '../_design-tokens' as tokens;
+@use './styles/_theme-colors' as theme-colors;
+@use './styles/_glass-theme' as glass;
+@use './styles/_design-tokens' as tokens;
 @use 'sass:map';
 @use 'sass:meta';
 

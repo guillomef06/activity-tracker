@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivityInputComponent } from './activity-input.component';
-import { ActivityService } from '../../../../core/services/activity.service';
-import { AllianceService } from '../../../../core/services/alliance.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { ActivityService } from '@core/services/activity.service';
+import { AllianceService } from '@core/services/alliance.service';
+import { AuthService } from '@core/services/auth.service';
+import { SnackbarService } from '@core/services/snackbar.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { signal, provideZonelessChangeDetection } from '@angular/core';

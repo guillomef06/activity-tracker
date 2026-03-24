@@ -2,6 +2,13 @@
   "app": {
     "subtitle": "Rastrea actividades y visualiza puntuaciones de las últimas 6 semanas"
   },
+  "home": {
+    "tabs": {
+      "submit": "Enviar actividad",
+      "leaderboard": "Clasificación",
+      "tools": "Herramientas"
+    }
+  },
   "auth": {
     "login": "Iniciar Sesión",
     "signup": "Registrarse",
@@ -270,7 +277,8 @@
     "cancel": "Cancelar",
     "save": "Guardar",
     "saving": "Guardando...",
-    "update": "Actualizar"
+    "update": "Actualizar",
+    "back": "Volver"
   },
   "superAdmin": {
     "dashboard": {
@@ -338,9 +346,11 @@
     "title": "Novedades",
     "markAsSeen": "Marcar como leído"
   },
+  "tools": {
+    "gemCalcDesc": "Calcula la ganancia de puntuación al equipar una gema en tu comandante."
+  },
   "gemCalculator": {
-    "nerdModeButton": "💎 Enter the nerd mode",
-    "title": "💎 Calculadora de Gemas",
+    "title": "Calculadora de Gemas",
     "back": "Volver",
     "troopType": "Tipo de tropa",
     "troopSwordsmen": "Espadachines",
@@ -354,11 +364,11 @@
     "mightAttack": "Might Attack (%)",
     "mightDefense": "Might Defense (%)",
     "gemType": "Tipo de gema",
-    "gemHealth": "❤️ Gema de Salud",
-    "gemCapacity": "👥 Gema de Capacidad",
+    "gemHealth": "Gema de Salud",
+    "gemCapacity": "Gema de Capacidad",
     "gemRarity": "Rareza de la gema",
     "verbose": "Modo detallado (detalle del cálculo)",
-    "analyze": "💎 Analizar",
+    "analyze": "Analizar",
     "score": "Ganancia",
     "rawBonus": "Bono bruto",
     "verboseTitle": "Detalle del cálculo",
@@ -488,5 +498,55 @@
     "errors": {
       "invalidWebhookUrl": "Debe ser una URL de webhook de Discord válida (https://discord.com/api/webhooks/...)"
     }
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "Seguimiento de Actividades de Alianza",
+      "title1": "Juega Inteligente.",
+      "title2": "Gana Juntos.",
+      "subtitleBefore": "Diseñado para todos los jugadores activos — no solo para quienes más gastan. Registra las actividades de tu alianza, acumula puntos estratégicos y alcanza",
+      "subtitleStrong": "el Top\u00a010 del Gobernador Más Poderoso",
+      "subtitleAfter": "con muchas menos aceleraciones y recursos.",
+      "ctaLogin": "Iniciar Sesión",
+      "ctaJoin": "Unirse con Invitación"
+    },
+    "steps": {
+      "label": "CÓMO FUNCIONA",
+      "title": "Tres pasos hacia la cima",
+      "step1": {
+        "title": "Registra tus Actividades",
+        "description": "Envía batallas KvK, combates de Legión, Expediciones Doradas y más. Cada evento, cada semana — tu contribución, registrada."
+      },
+      "step2": {
+        "title": "Acumula Puntos Estratégicos",
+        "description": "Los puntos se calculan según tu posición y rendimiento. Las reglas configurables premian a los jugadores constantes y comprometidos."
+      },
+      "step3": {
+        "title": "Escala los Rankings",
+        "description": "Un ranking rotativo de 6 semanas mantiene viva la competición y premia la regularidad por encima de los golpes de efecto aislados."
+      }
+    },
+    "benefits": {
+      "label": "POR QUÉ IMPORTA",
+      "title": "Todo el servidor sale ganando",
+      "benefit1": {
+        "title": "Hecho para Jugadores Activos",
+        "description": "Sin pay-to-win. La actividad constante y una participación inteligente son lo que te impulsa en el ranking — cualquiera puede llegar a lo más alto."
+      },
+      "benefit2": {
+        "title": "Ahorra Recursos en Toda la Alianza",
+        "description": "El seguimiento estructurado optimiza quién participa y cuándo, guardando aceleraciones y recursos para el KvK y el Mightiest Empire."
+      },
+      "benefit3": {
+        "title": "Alcanza el Top 10 Gobernador Más Poderoso",
+        "description": "Hazte con los mejores héroes usando menos recursos. Entre casi y campeón, la diferencia está en la organización."
+      }
+    },
+    "cta": {
+      "title": "¿Listo para llevar tu alianza a la cima?",
+      "subtitle": "Crea tu alianza y empieza a seguir el progreso de tus miembros hoy mismo.",
+      "button": "Crear tu Alianza"
+    },
+    "footer": "Activity Tracker — Juega inteligente, asegura la victoria."
   }
 }

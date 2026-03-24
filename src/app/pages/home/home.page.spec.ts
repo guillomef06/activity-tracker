@@ -5,11 +5,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { ActivityService } from '../../core/services/activity.service';
-import { AllianceService } from '../../core/services/alliance.service';
-import { AuthService } from '../../core/services/auth.service';
-import { SupabaseService } from '../../core/services/supabase.service';
-import { PwaService } from '../../core/services/pwa.service';
+import { ActivityService } from '@core/services/activity.service';
+import { AllianceService } from '@core/services/alliance.service';
+import { AuthService } from '@core/services/auth.service';
+import { SupabaseService } from '@core/services/supabase.service';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 
 describe('HomePage', () => {
@@ -37,12 +36,6 @@ describe('HomePage', () => {
     settings: signal([]),
   };
 
-  const pwaServiceSpy = {
-    isOnline: signal(true),
-    canInstall: signal(false),
-    promptInstall: vi.fn(),
-  };
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomePage, TranslateModule.forRoot()],
@@ -54,7 +47,6 @@ describe('HomePage', () => {
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         { provide: AllianceService, useValue: allianceServiceSpy },
-        { provide: PwaService, useValue: pwaServiceSpy },
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();
@@ -72,30 +64,12 @@ describe('HomePage', () => {
     expect(Array.isArray(component.userScores())).toBe(true);
   });
 
-  it('should show child components when online', () => {
-    pwaServiceSpy.isOnline.set(true);
-    fixture.detectChanges();
+  it('should render the 3 tabs', () => {
     const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('mat-tab-group')).toBeTruthy();
+    // mat-tab-group only renders the active tab content (first tab by default)
     expect(compiled.querySelector('app-activity-input')).toBeTruthy();
-    expect(compiled.querySelector('app-activities-details')).toBeTruthy();
-    expect(compiled.querySelector('.offline-card')).toBeFalsy();
-  });
-
-  it('should show nerd mode button when offline', () => {
-    pwaServiceSpy.isOnline.set(false);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.nerd-mode-container')).toBeTruthy();
-    expect(compiled.querySelector('app-activity-input')).toBeFalsy();
-    expect(compiled.querySelector('app-gem-calculator')).toBeFalsy();
-  });
-
-  it('should show gem calculator after clicking nerd mode button', () => {
-    pwaServiceSpy.isOnline.set(false);
-    component['nerdModeActive'].set(true);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('app-gem-calculator')).toBeTruthy();
-    expect(compiled.querySelector('.nerd-mode-container')).toBeFalsy();
+    // Check that 3 tab labels are rendered
+    expect(compiled.querySelectorAll('.mdc-tab').length).toBe(3);
   });
 });

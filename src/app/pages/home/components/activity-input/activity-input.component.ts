@@ -9,20 +9,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivityService } from '../../../../core/services/activity.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { AllianceService } from '../../../../core/services/alliance.service';
-import { SnackbarService } from '../../../../core/services/snackbar.service';
-import { APP_CONSTANTS } from '../../../../shared/constants/constants';
-import { PointCalculationResult } from '../../../../shared/models';
-import { createFieldErrorSignal } from '../../../../shared/utils/form-validation.utils';
-import { LoadingButtonComponent } from '../../../../shared/components/loading-button/loading-button.component';
-import {
-  getWeekNumberForWeeksAgo,
-  getWeekStart,
-  getDateForWeeksAgo,
-  getWeekEnd,
-} from '../../../../shared/utils/date.util';
+import { ActivityService } from '@core/services/activity.service';
+import { AuthService } from '@core/services/auth.service';
+import { AllianceService } from '@core/services/alliance.service';
+import { SnackbarService } from '@core/services/snackbar.service';
+import { APP_CONSTANTS } from '@shared/constants/constants';
+import { PointCalculationResult } from '@shared/models';
+import { createFieldErrorSignal } from '@shared/utils/form-validation.utils';
+import { LoadingButtonComponent } from '@shared/components/loading-button/loading-button.component';
+import { getWeekNumberForWeeksAgo, getWeekStart, getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
 
 interface WeekOption {
   value: number;

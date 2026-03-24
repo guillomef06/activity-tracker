@@ -1,16 +1,22 @@
 <div class="gem-calculator">
   <!-- Header -->
-  <div class="calc-header">
-    <button
-      mat-icon-button
-      (click)="back.emit()"
-      class="back-button"
-      [attr.aria-label]="'gemCalculator.back' | translate"
-    >
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h2>{{ 'gemCalculator.title' | translate }}</h2>
-  </div>
+  @if (showBack() || showTitle()) {
+    <div class="calc-header">
+      @if (showBack()) {
+        <button
+          mat-icon-button
+          (click)="back.emit()"
+          class="back-button"
+          [attr.aria-label]="'gemCalculator.back' | translate"
+        >
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      }
+      @if (showTitle()) {
+        <h2>{{ 'gemCalculator.title' | translate }}</h2>
+      }
+    </div>
+  }
 
   <mat-card>
     <mat-card-content>
