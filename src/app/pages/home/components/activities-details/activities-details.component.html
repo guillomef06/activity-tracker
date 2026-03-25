@@ -1,28 +1,31 @@
 <div class="scores-section">
   <div class="scores-header">
     <h2>{{ 'activitiesDetails.title' | translate }}</h2>
-    <p class="subtitle">{{ 'activitiesDetails.subtitle' | translate }}</p>
   </div>
 
   <div class="scores-container">
     @for (userScore of userScores(); track trackByUserId($index, userScore); let i = $index) {
       <mat-card class="score-card" [class.rank-1]="i === 0" [class.rank-2]="i === 1" [class.rank-3]="i === 2">
-        <mat-card-header class="score-header" (click)="toggleUserDetails(userScore.userId)">
+        <div
+          class="score-header"
+          role="button"
+          tabindex="0"
+          (click)="toggleUserDetails(userScore.userId)"
+          (keydown.enter)="toggleUserDetails(userScore.userId)"
+          (keydown.space)="toggleUserDetails(userScore.userId)"
+        >
           <div class="rank-badge">
             <mat-icon [matBadge]="i + 1" matBadgeColor="accent">emoji_events</mat-icon>
           </div>
-          <mat-card-title>{{ userScore.userName }}</mat-card-title>
-          <mat-card-subtitle>
-            <mat-chip>{{ userScore.sixWeekTotal }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
-          </mat-card-subtitle>
+          <span class="user-name">{{ userScore.userName }}</span>
+          <mat-chip class="score-chip">{{ userScore.sixWeekTotal }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
           <button mat-icon-button class="expand-button">
             <mat-icon>{{ selectedUserId() === userScore.userId ? 'expand_less' : 'expand_more' }}</mat-icon>
           </button>
-        </mat-card-header>
+        </div>
 
         @if (selectedUserId() === userScore.userId) {
           <mat-card-content class="score-details">
-            <h4>{{ 'dashboard.weeklyBreakdown' | translate }}</h4>
             <mat-accordion>
               @for (week of userScore.weeklyScores; let weekIndex = $index; track trackByIndex(weekIndex)) {
                 <mat-expansion-panel>

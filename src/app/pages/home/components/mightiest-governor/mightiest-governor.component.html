@@ -1,0 +1,46 @@
+<section class="mg-section">
+  <div class="mg-header">
+    <mat-icon class="mg-icon">emoji_events</mat-icon>
+    <div>
+      <h2>{{ 'mightiestGovernor.title' | translate }}</h2>
+      <p class="mg-subtitle">{{ 'mightiestGovernor.subtitle' | translate }}</p>
+    </div>
+  </div>
+
+  <mat-card class="mg-card">
+    <mat-card-content>
+      <p class="mg-description">{{ 'mightiestGovernor.description' | translate }}</p>
+
+      <mat-divider />
+
+      <div class="mg-table">
+        <div class="mg-table-header">
+          <span>{{ 'mightiestGovernor.rank' | translate }}</span>
+          <span>{{ 'mightiestGovernor.cost' | translate }}</span>
+        </div>
+
+        @for (slot of slots; track trackByRank($index, slot)) {
+          <div class="mg-row">
+            <span class="mg-rank">
+              @if (slot.rank === 1) {
+                <mat-icon class="rank-icon rank-gold">emoji_events</mat-icon>
+              } @else if (slot.rank === 2) {
+                <mat-icon class="rank-icon rank-silver">emoji_events</mat-icon>
+              } @else if (slot.rank === 3) {
+                <mat-icon class="rank-icon rank-bronze">emoji_events</mat-icon>
+              } @else {
+                <span class="rank-number">{{ slot.rank }}</span>
+              }
+            </span>
+            <span class="mg-cost">{{ slot.cost }} pts</span>
+          </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <p class="mg-notice">
+    <mat-icon class="notice-icon">info</mat-icon>
+    {{ 'mightiestGovernor.notice' | translate }}
+  </p>
+</section>

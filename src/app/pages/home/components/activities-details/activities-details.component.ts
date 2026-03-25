@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, input, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -15,6 +16,7 @@ import { ShortDatePipe } from '@shared/pipes/short-date.pipe';
   imports: [
     MatCardModule,
     MatIconModule,
+    MatButtonModule,
     MatExpansionModule,
     MatChipsModule,
     MatBadgeModule,

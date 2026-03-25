@@ -6,6 +6,7 @@
     "tabs": {
       "submit": "Enviar actividad",
       "leaderboard": "Clasificación",
+      "mightiestGovernor": "Gob. + Poderoso",
       "tools": "Herramientas"
     }
   },
@@ -139,7 +140,6 @@
         "activityConfiguration": "Configuración de actividades",
         "activityConfigurationHint": "Activa o desactiva cada actividad, configura el modo participación y el desempate",
         "participationMode": "Modo Participación",
-        "participationModeHint": "Los jugadores simplemente confirman su participación, sin posición requerida",
         "participationPoints": "Puntos por participación",
         "positionRangeError": "La posición mínima no puede ser mayor que la posición máxima",
         "created": "Regla de puntos creada con éxito",
@@ -258,15 +258,13 @@
   "dashboard": {
     "noActivitiesThisWeek": "No hay actividades disponibles esta semana",
     "totalPoints": "puntos totales",
-    "weeklyBreakdown": "Desglose Semanal",
     "pointsShort": "pts",
     "currentWeek": "Semana Actual",
     "lastWeek": "Semana Pasada",
     "weeksAgo": "semanas atrás"
   },
   "activitiesDetails": {
-    "title": "Detalles de Actividades",
-    "subtitle": "Desglose semanal para todos los usuarios"
+    "title": "Detalles de Actividades"
   },
   "common": {
     "points": "puntos",
@@ -349,6 +347,14 @@
   "tools": {
     "gemCalcDesc": "Calcula la ganancia de puntuación al equipar una gema en tu comandante."
   },
+  "mightiestGovernor": {
+    "title": "Mightiest Governor",
+    "subtitle": "Costes de inscripción por rango",
+    "description": "Para participar en el evento Mightiest Governor, los jugadores deben gastar puntos de puntuación. Cuanto más alto sea el rango objetivo, mayor será el coste.",
+    "rank": "Rango",
+    "cost": "Coste",
+    "notice": "El sistema DKP está en desarrollo. Los costes mostrados son indicativos y pueden cambiar."
+  },
   "gemCalculator": {
     "title": "Calculadora de Gemas",
     "back": "Volver",
@@ -358,8 +364,8 @@
     "troopPikemen": "Piqueros",
     "troopCavalry": "Caballería",
     "troopTier": "Tier de tropa",
-    "legionSize": "Tamaño de la legión",
-    "legionSizeHint": "Número de unidades en tu legión (máx 500 000)",
+    "troopSize": "Tamaño de la tropa",
+    "troopSizeHint": "Número de tropas (máx 500 000)",
     "healthBonus": "Bonificación Salud (%)",
     "mightAttack": "Might Attack (%)",
     "mightDefense": "Might Defense (%)",
@@ -417,8 +423,7 @@
       "wrongAnswer": "Respuesta incorrecta.",
       "wrongAnswerRemaining": "{{count}} intento(s) restante(s).",
       "locked": "Cuenta bloqueada hasta {{time}}.",
-      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres.",
-      "passwordMismatch": "Las contraseñas no coinciden."
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres."
     }
   },
   "accountSettings": {
@@ -458,8 +463,7 @@
       "auto": "Auto (sistema)",
       "glass": "Glass Claro",
       "glassDark": "Glass Oscuro",
-      "highContrast": "Alto Contraste",
-      "success": "Apariencia actualizada"
+      "highContrast": "Alto Contraste"
     }
   },
   "discord": {
