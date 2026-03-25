@@ -10,6 +10,7 @@ import { UserScore } from '@shared/models/activity.model';
 import { ActivityInputComponent } from './components/activity-input/activity-input.component';
 import { ActivitiesDetailsComponent } from './components/activities-details/activities-details.component';
 import { ToolsHubComponent } from './components/tools-hub/tools-hub.component';
+import { MightiestGovernorComponent } from './components/mightiest-governor/mightiest-governor.component';
 
 @Component({
   selector: 'app-home-page',
@@ -21,6 +22,7 @@ import { ToolsHubComponent } from './components/tools-hub/tools-hub.component';
     ActivityInputComponent,
     ActivitiesDetailsComponent,
     ToolsHubComponent,
+    MightiestGovernorComponent,
   ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
