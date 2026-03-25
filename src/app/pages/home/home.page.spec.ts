@@ -64,12 +64,12 @@ describe('HomePage', () => {
     expect(Array.isArray(component.userScores())).toBe(true);
   });
 
-  it('should render the 3 tabs', () => {
+  it('should render the 4 tabs', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('mat-tab-group')).toBeTruthy();
     // mat-tab-group only renders the active tab content (first tab by default)
     expect(compiled.querySelector('app-activity-input')).toBeTruthy();
-    // Check that 3 tab labels are rendered
-    expect(compiled.querySelectorAll('.mdc-tab').length).toBe(3);
+    // Check that 4 tab labels are rendered
+    expect(compiled.querySelectorAll('.mdc-tab').length).toBe(4);
   });
 });

@@ -6,6 +6,7 @@
     "tabs": {
       "submit": "Submit Activity",
       "leaderboard": "Leaderboard",
+      "mightiestGovernor": "Mightiest Gov.",
       "tools": "Tools"
     }
   },
@@ -139,7 +140,6 @@
         "activityConfiguration": "Activity Configuration",
         "activityConfigurationHint": "Enable or disable each activity, configure participation mode and tiebreaker settings",
         "participationMode": "Participation Mode",
-        "participationModeHint": "Players simply confirm participation, no position required",
         "participationPoints": "Points for participation",
         "positionRangeError": "Minimum position cannot be greater than maximum position",
         "created": "Point rule created successfully",
@@ -258,15 +258,13 @@
   "dashboard": {
     "noActivitiesThisWeek": "No activities available this week",
     "totalPoints": "total points",
-    "weeklyBreakdown": "Weekly Breakdown",
     "pointsShort": "pts",
     "currentWeek": "Current Week",
     "lastWeek": "Last Week",
     "weeksAgo": "weeks ago"
   },
   "activitiesDetails": {
-    "title": "Activities Details",
-    "subtitle": "Weekly breakdown for all users"
+    "title": "Activities Details"
   },
   "common": {
     "points": "points",
@@ -349,6 +347,14 @@
   "tools": {
     "gemCalcDesc": "Calculate the score gain from equipping a gem on your commander."
   },
+  "mightiestGovernor": {
+    "title": "Mightiest Governor",
+    "subtitle": "Registration costs by rank",
+    "description": "To participate in the Mightiest Governor event, players must spend score points. The higher the target rank, the higher the cost.",
+    "rank": "Rank",
+    "cost": "Cost",
+    "notice": "The DKP system is under development. The costs shown are indicative and may change."
+  },
   "gemCalculator": {
     "title": "Gem Calculator",
     "back": "Back",
@@ -358,8 +364,8 @@
     "troopPikemen": "Pikemen",
     "troopCavalry": "Cavalry",
     "troopTier": "Troop Tier",
-    "legionSize": "Legion Size",
-    "legionSizeHint": "Number of units in your legion (max 500,000)",
+    "troopSize": "Troop Size",
+    "troopSizeHint": "Number of troops (max 500,000)",
     "healthBonus": "Health Bonus (%)",
     "mightAttack": "Might Attack (%)",
     "mightDefense": "Might Defense (%)",
@@ -417,8 +423,7 @@
       "wrongAnswer": "Incorrect answer.",
       "wrongAnswerRemaining": "{{count}} attempt(s) remaining.",
       "locked": "Account locked until {{time}}.",
-      "passwordTooShort": "Password must be at least 6 characters.",
-      "passwordMismatch": "Passwords do not match."
+      "passwordTooShort": "Password must be at least 6 characters."
     }
   },
   "accountSettings": {
@@ -458,8 +463,7 @@
       "auto": "Auto (system)",
       "glass": "Glass Light",
       "glassDark": "Glass Dark",
-      "highContrast": "High Contrast",
-      "success": "Appearance updated"
+      "highContrast": "High Contrast"
     }
   },
   "discord": {

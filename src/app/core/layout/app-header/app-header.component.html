@@ -37,20 +37,20 @@
 
         <!-- Navigation based on role -->
         @if (authService.isSuperAdmin()) {
-          <button mat-menu-item routerLink="/super-admin" routerLinkActive="active">
+          <button mat-menu-item routerLink="/app/super-admin" routerLinkActive="active">
             <mat-icon>dashboard</mat-icon>
             <span>{{ 'nav.superAdminDashboard' | translate }}</span>
           </button>
         }
 
         @if (authService.isAdmin()) {
-          <button mat-menu-item routerLink="/alliance-settings" routerLinkActive="active">
+          <button mat-menu-item routerLink="/app/alliance-settings" routerLinkActive="active">
             <mat-icon>settings</mat-icon>
             <span>{{ 'nav.allianceSettings' | translate }}</span>
           </button>
         }
 
-        <button mat-menu-item routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <button mat-menu-item routerLink="/app" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <mat-icon>home</mat-icon>
           <span>{{ 'nav.home' | translate }}</span>
         </button>

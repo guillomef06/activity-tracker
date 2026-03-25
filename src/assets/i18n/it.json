@@ -6,6 +6,7 @@
     "tabs": {
       "submit": "Invia attività",
       "leaderboard": "Classifica",
+      "mightiestGovernor": "Gov. + Potente",
       "tools": "Strumenti"
     }
   },
@@ -139,7 +140,6 @@
         "activityConfiguration": "Configurazione attività",
         "activityConfigurationHint": "Abilita o disabilita ogni attività, configura la modalità partecipazione e il tiebreaker",
         "participationMode": "Modalità Partecipazione",
-        "participationModeHint": "I giocatori confermano semplicemente la partecipazione, senza posizione richiesta",
         "participationPoints": "Punti per la partecipazione",
         "positionRangeError": "La posizione minima non può essere maggiore della posizione massima",
         "created": "Regola punti creata con successo",
@@ -258,15 +258,13 @@
   "dashboard": {
     "noActivitiesThisWeek": "Nessuna attività disponibile questa settimana",
     "totalPoints": "punti totali",
-    "weeklyBreakdown": "Dettaglio Settimanale",
     "pointsShort": "pts",
     "currentWeek": "Settimana Corrente",
     "lastWeek": "Settimana Scorsa",
     "weeksAgo": "settimane fa"
   },
   "activitiesDetails": {
-    "title": "Dettagli Attività",
-    "subtitle": "Riepilogo settimanale per tutti gli utenti"
+    "title": "Dettagli Attività"
   },
   "common": {
     "points": "punti",
@@ -349,6 +347,14 @@
   "tools": {
     "gemCalcDesc": "Calcola il guadagno di punteggio equipaggiando una gemma sul tuo comandante."
   },
+  "mightiestGovernor": {
+    "title": "Mightiest Governor",
+    "subtitle": "Costi di iscrizione per rango",
+    "description": "Per partecipare all'evento Mightiest Governor, i giocatori devono spendere punti punteggio. Più alto è il rango target, maggiore è il costo.",
+    "rank": "Rango",
+    "cost": "Costo",
+    "notice": "Il sistema DKP è in fase di sviluppo. I costi mostrati sono indicativi e potrebbero cambiare."
+  },
   "gemCalculator": {
     "title": "Calcolatore di Gemme",
     "back": "Indietro",
@@ -358,8 +364,8 @@
     "troopPikemen": "Picchieri",
     "troopCavalry": "Cavalleria",
     "troopTier": "Tier truppa",
-    "legionSize": "Dimensione della legione",
-    "legionSizeHint": "Numero di unità nella tua legione (max 500 000)",
+    "troopSize": "Dimensione della truppa",
+    "troopSizeHint": "Numero di truppe (max 500 000)",
     "healthBonus": "Bonus Salute (%)",
     "mightAttack": "Might Attack (%)",
     "mightDefense": "Might Defense (%)",
@@ -417,8 +423,7 @@
       "wrongAnswer": "Risposta errata.",
       "wrongAnswerRemaining": "{{count}} tentativo/i rimanente/i.",
       "locked": "Account bloccato fino alle {{time}}.",
-      "passwordTooShort": "La password deve contenere almeno 6 caratteri.",
-      "passwordMismatch": "Le password non corrispondono."
+      "passwordTooShort": "La password deve contenere almeno 6 caratteri."
     }
   },
   "accountSettings": {
@@ -458,8 +463,7 @@
       "auto": "Auto (sistema)",
       "glass": "Glass Chiaro",
       "glassDark": "Glass Scuro",
-      "highContrast": "Alto Contrasto",
-      "success": "Aspetto aggiornato"
+      "highContrast": "Alto Contrasto"
     }
   },
   "discord": {
