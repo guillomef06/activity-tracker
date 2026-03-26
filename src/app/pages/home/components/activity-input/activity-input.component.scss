@@ -1,3 +1,5 @@
+@use '../../../../../styles/design-tokens' as tokens;
+
 .form-section {
   max-width: 600px;
   margin: 0 auto;
@@ -67,7 +69,7 @@ form {
   }
 }
 
-@media (max-width: 599px) {
+@media (max-width: tokens.$bp-xs-max) {
   mat-card-subtitle {
     display: none;
   }

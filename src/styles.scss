@@ -408,6 +408,48 @@ input:-webkit-autofill:active {
   }
 }
 
+// ── Danger/destructive buttons — M3-native alternative to color="warn" ───────
+// color="warn" ne génère pas de styles en M3 sans le mixin backwards-compat.
+// Cette classe applique directement les tokens error du thème courant.
+button.btn-danger {
+  // mat-raised-button (loading-button)
+  --mat-button-protected-container-color: var(--mat-sys-error);
+  --mat-button-protected-label-text-color: var(--mat-sys-on-error);
+  // mat-icon-button
+  --mat-icon-button-icon-color: var(--mat-sys-error);
+  // mat-button (text button)
+  --mat-button-text-label-text-color: var(--mat-sys-error);
+}
+
+// ── Full-width form submit buttons (centralized — avoids duplication across auth pages) ──
+button.submit-button {
+  width: 100%;
+  height: 48px;
+  font-size: 1rem;
+}
+
+// ── Tables — centralized styles (évite la duplication par composant) ─────────
+// Les composants ne doivent PAS redéfinir background-color ou font-weight sur th.
+.mat-mdc-table {
+  th.mat-mdc-header-cell {
+    font-weight: 600;
+    background-color: var(--mat-sys-surface-variant);
+  }
+}
+
+// Home tabs — full-height layout (::ng-deep forbidden, global override required)
+.home-tabs {
+  .mat-mdc-tab-body-wrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .mat-mdc-tab-body-content {
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
 // Import Excel tab — hide subscript wrapper on inline player-select form fields
 .player-select .mat-mdc-form-field-subscript-wrapper {
   display: none;
@@ -458,13 +500,19 @@ html.theme-dark {
 
 // ─── Glassmorphism theme ───────────────────────────────────────────────────
 // Suit automatiquement le mode light/dark de l'OS — effect verre par-dessus.
-// Tunable via CSS custom properties :
-//   --glass-blur          intensité du flou
-//   --glass-saturation    boost de saturation derrière le verre
-//   --glass-card-bg       fond des cards (rgba)
-//   --glass-card-border   bordure des cards (rgba)
-//   --glass-card-shadow   ombre des cards
-//   --glass-page-bg       fond de page (gradient)
+//
+// Backgrounds gérés via tokens Material natifs (pas de var intermédiaire) :
+//   --mat-card-elevated-container-color
+//   --mat-expansion-container-background-color
+//   --mat-dialog-container-color
+//   --mat-menu-container-color
+//
+// CSS vars restantes (pas de token Material équivalent) :
+//   --glass-blur          intensité du flou backdrop-filter
+//   --glass-saturation    boost de saturation backdrop-filter
+//   --glass-card-border   bordure (pas de token Material pour border)
+//   --glass-card-shadow   ombre cards
+//   --glass-page-bg       fond de page (body background)
 
 // ── Variant LIGHT (défaut) ─────────────────────────────────────────────────
 html.theme-glass {
@@ -473,12 +521,23 @@ html.theme-glass {
 
   --glass-blur: #{glass.$glass-blur};
   --glass-saturation: #{glass.$glass-saturation};
-  --glass-card-bg: #{glass.$glass-light-card-bg};
   --glass-card-border: #{glass.$glass-light-card-border};
   --glass-card-shadow: #{glass.$glass-light-card-shadow};
-  --glass-dialog-bg: #{glass.$glass-light-dialog-bg};
-  --glass-menu-bg: #{glass.$glass-light-menu-bg};
   --glass-page-bg: #{glass.$glass-light-page-bg};
+
+  // ── Backgrounds via tokens Material ──────────────────────────────────────
+  --mat-card-elevated-container-color: #{glass.$glass-light-card-bg};
+  --mat-expansion-container-background-color: #{glass.$glass-light-card-bg};
+  --mat-dialog-container-color: #{glass.$glass-light-dialog-bg};
+  --mat-menu-container-color: #{glass.$glass-light-menu-bg};
+  --mat-table-background-color: transparent;
+
+  // ── Surface containers → glass-coherent (semi-transparent) ───────────────
+  --mat-sys-surface-variant: #{glass.$glass-light-surface-variant};
+  --mat-sys-surface-container-lowest: #{glass.$glass-light-surface-container-lowest};
+  --mat-sys-surface-container-low: #{glass.$glass-light-surface-container-low};
+  --mat-sys-surface-container-high: #{glass.$glass-light-surface-container-high};
+  --mat-sys-surface-container-highest: #{glass.$glass-light-surface-container-highest};
 
   // ── Page background ──────────────────────────────────────────────────────
   body {
@@ -486,30 +545,24 @@ html.theme-glass {
     background-attachment: fixed;
   }
 
-  // ── Cards ────────────────────────────────────────────────────────────────
-  // On alimente --card-shadow avec la valeur glass par défaut.
-  // Les rank cards peuvent toujours overrider --card-shadow localement.
+  // ── Glass effect — backdrop-filter + border uniquement ───────────────────
+  // Les backgrounds sont délégués aux tokens Material ci-dessus.
   .mat-mdc-card {
     --card-shadow: var(--glass-card-shadow);
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-    background: var(--glass-card-bg) !important;
     border: 1px solid var(--glass-card-border) !important;
   }
 
-  // ── Expansion panels ─────────────────────────────────────────────────────
   .mat-expansion-panel {
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-    background: var(--glass-card-bg) !important;
     border: 1px solid var(--glass-card-border) !important;
   }
 
-  // ── Dialogs ──────────────────────────────────────────────────────────────
   .mat-mdc-dialog-surface.mdc-dialog__surface {
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-    background: var(--glass-dialog-bg) !important;
     border: 1px solid var(--glass-card-border) !important;
     box-shadow: var(--glass-card-shadow) !important;
   }
@@ -518,11 +571,16 @@ html.theme-glass {
     background: #{glass.$glass-light-overlay-backdrop};
   }
 
-  // ── Menus dropdown ───────────────────────────────────────────────────────
   .mat-mdc-menu-panel {
     backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-    background: var(--glass-menu-bg) !important;
+    border: 1px solid var(--glass-card-border) !important;
+  }
+
+  .mat-mdc-select-panel {
+    --mat-select-panel-background-color: var(--mat-sys-surface-container-highest);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
     border: 1px solid var(--glass-card-border) !important;
   }
 }
@@ -532,13 +590,25 @@ html.theme-glass.theme-glass-dark {
   @include mat-sys-css-vars($all-palettes, $mat-sys-vars-dark);
   @include mat.all-component-colors($dark-theme);
 
-  --glass-card-bg: #{glass.$glass-dark-card-bg};
   --glass-card-border: #{glass.$glass-dark-card-border};
   --glass-card-shadow: #{glass.$glass-dark-card-shadow};
   --glass-card-shadow-hover: #{glass.$glass-dark-card-shadow-hover};
-  --glass-dialog-bg: #{glass.$glass-dark-dialog-bg};
-  --glass-menu-bg: #{glass.$glass-dark-menu-bg};
   --glass-page-bg: #{glass.$glass-dark-page-bg};
+
+  // ── Backgrounds via tokens Material ──────────────────────────────────────
+  --mat-card-elevated-container-color: #{glass.$glass-dark-card-bg};
+  --mat-expansion-container-background-color: #{glass.$glass-dark-card-bg};
+  --mat-dialog-container-color: #{glass.$glass-dark-dialog-bg};
+  --mat-menu-container-color: #{glass.$glass-dark-menu-bg};
+  --mat-select-panel-background-color: var(--mat-sys-surface-container-highest);
+  --mat-table-background-color: transparent;
+
+  // ── Surface containers → glass-coherent (semi-transparent) ───────────────
+  --mat-sys-surface-variant: #{glass.$glass-dark-surface-variant};
+  --mat-sys-surface-container-lowest: #{glass.$glass-dark-surface-container-lowest};
+  --mat-sys-surface-container-low: #{glass.$glass-dark-surface-container-low};
+  --mat-sys-surface-container-high: #{glass.$glass-dark-surface-container-high};
+  --mat-sys-surface-container-highest: #{glass.$glass-dark-surface-container-highest};
 }
 
 // ── High contrast theme ────────────────────────────────────────────────────

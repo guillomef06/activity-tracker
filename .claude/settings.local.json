@@ -71,7 +71,9 @@
       "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
       "Bash(grep -r \"from ''''\\\\.\\\\.\" \"D:/workplace/activity-tracker/activity-tracker/src/app\" --include=\"*.ts\" -l)",
       "mcp__plugin_supabase_supabase__get_logs",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(grep -n \"\"\"cost\"\": \"\"Cost\"\"\" src/assets/i18n/en.json src/assets/i18n/fr.json src/assets/i18n/it.json src/assets/i18n/es.json)",
+      "Bash(grep -n \"\"\"cost\"\"\" src/assets/i18n/en.json src/assets/i18n/fr.json src/assets/i18n/it.json src/assets/i18n/es.json)"
     ]
   }
 }

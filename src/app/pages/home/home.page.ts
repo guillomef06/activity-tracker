@@ -11,6 +11,7 @@ import { ActivityInputComponent } from './components/activity-input/activity-inp
 import { ActivitiesDetailsComponent } from './components/activities-details/activities-details.component';
 import { ToolsHubComponent } from './components/tools-hub/tools-hub.component';
 import { MightiestGovernorComponent } from './components/mightiest-governor/mightiest-governor.component';
+import { SwipeTabsDirective } from '@shared/directives/swipe-tabs/swipe-tabs.directive';
 
 @Component({
   selector: 'app-home-page',
@@ -23,6 +24,7 @@ import { MightiestGovernorComponent } from './components/mightiest-governor/migh
     ActivitiesDetailsComponent,
     ToolsHubComponent,
     MightiestGovernorComponent,
+    SwipeTabsDirective,
   ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',

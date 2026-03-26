@@ -6,8 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -28,8 +26,6 @@ import type { DiscordWebhook } from '@app/shared/models';
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
-    MatTableModule,
-    MatTooltipModule,
     MatDialogModule,
     TranslateModule,
     LoadingButtonComponent,
@@ -54,7 +50,6 @@ export class DiscordTabComponent implements OnInit {
   protected readonly editingWebhook = signal<DiscordWebhook | null>(null);
   protected readonly isAddingChannel = signal(false);
   protected readonly selectedWebhookId = signal<string>('');
-  protected readonly webhookColumns: string[] = ['channelName', 'actions'];
 
   protected readonly webhookForm: FormGroup = this.fb.group({
     channel_name: ['', [Validators.required, Validators.maxLength(100)]],

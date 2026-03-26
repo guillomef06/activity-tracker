@@ -1,3 +1,5 @@
+@use '../../../../../styles/design-tokens' as tokens;
+
 .tab-content {
   margin: 1rem 0;
 }
@@ -58,7 +60,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: tokens.$bp-xs) {
   .participation-row {
     flex-direction: column;
     align-items: flex-start;
@@ -150,11 +152,6 @@
 .point-rules-table {
   width: 100%;
 
-  th {
-    font-weight: 600;
-    background-color: var(--mat-sys-surface-variant);
-  }
-
   td,
   th {
     padding: 1rem;
@@ -186,7 +183,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: tokens.$bp-md) {
   .participation-row {
     .points-field {
       width: 100%;

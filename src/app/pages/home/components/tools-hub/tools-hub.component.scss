@@ -1,3 +1,5 @@
+@use '../../../../../styles/design-tokens' as tokens;
+
 // ── Tool grid ──────────────────────────────────────────────────────────────
 .tools-grid {
   display: grid;
@@ -76,7 +78,7 @@
     gap: 0.5rem;
 
     // Desktop : titre centré grâce au spacer qui équilibre le bouton
-    @media (min-width: 600px) {
+    @media (min-width: tokens.$bp-sm) {
       .tool-view__spacer {
         width: 40px; // même largeur que mat-icon-button
         flex-shrink: 0;
@@ -84,7 +86,7 @@
     }
 
     // Mobile : titre à droite du bouton, pas de centrage
-    @media (max-width: 599px) {
+    @media (max-width: tokens.$bp-xs-max) {
       justify-content: space-between;
 
       .tool-view__spacer {
@@ -94,7 +96,7 @@
   }
 
   &__title {
-    @media (min-width: 600px) {
+    @media (min-width: tokens.$bp-sm) {
       flex: 1;
       text-align: center;
     }
