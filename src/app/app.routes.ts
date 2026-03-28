@@ -13,22 +13,22 @@ export const routes: Routes = [
   {
     path: 'login',
     canActivate: [guestGuard],
-    loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage),
+    loadComponent: () => import('./pages/auth/login/login.page').then(m => m.LoginPage),
   },
   {
     path: 'signup',
     canActivate: [guestGuard],
-    loadComponent: () => import('./pages/signup/signup.page').then(m => m.SignupPage),
+    loadComponent: () => import('./pages/auth/signup/signup.page').then(m => m.SignupPage),
   },
   {
     path: 'join',
     canActivate: [guestGuard],
-    loadComponent: () => import('./pages/join/join.page').then(m => m.JoinPage),
+    loadComponent: () => import('./pages/auth/join/join.page').then(m => m.JoinPage),
   },
   {
     path: 'account-recovery',
     canActivate: [guestGuard],
-    loadComponent: () => import('./pages/account-recovery/account-recovery.page').then(m => m.AccountRecoveryPage),
+    loadComponent: () => import('./pages/auth/account-recovery/account-recovery.page').then(m => m.AccountRecoveryPage),
   },
 
   // Protected routes (require authentication)
@@ -62,17 +62,17 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             loadComponent: () =>
-              import('./pages/super-admin-dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage),
+              import('./pages/super-admin/dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage),
           },
           {
             path: 'alliances',
             loadComponent: () =>
-              import('./pages/super-admin-alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage),
+              import('./pages/super-admin/alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage),
           },
           {
             path: 'users',
             loadComponent: () =>
-              import('./pages/super-admin-users/super-admin-users.page').then(m => m.SuperAdminUsersPage),
+              import('./pages/super-admin/users/super-admin-users.page').then(m => m.SuperAdminUsersPage),
           },
         ],
       },

@@ -37,7 +37,12 @@
                 >
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button class="btn-danger" (click)="deleteWebhook(w)">
+                <button
+                  mat-icon-button
+                  class="btn-danger"
+                  (click)="deleteWebhook(w)"
+                  [attr.aria-label]="'discord.deleteChannel' | translate"
+                >
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>

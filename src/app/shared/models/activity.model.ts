@@ -9,7 +9,7 @@
 export interface Activity {
   id: string;
   userId: string;
-  userName: string;
+  displayName: string;
   activityType: string;
   position: number | null; // null when participation_mode is active
   points: number;
@@ -66,7 +66,7 @@ export interface WeeklyScore {
  */
 export interface UserScore {
   userId: string;
-  userName: string;
+  displayName: string;
   weeklyScores: WeeklyScore[];
   sixWeekTotal: number;
 }

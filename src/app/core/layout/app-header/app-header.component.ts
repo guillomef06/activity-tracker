@@ -47,18 +47,17 @@ export class AppHeaderComponent {
 
   protected imageBaseUrl: string;
 
-  /** Combined display: [tag]DisplayName or AllianceName DisplayName or just DisplayName */
-  protected readonly headerIdentity = computed(() => {
-    const profile = this.authService.userProfile();
+  /** Alliance tag or name in brackets — hidden on narrow screens */
+  protected readonly headerTag = computed(() => {
     const alliance = this.allianceService.alliance();
-    const displayName = profile?.display_name ?? '';
+    if (alliance?.tag) return `[${alliance.tag}]`;
+    if (alliance?.name) return `[${alliance.name}]`;
+    return null;
+  });
 
-    if (alliance?.tag) {
-      return `[${alliance.tag}] ${displayName}`;
-    } else if (alliance?.name) {
-      return `[${alliance.name}] ${displayName}`;
-    }
-    return displayName;
+  /** Display name only */
+  protected readonly headerDisplayName = computed(() => {
+    return this.authService.userProfile()?.display_name ?? '';
   });
 
   constructor() {

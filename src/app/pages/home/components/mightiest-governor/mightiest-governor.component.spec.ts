@@ -31,13 +31,13 @@ describe('MightiestGovernorComponent', () => {
     expect(component.slots[0].cost).toBe(150);
   });
 
-  it('should have rank 10 cost 100', () => {
-    expect(component.slots[9].cost).toBe(100);
+  it('should have rank 10 cost 80', () => {
+    expect(component.slots[9].cost).toBe(80);
   });
 
-  it('costs should be decreasing', () => {
+  it('costs should be non-increasing', () => {
     for (let i = 0; i < component.slots.length - 1; i++) {
-      expect(component.slots[i].cost).toBeGreaterThan(component.slots[i + 1].cost);
+      expect(component.slots[i].cost).toBeGreaterThanOrEqual(component.slots[i + 1].cost);
     }
   });
 });

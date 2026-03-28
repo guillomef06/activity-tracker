@@ -1,5 +1,5 @@
 import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
-
+import { from } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -18,6 +18,7 @@ import {
   passwordMatchValidator,
   createFieldErrorSignal,
   createFieldValidSignal,
+  usernameAvailableValidator,
 } from '@app/shared/utils/form-validation.utils';
 
 @Component({
@@ -53,7 +54,16 @@ export class SignupPage {
 
   protected readonly signupForm: FormGroup = this.fb.group(
     {
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+          Validators.pattern(/^[a-zA-Z0-9_-]+$/),
+        ],
+        [usernameAvailableValidator(u => from(this.authService.checkUsernameAvailable(u)))],
+      ],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
@@ -73,7 +83,9 @@ export class SignupPage {
   }
 
   // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username', this.destroyRef);
+  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username', this.destroyRef, undefined, {
+    pattern: 'auth.errors.usernameInvalidChars',
+  });
   protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName', this.destroyRef);
   protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName', this.destroyRef);
   protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
@@ -87,7 +99,7 @@ export class SignupPage {
   protected readonly recoveryAnswerError = createFieldErrorSignal(this.signupForm, 'recoveryAnswer', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {
-    if (this.signupForm.invalid || this.isLoading()) {
+    if (this.signupForm.invalid || this.signupForm.pending || this.isLoading()) {
       this.signupForm.markAllAsTouched();
       return;
     }

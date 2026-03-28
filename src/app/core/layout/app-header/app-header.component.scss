@@ -35,7 +35,6 @@ $header-dot-border: 2px;
   padding: 0 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
   position: relative;
   box-shadow: 0 2px 16px $header-shadow;
 
@@ -123,14 +122,32 @@ $header-dot-border: 2px;
 .user-section {
   display: flex;
   align-items: center;
-  gap: 1rem;
 }
 
-.user-identity {
+.user-tag {
   font-size: 0.875rem;
   font-weight: 500;
   color: $header-text-user;
   white-space: nowrap;
+
+  // Hide the tag on narrow screens to prevent header overflow
+  @media (max-width: 400px) {
+    display: none;
+  }
+}
+
+.user-display-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $header-text-user;
+  white-space: nowrap;
+
+  @media (max-width: 400px) {
+    font-size: 0.75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+  }
 }
 
 .user-section button[mat-icon-button] {
