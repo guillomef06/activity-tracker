@@ -1,3 +1,5 @@
+@use '../../../styles/design-tokens' as tokens;
+
 .super-admin-alliances {
   padding: 1rem;
   max-width: 1400px;
@@ -83,11 +85,6 @@
 .alliances-table {
   width: 100%;
 
-  th {
-    font-weight: 600;
-    background-color: var(--mat-sys-surface-variant);
-  }
-
   td,
   th {
     padding: 1rem;
@@ -164,7 +161,7 @@
 }
 
 // Mobile responsiveness
-@media (max-width: 768px) {
+@media (max-width: tokens.$bp-md) {
   .super-admin-alliances {
     padding: 1rem;
   }

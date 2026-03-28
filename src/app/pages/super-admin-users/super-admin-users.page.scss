@@ -1,3 +1,5 @@
+@use '../../../styles/design-tokens' as tokens;
+
 .super-admin-users {
   padding: 1rem;
   max-width: 1400px;
@@ -83,11 +85,6 @@
 .users-table {
   width: 100%;
 
-  th {
-    font-weight: 600;
-    background-color: var(--mat-sys-surface-variant);
-  }
-
   td,
   th {
     padding: 1rem;
@@ -162,7 +159,7 @@
 }
 
 // Mobile responsiveness
-@media (max-width: 768px) {
+@media (max-width: tokens.$bp-md) {
   .super-admin-users {
     padding: 1rem;
   }

@@ -16,7 +16,8 @@
       <div class="mg-table">
         <div class="mg-table-header">
           <span>{{ 'mightiestGovernor.rank' | translate }}</span>
-          <span>{{ 'mightiestGovernor.cost' | translate }}</span>
+          <span class="header-center">{{ 'mightiestGovernor.weeklyTarget' | translate }}</span>
+          <span class="header-right">{{ 'mightiestGovernor.cost' | translate }}</span>
         </div>
 
         @for (slot of slots; track trackByRank($index, slot)) {
@@ -32,6 +33,7 @@
                 <span class="rank-number">{{ slot.rank }}</span>
               }
             </span>
+            <span class="mg-weekly-target">{{ slot.weeklyTarget }}M</span>
             <span class="mg-cost">{{ slot.cost }} pts</span>
           </div>
         }

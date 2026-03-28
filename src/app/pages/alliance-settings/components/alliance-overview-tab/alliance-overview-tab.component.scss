@@ -1,3 +1,5 @@
+@use '../../../../../styles/design-tokens' as tokens;
+
 .section-card {
   margin: 1rem 0;
 }
@@ -68,7 +70,7 @@ form {
   gap: 0.5rem;
 
   mat-expansion-panel {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--card-shadow);
 
     &.mat-expanded {
       margin: 0.5rem 0;
@@ -112,7 +114,7 @@ form {
   }
 
   // Mobile: hide badges in collapsed header, show only when expanded
-  @media (max-width: 768px) {
+  @media (max-width: tokens.$bp-md) {
     mat-expansion-panel:not(.mat-expanded) .invitation-badges {
       display: none;
     }
@@ -239,7 +241,7 @@ mat-chip {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: tokens.$bp-md) {
   .invitation-form {
     flex-direction: column;
 

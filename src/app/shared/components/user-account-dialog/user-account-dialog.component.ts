@@ -14,6 +14,7 @@ import { LanguageService, type SupportedLanguage } from '@app/core/services/lang
 import { ThemeService, type ColorScheme } from '@app/core/services/theme.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
+import { SwipeTabsDirective } from '@app/shared/directives/swipe-tabs/swipe-tabs.directive';
 import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
 import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,6 +33,7 @@ import { TranslateService } from '@ngx-translate/core';
     MatDividerModule,
     TranslateModule,
     LoadingButtonComponent,
+    SwipeTabsDirective,
   ],
   templateUrl: './user-account-dialog.component.html',
   styleUrl: './user-account-dialog.component.scss',

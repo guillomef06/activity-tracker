@@ -21,6 +21,14 @@ $glass-light-page-bg:
   radial-gradient(ellipse at 60% 90%, rgba(0, 116, 233, 0.2) 0%, transparent 50%),
   linear-gradient(135deg, #b8cef8 0%, #cbb8f8 50%, #b8cef8 100%);
 
+// Surface containers — overrides --mat-sys-surface-* so every component using
+// these tokens (tables, form rows, code blocks…) stays glass-coherent.
+$glass-light-surface-variant: rgba(255, 255, 255, 0.28);
+$glass-light-surface-container-lowest: rgba(255, 255, 255, 0.15);
+$glass-light-surface-container-low: rgba(255, 255, 255, 0.22);
+$glass-light-surface-container-high: rgba(255, 255, 255, 0.4);
+$glass-light-surface-container-highest: rgba(255, 255, 255, 0.5);
+
 // ── Dark variant ──────────────────────────────────────────────────────────────
 $glass-dark-card-bg: rgba(255, 255, 255, 0.1);
 $glass-dark-card-border: rgba(255, 255, 255, 0.14);
@@ -37,3 +45,10 @@ $glass-dark-page-bg:
   radial-gradient(ellipse at 85% 20%, rgba(120, 40, 200, 0.25) 0%, transparent 50%),
   radial-gradient(ellipse at 60% 90%, rgba(0, 116, 233, 0.2) 0%, transparent 50%),
   linear-gradient(135deg, #02040a 0%, #06030f 50%, #02040a 100%);
+
+// Surface containers — dark glass equivalents
+$glass-dark-surface-variant: rgba(255, 255, 255, 0.08);
+$glass-dark-surface-container-lowest: rgba(255, 255, 255, 0.05);
+$glass-dark-surface-container-low: rgba(255, 255, 255, 0.07);
+$glass-dark-surface-container-high: rgba(255, 255, 255, 0.12);
+$glass-dark-surface-container-highest: rgba(255, 255, 255, 0.16);

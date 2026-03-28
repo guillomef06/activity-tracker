@@ -352,6 +352,7 @@
     "subtitle": "Registration costs by rank",
     "description": "To participate in the Mightiest Governor event, players must spend score points. The higher the target rank, the higher the cost.",
     "rank": "Rank",
+    "weeklyTarget": "Weekly Target",
     "cost": "Cost",
     "notice": "The DKP system is under development. The costs shown are indicative and may change."
   },

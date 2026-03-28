@@ -8,63 +8,42 @@
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Webhooks table -->
+      <!-- Webhooks list -->
       @if (webhooks().length > 0) {
-        <table mat-table [dataSource]="webhooks()" class="data-table">
-          <ng-container matColumnDef="channelName">
-            <th mat-header-cell *matHeaderCellDef>{{ 'discord.channelName' | translate }}</th>
-            <td mat-cell *matCellDef="let w">
+        <div class="webhook-list">
+          <div class="webhook-list__header">
+            <span>{{ 'discord.channelName' | translate }}</span>
+            <span>{{ 'common.actions' | translate }}</span>
+          </div>
+          @for (w of webhooks(); track w.id) {
+            <div class="webhook-row" [class.editing-row]="editingWebhook()?.id === w.id">
               <div class="channel-info">
                 <span class="channel-name">
                   <mat-icon class="discord-icon">tag</mat-icon>
-                  {{ w.channel_name }}
+                  <span class="channel-name__text">{{ w.channel_name }}</span>
                 </span>
                 @if (w.default_message) {
                   <span class="default-message-preview">{{ w.default_message }}</span>
                 }
               </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
-            <td mat-cell *matCellDef="let w">
               <div class="row-actions">
-                <button
-                  mat-icon-button
-                  class="action-send"
-                  (click)="quickSend(w)"
-                  [matTooltip]="'discord.sendMessage' | translate"
-                >
+                <button mat-icon-button class="action-send" (click)="quickSend(w)">
                   <mat-icon>send</mat-icon>
                 </button>
                 <button
                   mat-icon-button
                   (click)="startEdit(w)"
-                  [matTooltip]="'discord.editChannel' | translate"
                   [color]="editingWebhook()?.id === w.id ? 'primary' : undefined"
                 >
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="deleteWebhook(w)"
-                  [matTooltip]="'discord.deleteChannel' | translate"
-                >
+                <button mat-icon-button class="btn-danger" (click)="deleteWebhook(w)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="webhookColumns"></tr>
-          <tr
-            mat-row
-            *matRowDef="let row; columns: webhookColumns"
-            [class.editing-row]="editingWebhook()?.id === row.id"
-          ></tr>
-        </table>
+            </div>
+          }
+        </div>
       } @else if (!isLoading()) {
         <p class="no-data">{{ 'discord.noChannels' | translate }}</p>
       }

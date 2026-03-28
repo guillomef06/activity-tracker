@@ -1,3 +1,5 @@
+@use '../../../../../styles/design-tokens' as tokens;
+
 .import-tab {
   padding: 16px;
 }
@@ -221,7 +223,7 @@ tr.row-error {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: tokens.$bp-sm) {
   .import-tab {
     padding: 8px;
   }

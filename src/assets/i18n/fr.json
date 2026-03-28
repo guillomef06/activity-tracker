@@ -352,6 +352,7 @@
     "subtitle": "Coûts d'inscription par rang",
     "description": "Pour participer à l'event Mightiest Governor, les joueurs doivent dépenser des points de score. Plus le rang visé est élevé, plus le coût est important.",
     "rank": "Rang",
+    "weeklyTarget": "Objectif semaine",
     "cost": "Coût",
     "notice": "Le système DKP est en cours de développement. Les coûts affichés sont indicatifs et peuvent évoluer."
   },
