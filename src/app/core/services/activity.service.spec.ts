@@ -29,7 +29,7 @@ describe('ActivityService', () => {
       weekStart: new Date(),
       weekEnd: new Date(),
       totalPoints: acts.reduce((s, a) => s + a.points, 0),
-      activities: acts.map(a => ({ ...a, id: '1', userName: 'x', date: new Date(), timestamp: 0 })),
+      activities: acts.map(a => ({ ...a, id: '1', displayName: 'x', date: new Date(), timestamp: 0 })),
       conflictingPositions: undefined,
     }));
   };
@@ -78,7 +78,7 @@ describe('ActivityService', () => {
     it('should sort by tiebreaker activity points when sixWeekTotal is equal', () => {
       const userA: UserScore = {
         userId: 'a',
-        userName: 'Alice',
+        displayName: 'Alice',
         sixWeekTotal: 30,
         weeklyScores: makeWeeklyScores([
           [{ activityType: 'legion', points: 20, position: 1, userId: 'a' }],
@@ -87,7 +87,7 @@ describe('ActivityService', () => {
       };
       const userB: UserScore = {
         userId: 'b',
-        userName: 'Bob',
+        displayName: 'Bob',
         sixWeekTotal: 30,
         weeklyScores: makeWeeklyScores([
           [{ activityType: 'legion', points: 10, position: 3, userId: 'b' }],
@@ -132,8 +132,8 @@ describe('ActivityService', () => {
     it('should keep original order when no tiebreaker is configured', () => {
       allianceServiceMock.alliance.set(null);
 
-      const userA: UserScore = { userId: 'a', userName: 'Alice', sixWeekTotal: 30, weeklyScores: [] };
-      const userB: UserScore = { userId: 'b', userName: 'Bob', sixWeekTotal: 30, weeklyScores: [] };
+      const userA: UserScore = { userId: 'a', displayName: 'Alice', sixWeekTotal: 30, weeklyScores: [] };
+      const userB: UserScore = { userId: 'b', displayName: 'Bob', sixWeekTotal: 30, weeklyScores: [] };
 
       const sorted = [userA, userB].sort((a, b) => {
         const diff = b.sixWeekTotal - a.sixWeekTotal;

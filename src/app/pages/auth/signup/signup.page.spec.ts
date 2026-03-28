@@ -13,7 +13,10 @@ describe('SignupPage', () => {
   let fixture: ComponentFixture<SignupPage>;
 
   beforeEach(async () => {
-    const authServiceSpy = { signupAdmin: vi.fn() };
+    const authServiceSpy = {
+      signupAdmin: vi.fn(),
+      checkUsernameAvailable: vi.fn().mockResolvedValue(true),
+    };
 
     await TestBed.configureTestingModule({
       imports: [SignupPage, TranslateModule.forRoot()],
@@ -48,7 +51,9 @@ describe('SignupPage', () => {
       recoveryAnswer: 'Fluffy',
     });
 
-    expect(component['signupForm'].valid).toBe(true);
+    // Form may be PENDING due to async username validator — invalid must be false
+    // meaning all sync validators pass (required, minLength, pattern, passwordMatch)
+    expect(component['signupForm'].invalid).toBe(false);
   });
 
   it('should be invalid without recovery question and answer', () => {

@@ -30,7 +30,7 @@ export class ActivityService {
     return {
       id: db.id,
       userId: db.user_id,
-      userName: db.user_profiles.display_name,
+      displayName: db.user_profiles.display_name,
       activityType: db.activity_type,
       position: db.position,
       points: db.points,
@@ -250,13 +250,13 @@ export class ActivityService {
 
     const userScores: UserScore[] = [];
     userMap.forEach((activities, userId) => {
-      const userName = activities[0]?.userName || 'Unknown';
+      const displayName = activities[0]?.displayName || 'Unknown';
       const weeklyScores = this.calculateWeeklyScores(activities);
       const sixWeekTotal = weeklyScores.reduce((sum, week) => sum + week.totalPoints, 0);
 
       userScores.push({
         userId,
-        userName,
+        displayName,
         weeklyScores,
         sixWeekTotal,
       });

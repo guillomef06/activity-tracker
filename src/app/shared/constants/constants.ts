@@ -17,10 +17,6 @@ export const APP_CONSTANTS = {
     TOTAL_DAYS: 42, // 6 weeks * 7 days
   },
 
-  STORAGE_KEYS: {
-    USER_NAME: 'userName',
-  },
-
   ACTIVITY_TYPES: [
     {
       value: 'kvk prep',
@@ -59,14 +55,6 @@ export const APP_CONSTANTS = {
       availableWeeks: [1, 2, 3, 4, 5, 6],
     },
   ] as ActivityType[],
-
-  CHART_COLORS: [
-    { border: 'rgb(75, 192, 192)', background: 'rgba(75, 192, 192, 0.2)' }, // Turquoise
-    { border: 'rgb(255, 99, 132)', background: 'rgba(255, 99, 132, 0.2)' }, // Red
-    { border: 'rgb(54, 162, 235)', background: 'rgba(54, 162, 235, 0.2)' }, // Blue
-    { border: 'rgb(255, 206, 86)', background: 'rgba(255, 206, 86, 0.2)' }, // Yellow
-    { border: 'rgb(153, 102, 255)', background: 'rgba(153, 102, 255, 0.2)' }, // Purple
-  ] as const,
 } as const;
 
 /**
