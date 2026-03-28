@@ -1,5 +1,5 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
-
+import { from } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +19,7 @@ import {
   passwordMatchValidator,
   createFieldErrorSignal,
   createFieldValidSignal,
+  usernameAvailableValidator,
 } from '@app/shared/utils/form-validation.utils';
 
 @Component({
@@ -60,7 +61,16 @@ export class JoinPage implements OnInit {
   protected readonly joinForm: FormGroup = this.fb.group(
     {
       token: ['', [Validators.required, Validators.minLength(6)]],
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(30),
+          Validators.pattern(/^[a-zA-Z0-9_-]+$/),
+        ],
+        [usernameAvailableValidator(u => from(this.authService.checkUsernameAvailable(u)))],
+      ],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
@@ -89,7 +99,9 @@ export class JoinPage implements OnInit {
 
   // Reactive error signals (automatically update when form state changes)
   protected readonly tokenError = createFieldErrorSignal(this.joinForm, 'token', this.destroyRef);
-  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username', this.destroyRef);
+  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username', this.destroyRef, undefined, {
+    pattern: 'auth.errors.usernameInvalidChars',
+  });
   protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName', this.destroyRef);
   protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef);
   protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
@@ -136,7 +148,7 @@ export class JoinPage implements OnInit {
   }
 
   protected async onSubmit(): Promise<void> {
-    if (this.joinForm.invalid || this.isLoading()) {
+    if (this.joinForm.invalid || this.joinForm.pending || this.isLoading()) {
       this.joinForm.markAllAsTouched();
       return;
     }

@@ -3,10 +3,10 @@
  * Helper functions for form error handling with i18n
  */
 
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 import { Signal, signal, computed, DestroyRef } from '@angular/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { merge } from 'rxjs';
+import { merge, Observable, timer, switchMap, map, catchError, of, first } from 'rxjs';
 
 const DEFAULT_ERROR_KEYS: Record<string, string> = {
   required: 'errors.required',
@@ -17,6 +17,7 @@ const DEFAULT_ERROR_KEYS: Record<string, string> = {
   email: 'errors.email',
   pattern: 'errors.pattern',
   passwordMismatch: 'errors.passwordMismatch',
+  usernameTaken: 'auth.errors.usernameExists',
 };
 
 /**
@@ -42,6 +43,23 @@ export function getFormControlError(
   const errorMap = { ...DEFAULT_ERROR_KEYS, ...customErrorKeys };
   const firstErrorKey = Object.keys(control.errors)[0];
   return errorMap[firstErrorKey] ?? 'errors.pattern';
+}
+
+/**
+ * Async validator factory that checks username availability via a provided check function.
+ * Debounces 500ms to avoid flooding the backend on every keystroke.
+ */
+export function usernameAvailableValidator(checkFn: (username: string) => Observable<boolean>): AsyncValidatorFn {
+  return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    const value = control.value?.trim();
+    if (!value) return of(null);
+    return timer(500).pipe(
+      switchMap(() => checkFn(value)),
+      map(available => (available ? null : { usernameTaken: true })),
+      catchError(() => of(null)),
+      first()
+    );
+  };
 }
 
 /**

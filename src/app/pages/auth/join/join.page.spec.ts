@@ -13,7 +13,10 @@ describe('JoinPage', () => {
   let fixture: ComponentFixture<JoinPage>;
 
   beforeEach(async () => {
-    const authServiceSpy = { joinWithInvitation: vi.fn() };
+    const authServiceSpy = {
+      joinWithInvitation: vi.fn(),
+      checkUsernameAvailable: vi.fn().mockResolvedValue(true),
+    };
 
     await TestBed.configureTestingModule({
       imports: [JoinPage, TranslateModule.forRoot()],
@@ -48,7 +51,9 @@ describe('JoinPage', () => {
       recoveryAnswer: 'Paris',
     });
 
-    expect(component['joinForm'].valid).toBe(true);
+    // Form may be PENDING due to async username validator — invalid must be false
+    // meaning all sync validators pass (required, minLength, pattern, passwordMatch)
+    expect(component['joinForm'].invalid).toBe(false);
   });
 
   it('should be invalid without recovery question and answer', () => {

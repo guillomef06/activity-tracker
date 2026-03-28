@@ -464,4 +464,13 @@ export class AuthService {
   getUserId(): string | null {
     return this.currentUserSignal()?.id || null;
   }
+
+  /**
+   * Check if a username is available (not already taken).
+   * Calls a SECURITY DEFINER RPC accessible to anon — safe to call before signup.
+   */
+  async checkUsernameAvailable(username: string): Promise<boolean> {
+    const { data } = await this.supabase.rpc('check_username_available', { p_username: username });
+    return (data as boolean) ?? false;
+  }
 }

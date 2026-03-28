@@ -8,7 +8,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 const mockUserScores: UserScore[] = [
   {
     userId: 'u1',
-    userName: 'Alice',
+    displayName: 'Alice',
     sixWeekTotal: 120,
     weeklyScores: [
       {
@@ -19,7 +19,7 @@ const mockUserScores: UserScore[] = [
           {
             id: 'a1',
             userId: 'u1',
-            userName: 'Alice',
+            displayName: 'Alice',
             activityType: 'kvk-prep',
             position: 1,
             points: 30,

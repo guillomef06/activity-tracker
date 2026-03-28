@@ -35,7 +35,7 @@
     "createSuperAdmin": "Create Super Admin",
     "creating": "Creating...",
     "usernamePlaceholder": "Choose a unique username",
-    "usernameHint": "3-30 characters, used for login",
+    "usernameHint": "3-30 characters — letters, numbers, - and _ only",
     "displayNamePlaceholder": "Enter your full name",
     "displayNameHint": "Your name as it will appear to others",
     "allianceNamePlaceholder": "Enter your alliance name",
@@ -51,6 +51,7 @@
     "wantCreateAlliance": "Want to create an alliance?",
     "errors": {
       "usernameExists": "Username already exists",
+      "usernameInvalidChars": "Letters, numbers, - and _ only",
       "invalidCredentials": "Invalid username or password",
       "userNotFound": "User not found",
       "loginFailed": "Login failed. Please try again.",
