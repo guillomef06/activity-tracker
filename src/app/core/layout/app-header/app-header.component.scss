@@ -1,3 +1,5 @@
+@use '../../../../styles/design-tokens' as tokens;
+
 // ── Header color tokens (always dark navy, theme-independent) ──────────────
 $header-bg-start: #001b3f;
 $header-bg-mid: #002f65;
@@ -165,13 +167,13 @@ $header-dot-border: 2px;
 }
 
 // Mobile responsiveness
-@media (max-width: 1024px) {
+@media (max-width: tokens.$bp-header-collapse) {
   .subtitle {
     display: none;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: tokens.$bp-sm) {
   .app-header {
     padding: 0 0.5rem;
   }
@@ -189,7 +191,7 @@ $header-dot-border: 2px;
   z-index: 1000;
 }
 
-@media (min-width: 768px) {
+@media (min-width: tokens.$bp-md) {
   .header-content h1 {
     font-size: 2rem;
   }

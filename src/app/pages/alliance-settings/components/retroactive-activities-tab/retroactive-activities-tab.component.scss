@@ -1,3 +1,5 @@
+@use '../../../../../styles/design-tokens' as tokens;
+
 .retroactive-tab-container {
   padding: 1rem;
   max-width: 800px;
@@ -50,7 +52,7 @@ form {
   margin-top: 0.5rem;
 
   mat-icon {
-    color: var(--mat-sys-tertiary, #ffc107);
+    color: var(--mat-sys-tertiary);
   }
 
   .points-label {
@@ -61,7 +63,7 @@ form {
   .points-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--mat-sys-primary, #1976d2);
+    color: var(--mat-sys-primary);
   }
 }
 
@@ -77,7 +79,7 @@ form {
 }
 
 // Mobile responsiveness
-@media (max-width: 600px) {
+@media (max-width: tokens.$bp-sm) {
   .retroactive-tab-container {
     padding: 1rem;
   }

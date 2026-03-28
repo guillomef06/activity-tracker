@@ -1,3 +1,5 @@
+@use '../../../styles/design-tokens' as tokens;
+
 .super-admin-dashboard {
   padding: 1rem;
   max-width: 1400px;
@@ -203,7 +205,7 @@
 }
 
 // Mobile responsiveness
-@media (max-width: 768px) {
+@media (max-width: tokens.$bp-md) {
   .super-admin-dashboard {
     padding: 1rem;
   }

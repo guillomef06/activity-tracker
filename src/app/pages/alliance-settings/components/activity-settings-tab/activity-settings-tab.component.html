@@ -70,7 +70,7 @@
           <p>{{ 'alliance.settings.dangerZone.deleteAllActivitiesDescription' | translate }}</p>
         </div>
         <app-loading-button
-          color="warn"
+          buttonClass="btn-danger"
           icon="delete_forever"
           [text]="'alliance.settings.dangerZone.deleteAllActivities' | translate"
           [submitting]="isDeletingAll()"
@@ -193,6 +193,7 @@
               <td mat-cell *matCellDef="let rule">
                 <button
                   mat-icon-button
+                  class="btn-danger"
                   (click)="deletePointRule(rule.id)"
                   [disabled]="isLoading() || isSubmitting()"
                   [matTooltip]="'common.delete' | translate"

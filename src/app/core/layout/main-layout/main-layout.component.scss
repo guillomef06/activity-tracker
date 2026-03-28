@@ -1,3 +1,5 @@
+@use '../../../../styles/design-tokens' as tokens;
+
 .app-container {
   min-height: 100vh;
   display: flex;
@@ -6,10 +8,13 @@
 
 main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* Ajouter marge en bas sur desktop quand le footer est visible */
-@media (min-width: 1024px) {
+@media (min-width: tokens.$bp-header-collapse) {
   main {
     margin-bottom: 40px;
   }

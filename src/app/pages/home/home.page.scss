@@ -1,3 +1,12 @@
+// ── Host fills the remaining height passed down by main-layout ──────────────
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 // ── Tab navigation ─────────────────────────────────────────────────────────
 //
 // Tous les overrides passent par les CSS tokens Material M3 — aucun ::ng-deep.
@@ -32,6 +41,12 @@
   // Ripple
   --mat-tab-header-active-ripple-color: var(--mat-sys-primary);
   --mat-tab-header-inactive-ripple-color: var(--mat-sys-on-surface);
+
+  // ── Full-height layout ──────────────────────────────────────────────────
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   // ── Label icône + texte ─────────────────────────────────────────────────
   // .tab-label est dans notre template → encapsulation Angular OK, pas besoin de ::ng-deep

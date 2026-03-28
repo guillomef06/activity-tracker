@@ -14,6 +14,7 @@ import { ActivitySettingsTabComponent } from './components/activity-settings-tab
 import { RetroactiveActivitiesTabComponent } from './components/retroactive-activities-tab/retroactive-activities-tab.component';
 import { ImportExcelTabComponent } from './components/import-excel-tab/import-excel-tab.component';
 import { DiscordTabComponent } from './components/discord-tab/discord-tab.component';
+import { SwipeTabsDirective } from '@app/shared/directives/swipe-tabs/swipe-tabs.directive';
 
 @Component({
   selector: 'app-alliance-settings',
@@ -27,6 +28,7 @@ import { DiscordTabComponent } from './components/discord-tab/discord-tab.compon
     RetroactiveActivitiesTabComponent,
     ImportExcelTabComponent,
     DiscordTabComponent,
+    SwipeTabsDirective,
   ],
   templateUrl: './alliance-settings.page.html',
   styleUrl: './alliance-settings.page.scss',

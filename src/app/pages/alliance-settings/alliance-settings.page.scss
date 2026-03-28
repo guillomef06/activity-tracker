@@ -1,3 +1,5 @@
+@use '../../../styles/design-tokens' as tokens;
+
 .alliance-settings-container {
   padding: 1rem;
   max-width: 1200px;
@@ -42,7 +44,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: tokens.$bp-md) {
   .alliance-settings-container {
     padding: 1rem;
   }

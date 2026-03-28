@@ -11,7 +11,7 @@
   <button mat-button (click)="onCancel()">
     {{ data.cancelText || ('common.cancel' | translate) }}
   </button>
-  <button mat-raised-button (click)="onConfirm()" cdkFocusInitial>
+  <button mat-raised-button color="primary" (click)="onConfirm()" cdkFocusInitial>
     {{ data.confirmText || ('common.confirm' | translate) }}
   </button>
 </mat-dialog-actions>
