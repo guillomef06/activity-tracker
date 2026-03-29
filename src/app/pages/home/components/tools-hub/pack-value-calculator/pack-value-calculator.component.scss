@@ -1,0 +1,47 @@
+.pack-value-calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 1rem;
+}
+
+.calculator-description {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  margin: 0 0 16px;
+}
+
+.items-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.no-items-hint {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.add-item-btn {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.price-field {
+  width: 100%;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+
+  button {
+    flex: 1;
+    min-width: 120px;
+  }
+}

@@ -348,6 +348,51 @@
   "tools": {
     "gemCalcDesc": "Calcola il guadagno di punteggio equipaggiando una gemma sul tuo comandante."
   },
+  "packValue": {
+    "title": "Calcolatore Valore Pack",
+    "description": "Valuta il valore di un pacchetto di gioco",
+    "addItem": "Aggiungi oggetto",
+    "packPrice": "Prezzo del pack (Apex Coins)",
+    "calculate": "Calcola",
+    "reset": "Reimposta",
+    "noItems": "Aggiungi almeno un oggetto per calcolare",
+    "units": {
+      "hours": "Ore",
+      "qty": "Qtà"
+    },
+    "result": {
+      "title": "Risultato",
+      "tier": {
+        "terrible": "Pessimo",
+        "average": "Medio",
+        "good": "Buono",
+        "excellent": "Eccellente"
+      },
+      "breakdown": "Dettaglio"
+    },
+    "items": {
+      "speedUp": "Acceleratore",
+      "legendaryLightningCrystal": "Cristallo Fulmine Leggendario",
+      "legendaryMagmaCrystal": "Cristallo Magma Leggendario",
+      "fineGold": "Oro fino",
+      "silverSand": "Sabbia d'argento",
+      "copperSand": "Sabbia di rame",
+      "universalLegendaryHeroMedal": "Medaglia Eroe Leggendario Universale",
+      "forgingKit": "Kit di forgiatura (per 100)",
+      "planishingHammer": "Martello di placcatura",
+      "legendarySkillScroll": "Pergamena abilità leggendaria",
+      "techniquePoint": "Punto tecnica",
+      "epicGem": "Gemma epica",
+      "legendaryGem": "Gemma leggendaria",
+      "rawIron": "Ferro grezzo",
+      "insightPoint": "Punto intuizione",
+      "mountWhistle": "Fischio della cavalcatura",
+      "meteoriteSteel": "Acciaio meteorico",
+      "refinedIron": "Ferro raffinato",
+      "goldenKey": "Chiave dorata",
+      "torchOfEnlightenment": "Torcia dell'Illuminazione"
+    }
+  },
   "mightiestGovernor": {
     "title": "Mightiest Governor",
     "subtitle": "Costi di iscrizione per rango",

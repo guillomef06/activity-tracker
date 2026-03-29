@@ -1,0 +1,31 @@
+<mat-card class="result-card">
+  <mat-card-content>
+    <h3 class="result-title">{{ 'packValue.result.title' | translate }}</h3>
+
+    <div class="result-body">
+      <div class="result-summary">
+        <div class="tier-badge" [class]="tierDef().colorClass">
+          <mat-icon class="tier-icon">{{ tierDef().icon }}</mat-icon>
+          <span class="tier-label">{{ 'packValue.result.tier.' + result().tier | translate }}</span>
+        </div>
+
+        <div class="total-coins">
+          <span class="total-value">{{ result().totalApexCoins | number: '1.0-0' }} AC</span>
+          <span class="ratio-badge">×{{ result().valueRatio | number: '1.2-2' }}</span>
+        </div>
+      </div>
+
+      <div class="result-breakdown">
+        <h4 class="breakdown-title">{{ 'packValue.result.breakdown' | translate }}</h4>
+        <ul class="breakdown-list">
+          @for (item of result().breakdown; track item.nameKey) {
+            <li class="breakdown-item">
+              <span class="breakdown-name">{{ item.nameKey | translate }}</span>
+              <span class="breakdown-detail">{{ item.apexCoinsPerUnit | number: '1.0-2' }} × {{ item.quantity }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

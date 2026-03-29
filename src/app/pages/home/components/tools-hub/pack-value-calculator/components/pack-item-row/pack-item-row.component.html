@@ -1,0 +1,25 @@
+<div class="pack-item-row" [formGroup]="formGroup()">
+  <mat-form-field appearance="outline" class="item-select">
+    <mat-label>{{ 'packValue.items.speedUp' | translate }}</mat-label>
+    <mat-select formControlName="itemId">
+      @for (item of catalog(); track item.id) {
+        <mat-option [value]="item.id">{{ item.nameKey | translate }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="quantity-input">
+    <mat-label>{{ unitLabel | translate }}</mat-label>
+    <input matInput type="number" formControlName="quantity" min="1" />
+  </mat-form-field>
+
+  <button
+    mat-icon-button
+    type="button"
+    class="remove-btn"
+    [attr.aria-label]="'common.delete' | translate"
+    (click)="removed.emit()"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>
