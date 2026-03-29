@@ -348,6 +348,51 @@
   "tools": {
     "gemCalcDesc": "Calculate the score gain from equipping a gem on your commander."
   },
+  "packValue": {
+    "title": "Pack Value Calculator",
+    "description": "Evaluate the value of an in-game pack",
+    "addItem": "Add item",
+    "packPrice": "Pack price (Apex Coins)",
+    "calculate": "Calculate",
+    "reset": "Reset",
+    "noItems": "Add at least one item to calculate",
+    "units": {
+      "hours": "Hours",
+      "qty": "Qty"
+    },
+    "result": {
+      "title": "Result",
+      "tier": {
+        "terrible": "Terrible",
+        "average": "Average",
+        "good": "Good",
+        "excellent": "Excellent"
+      },
+      "breakdown": "Breakdown"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
   "mightiestGovernor": {
     "title": "Mightiest Governor",
     "subtitle": "Registration costs by rank",

@@ -4,8 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { GemCalculatorComponent } from './gem-calculator/gem-calculator.component';
+import { PackValueCalculatorComponent } from './pack-value-calculator/pack-value-calculator.component';
 
-type ToolId = 'gem-calculator';
+type ToolId = 'gem-calculator' | 'pack-value-calculator';
 
 interface Tool {
   id: ToolId;
@@ -16,7 +17,14 @@ interface Tool {
 
 @Component({
   selector: 'app-tools-hub',
-  imports: [MatButtonModule, MatCardModule, MatIconModule, TranslateModule, GemCalculatorComponent],
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    TranslateModule,
+    GemCalculatorComponent,
+    PackValueCalculatorComponent,
+  ],
   templateUrl: './tools-hub.component.html',
   styleUrl: './tools-hub.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +38,12 @@ export class ToolsHubComponent {
       icon: 'diamond',
       titleKey: 'gemCalculator.title',
       descKey: 'tools.gemCalcDesc',
+    },
+    {
+      id: 'pack-value-calculator',
+      icon: 'inventory_2',
+      titleKey: 'packValue.title',
+      descKey: 'packValue.description',
     },
   ];
 

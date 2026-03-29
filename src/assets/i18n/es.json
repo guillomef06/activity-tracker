@@ -348,6 +348,51 @@
   "tools": {
     "gemCalcDesc": "Calcula la ganancia de puntuación al equipar una gema en tu comandante."
   },
+  "packValue": {
+    "title": "Calculadora de Valor de Pack",
+    "description": "Evalúa el valor de un pack del juego",
+    "addItem": "Añadir objeto",
+    "packPrice": "Precio del pack (Apex Coins)",
+    "calculate": "Calcular",
+    "reset": "Restablecer",
+    "noItems": "Añade al menos un objeto para calcular",
+    "units": {
+      "hours": "Horas",
+      "qty": "Cant."
+    },
+    "result": {
+      "title": "Resultado",
+      "tier": {
+        "terrible": "Terrible",
+        "average": "Normal",
+        "good": "Bueno",
+        "excellent": "Excelente"
+      },
+      "breakdown": "Desglose"
+    },
+    "items": {
+      "speedUp": "Acelerador",
+      "legendaryLightningCrystal": "Cristal Rayo Legendario",
+      "legendaryMagmaCrystal": "Cristal Magma Legendario",
+      "fineGold": "Oro fino",
+      "silverSand": "Arena de plata",
+      "copperSand": "Arena de cobre",
+      "universalLegendaryHeroMedal": "Medalla de Héroe Legendario Universal",
+      "forgingKit": "Kit de forja (por 100)",
+      "planishingHammer": "Martillo de alisado",
+      "legendarySkillScroll": "Pergamino de habilidad legendario",
+      "techniquePoint": "Punto de técnica",
+      "epicGem": "Gema épica",
+      "legendaryGem": "Gema legendaria",
+      "rawIron": "Hierro crudo",
+      "insightPoint": "Punto de perspicacia",
+      "mountWhistle": "Silbato de montura",
+      "meteoriteSteel": "Acero meteórico",
+      "refinedIron": "Hierro refinado",
+      "goldenKey": "Llave dorada",
+      "torchOfEnlightenment": "Antorcha de la Iluminación"
+    }
+  },
   "mightiestGovernor": {
     "title": "Mightiest Governor",
     "subtitle": "Costes de inscripción por rango",
