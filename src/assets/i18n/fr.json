@@ -348,6 +348,51 @@
   "tools": {
     "gemCalcDesc": "Calculez le gain de score obtenu en équipant une gemme sur votre commandant."
   },
+  "packValue": {
+    "title": "Calculateur de valeur de pack",
+    "description": "Évaluez la valeur d'un pack en jeu",
+    "addItem": "Ajouter un item",
+    "packPrice": "Prix du pack (Apex Coins)",
+    "calculate": "Calculer",
+    "reset": "Réinitialiser",
+    "noItems": "Ajoutez au moins un item pour calculer",
+    "units": {
+      "hours": "Heures",
+      "qty": "Qté"
+    },
+    "result": {
+      "title": "Résultat",
+      "tier": {
+        "terrible": "Mauvais",
+        "average": "Moyen",
+        "good": "Bon",
+        "excellent": "Excellent"
+      },
+      "breakdown": "Détail"
+    },
+    "items": {
+      "speedUp": "Accélérateur",
+      "legendaryLightningCrystal": "Cristal de Foudre Légendaire",
+      "legendaryMagmaCrystal": "Cristal de Magma Légendaire",
+      "fineGold": "Or fin",
+      "silverSand": "Sable d'argent",
+      "copperSand": "Sable de cuivre",
+      "universalLegendaryHeroMedal": "Médaille de Héros Légendaire Universelle",
+      "forgingKit": "Kit de forge (par 100)",
+      "planishingHammer": "Marteau de planissage",
+      "legendarySkillScroll": "Parchemin de compétence légendaire",
+      "techniquePoint": "Point de technique",
+      "epicGem": "Gemme épique",
+      "legendaryGem": "Gemme légendaire",
+      "rawIron": "Fer brut",
+      "insightPoint": "Point de perspicacité",
+      "mountWhistle": "Sifflet de monture",
+      "meteoriteSteel": "Acier météoritique",
+      "refinedIron": "Fer raffiné",
+      "goldenKey": "Clé dorée",
+      "torchOfEnlightenment": "Torche de l'Éveil"
+    }
+  },
   "mightiestGovernor": {
     "title": "Mightiest Governor",
     "subtitle": "Coûts d'inscription par rang",

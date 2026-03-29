@@ -1,0 +1,124 @@
+.result-card {
+  margin-top: 16px;
+}
+
+.result-title {
+  margin: 0 0 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.tier-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+
+  .tier-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .tier-label {
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &.tier-terrible {
+    color: #f44336;
+  }
+
+  &.tier-average {
+    color: #ff9800;
+  }
+
+  &.tier-good {
+    color: #4caf50;
+  }
+
+  &.tier-excellent {
+    color: #2196f3;
+  }
+}
+
+.result-body {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.result-breakdown {
+  min-width: 0;
+}
+
+.total-coins {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  .total-value {
+    font-weight: 600;
+  }
+
+  .ratio-badge {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--mat-sys-on-surface);
+    background: var(--mat-sys-surface-variant);
+    border-radius: 12px;
+    padding: 2px 8px;
+  }
+}
+
+.breakdown-title {
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.breakdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+
+  .breakdown-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .breakdown-detail {
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+  }
+}

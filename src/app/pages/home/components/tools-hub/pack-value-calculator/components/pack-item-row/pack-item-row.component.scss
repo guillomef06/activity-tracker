@@ -1,0 +1,21 @@
+.pack-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+
+  .item-select {
+    flex: 2;
+    min-width: 0;
+  }
+
+  .quantity-input {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  .remove-btn {
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+}

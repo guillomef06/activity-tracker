@@ -53,6 +53,10 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - Material Design 3, Inter, OnPush, Signals
 - Internationalisation : EN, FR, ES, IT
 
+### Outils (Tools Hub)
+- **Gem Calculator** : calculateur de score de gemme sur commander
+- **Pack Value Calculator** : évalue la valeur d'un pack en jeu en Apex Coins
+
 ### Super Admin
 - Dashboard, gestion alliances, gestion users
 - Suppression complète d'un user via RPC `delete_user_complete`
