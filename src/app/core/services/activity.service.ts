@@ -237,7 +237,9 @@ export class ActivityService {
 
   getUserScores(): UserScore[] {
     const activities = this.activitiesSignal();
-    const oldestWeekStart = getDateForWeeksAgo(APP_CONSTANTS.SCORING.WEEKS_TO_TRACK - 1);
+    const tiebreaker = this.allianceService.alliance()?.tiebreaker_activity_type ?? null;
+    const scoringWeeks = this.allianceService.scoringWeeks();
+    const oldestWeekStart = getDateForWeeksAgo(scoringWeeks - 1);
 
     const recentActivities = activities.filter(activity => new Date(activity.date) >= oldestWeekStart);
 
@@ -251,7 +253,7 @@ export class ActivityService {
     const userScores: UserScore[] = [];
     userMap.forEach((activities, userId) => {
       const displayName = activities[0]?.displayName || 'Unknown';
-      const weeklyScores = this.calculateWeeklyScores(activities);
+      const weeklyScores = this.calculateWeeklyScores(activities, tiebreaker, scoringWeeks);
       const sixWeekTotal = weeklyScores.reduce((sum, week) => sum + week.totalPoints, 0);
 
       userScores.push({
@@ -306,10 +308,14 @@ export class ActivityService {
     });
   }
 
-  private calculateWeeklyScores(activities: Activity[]): WeeklyScore[] {
+  private calculateWeeklyScores(
+    activities: Activity[],
+    tiebreakerType: string | null = null,
+    weeksCount: number = APP_CONSTANTS.SCORING.WEEKS_TO_TRACK
+  ): WeeklyScore[] {
     const weeks: WeeklyScore[] = [];
 
-    for (let i = 0; i < APP_CONSTANTS.SCORING.WEEKS_TO_TRACK; i++) {
+    for (let i = 0; i < weeksCount; i++) {
       const weekStart = getDateForWeeksAgo(i);
       const weekEnd = getWeekEnd(weekStart);
 
@@ -318,7 +324,10 @@ export class ActivityService {
         return activityDate >= weekStart && activityDate <= weekEnd;
       });
 
-      const totalPoints = weekActivities.reduce((sum, activity) => sum + activity.points, 0);
+      const scoringActivities = tiebreakerType
+        ? weekActivities.filter(a => a.activityType !== tiebreakerType)
+        : weekActivities;
+      const totalPoints = scoringActivities.reduce((sum, activity) => sum + activity.points, 0);
 
       weeks.push({
         weekStart,

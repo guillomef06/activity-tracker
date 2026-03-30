@@ -154,6 +154,15 @@
         "tiebreaker": "Tiebreaker",
         "tiebreakerFailed": "Error al actualizar el tiebreaker"
       },
+      "leaderboard": {
+        "title": "Configuración del clasificación",
+        "hint": "Configure cuántas semanas se incluyen en la clasificación",
+        "weeksMultiplier": "Multiplicador de temporada",
+        "multiplierOption": "{{weeks}} semanas (×{{multiplier}})",
+        "weeksHint": "{{weeks}} semanas incluidas en la clasificación",
+        "multiplierUpdated": "Multiplicador de temporada actualizado",
+        "multiplierFailed": "Error al actualizar el multiplicador de temporada"
+      },
       "dangerZone": {
         "title": "Zona de peligro",
         "deleteAllActivities": "Eliminar todas las actividades",

@@ -24,6 +24,7 @@ describe('AllianceSettingsPage', () => {
       revokeInvitation: vi.fn(),
       updateAlliance: vi.fn(),
       setTiebreakerActivity: vi.fn().mockResolvedValue({ error: null }),
+      setScoringWeeksMultiplier: vi.fn().mockResolvedValue({ error: null }),
       isActivityEnabled: vi.fn().mockReturnValue(true),
       isParticipationMode: vi.fn().mockReturnValue(false),
       getParticipationPoints: vi.fn().mockReturnValue(5),
@@ -37,6 +38,7 @@ describe('AllianceSettingsPage', () => {
       invitations: signal([]),
       rules: signal([]),
       settings: signal([]),
+      scoringWeeks: signal(6),
     };
 
     const authServiceSpy = {

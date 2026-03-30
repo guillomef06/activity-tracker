@@ -15,7 +15,7 @@ import {
   PointCalculationResult,
   UpsertActivitySettingsRequest,
 } from '@shared/models';
-import { getActivityTypePoints } from '@shared/constants/constants';
+import { getActivityTypePoints, APP_CONSTANTS } from '@shared/constants/constants';
 
 type AllianceWithRelations = Alliance & {
   user_profiles: UserProfile[];
@@ -45,6 +45,11 @@ export class AllianceService {
   readonly invitations = this.invitationsSignal.asReadonly();
   readonly rules = this.rulesSignal.asReadonly();
   readonly settings = this.settingsSignal.asReadonly();
+
+  /** Number of weeks included in the leaderboard ranking (multiplier × 6). */
+  readonly scoringWeeks = computed(
+    () => (this.allianceSignal()?.scoring_weeks_multiplier ?? 1) * APP_CONSTANTS.SCORING.WEEKS_TO_TRACK
+  );
 
   /**
    * Load alliance, members, point rules and activity settings in a single Supabase query (4→1 requests).
@@ -523,6 +528,15 @@ export class AllianceService {
    */
   async setTiebreakerActivity(activityType: string | null): Promise<{ error: Error | null }> {
     return this.updateAlliance({ tiebreaker_activity_type: activityType });
+  }
+
+  /**
+   * Set the scoring weeks multiplier for the alliance (admin only).
+   * Actual weeks in the leaderboard = multiplier × 6.
+   * Valid values: 1, 2, or 3.
+   */
+  async setScoringWeeksMultiplier(multiplier: 1 | 2 | 3): Promise<{ error: Error | null }> {
+    return this.updateAlliance({ scoring_weeks_multiplier: multiplier });
   }
 
   /**

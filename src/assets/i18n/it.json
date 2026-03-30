@@ -154,6 +154,15 @@
         "tiebreaker": "Tiebreaker",
         "tiebreakerFailed": "Impossibile aggiornare lo spareggio"
       },
+      "leaderboard": {
+        "title": "Impostazioni classifica",
+        "hint": "Configura quante settimane sono incluse nella classifica",
+        "weeksMultiplier": "Moltiplicatore di stagione",
+        "multiplierOption": "{{weeks}} settimane (×{{multiplier}})",
+        "weeksHint": "{{weeks}} settimane incluse nella classifica",
+        "multiplierUpdated": "Moltiplicatore di stagione aggiornato",
+        "multiplierFailed": "Impossibile aggiornare il moltiplicatore di stagione"
+      },
       "dangerZone": {
         "title": "Zona di pericolo",
         "deleteAllActivities": "Elimina tutte le attività",

@@ -34,6 +34,7 @@ describe('HomePage', () => {
     alliance: signal(null),
     rules: signal([]),
     settings: signal([]),
+    scoringWeeks: signal(6),
   };
 
   beforeEach(async () => {
