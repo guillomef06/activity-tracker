@@ -52,7 +52,7 @@ export const APP_CONSTANTS = {
       value: 'stellar glory',
       labelKey: 'activities.types.stellar-glory',
       points: 5,
-      availableWeeks: [1, 2, 3, 4, 5, 6],
+      availableWeeks: [6],
     },
   ] as ActivityType[],
 } as const;

@@ -78,6 +78,14 @@ export class ActivitySettingsTabComponent {
     () => this.allianceService.alliance()?.tiebreaker_activity_type ?? null
   );
 
+  // Scoring weeks multiplier (1, 2 or 3) and resulting week count
+  protected readonly scoringWeeksMultiplier = computed(
+    () => (this.allianceService.alliance()?.scoring_weeks_multiplier ?? 1) as 1 | 2 | 3
+  );
+  protected readonly scoringWeeks = computed(() => this.allianceService.scoringWeeks());
+  protected readonly isUpdatingMultiplier = signal(false);
+  protected readonly multiplierOptions = [1, 2, 3] as const;
+
   // Merged list of activity types with their current settings for the participation section
   protected readonly activitySettingsList = computed(() => {
     const settings = this.allianceService.settings();
@@ -256,6 +264,20 @@ export class ActivitySettingsTabComponent {
       this.snackbarService.error(this.translate.instant('alliance.settings.pointRules.participationPointsFailed'));
     } finally {
       this.isUpdatingSetting.set(null);
+    }
+  }
+
+  protected async onMultiplierChange(multiplier: 1 | 2 | 3): Promise<void> {
+    this.isUpdatingMultiplier.set(true);
+    try {
+      const { error } = await this.allianceService.setScoringWeeksMultiplier(multiplier);
+      if (error) throw error;
+      this.snackbarService.success(this.translate.instant('alliance.settings.leaderboard.multiplierUpdated'));
+    } catch (error) {
+      console.error('Error updating scoring weeks multiplier:', error);
+      this.snackbarService.error(this.translate.instant('alliance.settings.leaderboard.multiplierFailed'));
+    } finally {
+      this.isUpdatingMultiplier.set(false);
     }
   }
 

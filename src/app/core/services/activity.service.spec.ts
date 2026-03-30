@@ -22,6 +22,7 @@ describe('ActivityService', () => {
     rules: ReturnType<typeof signal>;
     loadRules: ReturnType<typeof vi.fn>;
     calculatePoints: ReturnType<typeof vi.fn>;
+    scoringWeeks: ReturnType<typeof signal<number>>;
   };
 
   const makeWeeklyScores = (activitiesByWeek: ActivityRow[][]) => {
@@ -40,6 +41,7 @@ describe('ActivityService', () => {
       rules: signal([]),
       loadRules: vi.fn().mockResolvedValue({ error: null }),
       calculatePoints: vi.fn().mockReturnValue({ points: 0, usedFallback: true }),
+      scoringWeeks: signal(6),
     };
 
     const supabaseMock = {
@@ -74,7 +76,91 @@ describe('ActivityService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getUserScores() tiebreaker sort', () => {
+  describe('getUserScores() tiebreaker', () => {
+    it('should exclude tiebreaker activity points from totalPoints and sixWeekTotal', () => {
+      // Arrange
+      allianceServiceMock.alliance.set({
+        id: '1',
+        name: 'test',
+        tag: null,
+        owner_id: null,
+        tiebreaker_activity_type: 'stellar glory',
+        scoring_weeks_multiplier: 1,
+        created_at: '',
+        updated_at: '',
+      });
+
+      const now = new Date();
+      service['activitiesSignal'].set([
+        {
+          id: '1',
+          userId: 'a',
+          displayName: 'Alice',
+          activityType: 'legion',
+          position: 1,
+          points: 20,
+          date: now,
+          timestamp: now.getTime(),
+        },
+        {
+          id: '2',
+          userId: 'a',
+          displayName: 'Alice',
+          activityType: 'stellar glory',
+          position: null,
+          points: 10,
+          date: now,
+          timestamp: now.getTime(),
+        },
+      ]);
+
+      // Act
+      const scores = service.getUserScores();
+
+      // Assert — stellar glory (10 pts) must be excluded from totals
+      const alice = scores.find(u => u.userId === 'a')!;
+      expect(alice.sixWeekTotal).toBe(20);
+      expect(alice.weeklyScores.find(w => w.activities.length > 0)?.totalPoints).toBe(20);
+      // The tiebreaker activity is still present in the activities list (for display)
+      expect(alice.weeklyScores.find(w => w.activities.length > 0)?.activities).toHaveLength(2);
+    });
+
+    it('should include all activity points when no tiebreaker is configured', () => {
+      // Arrange
+      allianceServiceMock.alliance.set(null);
+
+      const now = new Date();
+      service['activitiesSignal'].set([
+        {
+          id: '1',
+          userId: 'a',
+          displayName: 'Alice',
+          activityType: 'legion',
+          position: 1,
+          points: 20,
+          date: now,
+          timestamp: now.getTime(),
+        },
+        {
+          id: '2',
+          userId: 'a',
+          displayName: 'Alice',
+          activityType: 'stellar glory',
+          position: null,
+          points: 10,
+          date: now,
+          timestamp: now.getTime(),
+        },
+      ]);
+
+      // Act
+      const scores = service.getUserScores();
+
+      // Assert — all points counted
+      const alice = scores.find(u => u.userId === 'a')!;
+      expect(alice.sixWeekTotal).toBe(30);
+    });
+
     it('should sort by tiebreaker activity points when sixWeekTotal is equal', () => {
       const userA: UserScore = {
         userId: 'a',
@@ -102,6 +188,7 @@ describe('ActivityService', () => {
         tag: null,
         owner_id: null,
         tiebreaker_activity_type: 'stellar glory',
+        scoring_weeks_multiplier: 1,
         created_at: '',
         updated_at: '',
       });

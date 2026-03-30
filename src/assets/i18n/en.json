@@ -154,6 +154,15 @@
         "tiebreaker": "Tiebreaker",
         "tiebreakerFailed": "Failed to update tiebreaker"
       },
+      "leaderboard": {
+        "title": "Leaderboard Settings",
+        "hint": "Configure how many weeks are included in the ranking",
+        "weeksMultiplier": "Season multiplier",
+        "multiplierOption": "{{weeks}} weeks (×{{multiplier}})",
+        "weeksHint": "{{weeks}} weeks included in the leaderboard",
+        "multiplierUpdated": "Season multiplier updated",
+        "multiplierFailed": "Failed to update season multiplier"
+      },
       "dangerZone": {
         "title": "Danger Zone",
         "deleteAllActivities": "Delete all activities",

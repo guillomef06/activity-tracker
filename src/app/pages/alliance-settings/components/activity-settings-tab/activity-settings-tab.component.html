@@ -58,6 +58,32 @@
       </div>
     </div>
 
+    <!-- Leaderboard Settings -->
+    <div class="section">
+      <h3 class="section-title">
+        <mat-icon>leaderboard</mat-icon>
+        {{ 'alliance.settings.leaderboard.title' | translate }}
+      </h3>
+      <p class="section-hint">{{ 'alliance.settings.leaderboard.hint' | translate }}</p>
+
+      <mat-form-field appearance="outline" class="multiplier-field">
+        <mat-label>{{ 'alliance.settings.leaderboard.weeksMultiplier' | translate }}</mat-label>
+        <mat-icon matIconPrefix>calendar_month</mat-icon>
+        <mat-select
+          [value]="scoringWeeksMultiplier()"
+          [disabled]="isUpdatingMultiplier()"
+          (selectionChange)="onMultiplierChange($event.value)"
+        >
+          @for (m of multiplierOptions; track m) {
+            <mat-option [value]="m">
+              {{ 'alliance.settings.leaderboard.multiplierOption' | translate: { weeks: m * 6, multiplier: m } }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-hint>{{ 'alliance.settings.leaderboard.weeksHint' | translate: { weeks: scoringWeeks() } }}</mat-hint>
+      </mat-form-field>
+    </div>
+
     <!-- Danger Zone -->
     <div class="section danger-zone">
       <h3 class="section-title danger-title">

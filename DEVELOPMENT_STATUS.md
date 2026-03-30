@@ -33,8 +33,8 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - Saisie activité avec position → calcul points automatique selon règles configurables
 - Mode participation par activité (toggle à la place du champ position, points fixes)
 - Cycle de 6 semaines pour la disponibilité des activités (date ref : 25 jan 2026 = semaine 1)
-- Scores sur 6 semaines glissantes
-- Activité tiebreaker (départage à égalité de score)
+- Scores sur N semaines glissantes (multiplicateur configurable : 1×6, 2×12, 3×18 semaines)
+- Activité tiebreaker (départage à égalité de score, exclue du calcul des points)
 - Désactivation d'activités par alliance
 - Entrée rétroactive admin (pour n'importe quel membre, n'importe quelle semaine)
 - Import Excel batch (wizard upload → preview → done, matching joueur, upsert)
@@ -43,7 +43,7 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 ### Alliance Settings
 - Gestion membres (invitations, suppression)
 - Règles de points configurables par activité + plage de positions
-- Paramètres d'activités (activation, mode participation, tiebreaker)
+- Paramètres d'activités (activation, mode participation, tiebreaker, multiplicateur de semaines)
 - Discord webhooks : envoi de messages vers channels Discord
 - Alliance tag (3 caractères, affiché dans le header)
 
