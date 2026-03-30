@@ -74,7 +74,8 @@
       "Bash(npm run:*)",
       "Bash(grep -n \"\"\"cost\"\": \"\"Cost\"\"\" src/assets/i18n/en.json src/assets/i18n/fr.json src/assets/i18n/it.json src/assets/i18n/es.json)",
       "Bash(grep -n \"\"\"cost\"\"\" src/assets/i18n/en.json src/assets/i18n/fr.json src/assets/i18n/it.json src/assets/i18n/es.json)",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in d.items\\(\\) if k in [''''tools'''',''''gemCalculator'''',''''packValueCalculator'''']}, indent=2\\)\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in d.items\\(\\) if k in [''''tools'''',''''gemCalculator'''',''''packValueCalculator'''']}, indent=2\\)\\)\")",
+      "Bash(tee /tmp/test_output.txt)"
     ]
   }
 }

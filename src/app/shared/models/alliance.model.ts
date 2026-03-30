@@ -12,6 +12,7 @@ export interface Alliance {
   tag: string | null;
   owner_id: string | null;
   tiebreaker_activity_type: string | null;
+  scoring_weeks_multiplier: number;
   created_at: string;
   updated_at: string;
 }
@@ -31,6 +32,7 @@ export interface UpdateAllianceRequest {
   name?: string;
   tag?: string | null;
   tiebreaker_activity_type?: string | null;
+  scoring_weeks_multiplier?: number;
 }
 
 /**

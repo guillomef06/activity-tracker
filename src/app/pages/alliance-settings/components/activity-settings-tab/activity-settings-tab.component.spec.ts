@@ -22,8 +22,10 @@ describe('ActivitySettingsTabComponent', () => {
       isActivityEnabled: vi.fn().mockReturnValue(true),
       isParticipationMode: vi.fn().mockReturnValue(false),
       setTiebreakerActivity: vi.fn().mockResolvedValue({ error: null }),
+      setScoringWeeksMultiplier: vi.fn().mockResolvedValue({ error: null }),
       alliance: signal<Alliance | null>(null),
       settings: signal([]),
+      scoringWeeks: signal(6),
     };
 
     const activityServiceSpy = {
@@ -152,6 +154,7 @@ describe('ActivitySettingsTabComponent', () => {
       tag: null,
       owner_id: null,
       tiebreaker_activity_type: 'legion',
+      scoring_weeks_multiplier: 1,
       created_at: '',
       updated_at: '',
     });
@@ -172,6 +175,16 @@ describe('ActivitySettingsTabComponent', () => {
     expect(component['isDeletingAll']()).toBe(false);
   });
 
+  it('should call setScoringWeeksMultiplier with selected value when onMultiplierChange is called', async () => {
+    // Arrange — done in beforeEach
+
+    // Act
+    await component['onMultiplierChange'](2);
+
+    // Assert
+    expect(allianceService.setScoringWeeksMultiplier).toHaveBeenCalledWith(2);
+  });
+
   it('should not clear tiebreaker when disabling a non-tiebreaker activity', async () => {
     (allianceService.alliance as unknown as WritableSignal<Alliance | null>).set({
       id: '1',
@@ -179,6 +192,7 @@ describe('ActivitySettingsTabComponent', () => {
       tag: null,
       owner_id: null,
       tiebreaker_activity_type: 'kvk prep',
+      scoring_weeks_multiplier: 1,
       created_at: '',
       updated_at: '',
     });

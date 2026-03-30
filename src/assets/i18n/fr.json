@@ -154,6 +154,15 @@
         "tiebreaker": "Tiebreaker",
         "tiebreakerFailed": "Échec de la mise à jour du tiebreaker"
       },
+      "leaderboard": {
+        "title": "Paramètres du classement",
+        "hint": "Configurez combien de semaines sont prises en compte dans le classement",
+        "weeksMultiplier": "Multiplicateur de saison",
+        "multiplierOption": "{{weeks}} semaines (×{{multiplier}})",
+        "weeksHint": "{{weeks}} semaines incluses dans le classement",
+        "multiplierUpdated": "Multiplicateur de saison mis à jour",
+        "multiplierFailed": "Échec de la mise à jour du multiplicateur de saison"
+      },
       "dangerZone": {
         "title": "Zone de danger",
         "deleteAllActivities": "Supprimer toutes les activités",
