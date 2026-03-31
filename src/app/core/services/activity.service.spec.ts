@@ -20,6 +20,7 @@ describe('ActivityService', () => {
   let allianceServiceMock: {
     alliance: ReturnType<typeof signal<Alliance | null>>;
     rules: ReturnType<typeof signal>;
+    loadAlliance: ReturnType<typeof vi.fn>;
     loadRules: ReturnType<typeof vi.fn>;
     calculatePoints: ReturnType<typeof vi.fn>;
     scoringWeeks: ReturnType<typeof signal<number>>;
@@ -39,6 +40,7 @@ describe('ActivityService', () => {
     allianceServiceMock = {
       alliance: signal<Alliance | null>(null),
       rules: signal([]),
+      loadAlliance: vi.fn().mockResolvedValue(undefined),
       loadRules: vi.fn().mockResolvedValue({ error: null }),
       calculatePoints: vi.fn().mockReturnValue({ points: 0, usedFallback: true }),
       scoringWeeks: signal(6),
@@ -49,6 +51,7 @@ describe('ActivityService', () => {
         select: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
+        gte: vi.fn().mockReturnThis(),
         upsert: vi.fn().mockReturnThis(),
         then: vi.fn().mockResolvedValue({ data: [], error: null }),
       }),

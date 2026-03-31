@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { signal } from '@angular/core';
 import { RetroactiveActivitiesTabComponent } from './retroactive-activities-tab.component';
 import { ActivityService } from '@app/core/services';
 import { AllianceService } from '@app/core/services/alliance.service';
@@ -16,6 +17,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
     isActivityEnabled: ReturnType<typeof vi.fn>;
     isParticipationMode: ReturnType<typeof vi.fn>;
     getParticipationPoints: ReturnType<typeof vi.fn>;
+    scoringWeeks: ReturnType<typeof signal<number>>;
   };
   let snackBarSpy: { open: ReturnType<typeof vi.fn> };
 
@@ -25,6 +27,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
       isActivityEnabled: vi.fn().mockReturnValue(true),
       isParticipationMode: vi.fn().mockReturnValue(false),
       getParticipationPoints: vi.fn().mockReturnValue(5),
+      scoringWeeks: signal(6),
     };
     snackBarSpy = { open: vi.fn() };
 
@@ -61,11 +64,33 @@ describe('RetroactiveActivitiesTabComponent', () => {
     expect(component['retroactiveForm'].get('position')?.value).toBe(1);
   });
 
-  it('should generate 6 week options (current + 5 past weeks)', () => {
+  it('should generate 6 week options when scoringWeeks is 6', () => {
+    allianceServiceSpy.scoringWeeks.set(6);
+    fixture.detectChanges();
+
     const weekOptions = component.weekOptions();
     expect(weekOptions.length).toBe(6);
-    expect(weekOptions[0].value).toBe(0); // Current week
-    expect(weekOptions[5].value).toBe(5); // 5 weeks ago
+    expect(weekOptions[0].value).toBe(0);
+    expect(weekOptions[5].value).toBe(5);
+  });
+
+  it('should generate 12 week options when scoringWeeks is 12 (multiplier x2)', () => {
+    allianceServiceSpy.scoringWeeks.set(12);
+    fixture.detectChanges();
+
+    const weekOptions = component.weekOptions();
+    expect(weekOptions.length).toBe(12);
+    expect(weekOptions[0].value).toBe(0);
+    expect(weekOptions[11].value).toBe(11);
+  });
+
+  it('should generate 18 week options when scoringWeeks is 18 (multiplier x3)', () => {
+    allianceServiceSpy.scoringWeeks.set(18);
+    fixture.detectChanges();
+
+    const weekOptions = component.weekOptions();
+    expect(weekOptions.length).toBe(18);
+    expect(weekOptions[17].value).toBe(17);
   });
 
   it('should filter activities based on selected week cycle', () => {
