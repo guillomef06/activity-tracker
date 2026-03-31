@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 24 mars 2026
+**Dernière mise à jour:** 31 mars 2026
 
 ## 📋 Résumé
 
@@ -60,6 +60,12 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 ### Super Admin
 - Dashboard, gestion alliances, gestion users
 - Suppression complète d'un user via RPC `delete_user_complete`
+- Gestion alliances : N+1 supprimé (1 requête avec join `user_profiles` au lieu de 1 + N×2)
+- Gestion users : pagination cursor-based 20 par 20 + infinite scroll (`IntersectionObserver`)
+
+### Performance & Optimisations
+- `ActivityService.loadActivities()` : filtre côté DB sur les N dernières semaines (`.gte('date', cutoffDate)`) selon le multiplicateur — évite de charger l'historique complet
+- `InfiniteScrollDirective` réutilisable (`src/app/shared/directives/infinite-scroll/`) basée sur `IntersectionObserver` natif (zéro dépendance)
 
 ---
 
@@ -71,6 +77,7 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - **Recovery answer** : fix vérification lors du reset
 - **Angular 21 upgrade** : CSS tokens Material renommés post-migration
 - **Home page** : fusion activité + scores en page unique, suppression dépendances chart.js
+- **Multiplicateur semaines (retroactive)** : le sélecteur de semaine s'adapte dynamiquement au multiplicateur (6/12/18 semaines)
 - **Auth double requête** : suppression `getSession()` dans `initializeAuth()`, source unique via `onAuthStateChange`
 - **GitHub Pages SPA** : 404.html corrigé (save + redirect), index.html restaure l'URL avant bootstrap Angular
 

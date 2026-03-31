@@ -21,8 +21,8 @@ export class ActivityService {
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
-    await this.allianceService.loadRules();
-    await this.loadFromSupabase();
+    await Promise.all([this.allianceService.loadAlliance(), this.allianceService.loadRules()]);
+    await this.loadActivities();
     this.isInitialized = true;
   }
 
@@ -39,7 +39,7 @@ export class ActivityService {
     };
   }
 
-  private async loadFromSupabase(): Promise<void> {
+  private async loadActivities(): Promise<void> {
     try {
       const allianceId = this.authService.getAllianceId();
       if (!allianceId) {
@@ -47,9 +47,13 @@ export class ActivityService {
         return;
       }
 
+      const scoringWeeks = this.allianceService.scoringWeeks();
+      const cutoffDate = getDateForWeeksAgo(scoringWeeks - 1);
+
       const { data, error } = await this.supabase
         .from('activities')
         .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
+        .gte('date', cutoffDate.toISOString())
         .order('date', { ascending: false });
 
       if (error) throw error;
@@ -215,7 +219,7 @@ export class ActivityService {
 
       if (error) throw error;
 
-      await this.loadFromSupabase();
+      await this.loadActivities();
       return { error: null };
     } catch (error) {
       console.error('Error batch-importing activities:', error);

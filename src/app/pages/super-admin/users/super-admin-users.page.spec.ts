@@ -13,21 +13,26 @@ describe('SuperAdminUsersPage', () => {
   let fixture: ComponentFixture<SuperAdminUsersPage>;
 
   beforeEach(async () => {
+    const mockQueryBuilder = {
+      select: vi.fn(),
+      order: vi.fn(),
+      limit: vi.fn(),
+      lt: vi.fn(),
+      eq: vi.fn(),
+      update: vi.fn(),
+      then: (resolve: (value: { data: unknown[]; error: null }) => void) => resolve({ data: [], error: null }),
+    };
+    mockQueryBuilder.select.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.order.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.limit.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.lt.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.eq.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.update.mockReturnValue(mockQueryBuilder);
+
     const supabaseServiceSpy = {
       client: {
-        from: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({
-            order: vi.fn().mockReturnValue(Promise.resolve({ data: [], error: null })),
-          }),
-          update: vi.fn().mockReturnValue({
-            eq: vi.fn().mockReturnValue(Promise.resolve({ error: null })),
-          }),
-        }),
-        auth: {
-          admin: {
-            deleteUser: vi.fn().mockReturnValue(Promise.resolve({ error: null })),
-          },
-        },
+        from: vi.fn().mockReturnValue(mockQueryBuilder),
+        rpc: vi.fn().mockResolvedValue({ data: true, error: null }),
       },
     };
 
