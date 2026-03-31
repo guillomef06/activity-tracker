@@ -104,12 +104,15 @@ export class RetroactiveActivitiesTabComponent {
   protected readonly positionError = createFieldErrorSignal(this.retroactiveForm, 'position', this.destroyRef);
 
   // Computed values
+  readonly scoringWeeks = computed(() => this.allianceService.scoringWeeks());
+
   weekOptions = computed<WeekOption[]>(() => {
     const options: WeekOption[] = [];
     const currentWeekLabel = this.translate.instant('alliance.retroactive.currentWeek');
     const weeksAgoLabel = this.translate.instant('alliance.retroactive.weeksAgo');
+    const totalWeeks = this.scoringWeeks();
 
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i < totalWeeks; i++) {
       const date = getDateForWeeksAgo(i);
       const weekStart = getWeekStart(date);
       const weekEnd = getWeekEnd(date);

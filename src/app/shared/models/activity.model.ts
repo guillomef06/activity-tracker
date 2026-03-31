@@ -62,7 +62,7 @@ export interface WeeklyScore {
 }
 
 /**
- * User score over 6 weeks
+ * User score over n weeks
  */
 export interface UserScore {
   userId: string;

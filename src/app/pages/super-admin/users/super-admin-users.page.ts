@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarService } from '@app/core/services';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -17,6 +18,7 @@ import { SupabaseService } from '@app/core/services/supabase.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
+import { InfiniteScrollDirective } from '@app/shared/directives/infinite-scroll/infinite-scroll.directive';
 import type { UserProfile } from '@app/shared/models';
 import { firstValueFrom } from 'rxjs';
 
@@ -36,9 +38,11 @@ interface UserWithAlliance extends UserProfile {
     MatIconModule,
     MatTableModule,
     MatChipsModule,
+    MatProgressSpinnerModule,
     MatDialogModule,
     TranslateModule,
     LocalDatePipe,
+    InfiniteScrollDirective,
   ],
   templateUrl: './super-admin-users.page.html',
   styleUrl: './super-admin-users.page.scss',
@@ -53,7 +57,12 @@ export class SuperAdminUsersPage implements OnInit {
   protected readonly progressBarService = inject(ProgressBarService);
   private readonly destroyRef = inject(DestroyRef);
 
+  private readonly PAGE_SIZE = 20;
+
   protected readonly users = signal<UserWithAlliance[]>([]);
+  protected readonly hasMore = signal(true);
+  protected readonly isLoadingMore = signal(false);
+  private lastCursor: string | null = null;
   protected readonly displayedColumns: string[] = [
     'displayName',
     'username',
@@ -81,31 +90,59 @@ export class SuperAdminUsersPage implements OnInit {
   }
 
   protected async loadUsers(): Promise<void> {
+    this.lastCursor = null;
+    this.hasMore.set(true);
+
     await this.progressBarService.withProgress(async () => {
       try {
-        // Load users with alliance names
-        const { data: usersData, error: usersError } = await this.supabase.client
+        const { data, error } = await this.supabase.client
           .from('user_profiles')
           .select('*, alliances(name)')
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .limit(this.PAGE_SIZE);
 
-        if (usersError) throw usersError;
+        if (error) throw error;
 
-        if (usersData) {
-          const usersWithAlliance: UserWithAlliance[] = usersData.map(
-            (user: { alliances?: { name: string } | null } & UserProfile) => ({
-              ...user,
-              alliance_name: user.alliances?.name || null,
-            })
-          );
-
-          this.users.set(usersWithAlliance);
-        }
+        const mapped = this.mapUsers(data ?? []);
+        this.users.set(mapped);
+        this.lastCursor = mapped.at(-1)?.created_at ?? null;
+        this.hasMore.set(mapped.length === this.PAGE_SIZE);
       } catch (error) {
         console.error('Error loading users:', error);
         this.snackbarService.error(this.translate.instant('superAdmin.users.loadFailed'));
       }
     });
+  }
+
+  protected async loadMore(): Promise<void> {
+    if (!this.hasMore() || this.isLoadingMore() || this.progressBarService.isLoading()) return;
+
+    this.isLoadingMore.set(true);
+    try {
+      const baseQuery = this.supabase.client
+        .from('user_profiles')
+        .select('*, alliances(name)')
+        .order('created_at', { ascending: false })
+        .limit(this.PAGE_SIZE);
+
+      const { data, error } = await (this.lastCursor ? baseQuery.lt('created_at', this.lastCursor) : baseQuery);
+
+      if (error) throw error;
+
+      const mapped = this.mapUsers(data ?? []);
+      this.users.update(current => [...current, ...mapped]);
+      this.lastCursor = mapped.at(-1)?.created_at ?? null;
+      this.hasMore.set(mapped.length === this.PAGE_SIZE);
+    } catch (error) {
+      console.error('Error loading more users:', error);
+      this.snackbarService.error(this.translate.instant('superAdmin.users.loadFailed'));
+    } finally {
+      this.isLoadingMore.set(false);
+    }
+  }
+
+  private mapUsers(data: ({ alliances?: { name: string } | null } & UserProfile)[]): UserWithAlliance[] {
+    return data.map(user => ({ ...user, alliance_name: user.alliances?.name ?? null }));
   }
 
   protected startEdit(user: UserProfile): void {

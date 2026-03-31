@@ -24,6 +24,10 @@ interface AllianceWithStats extends Alliance {
   admin_name: string;
 }
 
+interface AllianceRow extends Alliance {
+  user_profiles: { display_name: string | null; role: string }[];
+}
+
 @Component({
   selector: 'app-super-admin-alliances',
   imports: [
@@ -74,38 +78,19 @@ export class SuperAdminAlliancesPage implements OnInit {
   protected async loadAlliances(): Promise<void> {
     await this.progressBarService.withProgress(async () => {
       try {
-        // Load alliances with member count and admin info
-        const { data: alliancesData, error: alliancesError } = await this.supabase.client
+        const { data, error } = await this.supabase.client
           .from('alliances')
-          .select('*')
+          .select('*, user_profiles(display_name, role)')
           .order('created_at', { ascending: false });
 
-        if (alliancesError) throw alliancesError;
+        if (error) throw error;
 
-        if (alliancesData) {
-          // For each alliance, get member count and admin name
-          const alliancesWithStats = await Promise.all(
-            alliancesData.map(async alliance => {
-              // Get member count
-              const { count } = await this.supabase.client
-                .from('user_profiles')
-                .select('count', { count: 'exact', head: true })
-                .eq('alliance_id', alliance.id);
-
-              // Get admin name
-              const { data: adminData } = await this.supabase.client
-                .from('user_profiles')
-                .select('display_name')
-                .eq('alliance_id', alliance.id)
-                .eq('role', 'admin')
-                .limit(1)
-                .single();
-
-              return {
-                ...alliance,
-                member_count: count || 0,
-                admin_name: adminData?.display_name || 'N/A',
-              };
+        if (data) {
+          const alliancesWithStats: AllianceWithStats[] = (data as AllianceRow[]).map(
+            ({ user_profiles, ...alliance }) => ({
+              ...alliance,
+              member_count: user_profiles.length,
+              admin_name: user_profiles.find(u => u.role === 'admin')?.display_name ?? 'N/A',
             })
           );
 

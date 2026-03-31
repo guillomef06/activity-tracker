@@ -131,6 +131,13 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
       </div>
+      @if (hasMore()) {
+        <div appInfiniteScroll (scrolled)="loadMore()" class="scroll-sentinel">
+          @if (isLoadingMore()) {
+            <mat-spinner diameter="32" />
+          }
+        </div>
+      }
     }
   </mat-card>
 </div>
