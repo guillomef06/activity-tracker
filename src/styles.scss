@@ -361,6 +361,14 @@ $all-palettes: (
 :root {
   --card-shadow: #{tokens.$card-shadow};
 
+  // ── Spacing scale (4px base grid) ─────────────────────────────────────────
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
   @include mat-sys-css-vars($all-palettes, $mat-sys-vars-light);
   --mat-sys-surface-container: #{tokens.$light-bg-tinted};
   @include export-palette-css-vars(theme-colors.$primary-palette, 'primary');
@@ -609,6 +617,13 @@ html.theme-glass.theme-glass-dark {
   --mat-sys-surface-container-low: #{glass.$glass-dark-surface-container-low};
   --mat-sys-surface-container-high: #{glass.$glass-dark-surface-container-high};
   --mat-sys-surface-container-highest: #{glass.$glass-dark-surface-container-highest};
+}
+
+// ── Guide editor stepper — gap between step content elements ───────────────
+.editor-stepper .mat-vertical-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 // ── High contrast theme ────────────────────────────────────────────────────

@@ -63,6 +63,10 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - Gestion alliances : N+1 supprimé (1 requête avec join `user_profiles` au lieu de 1 + N×2)
 - Gestion users : pagination cursor-based 20 par 20 + infinite scroll (`IntersectionObserver`)
 
+### Guides
+
+Guides stratégiques partageables : création (jusqu'à 10 par user), upvote anonyme, accès public sans login. Guides de formation avec 3 slots champions configurables (skills, gems, traits, ornement, anneau). Page super admin pour gérer les référentiels (champions, skills, gems, ornements, anneaux, tempéraments).
+
 ### Performance & Optimisations
 - `ActivityService.loadActivities()` : filtre côté DB sur les N dernières semaines (`.gte('date', cutoffDate)`) selon le multiplicateur — évite de charger l'historique complet
 - `InfiniteScrollDirective` réutilisable (`src/app/shared/directives/infinite-scroll/`) basée sur `IntersectionObserver` natif (zéro dépendance)

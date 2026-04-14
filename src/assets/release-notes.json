@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.2.0",
+    "date": "2026-04-14",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Strategy Guides — create and share formation guides with full champion builds (skills, gems, temperaments, ornaments and rings), browse community guides, and upvote your favorites",
+          "fr": "Guides stratégiques — créez et partagez des guides de formation avec des compositions complètes (compétences, gemmes, tempéraments, ornements et anneaux), parcourez les guides de la communauté et votez pour vos favoris",
+          "es": "Guías estratégicas — crea y comparte guías de formación con builds completos de campeones (habilidades, gemas, temperamentos, ornamentos y anillos), explora las guías de la comunidad y vota por tus favoritas",
+          "it": "Guide strategiche — crea e condividi guide di formazione con build completi dei campioni (abilità, gemme, temperamenti, ornamenti e anelli), sfoglia le guide della community e vota le tue preferite"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.1.4",
     "date": "2026-03-30",
     "entries": [

@@ -1,0 +1,196 @@
+<div class="guides-hub-container">
+  <mat-card class="page-header">
+    <mat-card-header>
+      <mat-icon class="header-icon">menu_book</mat-icon>
+      <div class="header-content">
+        <mat-card-title>{{ 'guides.title' | translate }}</mat-card-title>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  <mat-tab-group class="hub-tabs" appSwipeTabs>
+    <!-- Tab 1: Community guides -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">groups</mat-icon>
+        {{ 'guides.community' | translate }}
+      </ng-template>
+
+      <div class="tab-content">
+        <!-- Category filters -->
+        <mat-chip-listbox class="category-filters" aria-label="Category filter">
+          <mat-chip-option (click)="onCategoryFilter(undefined)" [selected]="!categoryFilter()">
+            {{ 'common.all' | translate }}
+          </mat-chip-option>
+          @for (cat of categories; track cat.value) {
+            <mat-chip-option (click)="onCategoryFilter(cat.value)" [selected]="categoryFilter() === cat.value">
+              {{ cat.labelKey | translate }}
+            </mat-chip-option>
+          }
+        </mat-chip-listbox>
+
+        <!-- Loading state -->
+        @if (isLoadingCommunity() && communityGuides().length === 0) {
+          <div class="loading-center">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        }
+
+        <!-- Empty state -->
+        @if (!isLoadingCommunity() && communityGuides().length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">menu_book</mat-icon>
+            <p>{{ 'guides.no_guides' | translate }}</p>
+          </div>
+        }
+
+        <!-- Guide cards -->
+        <div class="guides-grid">
+          @for (guide of communityGuides(); track guide.id) {
+            <mat-card class="guide-card">
+              <mat-card-header>
+                <div class="card-header-row">
+                  <span class="category-badge category-badge--{{ guide.category }}">
+                    {{ 'guides.categories.' + guide.category | translate }}
+                  </span>
+                  <div class="upvotes">
+                    <mat-icon class="upvote-icon">favorite</mat-icon>
+                    <span>{{ guide.upvotes_count }}</span>
+                  </div>
+                </div>
+                <mat-card-title class="guide-title">{{ guide.title }}</mat-card-title>
+                <mat-card-subtitle>
+                  {{ 'guides.by' | translate }} {{ authorName(guide) }} · {{ guide.created_at | localDate }}
+                </mat-card-subtitle>
+              </mat-card-header>
+
+              @if (guide.description) {
+                <mat-card-content>
+                  <p class="guide-description">
+                    {{ guide.description | slice: 0 : 120 }}{{ guide.description.length > 120 ? '...' : '' }}
+                  </p>
+                </mat-card-content>
+              }
+
+              <mat-card-actions align="end">
+                <button mat-button color="primary" (click)="viewGuide(guide.slug)">
+                  <mat-icon>open_in_new</mat-icon>
+                  {{ 'guides.view' | translate }}
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+
+        <!-- Infinite scroll sentinel -->
+        @if (hasMoreCommunity()) {
+          <div appInfiniteScroll (scrolled)="onLoadMore()" class="scroll-sentinel">
+            @if (isLoadingCommunity()) {
+              <mat-spinner diameter="32"></mat-spinner>
+            }
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: My guides -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">bookmark</mat-icon>
+        {{ 'guides.my_guides' | translate }}
+      </ng-template>
+
+      <div class="tab-content">
+        <div class="my-guides-header">
+          <span class="guides-count">{{ 'guides.count' | translate: { count: guidesCount(), max: MAX_GUIDES } }}</span>
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="createGuide()"
+            [disabled]="isAtLimit()"
+            [matTooltip]="isAtLimit() ? ('guides.limit_reached' | translate) : ''"
+          >
+            <mat-icon>add</mat-icon>
+            {{ 'guides.create' | translate }}
+          </button>
+        </div>
+
+        <!-- Loading state -->
+        @if (isLoadingMyGuides()) {
+          <div class="loading-center">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        }
+
+        <!-- Empty state -->
+        @if (!isLoadingMyGuides() && myGuides().length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">edit_note</mat-icon>
+            <p>{{ 'guides.no_guides' | translate }}</p>
+            <button mat-flat-button color="primary" (click)="createGuide()">
+              {{ 'guides.create' | translate }}
+            </button>
+          </div>
+        }
+
+        <!-- My guide cards -->
+        <div class="guides-grid">
+          @for (guide of myGuides(); track guide.id) {
+            <mat-card class="guide-card my-guide-card">
+              <mat-card-header>
+                <div class="card-header-row">
+                  <span class="category-badge category-badge--{{ guide.category }}">
+                    {{ 'guides.categories.' + guide.category | translate }}
+                  </span>
+                  <span
+                    class="status-badge"
+                    [class.status-badge--published]="guide.is_published"
+                    [class.status-badge--draft]="!guide.is_published"
+                  >
+                    {{ (guide.is_published ? 'guides.status.published' : 'guides.status.draft') | translate }}
+                  </span>
+                  <div class="upvotes">
+                    <mat-icon class="upvote-icon">favorite</mat-icon>
+                    <span>{{ guide.upvotes_count }}</span>
+                  </div>
+                </div>
+                <mat-card-title class="guide-title">{{ guide.title }}</mat-card-title>
+                <mat-card-subtitle>{{ guide.created_at | localDate }}</mat-card-subtitle>
+              </mat-card-header>
+
+              <mat-card-actions>
+                <button mat-button (click)="editGuide(guide.id)">
+                  <mat-icon>edit</mat-icon>
+                  {{ 'guides.edit' | translate }}
+                </button>
+
+                <button mat-button (click)="togglePublish(guide)">
+                  <mat-icon>{{ guide.is_published ? 'visibility_off' : 'publish' }}</mat-icon>
+                  {{ (guide.is_published ? 'guides.unpublish' : 'guides.publish') | translate }}
+                </button>
+
+                @if (guide.is_published) {
+                  <button mat-button (click)="viewGuide(guide.slug)">
+                    <mat-icon>open_in_new</mat-icon>
+                    {{ 'guides.view' | translate }}
+                  </button>
+                }
+
+                <span class="spacer"></span>
+
+                <button
+                  mat-icon-button
+                  class="btn-danger-icon"
+                  (click)="deleteGuide(guide)"
+                  [matTooltip]="'guides.delete' | translate"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

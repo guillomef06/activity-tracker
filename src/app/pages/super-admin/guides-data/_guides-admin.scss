@@ -1,0 +1,187 @@
+// Shared styles for all guides-data tab components
+// Imported via @use in each tab component's SCSS
+
+.tab-content {
+  padding: 1rem;
+}
+
+.tab-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+
+  .gem-filter-field {
+    min-width: 160px;
+  }
+}
+
+.add-row-form {
+  background: var(--mat-sys-surface-variant);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .inline-form {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    mat-form-field {
+      margin-bottom: 0;
+    }
+
+    .field-narrow {
+      width: 100px;
+    }
+
+    .field-medium {
+      width: 160px;
+    }
+
+    .field-wide {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding-top: var(--space-1);
+    }
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+
+  td,
+  th {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.thumbnail-cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .thumbnail {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  .no-image-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.3;
+  }
+
+  .upload-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    .upload-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .hidden-input {
+      display: none;
+    }
+  }
+}
+
+.edit-field {
+  margin: 0;
+  width: 100%;
+  min-width: 120px;
+}
+
+.edit-field-narrow {
+  margin: 0;
+  width: 80px;
+}
+
+.edit-field-medium {
+  margin: 0;
+  width: 140px;
+}
+
+.description-text {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  max-width: 300px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.skills-panel {
+  background: var(--mat-sys-surface-variant);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+
+  .skills-panel-title {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .champion-skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    min-height: 36px;
+  }
+
+  .empty-text {
+    font-style: italic;
+    opacity: 0.6;
+    font-size: 0.875rem;
+  }
+
+  .skill-assign-field {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .loading-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+}
+
+.type-chip {
+  font-size: 0.75rem;
+}

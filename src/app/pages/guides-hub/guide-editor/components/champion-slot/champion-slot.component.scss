@@ -1,0 +1,131 @@
+.champion-slot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  min-height: 88px;
+  background: var(--mat-sys-surface-container-low);
+  cursor: default;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+
+  &.filled {
+    border-color: var(--mat-sys-primary);
+    background: color-mix(in srgb, var(--mat-sys-primary) 6%, var(--mat-sys-surface-container-low));
+  }
+
+  &:hover {
+    background: var(--mat-sys-surface-container);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.drag-handle {
+  cursor: grab;
+  color: var(--mat-sys-on-surface-variant);
+  flex-shrink: 0;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.slot-content {
+  display: flex;
+  flex: 1;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.champion-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  width: 64px;
+}
+
+.champion-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.champion-avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--mat-sys-secondary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mat-sys-on-secondary-container);
+}
+
+.champion-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
+  word-break: break-word;
+}
+
+.slot-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  flex-wrap: wrap;
+  line-height: 1.4;
+}
+
+.detail-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.trait-chip {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  padding: 0 var(--space-2);
+  border-radius: 12px;
+  font-size: 0.7rem;
+}
+
+.slot-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.btn-danger-icon {
+  color: var(--mat-sys-error);
+}
+
+.empty-slot-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--mat-sys-on-surface-variant);
+  width: 100%;
+  min-height: 80px;
+}

@@ -1,0 +1,104 @@
+<mat-card class="champion-card">
+  <mat-card-content>
+    <!-- Champion header -->
+    <div class="champion-header">
+      @if (champion().champions?.image_url) {
+        <img
+          [src]="champion().champions!.image_url!"
+          [alt]="champion().champions?.name ?? ''"
+          class="champion-avatar"
+        />
+      } @else {
+        <div class="champion-avatar-placeholder">
+          <mat-icon>person</mat-icon>
+        </div>
+      }
+      <h3 class="champion-name">
+        {{ 'guides.champion_slot' | translate: { n: champion().position + 1 } }}
+        @if (champion().champions?.name) {
+          — {{ champion().champions!.name }}
+        }
+      </h3>
+    </div>
+
+    <div class="champion-details">
+      <!-- Skills -->
+      @if (champion().guide_champion_skills && champion().guide_champion_skills!.length > 0) {
+        <div class="detail-row">
+          <mat-icon class="detail-icon">flash_on</mat-icon>
+          <div class="item-list">
+            @for (skillEntry of champion().guide_champion_skills!; track skillEntry.id) {
+              @if (skillEntry.skills) {
+                <span class="item-chip">
+                  @if (skillEntry.skills.icon_url) {
+                    <img [src]="skillEntry.skills.icon_url" [alt]="skillEntry.skills.name" class="item-img" />
+                  }
+                  {{ skillEntry.skills.name }}
+                </span>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Gems -->
+      @if (champion().guide_champion_gems && champion().guide_champion_gems!.length > 0) {
+        <div class="detail-row">
+          <mat-icon class="detail-icon">diamond</mat-icon>
+          <div class="item-list">
+            @for (gemEntry of champion().guide_champion_gems!; track gemEntry.id) {
+              @if (gemEntry.gems) {
+                <span class="item-chip">
+                  @if (gemEntry.gems.icon_url) {
+                    <img [src]="gemEntry.gems.icon_url" [alt]="gemEntry.gems.name" class="item-img" />
+                  }
+                  {{ gemEntry.gems.name }}
+                </span>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Horse traits -->
+      @if (champion().guide_champion_horse_traits && champion().guide_champion_horse_traits!.length > 0) {
+        <div class="detail-row">
+          <mat-icon class="detail-icon">psychology</mat-icon>
+          <div class="item-list">
+            @for (traitEntry of champion().guide_champion_horse_traits!; track traitEntry.id) {
+              @if (traitEntry.horse_temperaments) {
+                <span class="item-chip">{{ traitEntry.horse_temperaments.name }}</span>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Ornament -->
+      @if (champion().ornaments) {
+        <div class="detail-row">
+          <mat-icon class="detail-icon">auto_awesome</mat-icon>
+          <span class="item-chip">
+            @if (champion().ornaments!.image_url) {
+              <img [src]="champion().ornaments!.image_url!" [alt]="champion().ornaments!.name" class="item-img" />
+            }
+            {{ champion().ornaments!.name }}
+          </span>
+        </div>
+      }
+
+      <!-- Ring -->
+      @if (champion().rings) {
+        <div class="detail-row">
+          <mat-icon class="detail-icon">album</mat-icon>
+          <span class="item-chip">
+            @if (champion().rings!.icon_url) {
+              <img [src]="champion().rings!.icon_url!" [alt]="champion().rings!.name" class="item-img" />
+            }
+            {{ champion().rings!.name }}
+          </span>
+        </div>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

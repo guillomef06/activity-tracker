@@ -50,7 +50,7 @@
   &__header {
     display: grid;
     grid-template-columns: 1fr 116px;
-    padding: 0 16px;
+    padding: 0 var(--space-4);
     height: 48px;
     align-items: center;
     background: var(--mat-sys-surface-variant);
