@@ -1,0 +1,157 @@
+<div class="editor-container">
+  <mat-card class="page-header">
+    <mat-card-header>
+      <mat-icon class="header-icon">{{ isEditMode() ? 'edit' : 'add_circle' }}</mat-icon>
+      <div class="header-content">
+        <mat-card-title>
+          {{ (isEditMode() ? 'guides.editor.title_edit' : 'guides.editor.title_new') | translate }}
+        </mat-card-title>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <mat-stepper linear class="editor-stepper" orientation="vertical">
+      <!-- Step 1 — Basic info -->
+      <mat-step [stepControl]="basicForm" [label]="'guides.editor.step_basic' | translate">
+        <form [formGroup]="basicForm" class="step-content">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'guides.editor.title_label' | translate }}</mat-label>
+            <input matInput formControlName="title" maxlength="100" />
+            <mat-hint align="end">{{ basicForm.get('title')?.value?.length ?? 0 }}/100</mat-hint>
+            @if (basicForm.get('title')?.errors?.['required']) {
+              <mat-error>{{ 'errors.required' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'guides.editor.category_label' | translate }}</mat-label>
+            <mat-select formControlName="category">
+              @for (cat of categories; track cat.value) {
+                <mat-option [value]="cat.value">{{ cat.labelKey | translate }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <div class="step-actions">
+            <button mat-flat-button color="primary" matStepperNext [disabled]="basicForm.invalid">
+              {{ 'common.next' | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 2 — Content -->
+      <mat-step [label]="'guides.editor.step_content' | translate">
+        <div class="step-content">
+          @if (isFormationCategory()) {
+            <!-- Formation: champion slots with drag & drop -->
+            <p class="step-hint">{{ 'guides.formation_hint' | translate }}</p>
+
+            <div cdkDropList (cdkDropListDropped)="onSlotDrop($event)" class="champion-slots-list">
+              @for (slot of championSlots(); track $index) {
+                <app-champion-slot
+                  cdkDrag
+                  [config]="slot"
+                  [position]="$index"
+                  (editSlot)="openChampionDialog($index)"
+                  (clearSlot)="clearChampionSlot($index)"
+                />
+              }
+            </div>
+          } @else {
+            <!-- Event / General: textarea -->
+            <form [formGroup]="contentForm">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'guides.editor.description_label' | translate }}</mat-label>
+                <textarea
+                  matInput
+                  formControlName="description"
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="5"
+                  cdkAutosizeMaxRows="20"
+                  maxlength="2000"
+                ></textarea>
+                <mat-hint align="end">{{ contentForm.get('description')?.value?.length ?? 0 }}/2000</mat-hint>
+              </mat-form-field>
+            </form>
+          }
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>{{ 'common.back' | translate }}</button>
+            <button
+              mat-flat-button
+              color="primary"
+              matStepperNext
+              [disabled]="isFormationCategory() && !hasAtLeastOneChampion()"
+            >
+              {{ 'common.next' | translate }}
+            </button>
+          </div>
+        </div>
+      </mat-step>
+
+      <!-- Step 3 — Review & Save -->
+      <mat-step [stepControl]="reviewForm" [label]="'guides.editor.step_review' | translate">
+        <form [formGroup]="reviewForm" class="step-content">
+          <!-- Preview summary -->
+          <mat-card class="preview-card" appearance="outlined">
+            <mat-card-content>
+              <p class="preview-title">{{ guidePreview().title }}</p>
+              <span class="category-badge">{{ 'guides.categories.' + guidePreview().category | translate }}</span>
+              @if (isFormationCategory()) {
+                <p class="preview-info">{{ 'guides.champion_count' | translate: { count: filledSlotsCount() } }}</p>
+              } @else if (guidePreview().description) {
+                <p class="preview-description">
+                  {{ guidePreview().description | slice: 0 : 150
+                  }}{{ guidePreview().description.length > 150 ? '...' : '' }}
+                </p>
+              }
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Author notes -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'guides.description' | translate }}</mat-label>
+            <textarea
+              matInput
+              formControlName="notes"
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="10"
+              maxlength="2000"
+            ></textarea>
+            <mat-hint align="end">{{ reviewForm.get('notes')?.value?.length ?? 0 }}/2000</mat-hint>
+          </mat-form-field>
+
+          <!-- Publish toggle -->
+          <div class="publish-toggle">
+            <mat-slide-toggle formControlName="is_published" color="primary">
+              {{
+                (reviewForm.get('is_published')?.value ? 'guides.editor.publish_now' : 'guides.editor.save_draft')
+                  | translate
+              }}
+            </mat-slide-toggle>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious>{{ 'common.back' | translate }}</button>
+            <button mat-button (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+            <button mat-flat-button color="primary" (click)="save()" [disabled]="basicForm.invalid || isSaving()">
+              @if (isSaving()) {
+                <mat-spinner diameter="18" class="inline-spinner"></mat-spinner>
+              } @else {
+                <mat-icon>save</mat-icon>
+              }
+              {{ 'guides.editor.save' | translate }}
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-stepper>
+  }
+</div>

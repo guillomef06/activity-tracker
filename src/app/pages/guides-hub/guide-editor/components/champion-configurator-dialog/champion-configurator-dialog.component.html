@@ -1,0 +1,168 @@
+<h2 mat-dialog-title>{{ 'guides.champion_slot' | translate: { n: data.position + 1 } }}</h2>
+
+<mat-dialog-content [formGroup]="form" class="dialog-content">
+  <!-- Champion selection -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ 'guides.champion' | translate }}</mat-label>
+    <mat-select formControlName="champion_id">
+      @for (champion of data.champions; track champion.id) {
+        <mat-option [value]="champion.id">
+          {{ champion.name }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (selectedChampionId()) {
+    <!-- ── HERO ──────────────────────────────────────────────────────── -->
+    <mat-divider class="section-divider"></mat-divider>
+    <p class="section-group">
+      <mat-icon class="section-group-icon">person</mat-icon>
+      {{ 'guides.hero_section' | translate }}
+    </p>
+
+    <!-- Skills -->
+    <p class="section-label">
+      <mat-icon class="section-icon">flash_on</mat-icon>
+      {{ 'guides.skills' | translate }}
+    </p>
+
+    <div class="two-col">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'guides.skill' | translate }} 1</mat-label>
+        <mat-select formControlName="skill1_id">
+          <mat-option [value]="null">—</mat-option>
+          @for (skill of availableSkillsSlot1(); track skill.id) {
+            <mat-option [value]="skill.id">{{ skill.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'guides.skill' | translate }} 2</mat-label>
+        <mat-select formControlName="skill2_id">
+          <mat-option [value]="null">—</mat-option>
+          @for (skill of availableSkillsSlot2(); track skill.id) {
+            <mat-option [value]="skill.id">{{ skill.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Gems -->
+    <p class="section-label">
+      <mat-icon class="section-icon">diamond</mat-icon>
+      {{ 'guides.gems' | translate }}
+    </p>
+
+    <div class="three-col">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'superAdmin.gemType.strategy' | translate }}</mat-label>
+        <mat-select formControlName="gem_strategy_id">
+          <mat-option [value]="null">—</mat-option>
+          @for (gem of strategyGems(); track gem.id) {
+            <mat-option [value]="gem.id">{{ gem.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'superAdmin.gemType.hero' | translate }}</mat-label>
+        <mat-select formControlName="gem_hero_id">
+          <mat-option [value]="null">—</mat-option>
+          @for (gem of heroGems(); track gem.id) {
+            <mat-option [value]="gem.id">{{ gem.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'superAdmin.gemType.tactics' | translate }}</mat-label>
+        <mat-select formControlName="gem_tactics_id">
+          <mat-option [value]="null">—</mat-option>
+          @for (gem of tacticsGems(); track gem.id) {
+            <mat-option [value]="gem.id">{{ gem.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Ring -->
+    <p class="section-label">
+      <mat-icon class="section-icon">album</mat-icon>
+      {{ 'guides.ring' | translate }}
+    </p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'guides.ring' | translate }}</mat-label>
+      <mat-select formControlName="ring_id">
+        <mat-option [value]="null">—</mat-option>
+        @for (ring of availableRings(); track ring.id) {
+          <mat-option [value]="ring.id">{{ ring.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- ── HORSE ─────────────────────────────────────────────────────── -->
+    <mat-divider class="section-divider"></mat-divider>
+    <p class="section-group">
+      <mat-icon class="section-group-icon">emoji_nature</mat-icon>
+      {{ 'guides.horse_section' | translate }}
+    </p>
+
+    <!-- Traits -->
+    <p class="section-label">
+      <mat-icon class="section-icon">psychology</mat-icon>
+      {{ 'guides.traits' | translate }}
+    </p>
+
+    @for (i of [1, 2, 3].slice(0, traitCount()); track i) {
+      <div class="trait-row">
+        <mat-form-field appearance="outline" class="flex-grow">
+          <mat-label>{{ 'guides.trait' | translate }} {{ i }}</mat-label>
+          <mat-select [formControlName]="'trait' + i + '_id'">
+            <mat-option [value]="null">—</mat-option>
+            @for (t of availableTraitsPerSlot()[i - 1]; track t.id) {
+              <mat-option [value]="t.id">{{ t.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        @if (i > 1) {
+          <button mat-icon-button type="button" (click)="removeTrait($any(i))" class="remove-trait-btn">
+            <mat-icon>remove_circle_outline</mat-icon>
+          </button>
+        }
+      </div>
+    }
+
+    @if (traitCount() < 3) {
+      <button mat-button type="button" (click)="addTrait()">
+        <mat-icon>add</mat-icon>
+        {{ 'guides.add_trait' | translate }}
+      </button>
+    }
+
+    <!-- Ornament -->
+    <p class="section-label">
+      <mat-icon class="section-icon">auto_awesome</mat-icon>
+      {{ 'guides.ornament' | translate }}
+    </p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'guides.ornament' | translate }}</mat-label>
+      <mat-select formControlName="ornament_id">
+        <mat-option [value]="null">—</mat-option>
+        @for (ornament of data.ornaments; track ornament.id) {
+          <mat-option [value]="ornament.id">{{ ornament.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">{{ 'common.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="confirm()">
+    {{ 'common.confirm' | translate }}
+  </button>
+</mat-dialog-actions>

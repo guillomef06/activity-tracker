@@ -1,0 +1,75 @@
+<div class="guide-view-page">
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="spinner-container">
+      <mat-spinner diameter="48"></mat-spinner>
+    </div>
+  }
+
+  <!-- Not found -->
+  @if (!isLoading() && notFound()) {
+    <div class="not-found-state">
+      <mat-icon>search_off</mat-icon>
+      <p>{{ 'guides.guide_not_found' | translate }}</p>
+      <button mat-stroked-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        {{ 'guides.back_to_list' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- Guide content -->
+  @if (!isLoading() && guide(); as g) {
+    <!-- Back + actions bar -->
+    <div class="top-bar">
+      <button mat-icon-button (click)="goBack()" [attr.aria-label]="'guides.back_to_list' | translate">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span class="top-bar-spacer"></span>
+      <button mat-icon-button (click)="copyLink()" [attr.aria-label]="'guides.copy_link' | translate">
+        <mat-icon>link</mat-icon>
+      </button>
+    </div>
+
+    <!-- Guide header -->
+    <header class="guide-header">
+      <span class="category-badge category-badge--{{ g.category }}">
+        {{ 'guides.categories.' + g.category | translate }}
+      </span>
+      <h1 class="guide-title">{{ g.title }}</h1>
+      <p class="guide-meta">
+        {{ 'guides.by' | translate }} {{ authorName(g) }}
+        &nbsp;·&nbsp;
+        {{ g.created_at | localDate }}
+      </p>
+    </header>
+
+    <!-- Formation champion cards -->
+    @if (g.category === 'formation') {
+      <section class="champions-section">
+        @for (champion of sortedChampions(); track trackChampion($index, champion)) {
+          <app-guide-champion-card [champion]="champion" />
+        }
+      </section>
+    }
+
+    <!-- Author's notes -->
+    @if (g.description) {
+      <mat-card class="author-notes-card">
+        <mat-card-content>
+          <p class="author-notes-label">{{ 'guides.author_notes' | translate }}</p>
+          <p class="author-notes-text">{{ g.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Upvote -->
+    <div class="upvote-bar">
+      <button mat-stroked-button class="upvote-btn" [class.upvote-btn--active]="hasUpvoted()" (click)="toggleUpvote()">
+        <mat-icon>{{ hasUpvoted() ? 'thumb_up' : 'thumb_up_off_alt' }}</mat-icon>
+        {{ (hasUpvoted() ? 'guides.upvoted' : 'guides.upvote') | translate }}
+        <span class="upvote-count">{{ upvoteCount() }}</span>
+      </button>
+    </div>
+  }
+</div>

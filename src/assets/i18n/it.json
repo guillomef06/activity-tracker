@@ -84,7 +84,8 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "allianceSettings": "Impostazioni Alleanza",
-    "home": "Home"
+    "home": "Home",
+    "guides": "Guide"
   },
   "alliance": {
     "settings": {
@@ -286,7 +287,24 @@
     "save": "Salva",
     "saving": "Salvataggio...",
     "update": "Aggiorna",
-    "back": "Indietro"
+    "back": "Indietro",
+    "add": "Aggiungi",
+    "edit": "Modifica",
+    "name": "Nome",
+    "description": "Descrizione",
+    "image": "Immagine",
+    "icon": "Icona",
+    "order": "Ordine",
+    "active": "Attivo",
+    "all": "Tutti",
+    "none": "Nessuno",
+    "saved": "Salvato",
+    "created": "Creato",
+    "deleted": "Eliminato",
+    "deleteConfirm": "Sei sicuro di voler eliminare \"{{name}}\"?",
+    "uploadImage": "Carica immagine",
+    "next": "Avanti",
+    "clear": "Cancella"
   },
   "superAdmin": {
     "dashboard": {
@@ -300,7 +318,9 @@
       "manageAlliances": "Gestisci Alleanze",
       "manageAlliancesDesc": "Visualizza e gestisci tutte le alleanze",
       "manageUsers": "Gestisci Utenti",
-      "manageUsersDesc": "Visualizza e gestisci tutti gli utenti"
+      "manageUsersDesc": "Visualizza e gestisci tutti gli utenti",
+      "manageGuidesData": "Dati di Riferimento Guide",
+      "manageGuidesDataDesc": "Gestisci campioni, abilità, cavalli e gemme"
     },
     "alliances": {
       "title": "Gestione Alleanze",
@@ -335,6 +355,21 @@
       "updated": "Utente aggiornato con successo",
       "updateFailed": "Impossibile aggiornare l'utente",
       "deleted": "Utente eliminato con successo"
+    },
+    "guidesData": "Dati di Riferimento Guide",
+    "guidesDataSubtitle": "Gestisci campioni, abilità, cavalli, ornamenti e gemme",
+    "champions": "Campioni",
+    "skills": "Abilità",
+    "assignSkills": "Assegna Abilità",
+    "temperaments": "Temperamenti",
+    "ornaments": "Ornamenti",
+    "gems": "Gemme",
+    "rings": "Anelli",
+    "gemType": {
+      "label": "Tipo",
+      "strategy": "Strategia",
+      "hero": "Eroe",
+      "tactics": "Tattiche"
     }
   },
   "super_admin": "Super Amministratore",
@@ -559,13 +594,88 @@
       "invalidWebhookUrl": "Deve essere un URL webhook Discord valido (https://discord.com/api/webhooks/...)"
     }
   },
+  "guides": {
+    "title": "Guide",
+    "community": "Comunità",
+    "my_guides": "Le Mie Guide",
+    "create": "Crea una guida",
+    "limit_reached": "Limite di 10 guide raggiunto",
+    "no_guides": "Nessuna guida per ora",
+    "count": "{{ count }}/10 guide",
+    "categories": {
+      "formation": "Formazione",
+      "evenement": "Evento",
+      "general": "Generale"
+    },
+    "status": {
+      "published": "Pubblicato",
+      "draft": "Bozza"
+    },
+    "by": "Di",
+    "view": "Vedi",
+    "edit": "Modifica",
+    "publish": "Pubblica",
+    "unpublish": "Annulla pubblicazione",
+    "delete": "Elimina",
+    "published_success": "Guida pubblicata",
+    "unpublished_success": "Guida non pubblicata",
+    "champion": "Campione",
+    "champion_slot": "Slot Campione",
+    "add_champion": "Aggiungi campione",
+    "champion_count": "{{ count }} campione/i configurato/i",
+    "formation_hint": "Configura fino a 3 campioni. Trascina per riordinare.",
+    "skill": "Abilità",
+    "skills": "Abilità",
+    "gems": "Gemme",
+    "hero_section": "Eroe",
+    "horse_section": "Cavallo",
+    "traits": "Tratti del cavallo",
+    "trait": "Tratto",
+    "add_trait": "Aggiungi tratto",
+    "ornament": "Ornamento",
+    "ring": "Anello",
+    "description": "Descrizione / Note dell'autore",
+    "editor": {
+      "title_new": "Crea una guida",
+      "title_edit": "Modifica guida",
+      "step_basic": "Informazioni",
+      "step_content": "Contenuto",
+      "step_review": "Riepilogo",
+      "title_label": "Titolo della guida",
+      "category_label": "Categoria",
+      "description_label": "Descrizione",
+      "publish_now": "Pubblica ora",
+      "save_draft": "Salva come bozza",
+      "save": "Salva"
+    },
+    "confirm_delete": "Eliminare questa guida?",
+    "confirm_delete_msg": "Questa azione non può essere annullata.",
+    "errors": {
+      "limitReached": "Hai raggiunto il massimo di 10 guide.",
+      "slugDuplicate": "Questo titolo è troppo simile a una guida esistente. Modifica il titolo.",
+      "notFound": "Guida non trovata.",
+      "unauthorized": "Non sei autorizzato a modificare questa guida.",
+      "unknown": "Si è verificato un errore imprevisto. Riprova.",
+      "invalidFileType": "Tipo di file non valido. Consentiti: PNG, JPEG, WebP."
+    },
+    "public_list_title": "Guide della Comunità",
+    "public_list_empty": "Nessuna guida pubblicata ancora",
+    "copy_link": "Copia link",
+    "link_copied": "Link copiato!",
+    "back_to_list": "Torna alle guide",
+    "guide_not_found": "Guida non trovata",
+    "upvote": "Vota",
+    "upvoted": "Votato",
+    "champion_slot": "Campione {{n}}",
+    "author_notes": "Note dell'autore"
+  },
   "landing": {
     "hero": {
       "eyebrow": "Monitoraggio Attività dell'Alleanza",
       "title1": "Gioca Furbo.",
       "title2": "Vinci Insieme.",
       "subtitleBefore": "Pensato per ogni giocatore attivo — non solo per chi spende di più. Registra le attività della tua alleanza, accumula punti strategici e conquista",
-      "subtitleStrong": "la Top\u00a010 del Governatore Più Potente",
+      "subtitleStrong": "la Top 10 del Governatore Più Potente",
       "subtitleAfter": "con molti meno acceleratori e risorse.",
       "ctaLogin": "Accedi",
       "ctaJoin": "Unisciti con Invito"

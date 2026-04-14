@@ -84,7 +84,8 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "allianceSettings": "Alliance Settings",
-    "home": "Home"
+    "home": "Home",
+    "guides": "Guides"
   },
   "alliance": {
     "settings": {
@@ -286,7 +287,24 @@
     "save": "Save",
     "saving": "Saving...",
     "update": "Update",
-    "back": "Back"
+    "back": "Back",
+    "add": "Add",
+    "edit": "Edit",
+    "name": "Name",
+    "description": "Description",
+    "image": "Image",
+    "icon": "Icon",
+    "order": "Order",
+    "active": "Active",
+    "all": "All",
+    "none": "None",
+    "saved": "Saved",
+    "created": "Created",
+    "deleted": "Deleted",
+    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"?",
+    "uploadImage": "Upload image",
+    "next": "Next",
+    "clear": "Clear"
   },
   "superAdmin": {
     "dashboard": {
@@ -300,7 +318,9 @@
       "manageAlliances": "Manage Alliances",
       "manageAlliancesDesc": "View and manage all alliances",
       "manageUsers": "Manage Users",
-      "manageUsersDesc": "View and manage all users"
+      "manageUsersDesc": "View and manage all users",
+      "manageGuidesData": "Guide Reference Data",
+      "manageGuidesDataDesc": "Manage champions, skills, horses and gems"
     },
     "alliances": {
       "title": "Alliances Management",
@@ -335,6 +355,21 @@
       "updated": "User updated successfully",
       "updateFailed": "Failed to update user",
       "deleted": "User deleted successfully"
+    },
+    "guidesData": "Guide Reference Data",
+    "guidesDataSubtitle": "Manage champions, skills, horses, ornaments and gems",
+    "champions": "Champions",
+    "skills": "Skills",
+    "assignSkills": "Assign Skills",
+    "temperaments": "Temperaments",
+    "ornaments": "Ornaments",
+    "gems": "Gems",
+    "rings": "Rings",
+    "gemType": {
+      "label": "Type",
+      "strategy": "Strategy",
+      "hero": "Hero",
+      "tactics": "Tactics"
     }
   },
   "super_admin": "Super Admin",
@@ -559,13 +594,88 @@
       "invalidWebhookUrl": "Must be a valid Discord webhook URL (https://discord.com/api/webhooks/...)"
     }
   },
+  "guides": {
+    "title": "Guides",
+    "community": "Community",
+    "my_guides": "My Guides",
+    "create": "Create a guide",
+    "limit_reached": "10 guide limit reached",
+    "no_guides": "No guides yet",
+    "count": "{{ count }}/10 guides",
+    "categories": {
+      "formation": "Formation",
+      "evenement": "Event",
+      "general": "General"
+    },
+    "status": {
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "by": "By",
+    "view": "View",
+    "edit": "Edit",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "delete": "Delete",
+    "published_success": "Guide published",
+    "unpublished_success": "Guide unpublished",
+    "champion": "Champion",
+    "champion_slot": "Champion Slot",
+    "add_champion": "Add champion",
+    "champion_count": "{{ count }} champion(s) configured",
+    "formation_hint": "Configure up to 3 champions. Drag to reorder.",
+    "skill": "Skill",
+    "skills": "Skills",
+    "gems": "Gems",
+    "hero_section": "Hero",
+    "horse_section": "Horse",
+    "traits": "Horse traits",
+    "trait": "Trait",
+    "add_trait": "Add trait",
+    "ornament": "Ornament",
+    "ring": "Ring",
+    "description": "Description / Author notes",
+    "editor": {
+      "title_new": "Create a guide",
+      "title_edit": "Edit guide",
+      "step_basic": "Information",
+      "step_content": "Content",
+      "step_review": "Summary",
+      "title_label": "Guide title",
+      "category_label": "Category",
+      "description_label": "Description",
+      "publish_now": "Publish now",
+      "save_draft": "Save as draft",
+      "save": "Save"
+    },
+    "confirm_delete": "Delete this guide?",
+    "confirm_delete_msg": "This action cannot be undone.",
+    "errors": {
+      "limitReached": "You have reached the maximum of 10 guides.",
+      "slugDuplicate": "This title is too similar to an existing guide. Please adjust the title.",
+      "notFound": "Guide not found.",
+      "unauthorized": "You are not authorized to modify this guide.",
+      "unknown": "An unexpected error occurred. Please try again.",
+      "invalidFileType": "Invalid file type. Allowed: PNG, JPEG, WebP."
+    },
+    "public_list_title": "Community Guides",
+    "public_list_empty": "No guides published yet",
+    "copy_link": "Copy link",
+    "link_copied": "Link copied!",
+    "back_to_list": "Back to guides",
+    "guide_not_found": "Guide not found",
+    "upvote": "Upvote",
+    "upvoted": "Upvoted",
+    "champion_slot": "Champion {{n}}",
+    "author_notes": "Author's notes"
+  },
   "landing": {
     "hero": {
       "eyebrow": "Alliance Activity Tracker",
       "title1": "Play Smart.",
       "title2": "Win Together.",
       "subtitleBefore": "Designed for every active player — not just spenders. Track your alliance activities, earn strategic points, and reach",
-      "subtitleStrong": "Top\u00a010 Mightiest Governor",
+      "subtitleStrong": "Top 10 Mightiest Governor",
       "subtitleAfter": "with significantly fewer speed-ups and resources.",
       "ctaLogin": "Login",
       "ctaJoin": "Join with Invitation"

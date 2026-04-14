@@ -1,0 +1,920 @@
+<div class="guides-data-page">
+  <!-- Page header -->
+  <mat-card class="page-header">
+    <mat-card-header>
+      <mat-icon class="header-icon">auto_stories</mat-icon>
+      <div class="header-content">
+        <mat-card-title>{{ 'superAdmin.guidesData' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'superAdmin.guidesDataSubtitle' | translate }}</mat-card-subtitle>
+      </div>
+      <button mat-icon-button (click)="ngOnInit()" [disabled]="progressBar.isLoading()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </mat-card-header>
+  </mat-card>
+
+  <mat-card class="content-card">
+    <mat-tab-group animationDuration="200ms">
+      <!-- ══════════════════════════════════════════════════════════
+           Tab 1 — Champions
+      ══════════════════════════════════════════════════════════ -->
+      <mat-tab [label]="'superAdmin.champions' | translate">
+        <div class="tab-content">
+          <div class="tab-toolbar">
+            <button mat-raised-button color="primary" (click)="showAddChampion.set(!showAddChampion())">
+              <mat-icon>add</mat-icon>
+              {{ 'common.add' | translate }}
+            </button>
+          </div>
+
+          @if (showAddChampion()) {
+            <div class="add-row-form">
+              <form [formGroup]="championForm" (ngSubmit)="addChampion()" class="inline-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'common.name' | translate }}</mat-label>
+                  <input matInput formControlName="name" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-narrow">
+                  <mat-label>{{ 'common.order' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="sort_order" />
+                </mat-form-field>
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="championForm.invalid">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="showAddChampion.set(false)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </form>
+            </div>
+          }
+
+          <div class="table-container">
+            <table mat-table [dataSource]="champions()" class="data-table">
+              <!-- Image -->
+              <ng-container matColumnDef="image">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.image' | translate }}</th>
+                <td mat-cell *matCellDef="let champion">
+                  <div class="thumbnail-cell">
+                    @if (champion.image_url) {
+                      <img [src]="champion.image_url" class="thumbnail" [alt]="champion.name" />
+                    } @else {
+                      <mat-icon class="no-image-icon">image_not_supported</mat-icon>
+                    }
+                    <label class="upload-label" [matTooltip]="'common.uploadImage' | translate">
+                      <mat-icon class="upload-icon">upload</mat-icon>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        (change)="uploadChampionImage(champion, $event)"
+                        class="hidden-input"
+                      />
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
+                <td mat-cell *matCellDef="let champion">
+                  @if (isEditingChampion(champion.id)) {
+                    <form [formGroup]="editChampionForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="name" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <strong>{{ champion.name }}</strong>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Active -->
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.active' | translate }}</th>
+                <td mat-cell *matCellDef="let champion">
+                  <mat-slide-toggle
+                    [checked]="champion.is_active"
+                    (change)="toggleChampionActive(champion)"
+                    color="primary"
+                  ></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <!-- Order -->
+              <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.order' | translate }}</th>
+                <td mat-cell *matCellDef="let champion">
+                  @if (isEditingChampion(champion.id)) {
+                    <form [formGroup]="editChampionForm">
+                      <mat-form-field appearance="outline" class="edit-field-narrow">
+                        <input matInput type="number" formControlName="sort_order" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    {{ champion.sort_order }}
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                <td mat-cell *matCellDef="let champion">
+                  @if (isEditingChampion(champion.id)) {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="saveChampion(champion)" [disabled]="editChampionForm.invalid">
+                        <mat-icon>save</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="cancelEditChampion()">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="row-actions">
+                      <button
+                        mat-icon-button
+                        (click)="startEditChampion(champion)"
+                        [matTooltip]="'common.edit' | translate"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="btn-danger"
+                        (click)="deleteChampion(champion)"
+                        [matTooltip]="'common.delete' | translate"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Skills expand toggle -->
+              <ng-container matColumnDef="skills">
+                <th mat-header-cell *matHeaderCellDef>{{ 'superAdmin.skills' | translate }}</th>
+                <td mat-cell *matCellDef="let champion">
+                  <button
+                    mat-icon-button
+                    (click)="toggleChampionPanel(champion)"
+                    [matTooltip]="'superAdmin.assignSkills' | translate"
+                  >
+                    <mat-icon>{{ isChampionExpanded(champion.id) ? 'expand_less' : 'sports_kabaddi' }}</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="championColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: championColumns"></tr>
+            </table>
+          </div>
+
+          <!-- Skills assignment panel -->
+          @if (expandedChampionId()) {
+            <div class="skills-panel">
+              <h3 class="skills-panel-title">{{ 'superAdmin.assignSkills' | translate }}</h3>
+
+              @if (isLoadingChampionSkills()) {
+                <div class="loading-row">
+                  <mat-spinner diameter="24"></mat-spinner>
+                </div>
+              } @else {
+                <div class="champion-skills-list">
+                  @for (skill of championSkills(); track skill.id) {
+                    <mat-chip (removed)="removeSkillFromChampion(skill)">
+                      {{ skill.name }}
+                      <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-chip>
+                  } @empty {
+                    <span class="empty-text">{{ 'common.none' | translate }}</span>
+                  }
+                </div>
+
+                <mat-form-field appearance="outline" class="skill-assign-field">
+                  <mat-label>{{ 'superAdmin.assignSkills' | translate }}</mat-label>
+                  <input matInput [formControl]="skillSearchControl" [matAutocomplete]="skillAuto" />
+                  <mat-autocomplete
+                    #skillAuto="matAutocomplete"
+                    [displayWith]="displaySkillName"
+                    (optionSelected)="assignSkillToChampion($event.option.value)"
+                  >
+                    @for (skill of filteredSkillsForAssign(); track skill.id) {
+                      <mat-option [value]="skill">{{ skill.name }}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              }
+            </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Tab 2 — Skills
+      ══════════════════════════════════════════════════════════ -->
+      <mat-tab [label]="'superAdmin.skills' | translate">
+        <div class="tab-content">
+          <div class="tab-toolbar">
+            <button mat-raised-button color="primary" (click)="showAddSkill.set(!showAddSkill())">
+              <mat-icon>add</mat-icon>
+              {{ 'common.add' | translate }}
+            </button>
+          </div>
+
+          @if (showAddSkill()) {
+            <div class="add-row-form">
+              <form [formGroup]="skillForm" (ngSubmit)="addSkill()" class="inline-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'common.name' | translate }}</mat-label>
+                  <input matInput formControlName="name" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-wide">
+                  <mat-label>{{ 'common.description' | translate }}</mat-label>
+                  <input matInput formControlName="description" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-narrow">
+                  <mat-label>{{ 'common.order' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="sort_order" />
+                </mat-form-field>
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="skillForm.invalid">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="showAddSkill.set(false)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </form>
+            </div>
+          }
+
+          <div class="table-container">
+            <table mat-table [dataSource]="skills()" class="data-table">
+              <!-- Icon -->
+              <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.icon' | translate }}</th>
+                <td mat-cell *matCellDef="let skill">
+                  <div class="thumbnail-cell">
+                    @if (skill.icon_url) {
+                      <img [src]="skill.icon_url" class="thumbnail" [alt]="skill.name" />
+                    } @else {
+                      <mat-icon class="no-image-icon">flash_on</mat-icon>
+                    }
+                    <label class="upload-label" [matTooltip]="'common.uploadImage' | translate">
+                      <mat-icon class="upload-icon">upload</mat-icon>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        (change)="uploadSkillImage(skill, $event)"
+                        class="hidden-input"
+                      />
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Name -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
+                <td mat-cell *matCellDef="let skill">
+                  @if (isEditingSkill(skill.id)) {
+                    <form [formGroup]="editSkillForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="name" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <strong>{{ skill.name }}</strong>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Description -->
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.description' | translate }}</th>
+                <td mat-cell *matCellDef="let skill">
+                  @if (isEditingSkill(skill.id)) {
+                    <form [formGroup]="editSkillForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="description" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <span class="description-text">{{ skill.description }}</span>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Active -->
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.active' | translate }}</th>
+                <td mat-cell *matCellDef="let skill">
+                  <mat-slide-toggle
+                    [checked]="skill.is_active"
+                    (change)="toggleSkillActive(skill)"
+                    color="primary"
+                  ></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <!-- Order -->
+              <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.order' | translate }}</th>
+                <td mat-cell *matCellDef="let skill">
+                  @if (isEditingSkill(skill.id)) {
+                    <form [formGroup]="editSkillForm">
+                      <mat-form-field appearance="outline" class="edit-field-narrow">
+                        <input matInput type="number" formControlName="sort_order" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    {{ skill.sort_order }}
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                <td mat-cell *matCellDef="let skill">
+                  @if (isEditingSkill(skill.id)) {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="saveSkill(skill)" [disabled]="editSkillForm.invalid">
+                        <mat-icon>save</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="cancelEditSkill()">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="startEditSkill(skill)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button class="btn-danger" (click)="deleteSkill(skill)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="skillColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: skillColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Tab 3 — Caractères (horse_temperaments)
+      ══════════════════════════════════════════════════════════ -->
+      <mat-tab [label]="'superAdmin.temperaments' | translate">
+        <div class="tab-content">
+          <div class="tab-toolbar">
+            <button mat-raised-button color="primary" (click)="showAddTemperament.set(!showAddTemperament())">
+              <mat-icon>add</mat-icon>
+              {{ 'common.add' | translate }}
+            </button>
+          </div>
+
+          @if (showAddTemperament()) {
+            <div class="add-row-form">
+              <form [formGroup]="temperamentForm" (ngSubmit)="addTemperament()" class="inline-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'common.name' | translate }}</mat-label>
+                  <input matInput formControlName="name" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-wide">
+                  <mat-label>{{ 'common.description' | translate }}</mat-label>
+                  <input matInput formControlName="description" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-narrow">
+                  <mat-label>{{ 'common.order' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="sort_order" />
+                </mat-form-field>
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="temperamentForm.invalid">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="showAddTemperament.set(false)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </form>
+            </div>
+          }
+
+          <div class="table-container">
+            <table mat-table [dataSource]="temperaments()" class="data-table">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
+                <td mat-cell *matCellDef="let temperament">
+                  @if (isEditingTemperament(temperament.id)) {
+                    <form [formGroup]="editTemperamentForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="name" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <strong>{{ temperament.name }}</strong>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.description' | translate }}</th>
+                <td mat-cell *matCellDef="let temperament">
+                  @if (isEditingTemperament(temperament.id)) {
+                    <form [formGroup]="editTemperamentForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="description" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <span class="description-text">{{ temperament.description }}</span>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.order' | translate }}</th>
+                <td mat-cell *matCellDef="let temperament">
+                  @if (isEditingTemperament(temperament.id)) {
+                    <form [formGroup]="editTemperamentForm">
+                      <mat-form-field appearance="outline" class="edit-field-narrow">
+                        <input matInput type="number" formControlName="sort_order" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    {{ temperament.sort_order }}
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                <td mat-cell *matCellDef="let temperament">
+                  @if (isEditingTemperament(temperament.id)) {
+                    <div class="row-actions">
+                      <button
+                        mat-icon-button
+                        (click)="saveTemperament(temperament)"
+                        [disabled]="editTemperamentForm.invalid"
+                      >
+                        <mat-icon>save</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="cancelEditTemperament()">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="startEditTemperament(temperament)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button class="btn-danger" (click)="deleteTemperament(temperament)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="temperamentColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: temperamentColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Tab 5 — Ornements
+      ══════════════════════════════════════════════════════════ -->
+      <mat-tab [label]="'superAdmin.ornaments' | translate">
+        <div class="tab-content">
+          <div class="tab-toolbar">
+            <button mat-raised-button color="primary" (click)="showAddOrnament.set(!showAddOrnament())">
+              <mat-icon>add</mat-icon>
+              {{ 'common.add' | translate }}
+            </button>
+          </div>
+
+          @if (showAddOrnament()) {
+            <div class="add-row-form">
+              <form [formGroup]="ornamentForm" (ngSubmit)="addOrnament()" class="inline-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'common.name' | translate }}</mat-label>
+                  <input matInput formControlName="name" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-narrow">
+                  <mat-label>{{ 'common.order' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="sort_order" />
+                </mat-form-field>
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="ornamentForm.invalid">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="showAddOrnament.set(false)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </form>
+            </div>
+          }
+
+          <div class="table-container">
+            <table mat-table [dataSource]="ornaments()" class="data-table">
+              <ng-container matColumnDef="image">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.image' | translate }}</th>
+                <td mat-cell *matCellDef="let ornament">
+                  @if (ornament.image_url) {
+                    <img [src]="ornament.image_url" class="thumbnail" [alt]="ornament.name" />
+                  } @else {
+                    <mat-icon class="no-image-icon">image_not_supported</mat-icon>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
+                <td mat-cell *matCellDef="let ornament">
+                  @if (isEditingOrnament(ornament.id)) {
+                    <form [formGroup]="editOrnamentForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="name" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <strong>{{ ornament.name }}</strong>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.active' | translate }}</th>
+                <td mat-cell *matCellDef="let ornament">
+                  <mat-slide-toggle
+                    [checked]="ornament.is_active"
+                    (change)="toggleOrnamentActive(ornament)"
+                    color="primary"
+                  ></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.order' | translate }}</th>
+                <td mat-cell *matCellDef="let ornament">
+                  @if (isEditingOrnament(ornament.id)) {
+                    <form [formGroup]="editOrnamentForm">
+                      <mat-form-field appearance="outline" class="edit-field-narrow">
+                        <input matInput type="number" formControlName="sort_order" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    {{ ornament.sort_order }}
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                <td mat-cell *matCellDef="let ornament">
+                  @if (isEditingOrnament(ornament.id)) {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="saveOrnament(ornament)" [disabled]="editOrnamentForm.invalid">
+                        <mat-icon>save</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="cancelEditOrnament()">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="startEditOrnament(ornament)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button class="btn-danger" (click)="deleteOrnament(ornament)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="ornamentColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: ornamentColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Tab 6 — Gemmes
+      ══════════════════════════════════════════════════════════ -->
+      <mat-tab [label]="'superAdmin.gems' | translate">
+        <div class="tab-content">
+          <div class="tab-toolbar">
+            <mat-form-field appearance="outline" class="gem-filter-field">
+              <mat-label>{{ 'superAdmin.gemType.label' | translate }}</mat-label>
+              <mat-select [value]="gemTypeFilter()" (valueChange)="gemTypeFilter.set($event)">
+                <mat-option value="">{{ 'common.all' | translate }}</mat-option>
+                @for (type of gemTypes; track type) {
+                  <mat-option [value]="type">{{ gemTypeLabel(type) | translate }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="showAddGem.set(!showAddGem())">
+              <mat-icon>add</mat-icon>
+              {{ 'common.add' | translate }}
+            </button>
+          </div>
+
+          @if (showAddGem()) {
+            <div class="add-row-form">
+              <form [formGroup]="gemForm" (ngSubmit)="addGem()" class="inline-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'common.name' | translate }}</mat-label>
+                  <input matInput formControlName="name" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-medium">
+                  <mat-label>{{ 'superAdmin.gemType.label' | translate }}</mat-label>
+                  <mat-select formControlName="type">
+                    @for (type of gemTypes; track type) {
+                      <mat-option [value]="type">{{ gemTypeLabel(type) | translate }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="gemForm.invalid">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="showAddGem.set(false)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </form>
+            </div>
+          }
+
+          <div class="table-container">
+            <table mat-table [dataSource]="filteredGems()" class="data-table">
+              <!-- Icon -->
+              <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.icon' | translate }}</th>
+                <td mat-cell *matCellDef="let gem">
+                  <div class="thumbnail-cell">
+                    @if (gem.icon_url) {
+                      <img [src]="gem.icon_url" class="thumbnail" [alt]="gem.name" />
+                    } @else {
+                      <mat-icon class="no-image-icon">diamond</mat-icon>
+                    }
+                    <label class="upload-label" [matTooltip]="'common.uploadImage' | translate">
+                      <mat-icon class="upload-icon">upload</mat-icon>
+                      <input type="file" accept="image/*" (change)="uploadGemImage(gem, $event)" class="hidden-input" />
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
+                <td mat-cell *matCellDef="let gem">
+                  @if (isEditingGem(gem.id)) {
+                    <form [formGroup]="editGemForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="name" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <strong>{{ gem.name }}</strong>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Type badge -->
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>{{ 'superAdmin.gemType.label' | translate }}</th>
+                <td mat-cell *matCellDef="let gem">
+                  @if (isEditingGem(gem.id)) {
+                    <form [formGroup]="editGemForm">
+                      <mat-form-field appearance="outline" class="edit-field-medium">
+                        <mat-select formControlName="type">
+                          @for (type of gemTypes; track type) {
+                            <mat-option [value]="type">{{ gemTypeLabel(type) | translate }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <mat-chip class="type-chip type-{{ gem.type }}">{{ gemTypeLabel(gem.type) | translate }}</mat-chip>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Active -->
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.active' | translate }}</th>
+                <td mat-cell *matCellDef="let gem">
+                  <mat-slide-toggle
+                    [checked]="gem.is_active"
+                    (change)="toggleGemActive(gem)"
+                    color="primary"
+                  ></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <!-- Actions -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                <td mat-cell *matCellDef="let gem">
+                  @if (isEditingGem(gem.id)) {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="saveGem(gem)" [disabled]="editGemForm.invalid">
+                        <mat-icon>save</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="cancelEditGem()">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="startEditGem(gem)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button class="btn-danger" (click)="deleteGem(gem)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="gemColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: gemColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Tab 7 — Anneaux
+      ══════════════════════════════════════════════════════════ -->
+      <mat-tab [label]="'superAdmin.rings' | translate">
+        <div class="tab-content">
+          <div class="tab-toolbar">
+            <button mat-raised-button color="primary" (click)="showAddRing.set(!showAddRing())">
+              <mat-icon>add</mat-icon>
+              {{ 'common.add' | translate }}
+            </button>
+          </div>
+
+          @if (showAddRing()) {
+            <div class="add-row-form">
+              <form [formGroup]="ringForm" (ngSubmit)="addRing()" class="inline-form">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'common.name' | translate }}</mat-label>
+                  <input matInput formControlName="name" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-wide">
+                  <mat-label>{{ 'common.description' | translate }}</mat-label>
+                  <input matInput formControlName="description" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="field-narrow">
+                  <mat-label>{{ 'common.order' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="sort_order" />
+                </mat-form-field>
+                <div class="form-actions">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="ringForm.invalid">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="showAddRing.set(false)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </form>
+            </div>
+          }
+
+          <div class="table-container">
+            <table mat-table [dataSource]="rings()" class="data-table">
+              <!-- Icon -->
+              <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.icon' | translate }}</th>
+                <td mat-cell *matCellDef="let ring">
+                  <div class="thumbnail-cell">
+                    @if (ring.icon_url) {
+                      <img [src]="ring.icon_url" class="thumbnail" [alt]="ring.name" />
+                    } @else {
+                      <mat-icon class="no-image-icon">album</mat-icon>
+                    }
+                    <label class="upload-label" [matTooltip]="'common.uploadImage' | translate">
+                      <mat-icon class="upload-icon">upload</mat-icon>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        (change)="uploadRingImage(ring, $event)"
+                        class="hidden-input"
+                      />
+                    </label>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
+                <td mat-cell *matCellDef="let ring">
+                  @if (isEditingRing(ring.id)) {
+                    <form [formGroup]="editRingForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="name" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <strong>{{ ring.name }}</strong>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.description' | translate }}</th>
+                <td mat-cell *matCellDef="let ring">
+                  @if (isEditingRing(ring.id)) {
+                    <form [formGroup]="editRingForm">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input matInput formControlName="description" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    <span class="description-text">{{ ring.description }}</span>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="active">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.active' | translate }}</th>
+                <td mat-cell *matCellDef="let ring">
+                  <mat-slide-toggle
+                    [checked]="ring.is_active"
+                    (change)="toggleRingActive(ring)"
+                    color="primary"
+                  ></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.order' | translate }}</th>
+                <td mat-cell *matCellDef="let ring">
+                  @if (isEditingRing(ring.id)) {
+                    <form [formGroup]="editRingForm">
+                      <mat-form-field appearance="outline" class="edit-field-narrow">
+                        <input matInput type="number" formControlName="sort_order" />
+                      </mat-form-field>
+                    </form>
+                  } @else {
+                    {{ ring.sort_order }}
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                <td mat-cell *matCellDef="let ring">
+                  @if (isEditingRing(ring.id)) {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="saveRing(ring)" [disabled]="editRingForm.invalid">
+                        <mat-icon>save</mat-icon>
+                      </button>
+                      <button mat-icon-button (click)="cancelEditRing()">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="row-actions">
+                      <button mat-icon-button (click)="startEditRing(ring)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button class="btn-danger" (click)="deleteRing(ring)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="ringColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: ringColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

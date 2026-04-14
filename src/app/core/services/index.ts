@@ -8,3 +8,6 @@ export { SnackbarService } from './snackbar.service';
 export { PwaService } from './pwa.service';
 export { ReleaseNotesService } from './release-notes.service';
 export type { ReleaseNote, ReleaseEntry } from './release-notes.service';
+export { VoterTokenService } from './voter-token.service';
+export { GuideService } from './guide.service';
+export { GuideAdminService } from './guide-admin.service';

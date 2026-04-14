@@ -1,0 +1,105 @@
+<div class="champion-slot" [class.filled]="config()">
+  <!-- Drag handle -->
+  <div cdkDragHandle class="drag-handle" aria-hidden="true">
+    <mat-icon>drag_indicator</mat-icon>
+  </div>
+
+  @if (config(); as slot) {
+    <!-- Filled slot -->
+    <div class="slot-content">
+      <div class="champion-info">
+        @if (slot.champion.image_url) {
+          <img [src]="slot.champion.image_url" [alt]="slot.champion.name" class="champion-avatar" />
+        } @else {
+          <div class="champion-avatar-placeholder">
+            <mat-icon>person</mat-icon>
+          </div>
+        }
+        <span class="champion-name">{{ slot.champion.name }}</span>
+      </div>
+
+      <div class="slot-details">
+        <!-- Skills -->
+        @if (slot.skills[0] || slot.skills[1]) {
+          <div class="detail-row">
+            <mat-icon class="detail-icon">flash_on</mat-icon>
+            <span>
+              {{ slot.skills[0]?.name ?? '—' }}
+              @if (slot.skills[1]) {
+                · {{ slot.skills[1].name }}
+              }
+            </span>
+          </div>
+        }
+
+        <!-- Gems (slot0=strategy, slot1=hero, slot2=tactics) -->
+        @if (slot.gems[0] || slot.gems[1] || slot.gems[2]) {
+          <div class="detail-row">
+            <mat-icon class="detail-icon">diamond</mat-icon>
+            <span>
+              @if (slot.gems[0]) {
+                {{ slot.gems[0].name }}&nbsp;
+              }
+              @if (slot.gems[1]) {
+                · {{ slot.gems[1].name }}&nbsp;
+              }
+              @if (slot.gems[2]) {
+                · {{ slot.gems[2].name }}
+              }
+            </span>
+          </div>
+        }
+
+        <!-- Traits de caractère -->
+        @if (slot.traits[0] || slot.traits[1] || slot.traits[2]) {
+          <div class="detail-row">
+            <mat-icon class="detail-icon">psychology</mat-icon>
+            <span>
+              @for (trait of slot.traits; track trait?.id) {
+                @if (trait) {
+                  {{ trait.name }}&nbsp;
+                }
+              }
+            </span>
+          </div>
+        }
+
+        <!-- Ornament -->
+        @if (slot.ornament) {
+          <div class="detail-row">
+            <mat-icon class="detail-icon">auto_awesome</mat-icon>
+            <span>{{ slot.ornament.name }}</span>
+          </div>
+        }
+
+        <!-- Ring -->
+        @if (slot.ring) {
+          <div class="detail-row">
+            <mat-icon class="detail-icon">album</mat-icon>
+            <span>{{ slot.ring.name }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="slot-actions">
+      <button mat-icon-button (click)="editSlot.emit()" [matTooltip]="'guides.edit' | translate">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        (click)="clearSlot.emit()"
+        [matTooltip]="'common.clear' | translate"
+        class="btn-danger-icon"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </div>
+  } @else {
+    <!-- Empty slot -->
+    <button mat-button class="empty-slot-btn" (click)="editSlot.emit()">
+      <mat-icon>add_circle_outline</mat-icon>
+      <span>{{ 'guides.add_champion' | translate }} {{ position() + 1 }}</span>
+    </button>
+  }
+</div>
