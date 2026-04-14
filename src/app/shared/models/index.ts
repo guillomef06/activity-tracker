@@ -49,3 +49,30 @@ export type { AllianceActivitySettings, UpsertActivitySettingsRequest } from './
 
 // Discord Webhook models
 export type { DiscordWebhook, CreateDiscordWebhookRequest } from './discord-webhook.model';
+
+// Guide models
+export type {
+  Guide,
+  GuideCategory,
+  GuideChampion,
+  GuideWithDetails,
+  Champion,
+  ChampionWithSkills,
+  Skill,
+  HorseTemperament,
+  Ornament,
+  Ring,
+  Gem,
+  GemType,
+  HorseTraitSlot,
+  SkillSlot,
+  GemSlot,
+  ChampionPosition,
+  GuideChampionSkill,
+  GuideChampionGem,
+  GuideChampionHorseTrait,
+  CreateGuideDto,
+  UpdateGuideDto,
+  CreateGuideChampionDto,
+  ChampionSlotConfig,
+} from './guide.model';

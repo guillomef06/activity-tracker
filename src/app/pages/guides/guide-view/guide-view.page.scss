@@ -1,0 +1,153 @@
+:host {
+  --badge-formation-bg: #e3f2fd;
+  --badge-formation-color: #1565c0;
+  --badge-evenement-bg: #fce4ec;
+  --badge-evenement-color: #880e4f;
+  --badge-general-bg: #e8f5e9;
+  --badge-general-color: #1b5e20;
+}
+
+.guide-view-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-4, 16px);
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8, 32px) 0;
+}
+
+.not-found-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4, 16px);
+  padding: var(--space-8, 32px) var(--space-4, 16px);
+  color: var(--mat-sys-on-surface-variant, #49454f);
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-4, 16px);
+}
+
+.top-bar-spacer {
+  flex: 1;
+}
+
+.guide-header {
+  margin-bottom: var(--space-6, 24px);
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-2, 8px);
+
+  &--formation {
+    background: var(--badge-formation-bg);
+    color: var(--badge-formation-color);
+  }
+
+  &--evenement {
+    background: var(--badge-evenement-bg);
+    color: var(--badge-evenement-color);
+  }
+
+  &--general {
+    background: var(--badge-general-bg);
+    color: var(--badge-general-color);
+  }
+}
+
+.guide-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-2, 8px);
+  line-height: 1.2;
+
+  @media (min-width: 480px) {
+    font-size: 1.75rem;
+  }
+}
+
+.guide-meta {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant, #49454f);
+  margin: 0 0 var(--space-3, 12px);
+  line-height: 1.5;
+}
+
+.upvote-btn {
+  min-width: 0;
+
+  .upvote-count {
+    margin-left: var(--space-1, 4px);
+    font-weight: 600;
+  }
+
+  &--active {
+    color: var(--mat-sys-primary, #6750a4);
+    border-color: var(--mat-sys-primary, #6750a4);
+  }
+}
+
+.author-notes-card {
+  margin-top: var(--space-4, 16px);
+  background: var(--mat-sys-surface-container-low);
+}
+
+.author-notes-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0 0 var(--space-2, 8px);
+}
+
+.author-notes-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.upvote-bar {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-6, 24px) 0 var(--space-4, 16px);
+}
+
+.champions-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4, 16px);
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

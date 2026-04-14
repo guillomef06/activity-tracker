@@ -8,26 +8,26 @@
 .calculator-description {
   color: var(--mat-sys-on-surface-variant);
   font-size: 0.875rem;
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-4);
 }
 
 .items-section {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
 .no-items-hint {
   color: var(--mat-sys-on-surface-variant);
   font-size: 0.875rem;
   text-align: center;
-  margin: 8px 0;
+  margin: var(--space-2) 0;
 }
 
 .add-item-btn {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
 }
 
 .price-field {
@@ -36,8 +36,8 @@
 
 .action-buttons {
   display: flex;
-  gap: 12px;
-  margin-top: 16px;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
   flex-wrap: wrap;
 
   button {

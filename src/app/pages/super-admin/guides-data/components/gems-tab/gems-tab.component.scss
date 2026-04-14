@@ -1,0 +1,20 @@
+@use '../../_guides-admin' as *;
+
+.type-chip {
+  font-size: 0.75rem;
+
+  &.type-strategy {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+  }
+
+  &.type-hero {
+    background-color: #fce4ec !important;
+    color: #c62828 !important;
+  }
+
+  &.type-tactics {
+    background-color: #e3f2fd !important;
+    color: #1565c0 !important;
+  }
+}

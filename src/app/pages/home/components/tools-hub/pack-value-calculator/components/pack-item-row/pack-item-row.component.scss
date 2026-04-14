@@ -1,7 +1,7 @@
 .pack-item-row {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-2);
   width: 100%;
 
   .item-select {
@@ -15,7 +15,7 @@
   }
 
   .remove-btn {
-    margin-top: 4px;
+    margin-top: var(--space-1);
     flex-shrink: 0;
   }
 }

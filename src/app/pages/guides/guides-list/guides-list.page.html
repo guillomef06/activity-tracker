@@ -1,0 +1,74 @@
+<div class="guides-list-page">
+  <header class="page-header">
+    <h1>{{ 'guides.public_list_title' | translate }}</h1>
+  </header>
+
+  <!-- Category filter chips -->
+  <mat-chip-listbox class="filter-chips" [attr.aria-label]="'guides.categories' | translate" [multiple]="false">
+    <mat-chip-option [selected]="categoryFilter() === undefined" (click)="onCategoryFilter(undefined)">
+      {{ 'common.all' | translate }}
+    </mat-chip-option>
+    @for (cat of categories; track trackCategory($index, cat)) {
+      <mat-chip-option [selected]="categoryFilter() === cat.value" (click)="onCategoryFilter(cat.value)">
+        {{ cat.labelKey | translate }}
+      </mat-chip-option>
+    }
+  </mat-chip-listbox>
+
+  <!-- Guide cards -->
+  <div class="guides-grid">
+    @for (guide of guides(); track trackGuide($index, guide)) {
+      <mat-card
+        class="guide-card"
+        (click)="viewGuide(guide.slug)"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="viewGuide(guide.slug)"
+      >
+        <mat-card-header>
+          <mat-card-title>{{ guide.title }}</mat-card-title>
+          <mat-card-subtitle>
+            <span class="category-badge category-badge--{{ guide.category }}">
+              {{ 'guides.categories.' + guide.category | translate }}
+            </span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          @if (guide.description) {
+            <p class="guide-description">{{ guide.description }}</p>
+          }
+        </mat-card-content>
+
+        <mat-card-footer class="guide-footer">
+          <span class="author-info"> {{ 'guides.by' | translate }} {{ authorName(guide) }} </span>
+          <span class="guide-meta">
+            <mat-icon class="meta-icon">thumb_up</mat-icon>
+            <span>{{ guide.upvotes_count }}</span>
+          </span>
+          <span class="guide-date">{{ guide.created_at | localDate }}</span>
+        </mat-card-footer>
+      </mat-card>
+    }
+  </div>
+
+  <!-- Loading spinner -->
+  @if (isLoading()) {
+    <div class="spinner-container">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
+
+  <!-- Empty state -->
+  @if (!isLoading() && guides().length === 0) {
+    <div class="empty-state">
+      <mat-icon>menu_book</mat-icon>
+      <p>{{ 'guides.public_list_empty' | translate }}</p>
+    </div>
+  }
+
+  <!-- Infinite scroll sentinel -->
+  @if (hasMore() && !isLoading()) {
+    <div appInfiniteScroll (scrolled)="onLoadMore()" class="scroll-sentinel" aria-hidden="true"></div>
+  }
+</div>

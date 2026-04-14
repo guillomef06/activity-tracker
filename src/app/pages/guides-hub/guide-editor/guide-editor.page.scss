@@ -1,0 +1,100 @@
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.page-header {
+  .header-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: var(--mat-sys-primary);
+    margin-right: var(--space-3);
+  }
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+.editor-stepper {
+  background: transparent;
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.step-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.step-hint {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.champion-slots-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.preview-card {
+  background: var(--mat-sys-surface-variant);
+}
+
+.preview-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+}
+
+.category-badge {
+  display: inline-block;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  padding: 2px var(--space-3);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.preview-info {
+  margin: var(--space-2) 0 0;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.preview-description {
+  margin: var(--space-2) 0 0;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  white-space: pre-wrap;
+}
+
+.publish-toggle {
+  padding: var(--space-2) 0;
+}
+
+.inline-spinner {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: var(--space-2);
+}

@@ -1,9 +1,9 @@
 .result-card {
-  margin-top: 16px;
+  margin-top: var(--space-4);
 }
 
 .result-title {
-  margin: 0 0 16px;
+  margin: 0 0 var(--space-4);
   font-size: 1rem;
   font-weight: 500;
   text-align: center;
@@ -14,8 +14,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  margin-bottom: 16px;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
 
   .tier-icon {
     font-size: 48px;
@@ -49,7 +49,7 @@
 
 .result-body {
   display: flex;
-  gap: 24px;
+  gap: var(--space-6);
   align-items: center;
   justify-content: center;
 }
@@ -69,7 +69,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: 0.95rem;
   color: var(--mat-sys-on-surface-variant);
 
@@ -83,12 +83,12 @@
     color: var(--mat-sys-on-surface);
     background: var(--mat-sys-surface-variant);
     border-radius: 12px;
-    padding: 2px 8px;
+    padding: 2px var(--space-2);
   }
 }
 
 .breakdown-title {
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--mat-sys-on-surface-variant);
@@ -106,7 +106,7 @@
 .breakdown-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: 0.875rem;
 
   .breakdown-name {

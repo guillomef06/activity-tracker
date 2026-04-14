@@ -42,6 +42,19 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./pages/home/home.page').then(m => m.HomePage),
       },
+      // Guides hub
+      {
+        path: 'guides',
+        loadComponent: () => import('./pages/guides-hub/guides-hub.page').then(m => m.GuidesHubPage),
+      },
+      {
+        path: 'guides/new',
+        loadComponent: () => import('./pages/guides-hub/guide-editor/guide-editor.page').then(m => m.GuideEditorPage),
+      },
+      {
+        path: 'guides/:id/edit',
+        loadComponent: () => import('./pages/guides-hub/guide-editor/guide-editor.page').then(m => m.GuideEditorPage),
+      },
       // Admin routes
       {
         path: 'alliance-settings',
@@ -74,9 +87,23 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./pages/super-admin/users/super-admin-users.page').then(m => m.SuperAdminUsersPage),
           },
+          {
+            path: 'guides-data',
+            loadComponent: () => import('./pages/super-admin/guides-data/guides-data.page').then(m => m.GuidesDataPage),
+          },
         ],
       },
     ],
+  },
+
+  // Public guides routes (no auth required, no layout wrapper)
+  {
+    path: 'guides',
+    loadComponent: () => import('./pages/guides/guides-list/guides-list.page').then(m => m.GuidesListPage),
+  },
+  {
+    path: 'guides/:slug',
+    loadComponent: () => import('./pages/guides/guide-view/guide-view.page').then(m => m.GuideViewPage),
   },
 
   // Fallback route

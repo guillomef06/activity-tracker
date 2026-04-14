@@ -84,7 +84,8 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "allianceSettings": "Configuración Alianza",
-    "home": "Inicio"
+    "home": "Inicio",
+    "guides": "Guías"
   },
   "alliance": {
     "settings": {
@@ -286,7 +287,24 @@
     "save": "Guardar",
     "saving": "Guardando...",
     "update": "Actualizar",
-    "back": "Volver"
+    "back": "Volver",
+    "add": "Añadir",
+    "edit": "Editar",
+    "name": "Nombre",
+    "description": "Descripción",
+    "image": "Imagen",
+    "icon": "Icono",
+    "order": "Orden",
+    "active": "Activo",
+    "all": "Todos",
+    "none": "Ninguno",
+    "saved": "Guardado",
+    "created": "Creado",
+    "deleted": "Eliminado",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar \"{{name}}\"?",
+    "uploadImage": "Subir imagen",
+    "next": "Siguiente",
+    "clear": "Limpiar"
   },
   "superAdmin": {
     "dashboard": {
@@ -300,7 +318,9 @@
       "manageAlliances": "Gestionar Alianzas",
       "manageAlliancesDesc": "Ver y gestionar todas las alianzas",
       "manageUsers": "Gestionar Usuarios",
-      "manageUsersDesc": "Ver y gestionar todos los usuarios"
+      "manageUsersDesc": "Ver y gestionar todos los usuarios",
+      "manageGuidesData": "Datos de Referencia de Guías",
+      "manageGuidesDataDesc": "Gestionar campeones, habilidades, caballos y gemas"
     },
     "alliances": {
       "title": "Gestión de Alianzas",
@@ -335,6 +355,21 @@
       "updated": "Usuario actualizado con éxito",
       "updateFailed": "Error al actualizar el usuario",
       "deleted": "Usuario eliminado con éxito"
+    },
+    "guidesData": "Datos de Referencia de Guías",
+    "guidesDataSubtitle": "Gestionar campeones, habilidades, caballos, ornamentos y gemas",
+    "champions": "Campeones",
+    "skills": "Habilidades",
+    "assignSkills": "Asignar Habilidades",
+    "temperaments": "Temperamentos",
+    "ornaments": "Ornamentos",
+    "gems": "Gemas",
+    "rings": "Anillos",
+    "gemType": {
+      "label": "Tipo",
+      "strategy": "Estrategia",
+      "hero": "Héroe",
+      "tactics": "Tácticas"
     }
   },
   "super_admin": "Super Administrador",
@@ -559,13 +594,88 @@
       "invalidWebhookUrl": "Debe ser una URL de webhook de Discord válida (https://discord.com/api/webhooks/...)"
     }
   },
+  "guides": {
+    "title": "Guías",
+    "community": "Comunidad",
+    "my_guides": "Mis Guías",
+    "create": "Crear una guía",
+    "limit_reached": "Límite de 10 guías alcanzado",
+    "no_guides": "Aún no hay guías",
+    "count": "{{ count }}/10 guías",
+    "categories": {
+      "formation": "Formación",
+      "evenement": "Evento",
+      "general": "General"
+    },
+    "status": {
+      "published": "Publicado",
+      "draft": "Borrador"
+    },
+    "by": "Por",
+    "view": "Ver",
+    "edit": "Editar",
+    "publish": "Publicar",
+    "unpublish": "Despublicar",
+    "delete": "Eliminar",
+    "published_success": "Guía publicada",
+    "unpublished_success": "Guía despublicada",
+    "champion": "Campeón",
+    "champion_slot": "Slot Campeón",
+    "add_champion": "Agregar campeón",
+    "champion_count": "{{ count }} campeón(es) configurado(s)",
+    "formation_hint": "Configura hasta 3 campeones. Arrastra para reordenar.",
+    "skill": "Habilidad",
+    "skills": "Habilidades",
+    "gems": "Gemas",
+    "hero_section": "Héroe",
+    "horse_section": "Caballo",
+    "traits": "Rasgos del caballo",
+    "trait": "Rasgo",
+    "add_trait": "Agregar rasgo",
+    "ornament": "Ornamento",
+    "ring": "Anillo",
+    "description": "Descripción / Notas del autor",
+    "editor": {
+      "title_new": "Crear una guía",
+      "title_edit": "Editar guía",
+      "step_basic": "Información",
+      "step_content": "Contenido",
+      "step_review": "Resumen",
+      "title_label": "Título de la guía",
+      "category_label": "Categoría",
+      "description_label": "Descripción",
+      "publish_now": "Publicar ahora",
+      "save_draft": "Guardar como borrador",
+      "save": "Guardar"
+    },
+    "confirm_delete": "¿Eliminar esta guía?",
+    "confirm_delete_msg": "Esta acción no se puede deshacer.",
+    "errors": {
+      "limitReached": "Has alcanzado el máximo de 10 guías.",
+      "slugDuplicate": "Este título es demasiado similar a una guía existente. Ajusta el título.",
+      "notFound": "Guía no encontrada.",
+      "unauthorized": "No tienes autorización para modificar esta guía.",
+      "unknown": "Se produjo un error inesperado. Por favor, inténtalo de nuevo.",
+      "invalidFileType": "Tipo de archivo no válido. Permitidos: PNG, JPEG, WebP."
+    },
+    "public_list_title": "Guías de la Comunidad",
+    "public_list_empty": "Aún no se han publicado guías",
+    "copy_link": "Copiar enlace",
+    "link_copied": "¡Enlace copiado!",
+    "back_to_list": "Volver a las guías",
+    "guide_not_found": "Guía no encontrada",
+    "upvote": "Votar",
+    "upvoted": "Votado",
+    "champion_slot": "Campeón {{n}}",
+    "author_notes": "Notas del autor"
+  },
   "landing": {
     "hero": {
       "eyebrow": "Seguimiento de Actividades de Alianza",
       "title1": "Juega Inteligente.",
       "title2": "Gana Juntos.",
       "subtitleBefore": "Diseñado para todos los jugadores activos — no solo para quienes más gastan. Registra las actividades de tu alianza, acumula puntos estratégicos y alcanza",
-      "subtitleStrong": "el Top\u00a010 del Gobernador Más Poderoso",
+      "subtitleStrong": "el Top 10 del Gobernador Más Poderoso",
       "subtitleAfter": "con muchas menos aceleraciones y recursos.",
       "ctaLogin": "Iniciar Sesión",
       "ctaJoin": "Unirse con Invitación"

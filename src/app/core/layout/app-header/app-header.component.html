@@ -57,6 +57,11 @@
           <span>{{ 'nav.home' | translate }}</span>
         </button>
 
+        <button mat-menu-item routerLink="/app/guides" routerLinkActive="active">
+          <mat-icon>menu_book</mat-icon>
+          <span>{{ 'nav.guides' | translate }}</span>
+        </button>
+
         <mat-divider></mat-divider>
 
         <button mat-menu-item (click)="openAccountSettings()">

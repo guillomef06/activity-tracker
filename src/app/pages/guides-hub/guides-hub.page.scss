@@ -1,0 +1,215 @@
+:host {
+  --badge-formation-bg: #e8f4f8;
+  --badge-formation-color: #1565c0;
+  --badge-evenement-bg: #fce4ec;
+  --badge-evenement-color: #c62828;
+  --badge-general-bg: #f3e5f5;
+  --badge-general-color: #6a1b9a;
+  --badge-published-bg: #e8f5e9;
+  --badge-published-color: #2e7d32;
+}
+
+.guides-hub-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.page-header {
+  .header-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: var(--mat-sys-primary);
+    margin-right: var(--space-3);
+  }
+}
+
+.hub-tabs {
+  background: transparent;
+}
+
+.tab-icon {
+  margin-right: var(--space-2);
+}
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+// ─── Category filters ──────────────────────────────────────────────────────
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+// ─── States ───────────────────────────────────────────────────────────────
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+
+  .empty-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    opacity: 0.4;
+  }
+}
+
+// ─── Guides grid ──────────────────────────────────────────────────────────
+
+.guides-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.guide-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-2);
+  width: 100%;
+}
+
+.guide-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.guide-description {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 2px var(--space-3);
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &--formation {
+    background: var(--badge-formation-bg);
+    color: var(--badge-formation-color);
+  }
+
+  &--evenement {
+    background: var(--badge-evenement-bg);
+    color: var(--badge-evenement-color);
+  }
+
+  &--general {
+    background: var(--badge-general-bg);
+    color: var(--badge-general-color);
+  }
+}
+
+.status-badge {
+  padding: 2px var(--space-2);
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+
+  &--published {
+    background: var(--badge-published-bg);
+    color: var(--badge-published-color);
+  }
+
+  &--draft {
+    background: var(--mat-sys-surface-variant);
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.upvotes {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+
+  .upvote-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    color: var(--mat-sys-error);
+  }
+}
+
+// ─── Card actions ──────────────────────────────────────────────────────────
+
+mat-card-actions button {
+  min-height: 44px;
+}
+
+// ─── My guides ─────────────────────────────────────────────────────────────
+
+.my-guides-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.guides-count {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.btn-danger-icon {
+  color: var(--mat-sys-error);
+}
+
+// ─── Scroll sentinel ───────────────────────────────────────────────────────
+
+.scroll-sentinel {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4);
+  min-height: 64px;
+}

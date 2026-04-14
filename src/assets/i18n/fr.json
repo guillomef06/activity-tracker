@@ -84,7 +84,8 @@
   "nav": {
     "superAdminDashboard": "Super Admin",
     "allianceSettings": "Paramètres Alliance",
-    "home": "Accueil"
+    "home": "Accueil",
+    "guides": "Guides"
   },
   "alliance": {
     "settings": {
@@ -286,7 +287,24 @@
     "save": "Enregistrer",
     "saving": "Enregistrement...",
     "update": "Mettre à jour",
-    "back": "Retour"
+    "back": "Retour",
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "name": "Nom",
+    "description": "Description",
+    "image": "Image",
+    "icon": "Icône",
+    "order": "Ordre",
+    "active": "Actif",
+    "all": "Tous",
+    "none": "Aucun",
+    "saved": "Enregistré",
+    "created": "Créé",
+    "deleted": "Supprimé",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ?",
+    "uploadImage": "Uploader l'image",
+    "next": "Suivant",
+    "clear": "Effacer"
   },
   "superAdmin": {
     "dashboard": {
@@ -300,7 +318,9 @@
       "manageAlliances": "Gérer les Alliances",
       "manageAlliancesDesc": "Voir et gérer toutes les alliances",
       "manageUsers": "Gérer les Utilisateurs",
-      "manageUsersDesc": "Voir et gérer tous les utilisateurs"
+      "manageUsersDesc": "Voir et gérer tous les utilisateurs",
+      "manageGuidesData": "Données de Référence Guides",
+      "manageGuidesDataDesc": "Gérer les champions, skills, chevaux et gemmes"
     },
     "alliances": {
       "title": "Gestion des Alliances",
@@ -335,6 +355,21 @@
       "updated": "Utilisateur mis à jour avec succès",
       "updateFailed": "Échec de la mise à jour de l'utilisateur",
       "deleted": "Utilisateur supprimé avec succès"
+    },
+    "guidesData": "Données de Référence Guides",
+    "guidesDataSubtitle": "Gérer les champions, skills, chevaux, ornements et gemmes",
+    "champions": "Champions",
+    "skills": "Skills",
+    "assignSkills": "Assigner des Skills",
+    "temperaments": "Caractères",
+    "ornaments": "Ornements",
+    "gems": "Gemmes",
+    "rings": "Anneaux",
+    "gemType": {
+      "label": "Type",
+      "strategy": "Stratégie",
+      "hero": "Héros",
+      "tactics": "Tactiques"
     }
   },
   "super_admin": "Super Administrateur",
@@ -559,13 +594,88 @@
       "invalidWebhookUrl": "Doit être une URL de webhook Discord valide (https://discord.com/api/webhooks/...)"
     }
   },
+  "guides": {
+    "title": "Guides",
+    "community": "Communauté",
+    "my_guides": "Mes Guides",
+    "create": "Créer un guide",
+    "limit_reached": "Limite de 10 guides atteinte",
+    "no_guides": "Aucun guide pour l'instant",
+    "count": "{{ count }}/10 guides",
+    "categories": {
+      "formation": "Formation",
+      "evenement": "Événement",
+      "general": "Général"
+    },
+    "status": {
+      "published": "Publié",
+      "draft": "Brouillon"
+    },
+    "by": "Par",
+    "view": "Voir",
+    "edit": "Modifier",
+    "publish": "Publier",
+    "unpublish": "Dépublier",
+    "delete": "Supprimer",
+    "published_success": "Guide publié",
+    "unpublished_success": "Guide dépublié",
+    "champion": "Champion",
+    "champion_slot": "Slot Champion",
+    "add_champion": "Ajouter un champion",
+    "champion_count": "{{ count }} champion(s) configuré(s)",
+    "formation_hint": "Configurez jusqu'à 3 champions. Faites glisser pour réordonner.",
+    "skill": "Skill",
+    "skills": "Skills",
+    "gems": "Gemmes",
+    "hero_section": "Héros",
+    "horse_section": "Cheval",
+    "traits": "Traits du cheval",
+    "trait": "Trait",
+    "add_trait": "Ajouter un trait",
+    "ornament": "Ornement",
+    "ring": "Anneau",
+    "description": "Description / Notes de l'auteur",
+    "editor": {
+      "title_new": "Créer un guide",
+      "title_edit": "Modifier le guide",
+      "step_basic": "Informations",
+      "step_content": "Contenu",
+      "step_review": "Récapitulatif",
+      "title_label": "Titre du guide",
+      "category_label": "Catégorie",
+      "description_label": "Description",
+      "publish_now": "Publier maintenant",
+      "save_draft": "Enregistrer comme brouillon",
+      "save": "Enregistrer"
+    },
+    "confirm_delete": "Supprimer ce guide ?",
+    "confirm_delete_msg": "Cette action est irréversible.",
+    "errors": {
+      "limitReached": "Vous avez atteint la limite de 10 guides.",
+      "slugDuplicate": "Ce titre est trop proche d'un guide existant. Veuillez ajuster le titre.",
+      "notFound": "Guide introuvable.",
+      "unauthorized": "Vous n'êtes pas autorisé à modifier ce guide.",
+      "unknown": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+      "invalidFileType": "Type de fichier invalide. Formats acceptés : PNG, JPEG, WebP."
+    },
+    "public_list_title": "Guides Communautaires",
+    "public_list_empty": "Aucun guide publié pour l'instant",
+    "copy_link": "Copier le lien",
+    "link_copied": "Lien copié !",
+    "back_to_list": "Retour aux guides",
+    "guide_not_found": "Guide introuvable",
+    "upvote": "Voter",
+    "upvoted": "Voté",
+    "champion_slot": "Champion {{n}}",
+    "author_notes": "Notes de l'auteur"
+  },
   "landing": {
     "hero": {
       "eyebrow": "Suivi d'Activités d'Alliance",
       "title1": "Jouez Malin.",
       "title2": "Gagnez Ensemble.",
       "subtitleBefore": "Conçu pour tous les joueurs actifs — pas seulement les gros dépensiers. Suivez les activités de votre alliance, accumulez des points stratégiques et décrochez",
-      "subtitleStrong": "le Top\u00a010 Gouverneur le Plus Puissant",
+      "subtitleStrong": "le Top 10 Gouverneur le Plus Puissant",
       "subtitleAfter": "avec bien moins d'accélérations et de ressources.",
       "ctaLogin": "Connexion",
       "ctaJoin": "Rejoindre avec une Invitation"
