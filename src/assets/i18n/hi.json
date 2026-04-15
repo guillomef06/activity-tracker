@@ -1,0 +1,724 @@
+{
+  "app": {
+    "subtitle": "गतिविधियों को ट्रैक करें और 6-सप्ताह के रोलिंग स्कोर देखें"
+  },
+  "home": {
+    "tabs": {
+      "submit": "गतिविधि सबमिट करें",
+      "leaderboard": "लीडरबोर्ड",
+      "mightiestGovernor": "सबसे शक्तिशाली गवर्नर",
+      "tools": "टूल्स"
+    }
+  },
+  "auth": {
+    "login": "साइन इन",
+    "signup": "साइन अप",
+    "logout": "लॉगआउट",
+    "username": "उपयोगकर्ता नाम",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "displayName": "प्रदर्शन नाम",
+    "allianceName": "गठबंधन का नाम",
+    "invitationToken": "निमंत्रण टोकन",
+    "welcomeBack": "वापसी पर स्वागत है",
+    "signInSubtitle": "अपने खाते में साइन इन करें",
+    "signupTitle": "गठबंधन बनाएं",
+    "signupSubtitle": "गठबंधन प्रशासक के रूप में साइन अप करें",
+    "joinTitle": "गठबंधन में शामिल हों",
+    "joinSubtitle": "अपने निमंत्रण का उपयोग करके गठबंधन में शामिल हों",
+    "setupTitle": "सुपर एडमिन सेटअप",
+    "setupSubtitle": "पहला सुपर एडमिन खाता बनाएं",
+    "setupWarning": "यह एक बार का सेटअप है। सुपर एडमिन के पास सभी गठबंधनों और उपयोगकर्ताओं को प्रबंधित करने की पूर्ण पहुंच है।",
+    "signingIn": "साइन इन हो रहा है...",
+    "creatingAlliance": "गठबंधन बन रहा है...",
+    "joining": "शामिल हो रहे हैं...",
+    "createSuperAdmin": "सुपर एडमिन बनाएं",
+    "creating": "बन रहा है...",
+    "usernamePlaceholder": "एक अद्वितीय उपयोगकर्ता नाम चुनें",
+    "usernameHint": "3-30 अक्षर — केवल अक्षर, संख्याएं, - और _",
+    "displayNamePlaceholder": "अपना पूरा नाम दर्ज करें",
+    "displayNameHint": "आपका नाम जैसा दूसरों को दिखेगा",
+    "allianceNamePlaceholder": "अपने गठबंधन का नाम दर्ज करें",
+    "allianceNameHint": "अपने नए गठबंधन के लिए एक नाम चुनें",
+    "passwordPlaceholder": "उदा. MyPass123!",
+    "passwordHint": "न्यूनतम 6 अक्षर, कम से कम एक अक्षर और एक संख्या होनी चाहिए",
+    "confirmPasswordPlaceholder": "अपना पासवर्ड फिर से दर्ज करें",
+    "tokenPlaceholder": "निमंत्रण टोकन दर्ज करें",
+    "tokenHint": "आपके गठबंधन प्रशासक द्वारा प्रदान किया गया",
+    "haveAccount": "पहले से खाता है?",
+    "noAccount": "खाता नहीं है?",
+    "haveInvitation": "निमंत्रण है?",
+    "wantCreateAlliance": "गठबंधन बनाना चाहते हैं?",
+    "errors": {
+      "usernameExists": "उपयोगकर्ता नाम पहले से मौजूद है",
+      "usernameInvalidChars": "केवल अक्षर, संख्याएं, - और _",
+      "invalidCredentials": "अमान्य उपयोगकर्ता नाम या पासवर्ड",
+      "userNotFound": "उपयोगकर्ता नहीं मिला",
+      "loginFailed": "लॉगिन विफल। कृपया पुनः प्रयास करें।",
+      "signupFailed": "साइनअप विफल। कृपया पुनः प्रयास करें।",
+      "joinFailed": "शामिल होना विफल। कृपया पुनः प्रयास करें।",
+      "setupFailed": "सेटअप विफल। कृपया पुनः प्रयास करें।",
+      "superAdminExists": "सुपर एडमिन पहले से मौजूद है",
+      "allianceCreationFailed": "गठबंधन बनाने में विफल",
+      "invalidToken": "अमान्य या समाप्त निमंत्रण टोकन"
+    },
+    "recovery": {
+      "forgotPassword": "पासवर्ड भूल गए?"
+    },
+    "signupForm": {
+      "recoveryQuestion": "गुप्त प्रश्न",
+      "recoveryAnswer": "गुप्त उत्तर",
+      "recoveryAnswerHint": "उत्तर केस-संवेदनशील नहीं है"
+    }
+  },
+  "errors": {
+    "required": "यह फ़ील्ड आवश्यक है",
+    "minLength": "न्यूनतम लंबाई पूरी नहीं हुई",
+    "maxLength": "अधिकतम लंबाई से अधिक",
+    "min": "मान न्यूनतम अनुमत से कम है",
+    "max": "मान अधिकतम अनुमत से अधिक है",
+    "email": "अमान्य ईमेल पता",
+    "pattern": "अमान्य प्रारूप",
+    "passwordMismatch": "पासवर्ड मेल नहीं खाते"
+  },
+  "nav": {
+    "superAdminDashboard": "सुपर एडमिन",
+    "allianceSettings": "गठबंधन सेटिंग्स",
+    "home": "होम",
+    "guides": "गाइड"
+  },
+  "alliance": {
+    "settings": {
+      "title": "गठबंधन सेटिंग्स",
+      "tabs": {
+        "overview": "गठबंधन",
+        "invitations": "निमंत्रण",
+        "activitySettings": "गतिविधि सेटिंग्स",
+        "retroactive": "पूर्वव्यापी गतिविधियां",
+        "importExcel": "एक्सेल इम्पोर्ट",
+        "discord": "Discord"
+      },
+      "allianceInfo": "गठबंधन जानकारी",
+      "allianceName": "गठबंधन का नाम",
+      "allianceTag": "गठबंधन टैग",
+      "allianceTagHint": "वैकल्पिक 3-अक्षर पहचानकर्ता (उदा. RgW)",
+      "updateName": "अपडेट",
+      "memberList": "सदस्य सूची",
+      "members": "सदस्य",
+      "noMembers": "अभी तक कोई सदस्य नहीं",
+      "displayName": "नाम",
+      "role": "भूमिका",
+      "joinedDate": "शामिल हुए",
+      "invitationManagement": "निमंत्रण प्रबंधन",
+      "invitationDuration": "अवधि (दिन)",
+      "durationHint": "निमंत्रण समाप्त होने के दिन",
+      "createInvitation": "निमंत्रण बनाएं",
+      "noInvitations": "अभी तक कोई निमंत्रण नहीं बनाया गया",
+      "expiresAt": "समाप्त होता है",
+      "createdAt": "बनाया गया",
+      "copyLink": "निमंत्रण लिंक कॉपी करें",
+      "revokeInvitation": "निमंत्रण रद्द करें",
+      "revokeConfirm": "क्या आप वाकई इस निमंत्रण को रद्द करना चाहते हैं?",
+      "membersJoined": "इस निमंत्रण से शामिल हुए सदस्य",
+      "nameUpdated": "गठबंधन सफलतापूर्वक अपडेट हुआ!",
+      "nameUpdateFailed": "गठबंधन अपडेट करने में विफल",
+      "invitationCreated": "निमंत्रण बनाया गया और लिंक क्लिपबोर्ड पर कॉपी हो गया!",
+      "invitationCreateFailed": "निमंत्रण बनाने में विफल",
+      "invitationRevoked": "निमंत्रण सफलतापूर्वक रद्द हुआ",
+      "invitationRevokeFailed": "निमंत्रण रद्द करने में विफल",
+      "invitationLinkCopied": "निमंत्रण लिंक क्लिपबोर्ड पर कॉपी हो गया!",
+      "pointRules": {
+        "addRule": "नया नियम जोड़ें",
+        "currentRules": "वर्तमान नियम",
+        "activityType": "गतिविधि प्रकार",
+        "positionMin": "न्यूनतम स्थिति",
+        "positionMax": "अधिकतम स्थिति",
+        "positionRange": "स्थिति सीमा",
+        "points": "अंक",
+        "create": "नियम बनाएं",
+        "noRules": "अभी तक कोई अंक नियम नहीं बना",
+        "noRulesHint": "स्थिति/रैंक के आधार पर अंक गणना के लिए नियम बनाएं। नियमों के बिना, डिफ़ॉल्ट अंक उपयोग होंगे।",
+        "deleteConfirm": "क्या आप वाकई इस नियम को हटाना चाहते हैं?",
+        "activityConfiguration": "गतिविधि कॉन्फ़िगरेशन",
+        "activityConfigurationHint": "प्रत्येक गतिविधि सक्षम या अक्षम करें, भागीदारी मोड और टाईब्रेकर सेटिंग्स कॉन्फ़िगर करें",
+        "participationMode": "भागीदारी मोड",
+        "participationPoints": "भागीदारी के अंक",
+        "positionRangeError": "न्यूनतम स्थिति अधिकतम स्थिति से अधिक नहीं हो सकती",
+        "created": "अंक नियम सफलतापूर्वक बनाया गया",
+        "createFailed": "अंक नियम बनाने में विफल",
+        "deleted": "अंक नियम सफलतापूर्वक हटाया गया",
+        "deleteFailed": "अंक नियम हटाने में विफल",
+        "participationModeFailed": "भागीदारी मोड अपडेट करने में विफल",
+        "participationPointsFailed": "भागीदारी अंक अपडेट करने में विफल",
+        "activityEnabled": "गतिविधि सक्षम",
+        "activityEnabledFailed": "गतिविधि स्थिति अपडेट करने में विफल",
+        "tiebreaker": "टाईब्रेकर",
+        "tiebreakerFailed": "टाईब्रेकर अपडेट करने में विफल"
+      },
+      "leaderboard": {
+        "title": "लीडरबोर्ड सेटिंग्स",
+        "hint": "रैंकिंग में शामिल हफ्तों की संख्या कॉन्फ़िगर करें",
+        "weeksMultiplier": "सीजन गुणक",
+        "multiplierOption": "{{weeks}} हफ्ते (×{{multiplier}})",
+        "weeksHint": "लीडरबोर्ड में {{weeks}} हफ्ते शामिल",
+        "multiplierUpdated": "सीजन गुणक अपडेट हुआ",
+        "multiplierFailed": "सीजन गुणक अपडेट करने में विफल"
+      },
+      "dangerZone": {
+        "title": "खतरनाक क्षेत्र",
+        "deleteAllActivities": "सभी गतिविधियां हटाएं",
+        "deleteAllActivitiesDescription": "गठबंधन सदस्यों द्वारा सबमिट की गई सभी गतिविधियां स्थायी रूप से हटाएं। यह क्रिया पूर्ववत नहीं की जा सकती।",
+        "deleteAllActivitiesConfirm": "क्या आप वाकई सभी गतिविधियां हटाना चाहते हैं? यह सभी सदस्यों का संपूर्ण गतिविधि इतिहास स्थायी रूप से मिटा देगा।",
+        "deleteAllActivitiesSuccess": "सभी गतिविधियां हटा दी गई हैं",
+        "deleteAllActivitiesFailed": "गतिविधियां हटाने में विफल"
+      }
+    },
+    "retroactive": {
+      "title": "पूर्वव्यापी गतिविधि जोड़ें",
+      "description": "एक एडमिन के रूप में, आप पिछले 6 हफ्तों के लिए गठबंधन सदस्यों की गतिविधियां जोड़ सकते हैं। एक सदस्य चुनें, एक हफ्ता चुनें, और उनकी गतिविधि विवरण दर्ज करें।",
+      "selectMember": "सदस्य चुनें",
+      "memberHint": "वह गठबंधन सदस्य चुनें जिसके लिए आप गतिविधि जोड़ना चाहते हैं",
+      "selectWeek": "हफ्ता चुनें",
+      "weekHint": "वह हफ्ता चुनें जब गतिविधि हुई",
+      "currentWeek": "इस हफ्ते",
+      "weeksAgo": "{{count}} हफ्ते पहले",
+      "selectActivity": "गतिविधि प्रकार",
+      "activityHint": "केवल चुने गए हफ्ते के लिए उपलब्ध गतिविधियां दिखाई जाती हैं",
+      "noActivities": "इस हफ्ते के लिए कोई गतिविधि उपलब्ध नहीं",
+      "position": "स्थिति",
+      "positionHint": "सदस्य की स्थिति या रैंक दर्ज करें",
+      "pointsPreview": "दिए जाने वाले अंक",
+      "submit": "गतिविधि जोड़ें",
+      "submitting": "गतिविधि जोड़ी जा रही है...",
+      "success": "गतिविधि सफलतापूर्वक जोड़ी गई!",
+      "error": "गतिविधि जोड़ने में विफल। कृपया पुनः प्रयास करें।"
+    },
+    "import": {
+      "title": "एक्सेल से गतिविधियां आयात करें",
+      "description": "अपने गठबंधन सदस्यों के लिए पूर्वव्यापी गतिविधियां बैच-आयात करने के लिए एक भरा हुआ टेम्पलेट अपलोड करें।",
+      "templateHint": "पहले, आयात टेम्पलेट डाउनलोड करें और भरें।",
+      "downloadTemplate": "टेम्पलेट डाउनलोड करें",
+      "activityFilter": "गतिविधि से फ़िल्टर करें",
+      "activityFilterAll": "सभी गतिविधियां",
+      "uploadFile": "फ़ाइल चुनें",
+      "fileHint": ".xlsx, .xls, .csv स्वीकार्य",
+      "back": "वापस",
+      "preview": {
+        "title": "पूर्वावलोकन",
+        "rowsFound": "{{count}} पंक्तियां मिलीं",
+        "playerColumn": "खिलाड़ी",
+        "activityColumn": "गतिविधि",
+        "positionColumn": "स्थिति",
+        "weekColumn": "हफ्ता",
+        "pointsColumn": "अंक",
+        "statusColumn": "स्थिति",
+        "updateColumn": "अपडेट?",
+        "selectPlayer": "खिलाड़ी चुनें",
+        "updateAll": "सभी मौजूदा अपडेट करें"
+      },
+      "status": {
+        "ready": "डालने के लिए तैयार",
+        "willUpdate": "मौजूदा एंट्री अपडेट होगी",
+        "unmatched": "खिलाड़ी नहीं मिला — मैन्युअल रूप से चुनें",
+        "invalid": {
+          "invalid_activity": "अज्ञात या अक्षम गतिविधि प्रकार",
+          "disabled_activity": "यह गतिविधि प्रकार अक्षम है",
+          "invalid_date": "अमान्य या गायब तारीख",
+          "invalid_position": "अमान्य स्थिति (≥ 1 होनी चाहिए)"
+        }
+      },
+      "confirm": {
+        "button": "आयात करें",
+        "importing": "आयात हो रहा है..."
+      },
+      "result": {
+        "title": "आयात पूर्ण",
+        "inserted": "डाला गया",
+        "updated": "अपडेट हुआ",
+        "skipped": "छोड़ा गया",
+        "error": "आयात विफल। कृपया पुनः प्रयास करें।"
+      },
+      "reset": "दूसरी फ़ाइल आयात करें"
+    }
+  },
+  "activityInput": {
+    "title": "गतिविधि सबमिट करें",
+    "subtitle": "अपनी गतिविधि रिकॉर्ड करें और अंक अर्जित करें",
+    "activityType": "गतिविधि प्रकार",
+    "position": "स्थिति/रैंक",
+    "positionPlaceholder": "उदा., 1, 5, 10...",
+    "positionHint": "अपनी स्थिति या रैंक दर्ज करें",
+    "submit": "गतिविधि सबमिट करें",
+    "submitting": "सबमिट हो रहा है...",
+    "typeHint": "केवल चुने गए हफ्ते के लिए उपलब्ध गतिविधियां दिखाई जाती हैं",
+    "success": "गतिविधि सफलतापूर्वक सबमिट हुई!",
+    "error": "गतिविधि सबमिट करने में विफल",
+    "participated": "मैंने इस हफ्ते भाग लिया",
+    "fillAllFields": "कृपया सभी आवश्यक फ़ील्ड भरें"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "इस हफ्ते कोई गतिविधि उपलब्ध नहीं",
+    "totalPoints": "कुल अंक",
+    "pointsShort": "pts",
+    "currentWeek": "इस हफ्ते",
+    "lastWeek": "पिछले हफ्ते",
+    "weeksAgo": "हफ्ते पहले"
+  },
+  "activitiesDetails": {
+    "title": "गतिविधि विवरण"
+  },
+  "common": {
+    "points": "अंक",
+    "close": "बंद करें",
+    "actions": "क्रियाएं",
+    "delete": "हटाएं",
+    "confirm": "पुष्टि करें",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "saving": "सहेजा जा रहा है...",
+    "update": "अपडेट",
+    "back": "वापस",
+    "add": "जोड़ें",
+    "edit": "संपादित करें",
+    "name": "नाम",
+    "description": "विवरण",
+    "image": "छवि",
+    "icon": "आइकन",
+    "order": "क्रम",
+    "active": "सक्रिय",
+    "all": "सभी",
+    "none": "कोई नहीं",
+    "saved": "सहेजा गया",
+    "created": "बनाया गया",
+    "deleted": "हटाया गया",
+    "deleteConfirm": "क्या आप वाकई \"{{name}}\" को हटाना चाहते हैं?",
+    "uploadImage": "छवि अपलोड करें",
+    "next": "अगला",
+    "clear": "साफ़ करें"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "सुपर एडमिन डैशबोर्ड",
+      "subtitle": "वैश्विक सिस्टम अवलोकन और प्रबंधन",
+      "totalAlliances": "कुल गठबंधन",
+      "totalUsers": "कुल उपयोगकर्ता",
+      "totalActivities": "कुल गतिविधियां",
+      "activeInvitations": "सक्रिय निमंत्रण",
+      "quickActions": "त्वरित क्रियाएं",
+      "manageAlliances": "गठबंधन प्रबंधित करें",
+      "manageAlliancesDesc": "सभी गठबंधन देखें और प्रबंधित करें",
+      "manageUsers": "उपयोगकर्ता प्रबंधित करें",
+      "manageUsersDesc": "सभी उपयोगकर्ता देखें और प्रबंधित करें",
+      "manageGuidesData": "गाइड संदर्भ डेटा",
+      "manageGuidesDataDesc": "चैंपियन, कौशल, घोड़े और रत्न प्रबंधित करें"
+    },
+    "alliances": {
+      "title": "गठबंधन प्रबंधन",
+      "subtitle": "सिस्टम के सभी गठबंधन प्रबंधित करें",
+      "noAlliances": "अभी तक कोई गठबंधन नहीं बना",
+      "name": "गठबंधन का नाम",
+      "tag": "टैग",
+      "admin": "एडमिन",
+      "members": "सदस्य",
+      "created": "बनाया गया",
+      "actions": "क्रियाएं",
+      "deleteConfirm": "क्या आप वाकई गठबंधन \"{{name}}\" को हटाना चाहते हैं? इससे सभी संबंधित उपयोगकर्ता, गतिविधियां और निमंत्रण भी हट जाएंगे।",
+      "loadFailed": "गठबंधन लोड करने में विफल",
+      "updated": "गठबंधन सफलतापूर्वक अपडेट हुआ",
+      "updateFailed": "गठबंधन अपडेट करने में विफल",
+      "deleted": "गठबंधन सफलतापूर्वक हटाया गया",
+      "deleteFailed": "गठबंधन हटाने में विफल"
+    },
+    "users": {
+      "title": "उपयोगकर्ता प्रबंधन",
+      "subtitle": "सिस्टम के सभी उपयोगकर्ता प्रबंधित करें",
+      "noUsers": "कोई उपयोगकर्ता नहीं मिला",
+      "displayName": "प्रदर्शन नाम",
+      "username": "उपयोगकर्ता नाम",
+      "role": "भूमिका",
+      "alliance": "गठबंधन",
+      "noAlliance": "कोई गठबंधन नहीं",
+      "created": "बनाया गया",
+      "actions": "क्रियाएं",
+      "deleteConfirm": "क्या आप वाकई उपयोगकर्ता \"{{name}}\" को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+      "loadFailed": "उपयोगकर्ता लोड करने में विफल",
+      "updated": "उपयोगकर्ता सफलतापूर्वक अपडेट हुआ",
+      "updateFailed": "उपयोगकर्ता अपडेट करने में विफल",
+      "deleted": "उपयोगकर्ता सफलतापूर्वक हटाया गया"
+    },
+    "guidesData": "गाइड संदर्भ डेटा",
+    "guidesDataSubtitle": "चैंपियन, कौशल, घोड़े, आभूषण और रत्न प्रबंधित करें",
+    "champions": "चैंपियन",
+    "skills": "कौशल",
+    "assignSkills": "कौशल असाइन करें",
+    "temperaments": "स्वभाव",
+    "ornaments": "आभूषण",
+    "gems": "रत्न",
+    "rings": "अंगूठियां",
+    "gemType": {
+      "label": "प्रकार",
+      "strategy": "रणनीति",
+      "hero": "नायक",
+      "tactics": "युक्ति"
+    }
+  },
+  "super_admin": "सुपर एडमिन",
+  "admin": "एडमिन",
+  "member": "सदस्य",
+  "pwa": {
+    "offline": "आप ऑफलाइन हैं",
+    "online": "आप ऑनलाइन हैं",
+    "updateAvailable": "एक नया संस्करण उपलब्ध है",
+    "reload": "पुनः लोड करें",
+    "install": "बेहतर अनुभव के लिए ऐप इंस्टॉल करें",
+    "installButton": "इंस्टॉल करें",
+    "iosInstruction": "शेयर बटन टैप करें फिर 'होम स्क्रीन में जोड़ें'",
+    "installDismiss": "इंस्टॉल बैनर खारिज करें"
+  },
+  "releaseNotes": {
+    "title": "नया क्या है",
+    "markAsSeen": "पढ़ा हुआ चिह्नित करें"
+  },
+  "tools": {
+    "gemCalcDesc": "अपने कमांडर पर रत्न लगाने से स्कोर लाभ की गणना करें।",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "अपने कमांडरों के लिए सर्वोत्तम घोड़े के स्वभाव संयोजन खोजें।"
+  },
+  "packValue": {
+    "title": "पैक वैल्यू कैलकुलेटर",
+    "description": "इन-गेम पैक की वैल्यू का मूल्यांकन करें",
+    "addItem": "आइटम जोड़ें",
+    "packPrice": "पैक मूल्य (Apex Coins)",
+    "calculate": "गणना करें",
+    "reset": "रीसेट",
+    "noItems": "गणना करने के लिए कम से कम एक आइटम जोड़ें",
+    "units": {
+      "hours": "घंटे",
+      "qty": "मात्रा"
+    },
+    "result": {
+      "title": "परिणाम",
+      "tier": {
+        "terrible": "बहुत खराब",
+        "average": "औसत",
+        "good": "अच्छा",
+        "excellent": "उत्कृष्ट"
+      },
+      "breakdown": "विस्तृत विवरण"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "सबसे शक्तिशाली गवर्नर",
+    "subtitle": "रैंक के अनुसार पंजीकरण लागत",
+    "description": "सबसे शक्तिशाली गवर्नर इवेंट में भाग लेने के लिए, खिलाड़ियों को स्कोर पॉइंट खर्च करने होंगे। लक्ष्य रैंक जितना ऊंचा, लागत उतनी अधिक।",
+    "rank": "रैंक",
+    "weeklyTarget": "साप्ताहिक लक्ष्य",
+    "cost": "लागत",
+    "notice": "DKP प्रणाली विकास में है। दिखाई गई लागतें सांकेतिक हैं और बदल सकती हैं।"
+  },
+  "gemCalculator": {
+    "title": "रत्न कैलकुलेटर",
+    "back": "वापस",
+    "troopType": "सेना प्रकार",
+    "troopSwordsmen": "तलवारधारी",
+    "troopArchers": "धनुर्धारी",
+    "troopPikemen": "भालाधारी",
+    "troopCavalry": "अश्वारोही",
+    "troopTier": "सेना स्तर",
+    "troopSize": "सेना का आकार",
+    "troopSizeHint": "सैनिकों की संख्या (अधिकतम 500,000)",
+    "healthBonus": "स्वास्थ्य बोनस (%)",
+    "mightAttack": "शक्ति आक्रमण (%)",
+    "mightDefense": "शक्ति रक्षा (%)",
+    "gemType": "रत्न प्रकार",
+    "gemHealth": "स्वास्थ्य रत्न",
+    "gemCapacity": "क्षमता रत्न",
+    "gemRarity": "रत्न दुर्लभता",
+    "verbose": "विस्तृत मोड (गणना विवरण)",
+    "analyze": "विश्लेषण करें",
+    "score": "लाभ",
+    "rawBonus": "कच्चा बोनस",
+    "verboseTitle": "गणना विवरण",
+    "verboseScoreBefore": "पहले का स्कोर",
+    "verboseScoreAfter": "बाद का स्कोर",
+    "verboseGain": "लाभ",
+    "verboseLegionSize": "सेना का आकार",
+    "verbosePerUnit": "प्रति इकाई स्कोर (पहले)",
+    "verbosePerUnitAfter": "प्रति इकाई स्कोर (बाद)",
+    "verboseGemValue": "रत्न बोनस",
+    "verboseNewHealthBonus": "नया स्वास्थ्य बोनस",
+    "noResult": "फॉर्म भरें और विश्लेषण क्लिक करें"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "आपके पहले पालतू जानवर का नाम क्या था?",
+      "q2": "आप किस शहर में पैदा हुए थे?",
+      "q3": "आपके बचपन के सबसे अच्छे दोस्त का पहला नाम क्या है?",
+      "q4": "आपका बचपन का उपनाम क्या था?",
+      "q5": "आपकी माँ का विवाह पूर्व उपनाम क्या है?",
+      "q6": "आपके प्राथमिक विद्यालय का नाम क्या है?",
+      "q7": "आप अपने साथी से किस शहर में मिले थे?",
+      "q8": "आपका पसंदीदा भोजन क्या है?",
+      "q9": "आपकी पहली कार का ब्रांड क्या था?",
+      "q10": "आपकी पहली विदेश यात्रा की मंजिल क्या थी?"
+    },
+    "page": {
+      "title": "खाता पुनर्प्राप्ति",
+      "step1": {
+        "usernamePlaceholder": "अपना उपयोगकर्ता नाम दर्ज करें",
+        "submit": "मेरा खाता खोजें"
+      },
+      "step2": {
+        "answerPlaceholder": "आपका उत्तर",
+        "newPassword": "नया पासवर्ड",
+        "confirmPassword": "पासवर्ड की पुष्टि करें",
+        "submit": "पासवर्ड रीसेट करें"
+      },
+      "step3": {
+        "success": "पासवर्ड सफलतापूर्वक रीसेट हुआ!"
+      },
+      "backToLogin": "लॉगिन पर वापस जाएं"
+    },
+    "errors": {
+      "userNotFound": "इस उपयोगकर्ता नाम के लिए कोई खाता नहीं मिला।",
+      "wrongAnswer": "गलत उत्तर।",
+      "wrongAnswerRemaining": "{{count}} प्रयास शेष।",
+      "locked": "{{time}} तक खाता लॉक है।",
+      "passwordTooShort": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।"
+    }
+  },
+  "accountSettings": {
+    "title": "मेरा खाता",
+    "tabAccount": "मेरा खाता",
+    "tabPreferences": "मेरी प्राथमिकताएं",
+    "displayName": {
+      "title": "प्रदर्शन नाम",
+      "save": "सहेजें",
+      "success": "प्रदर्शन नाम अपडेट हुआ",
+      "error": "प्रदर्शन नाम अपडेट करने में विफल"
+    },
+    "password": {
+      "title": "पासवर्ड बदलें",
+      "newPassword": "नया पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि करें",
+      "save": "पासवर्ड बदलें",
+      "success": "पासवर्ड सफलतापूर्वक अपडेट हुआ",
+      "error": "पासवर्ड अपडेट करने में विफल"
+    },
+    "recovery": {
+      "title": "पुनर्प्राप्ति प्रश्न",
+      "question": "गुप्त प्रश्न",
+      "answer": "नया उत्तर",
+      "answerHint": "उत्तर केस-संवेदनशील नहीं है",
+      "save": "अपडेट",
+      "success": "पुनर्प्राप्ति प्रश्न अपडेट हुआ",
+      "error": "पुनर्प्राप्ति प्रश्न अपडेट करने में विफल"
+    },
+    "language": {
+      "title": "एप्लिकेशन भाषा"
+    },
+    "colorScheme": {
+      "title": "उपस्थिति",
+      "light": "लाइट",
+      "dark": "डार्क",
+      "auto": "ऑटो (सिस्टम)",
+      "glass": "ग्लास लाइट",
+      "glassDark": "ग्लास डार्क",
+      "highContrast": "उच्च कंट्रास्ट"
+    }
+  },
+  "discord": {
+    "channelsTitle": "Discord चैनल",
+    "channelsSubtitle": "संदेश भेजने के लिए Discord वेबहुक चैनल कॉन्फ़िगर करें",
+    "channelName": "चैनल नाम",
+    "channelNamePlaceholder": "उदा. general-reminder",
+    "webhookUrl": "वेबहुक URL",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "सर्वर सेटिंग्स > इंटीग्रेशन से Discord वेबहुक URL",
+    "defaultMessage": "डिफ़ॉल्ट संदेश (वैकल्पिक)",
+    "defaultMessagePlaceholder": "⏰ रिमाइंडर: अपनी GE रैंकिंग दर्ज करें",
+    "defaultMessageHint": "इस चैनल को चुनने पर पहले से लोड — भेजने से पहले संपादन योग्य",
+    "addChannel": "चैनल जोड़ें",
+    "deleteChannel": "चैनल हटाएं",
+    "deleteConfirm": "क्या आप वाकई चैनल \"{{name}}\" को हटाना चाहते हैं?",
+    "noChannels": "अभी तक कोई Discord चैनल कॉन्फ़िगर नहीं है",
+    "noChannelsForMessage": "संदेश भेजने के लिए कम से कम एक चैनल जोड़ें",
+    "channelAdded": "Discord चैनल सफलतापूर्वक जोड़ा गया",
+    "channelAddFailed": "Discord चैनल जोड़ने में विफल",
+    "channelUpdated": "Discord चैनल सफलतापूर्वक अपडेट हुआ",
+    "channelUpdateFailed": "Discord चैनल अपडेट करने में विफल",
+    "channelDeleted": "Discord चैनल सफलतापूर्वक हटाया गया",
+    "channelDeleteFailed": "Discord चैनल हटाने में विफल",
+    "editChannel": "चैनल संपादित करें",
+    "editChannelTitle": "चैनल संपादित हो रहा है:",
+    "loadFailed": "Discord चैनल लोड करने में विफल",
+    "sendMessageTitle": "संदेश भेजें",
+    "sendMessageSubtitle": "एक चैनल चुनें, संदेश समायोजित करें, फिर भेजें",
+    "selectChannel": "चैनल चुनें",
+    "messageContent": "संदेश",
+    "messageContentPlaceholder": "⏰ रिमाइंडर: अपनी GE रैंकिंग दर्ज करें",
+    "sendMessage": "Discord को भेजें",
+    "messageSent": "संदेश Discord को सफलतापूर्वक भेजा गया",
+    "messageSendFailed": "Discord संदेश भेजने में विफल",
+    "errors": {
+      "invalidWebhookUrl": "एक वैध Discord वेबहुक URL होना चाहिए (https://discord.com/api/webhooks/...)"
+    }
+  },
+  "guides": {
+    "title": "गाइड",
+    "community": "समुदाय",
+    "my_guides": "मेरे गाइड",
+    "create": "गाइड बनाएं",
+    "limit_reached": "10 गाइड की सीमा पूरी हुई",
+    "no_guides": "अभी तक कोई गाइड नहीं",
+    "count": "{{ count }}/10 गाइड",
+    "categories": {
+      "formation": "गठन",
+      "evenement": "इवेंट",
+      "general": "सामान्य"
+    },
+    "status": {
+      "published": "प्रकाशित",
+      "draft": "ड्राफ्ट"
+    },
+    "by": "द्वारा",
+    "view": "देखें",
+    "edit": "संपादित करें",
+    "publish": "प्रकाशित करें",
+    "unpublish": "अप्रकाशित करें",
+    "delete": "हटाएं",
+    "published_success": "गाइड प्रकाशित हुआ",
+    "unpublished_success": "गाइड अप्रकाशित हुआ",
+    "champion": "चैंपियन",
+    "champion_slot": "चैंपियन स्लॉट",
+    "add_champion": "चैंपियन जोड़ें",
+    "champion_count": "{{ count }} चैंपियन कॉन्फ़िगर",
+    "formation_hint": "अधिकतम 3 चैंपियन कॉन्फ़िगर करें। क्रम बदलने के लिए ड्रैग करें।",
+    "skill": "कौशल",
+    "skills": "कौशल",
+    "gems": "रत्न",
+    "hero_section": "नायक",
+    "horse_section": "घोड़ा",
+    "traits": "घोड़े के गुण",
+    "trait": "गुण",
+    "add_trait": "गुण जोड़ें",
+    "ornament": "आभूषण",
+    "ring": "अंगूठी",
+    "description": "विवरण / लेखक नोट्स",
+    "editor": {
+      "title_new": "गाइड बनाएं",
+      "title_edit": "गाइड संपादित करें",
+      "step_basic": "जानकारी",
+      "step_content": "सामग्री",
+      "step_review": "सारांश",
+      "title_label": "गाइड शीर्षक",
+      "category_label": "श्रेणी",
+      "description_label": "विवरण",
+      "publish_now": "अभी प्रकाशित करें",
+      "save_draft": "ड्राफ्ट के रूप में सहेजें",
+      "save": "सहेजें"
+    },
+    "confirm_delete": "इस गाइड को हटाएं?",
+    "confirm_delete_msg": "यह क्रिया पूर्ववत नहीं की जा सकती।",
+    "errors": {
+      "limitReached": "आप अधिकतम 10 गाइड की सीमा तक पहुंच गए हैं।",
+      "slugDuplicate": "यह शीर्षक किसी मौजूदा गाइड से बहुत मिलता-जुलता है। कृपया शीर्षक बदलें।",
+      "notFound": "गाइड नहीं मिला।",
+      "unauthorized": "आपको इस गाइड को संशोधित करने का अधिकार नहीं है।",
+      "unknown": "एक अप्रत्याशित त्रुटि हुई। कृपया पुनः प्रयास करें।",
+      "invalidFileType": "अमान्य फ़ाइल प्रकार। अनुमत: PNG, JPEG, WebP."
+    },
+    "public_list_title": "समुदाय गाइड",
+    "public_list_empty": "अभी तक कोई गाइड प्रकाशित नहीं हुआ",
+    "copy_link": "लिंक कॉपी करें",
+    "link_copied": "लिंक कॉपी हुआ!",
+    "back_to_list": "गाइड सूची पर वापस",
+    "guide_not_found": "गाइड नहीं मिला",
+    "upvote": "अपवोट",
+    "upvoted": "अपवोट किया",
+    "champion_slot": "चैंपियन {{n}}",
+    "author_notes": "लेखक के नोट्स"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "गठबंधन गतिविधि ट्रैकर",
+      "title1": "स्मार्ट खेलें।",
+      "title2": "एक साथ जीतें।",
+      "subtitleBefore": "हर सक्रिय खिलाड़ी के लिए डिज़ाइन किया गया — केवल खर्च करने वालों के लिए नहीं। अपने गठबंधन की गतिविधियां ट्रैक करें, रणनीतिक अंक अर्जित करें, और",
+      "subtitleStrong": "Top 10 सबसे शक्तिशाली गवर्नर",
+      "subtitleAfter": "काफी कम स्पीड-अप और संसाधनों के साथ पहुंचें।",
+      "ctaLogin": "लॉगिन",
+      "ctaJoin": "निमंत्रण से जुड़ें"
+    },
+    "steps": {
+      "label": "यह कैसे काम करता है",
+      "title": "शीर्ष पर पहुंचने के तीन कदम",
+      "step1": {
+        "title": "अपनी गतिविधियां लॉग करें",
+        "description": "KvK लड़ाई, सेना युद्ध, सुनहरी खोज और अधिक सबमिट करें। हर इवेंट, हर हफ्ते — आपका योगदान दर्ज।"
+      },
+      "step2": {
+        "title": "रणनीतिक अंक अर्जित करें",
+        "description": "अंकों की गणना आपकी स्थिति और प्रदर्शन से होती है। कॉन्फ़िगर करने योग्य नियम उन खिलाड़ियों को पुरस्कृत करते हैं जो भाग लेते हैं।"
+      },
+      "step3": {
+        "title": "रैंकिंग में ऊपर उठें",
+        "description": "6-हफ्ते का रोलिंग लीडरबोर्ड प्रतिस्पर्धा को ताज़ा रखता है और व्यक्तिगत उछाल के बजाय निरंतरता को पुरस्कृत करता है।"
+      }
+    },
+    "benefits": {
+      "label": "यह क्यों महत्वपूर्ण है",
+      "title": "आपका पूरा सर्वर जीतता है",
+      "benefit1": {
+        "title": "सक्रिय खिलाड़ियों के लिए बनाया गया",
+        "description": "Pay-to-win नहीं। शुद्ध गतिविधि और स्मार्ट भागीदारी आपको लीडरबोर्ड पर ऊपर ले जाती है — कोई भी प्रतिस्पर्धा कर सकता है।"
+      },
+      "benefit2": {
+        "title": "गठबंधन-व्यापी संसाधन बचाएं",
+        "description": "संरचित ट्रैकिंग अनुकूलित करती है कि कौन और कब भाग लेता है, KvK तैयारी और सबसे शक्तिशाली साम्राज्य के लिए स्पीड-अप और संसाधन संरक्षित करती है।"
+      },
+      "benefit3": {
+        "title": "Top 10 सबसे शक्तिशाली गवर्नर तक पहुंचें",
+        "description": "कम संसाधनों से सबसे मजबूत नायक प्राप्त करें। लगभग और चैंपियन के बीच का अंतर व्यवस्थित प्रयास से मापा जाता है।"
+      }
+    },
+    "cta": {
+      "title": "क्या आप अपने गठबंधन का नेतृत्व करने के लिए तैयार हैं?",
+      "subtitle": "अपना गठबंधन बनाएं और आज से अपने सदस्यों की प्रगति ट्रैक करना शुरू करें।",
+      "button": "अपना गठबंधन बनाएं"
+    },
+    "footer": "Activity Tracker — स्मार्ट खेलें, मजबूत प्रतिस्पर्धा करें।"
+  }
+}

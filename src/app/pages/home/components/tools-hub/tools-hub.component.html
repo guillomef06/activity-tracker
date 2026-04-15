@@ -1,13 +1,7 @@
 @if (selectedTool() === null) {
   <div class="tools-grid">
     @for (tool of tools; track tool.id) {
-      <mat-card
-        class="tool-card"
-        (click)="selectedTool.set(tool.id)"
-        role="button"
-        tabindex="0"
-        (keyup.enter)="selectedTool.set(tool.id)"
-      >
+      <mat-card class="tool-card" (click)="openTool(tool)" role="button" tabindex="0" (keyup.enter)="openTool(tool)">
         <mat-card-content>
           <div class="tool-card__icon-wrap">
             <mat-icon>{{ tool.icon }}</mat-icon>

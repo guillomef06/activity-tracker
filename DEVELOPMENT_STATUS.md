@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 31 mars 2026
+**Dernière mise à jour:** 15 avril 2026
 
 ## 📋 Résumé
 
@@ -51,7 +51,7 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - Système de thèmes : Light / Dark / Auto / Glass Light / Glass Dark / High Contrast
 - Design "Command Post" (header gradient marine, rank gold/silver/bronze)
 - Material Design 3, Inter, OnPush, Signals
-- Internationalisation : EN, FR, ES, IT
+- Internationalisation : EN, FR, ES, IT, DE, TR, PT, EL, KO, HI, ZH, KU, AR (13 langues)
 
 ### Outils (Tools Hub)
 - **Gem Calculator** : calculateur de score de gemme sur commander
@@ -66,6 +66,12 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 ### Guides
 
 Guides stratégiques partageables : création (jusqu'à 10 par user), upvote anonyme, accès public sans login. Guides de formation avec 3 slots champions configurables (skills, gems, traits, ornement, anneau). Page super admin pour gérer les référentiels (champions, skills, gems, ornements, anneaux, tempéraments).
+
+Pages publiques (`/guides`, `/guides/:slug`) routées via `PublicLayoutComponent` — header présent même sans auth (logo + titre uniquement si non connecté, menu complet si connecté).
+
+### Internationalisation
+
+13 langues : EN, FR, ES, IT, DE, TR, PT, EL, KO, HI, ZH, KU, AR. Fichiers JSON dans `src/assets/i18n/`. Script de vérification des clés inutilisées : `npm run i18n:check`.
 
 ### Performance & Optimisations
 - `ActivityService.loadActivities()` : filtre côté DB sur les N dernières semaines (`.gte('date', cutoffDate)`) selon le multiplicateur — évite de charger l'historique complet

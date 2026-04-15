@@ -390,7 +390,9 @@
     "markAsSeen": "Marcar como leído"
   },
   "tools": {
-    "gemCalcDesc": "Calcula la ganancia de puntuación al equipar una gema en tu comandante."
+    "gemCalcDesc": "Calcula la ganancia de puntuación al equipar una gema en tu comandante.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Encuentra las mejores combinaciones de temperamentos para tus comandantes."
   },
   "packValue": {
     "title": "Calculadora de Valor de Pack",

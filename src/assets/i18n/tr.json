@@ -1,0 +1,724 @@
+{
+  "app": {
+    "subtitle": "Aktiviteleri takip edin ve 6 haftalık puanları görüntüleyin"
+  },
+  "home": {
+    "tabs": {
+      "submit": "Aktivite Gönder",
+      "leaderboard": "Sıralama",
+      "mightiestGovernor": "En Güçlü Val.",
+      "tools": "Araçlar"
+    }
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "signup": "Kayıt Ol",
+    "logout": "Çıkış Yap",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "confirmPassword": "Şifreyi Onayla",
+    "displayName": "Görünen Ad",
+    "allianceName": "İttifak Adı",
+    "invitationToken": "Davet Kodu",
+    "welcomeBack": "Tekrar Hoş Geldiniz",
+    "signInSubtitle": "Hesabınıza giriş yapın",
+    "signupTitle": "İttifak Oluştur",
+    "signupSubtitle": "İttifak yöneticisi olarak kaydolun",
+    "joinTitle": "İttifaka Katıl",
+    "joinSubtitle": "Bir ittifaka katılmak için davetinizi kullanın",
+    "setupTitle": "Süper Admin Kurulumu",
+    "setupSubtitle": "İlk süper yönetici hesabını oluşturun",
+    "setupWarning": "Bu tek seferlik bir kurulumdur. Süper yönetici tüm ittifak ve kullanıcılara tam erişime sahiptir.",
+    "signingIn": "Giriş yapılıyor...",
+    "creatingAlliance": "İttifak oluşturuluyor...",
+    "joining": "Katılıyor...",
+    "createSuperAdmin": "Süper Admin Oluştur",
+    "creating": "Oluşturuluyor...",
+    "usernamePlaceholder": "Benzersiz kullanıcı adı seçin",
+    "usernameHint": "3–30 karakter — yalnızca harf, rakam, - ve _",
+    "displayNamePlaceholder": "Tam adınızı girin",
+    "displayNameHint": "Diğerlerine görünecek adınız",
+    "allianceNamePlaceholder": "İttifak adı girin",
+    "allianceNameHint": "Yeni ittifakınız için bir ad seçin",
+    "passwordPlaceholder": "örn. Sifrem123!",
+    "passwordHint": "Min. 6 karakter, en az bir harf ve bir rakam içermelidir",
+    "confirmPasswordPlaceholder": "Şifrenizi tekrar girin",
+    "tokenPlaceholder": "Davet kodunu girin",
+    "tokenHint": "İttifak yöneticiniz tarafından sağlanır",
+    "haveAccount": "Zaten hesabınız var mı?",
+    "noAccount": "Hesabınız yok mu?",
+    "haveInvitation": "Davetiniz var mı?",
+    "wantCreateAlliance": "İttifak oluşturmak ister misiniz?",
+    "errors": {
+      "usernameExists": "Kullanıcı adı zaten mevcut",
+      "usernameInvalidChars": "Yalnızca harf, rakam, - ve _",
+      "invalidCredentials": "Geçersiz kullanıcı adı veya şifre",
+      "userNotFound": "Kullanıcı bulunamadı",
+      "loginFailed": "Giriş başarısız. Lütfen tekrar deneyin.",
+      "signupFailed": "Kayıt başarısız. Lütfen tekrar deneyin.",
+      "joinFailed": "Katılım başarısız. Lütfen tekrar deneyin.",
+      "setupFailed": "Kurulum başarısız. Lütfen tekrar deneyin.",
+      "superAdminExists": "Süper admin zaten mevcut",
+      "allianceCreationFailed": "İttifak oluşturulamadı",
+      "invalidToken": "Geçersiz veya süresi dolmuş davet kodu"
+    },
+    "recovery": {
+      "forgotPassword": "Şifremi unuttum?"
+    },
+    "signupForm": {
+      "recoveryQuestion": "Gizli soru",
+      "recoveryAnswer": "Gizli cevap",
+      "recoveryAnswerHint": "Cevap büyük/küçük harf duyarsızdır"
+    }
+  },
+  "errors": {
+    "required": "Bu alan zorunludur",
+    "minLength": "Minimum uzunluk karşılanmadı",
+    "maxLength": "Maksimum uzunluk aşıldı",
+    "min": "Değer izin verilen minimumun altında",
+    "max": "Değer izin verilen maksimumu aşıyor",
+    "email": "Geçersiz e-posta adresi",
+    "pattern": "Geçersiz format",
+    "passwordMismatch": "Şifreler eşleşmiyor"
+  },
+  "nav": {
+    "superAdminDashboard": "Süper Admin",
+    "allianceSettings": "İttifak Ayarları",
+    "home": "Ana Sayfa",
+    "guides": "Rehberler"
+  },
+  "alliance": {
+    "settings": {
+      "title": "İttifak Ayarları",
+      "tabs": {
+        "overview": "İttifak",
+        "invitations": "Davetler",
+        "activitySettings": "Aktivite Ayarları",
+        "retroactive": "Geçmiş Aktiviteler",
+        "importExcel": "Excel İçe Aktar",
+        "discord": "Discord"
+      },
+      "allianceInfo": "İttifak Bilgileri",
+      "allianceName": "İttifak Adı",
+      "allianceTag": "İttifak Etiketi",
+      "allianceTagHint": "İsteğe bağlı 3 karakterlik tanımlayıcı (örn. RgW)",
+      "updateName": "Güncelle",
+      "memberList": "Üye Listesi",
+      "members": "üyeler",
+      "noMembers": "Henüz üye yok",
+      "displayName": "Ad",
+      "role": "Rol",
+      "joinedDate": "Katılım",
+      "invitationManagement": "Davet Yönetimi",
+      "invitationDuration": "Süre (gün)",
+      "durationHint": "Davetin sona ermesine kadar geçen gün",
+      "createInvitation": "Davet Oluştur",
+      "noInvitations": "Henüz davet oluşturulmadı",
+      "expiresAt": "Bitiş",
+      "createdAt": "Oluşturuldu",
+      "copyLink": "Davet bağlantısını kopyala",
+      "revokeInvitation": "Daveti iptal et",
+      "revokeConfirm": "Bu daveti iptal etmek istediğinizden emin misiniz?",
+      "membersJoined": "Bu davet aracılığıyla katılan üyeler",
+      "nameUpdated": "İttifak başarıyla güncellendi!",
+      "nameUpdateFailed": "İttifak güncellenemedi",
+      "invitationCreated": "Davet oluşturuldu ve bağlantı panoya kopyalandı!",
+      "invitationCreateFailed": "Davet oluşturulamadı",
+      "invitationRevoked": "Davet başarıyla iptal edildi",
+      "invitationRevokeFailed": "Davet iptal edilemedi",
+      "invitationLinkCopied": "Davet bağlantısı panoya kopyalandı!",
+      "pointRules": {
+        "addRule": "Yeni Kural Ekle",
+        "currentRules": "Mevcut Kurallar",
+        "activityType": "Aktivite Türü",
+        "positionMin": "Min Konum",
+        "positionMax": "Max Konum",
+        "positionRange": "Konum Aralığı",
+        "points": "Puanlar",
+        "create": "Kural Oluştur",
+        "noRules": "Henüz puan kuralı yapılandırılmadı",
+        "noRulesHint": "Konuma/sıralamaya göre puan hesaplamak için kurallar oluşturun. Kural olmadan varsayılan puanlar kullanılır.",
+        "deleteConfirm": "Bu kuralı silmek istediğinizden emin misiniz?",
+        "activityConfiguration": "Aktivite Yapılandırması",
+        "activityConfigurationHint": "Her aktiviteyi etkinleştirin veya devre dışı bırakın, katılım modunu ve tiebreaker ayarlarını yapılandırın",
+        "participationMode": "Katılım Modu",
+        "participationPoints": "Katılım için puanlar",
+        "positionRangeError": "Minimum konum maksimum konumdan büyük olamaz",
+        "created": "Puan kuralı başarıyla oluşturuldu",
+        "createFailed": "Puan kuralı oluşturulamadı",
+        "deleted": "Puan kuralı başarıyla silindi",
+        "deleteFailed": "Puan kuralı silinemedi",
+        "participationModeFailed": "Katılım modu güncellenemedi",
+        "participationPointsFailed": "Katılım puanları güncellenemedi",
+        "activityEnabled": "Aktivite etkinleştirildi",
+        "activityEnabledFailed": "Aktivite durumu güncellenemedi",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Tiebreaker güncellenemedi"
+      },
+      "leaderboard": {
+        "title": "Sıralama Ayarları",
+        "hint": "Sıralamaya kaç hafta dahil edileceğini yapılandırın",
+        "weeksMultiplier": "Sezon çarpanı",
+        "multiplierOption": "{{weeks}} hafta (×{{multiplier}})",
+        "weeksHint": "{{weeks}} hafta sıralamaya dahil",
+        "multiplierUpdated": "Sezon çarpanı güncellendi",
+        "multiplierFailed": "Sezon çarpanı güncellenemedi"
+      },
+      "dangerZone": {
+        "title": "Tehlike Bölgesi",
+        "deleteAllActivities": "Tüm aktiviteleri sil",
+        "deleteAllActivitiesDescription": "İttifak üyeleri tarafından gönderilen tüm aktiviteleri kalıcı olarak silin. Bu işlem geri alınamaz.",
+        "deleteAllActivitiesConfirm": "TÜM aktiviteleri silmek istediğinizden emin misiniz? Bu, tüm üyeler için tüm aktivite geçmişini kalıcı olarak silecektir.",
+        "deleteAllActivitiesSuccess": "Tüm aktiviteler silindi",
+        "deleteAllActivitiesFailed": "Aktiviteler silinemedi"
+      }
+    },
+    "retroactive": {
+      "title": "Geçmiş Aktivite Ekle",
+      "description": "Yönetici olarak, ittifak üyeleri için son 6 haftanın aktivitelerini ekleyebilirsiniz. Bir üye, hafta seçin ve aktivite bilgilerini girin.",
+      "selectMember": "Üye Seç",
+      "memberHint": "Aktivite eklemek istediğiniz ittifak üyesini seçin",
+      "selectWeek": "Hafta Seç",
+      "weekHint": "Aktivitenin gerçekleştiği haftayı seçin",
+      "currentWeek": "Bu Hafta",
+      "weeksAgo": "{{count}} hafta önce",
+      "selectActivity": "Aktivite Türü",
+      "activityHint": "Yalnızca seçilen hafta için mevcut aktiviteler gösterilir",
+      "noActivities": "Bu hafta için aktivite yok",
+      "position": "Konum",
+      "positionHint": "Üyenin konumunu veya sıralamasını girin",
+      "pointsPreview": "Verilecek puanlar",
+      "submit": "Aktivite Ekle",
+      "submitting": "Aktivite ekleniyor...",
+      "success": "Aktivite başarıyla eklendi!",
+      "error": "Aktivite eklenemedi. Lütfen tekrar deneyin."
+    },
+    "import": {
+      "title": "Excel'den Aktivite İçe Aktar",
+      "description": "İttifak üyeleriniz için toplu geçmiş aktiviteleri içe aktarmak için doldurulmuş bir şablon yükleyin.",
+      "templateHint": "Önce içe aktarma şablonunu indirip doldurun.",
+      "downloadTemplate": "Şablonu İndir",
+      "activityFilter": "Aktiviteye göre filtrele",
+      "activityFilterAll": "Tüm aktiviteler",
+      "uploadFile": "Dosya seç",
+      "fileHint": ".xlsx, .xls, .csv kabul eder",
+      "back": "Geri",
+      "preview": {
+        "title": "Önizleme",
+        "rowsFound": "{{count}} satır bulundu",
+        "playerColumn": "Oyuncu",
+        "activityColumn": "Aktivite",
+        "positionColumn": "Konum",
+        "weekColumn": "Hafta",
+        "pointsColumn": "Puanlar",
+        "statusColumn": "Durum",
+        "updateColumn": "Güncelle?",
+        "selectPlayer": "Oyuncu seç",
+        "updateAll": "Tüm mevcut olanları güncelle"
+      },
+      "status": {
+        "ready": "Eklemeye hazır",
+        "willUpdate": "Mevcut girişi güncelleyecek",
+        "unmatched": "Oyuncu bulunamadı — manuel seç",
+        "invalid": {
+          "invalid_activity": "Bilinmeyen veya devre dışı aktivite türü",
+          "disabled_activity": "Bu aktivite türü devre dışı",
+          "invalid_date": "Geçersiz veya eksik tarih",
+          "invalid_position": "Geçersiz konum (≥ 1 olmalı)"
+        }
+      },
+      "confirm": {
+        "button": "İçe Aktar",
+        "importing": "İçe aktarılıyor..."
+      },
+      "result": {
+        "title": "İçe aktarma tamamlandı",
+        "inserted": "eklendi",
+        "updated": "güncellendi",
+        "skipped": "atlandı",
+        "error": "İçe aktarma başarısız. Lütfen tekrar deneyin."
+      },
+      "reset": "Başka dosya içe aktar"
+    }
+  },
+  "activityInput": {
+    "title": "Aktivite Gönder",
+    "subtitle": "Aktivitenizi kaydedin ve puan kazanın",
+    "activityType": "Aktivite Türü",
+    "position": "Konum/Sıra",
+    "positionPlaceholder": "örn. 1, 5, 10...",
+    "positionHint": "Konumunuzu veya sıralamanızı girin",
+    "submit": "Aktivite Gönder",
+    "submitting": "Gönderiliyor...",
+    "typeHint": "Yalnızca seçilen hafta için mevcut aktiviteler gösterilir",
+    "success": "Aktivite başarıyla gönderildi!",
+    "error": "Aktivite gönderilemedi",
+    "participated": "Bu hafta katıldım",
+    "fillAllFields": "Lütfen tüm zorunlu alanları doldurun"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "Bu hafta aktivite yok",
+    "totalPoints": "toplam puan",
+    "pointsShort": "puan",
+    "currentWeek": "Bu Hafta",
+    "lastWeek": "Geçen Hafta",
+    "weeksAgo": "hafta önce"
+  },
+  "activitiesDetails": {
+    "title": "Aktivite Detayları"
+  },
+  "common": {
+    "points": "puan",
+    "close": "Kapat",
+    "actions": "Eylemler",
+    "delete": "Sil",
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "saving": "Kaydediliyor...",
+    "update": "Güncelle",
+    "back": "Geri",
+    "add": "Ekle",
+    "edit": "Düzenle",
+    "name": "Ad",
+    "description": "Açıklama",
+    "image": "Görsel",
+    "icon": "Simge",
+    "order": "Sıra",
+    "active": "Aktif",
+    "all": "Tümü",
+    "none": "Hiçbiri",
+    "saved": "Kaydedildi",
+    "created": "Oluşturuldu",
+    "deleted": "Silindi",
+    "deleteConfirm": "\"{{name}}\" silmek istediğinizden emin misiniz?",
+    "uploadImage": "Görsel yükle",
+    "next": "İleri",
+    "clear": "Temizle"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Süper Admin Paneli",
+      "subtitle": "Global sistem genel bakışı ve yönetimi",
+      "totalAlliances": "Toplam İttifaklar",
+      "totalUsers": "Toplam Kullanıcılar",
+      "totalActivities": "Toplam Aktiviteler",
+      "activeInvitations": "Aktif Davetler",
+      "quickActions": "Hızlı Eylemler",
+      "manageAlliances": "İttifakları Yönet",
+      "manageAlliancesDesc": "Tüm ittifakları görüntüle ve yönet",
+      "manageUsers": "Kullanıcıları Yönet",
+      "manageUsersDesc": "Tüm kullanıcıları görüntüle ve yönet",
+      "manageGuidesData": "Rehber Referans Verileri",
+      "manageGuidesDataDesc": "Şampiyonlar, beceriler, atlar ve mücevherleri yönet"
+    },
+    "alliances": {
+      "title": "İttifak Yönetimi",
+      "subtitle": "Sistemdeki tüm ittifakları yönetin",
+      "noAlliances": "Henüz ittifak oluşturulmadı",
+      "name": "İttifak Adı",
+      "tag": "Etiket",
+      "admin": "Yönetici",
+      "members": "Üyeler",
+      "created": "Oluşturuldu",
+      "actions": "Eylemler",
+      "deleteConfirm": "\"{{name}}\" ittifakını silmek istediğinizden emin misiniz? Tüm ilgili kullanıcılar, aktiviteler ve davetler de silinecektir.",
+      "loadFailed": "İttifaklar yüklenemedi",
+      "updated": "İttifak başarıyla güncellendi",
+      "updateFailed": "İttifak güncellenemedi",
+      "deleted": "İttifak başarıyla silindi",
+      "deleteFailed": "İttifak silinemedi"
+    },
+    "users": {
+      "title": "Kullanıcı Yönetimi",
+      "subtitle": "Sistemdeki tüm kullanıcıları yönetin",
+      "noUsers": "Kullanıcı bulunamadı",
+      "displayName": "Görünen Ad",
+      "username": "Kullanıcı Adı",
+      "role": "Rol",
+      "alliance": "İttifak",
+      "noAlliance": "İttifak yok",
+      "created": "Oluşturuldu",
+      "actions": "Eylemler",
+      "deleteConfirm": "\"{{name}}\" kullanıcısını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "loadFailed": "Kullanıcılar yüklenemedi",
+      "updated": "Kullanıcı başarıyla güncellendi",
+      "updateFailed": "Kullanıcı güncellenemedi",
+      "deleted": "Kullanıcı başarıyla silindi"
+    },
+    "guidesData": "Rehber Referans Verileri",
+    "guidesDataSubtitle": "Şampiyonlar, beceriler, atlar, süsler ve mücevherleri yönetin",
+    "champions": "Şampiyonlar",
+    "skills": "Beceriler",
+    "assignSkills": "Becerileri Ata",
+    "temperaments": "Temperamentler",
+    "ornaments": "Süsler",
+    "gems": "Mücevherler",
+    "rings": "Yüzükler",
+    "gemType": {
+      "label": "Tür",
+      "strategy": "Strateji",
+      "hero": "Kahraman",
+      "tactics": "Taktik"
+    }
+  },
+  "super_admin": "Süper Admin",
+  "admin": "Yönetici",
+  "member": "Üye",
+  "pwa": {
+    "offline": "Çevrimdışısınız",
+    "online": "Çevrimiçisiniz",
+    "updateAvailable": "Yeni bir sürüm mevcut",
+    "reload": "Yenile",
+    "install": "Daha iyi bir deneyim için uygulamayı yükleyin",
+    "installButton": "Yükle",
+    "iosInstruction": "Paylaş düğmesine, ardından 'Ana Ekrana Ekle'ye dokunun",
+    "installDismiss": "Yükleme başlığını kapat"
+  },
+  "releaseNotes": {
+    "title": "Yenilikler",
+    "markAsSeen": "Okundu olarak işaretle"
+  },
+  "tools": {
+    "gemCalcDesc": "Komutanınıza bir mücevher takmanın puan kazancını hesaplayın.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Komutanlarınız için en iyi at mizacı kombinasyonlarını bulun."
+  },
+  "packValue": {
+    "title": "Paket Değer Hesaplayıcı",
+    "description": "Oyun içi bir paketin değerini değerlendirin",
+    "addItem": "Öğe ekle",
+    "packPrice": "Paket fiyatı (Apex Coins)",
+    "calculate": "Hesapla",
+    "reset": "Sıfırla",
+    "noItems": "Hesaplamak için en az bir öğe ekleyin",
+    "units": {
+      "hours": "Saat",
+      "qty": "Adet"
+    },
+    "result": {
+      "title": "Sonuç",
+      "tier": {
+        "terrible": "Çok Kötü",
+        "average": "Ortalama",
+        "good": "İyi",
+        "excellent": "Mükemmel"
+      },
+      "breakdown": "Döküm"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "En Güçlü Vali",
+    "subtitle": "Sıralamaya göre kayıt maliyetleri",
+    "description": "En Güçlü Vali etkinliğine katılmak için oyuncuların puan harcaması gerekir. Hedef sıralama ne kadar yüksekse, maliyet o kadar yüksek olur.",
+    "rank": "Sıralama",
+    "weeklyTarget": "Haftalık Hedef",
+    "cost": "Maliyet",
+    "notice": "DKP sistemi geliştirme aşamasındadır. Gösterilen maliyetler tahminidir ve değişebilir."
+  },
+  "gemCalculator": {
+    "title": "Mücevher Hesaplayıcı",
+    "back": "Geri",
+    "troopType": "Birlik Türü",
+    "troopSwordsmen": "Kılıçlılar",
+    "troopArchers": "Okçular",
+    "troopPikemen": "Mizraklılar",
+    "troopCavalry": "Süvari",
+    "troopTier": "Birlik Kademesi",
+    "troopSize": "Birlik Büyüklüğü",
+    "troopSizeHint": "Birlik sayısı (maks 500.000)",
+    "healthBonus": "Sağlık Bonusu (%)",
+    "mightAttack": "Güç Saldırısı (%)",
+    "mightDefense": "Güç Savunması (%)",
+    "gemType": "Mücevher Türü",
+    "gemHealth": "Sağlık Mücevheri",
+    "gemCapacity": "Kapasite Mücevheri",
+    "gemRarity": "Mücevher Nadirliği",
+    "verbose": "Ayrıntılı mod (hesaplama detayı)",
+    "analyze": "Analiz Et",
+    "score": "Kazanç",
+    "rawBonus": "Ham Bonus",
+    "verboseTitle": "Hesaplama Detayı",
+    "verboseScoreBefore": "Önceki puan",
+    "verboseScoreAfter": "Sonraki puan",
+    "verboseGain": "Kazanç",
+    "verboseLegionSize": "Lejyon büyüklüğü",
+    "verbosePerUnit": "Birim başına puan (önce)",
+    "verbosePerUnitAfter": "Birim başına puan (sonra)",
+    "verboseGemValue": "Mücevher bonusu",
+    "verboseNewHealthBonus": "Yeni sağlık bonusu",
+    "noResult": "Formu doldurun ve Analiz Et'e tıklayın"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "İlk evcil hayvanınızın adı neydi?",
+      "q2": "Hangi şehirde doğdunuz?",
+      "q3": "Çocukluk arkadaşınızın adı neydi?",
+      "q4": "Çocukluk lakabınız neydi?",
+      "q5": "Annenizin kızlık soyadı nedir?",
+      "q6": "İlköğretim okulunuzun adı neydi?",
+      "q7": "Partnerinizle hangi şehirde tanıştınız?",
+      "q8": "En sevdiğiniz yiyecek nedir?",
+      "q9": "İlk arabanızın markası neydi?",
+      "q10": "İlk yurt dışı seyahat hedefiniz nereydi?"
+    },
+    "page": {
+      "title": "Hesap Kurtarma",
+      "step1": {
+        "usernamePlaceholder": "Kullanıcı adınızı girin",
+        "submit": "Hesabımı bul"
+      },
+      "step2": {
+        "answerPlaceholder": "Cevabınız",
+        "newPassword": "Yeni şifre",
+        "confirmPassword": "Şifreyi onayla",
+        "submit": "Şifreyi sıfırla"
+      },
+      "step3": {
+        "success": "Şifre başarıyla sıfırlandı!"
+      },
+      "backToLogin": "Girişe dön"
+    },
+    "errors": {
+      "userNotFound": "Bu kullanıcı adı için hesap bulunamadı.",
+      "wrongAnswer": "Yanlış cevap.",
+      "wrongAnswerRemaining": "{{count}} deneme hakkı kaldı.",
+      "locked": "Hesap {{time}} tarihine kadar kilitlendi.",
+      "passwordTooShort": "Şifre en az 6 karakter olmalıdır."
+    }
+  },
+  "accountSettings": {
+    "title": "Hesabım",
+    "tabAccount": "Hesabım",
+    "tabPreferences": "Tercihlerim",
+    "displayName": {
+      "title": "Görünen Ad",
+      "save": "Kaydet",
+      "success": "Görünen ad güncellendi",
+      "error": "Görünen ad güncellenemedi"
+    },
+    "password": {
+      "title": "Şifre Değiştir",
+      "newPassword": "Yeni Şifre",
+      "confirmPassword": "Şifreyi Onayla",
+      "save": "Şifreyi Değiştir",
+      "success": "Şifre başarıyla güncellendi",
+      "error": "Şifre güncellenemedi"
+    },
+    "recovery": {
+      "title": "Kurtarma Sorusu",
+      "question": "Gizli Soru",
+      "answer": "Yeni Cevap",
+      "answerHint": "Cevap büyük/küçük harf duyarsızdır",
+      "save": "Güncelle",
+      "success": "Kurtarma sorusu güncellendi",
+      "error": "Kurtarma sorusu güncellenemedi"
+    },
+    "language": {
+      "title": "Uygulama Dili"
+    },
+    "colorScheme": {
+      "title": "Görünüm",
+      "light": "Açık",
+      "dark": "Koyu",
+      "auto": "Otomatik (sistem)",
+      "glass": "Cam Açık",
+      "glassDark": "Cam Koyu",
+      "highContrast": "Yüksek Kontrast"
+    }
+  },
+  "discord": {
+    "channelsTitle": "Discord Kanalları",
+    "channelsSubtitle": "Mesaj göndermek için Discord webhook kanallarını yapılandırın",
+    "channelName": "Kanal Adı",
+    "channelNamePlaceholder": "örn. general-reminder",
+    "webhookUrl": "Webhook URL",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "Sunucu Ayarları > Entegrasyonlar'dan Discord webhook URL'si",
+    "defaultMessage": "Varsayılan Mesaj (isteğe bağlı)",
+    "defaultMessagePlaceholder": "⏰ Hatırlatma: GE sıralamanızı girin",
+    "defaultMessageHint": "Bu kanalı seçtiğinizde önceden yüklenir — göndermeden önce düzenlenebilir",
+    "addChannel": "Kanal Ekle",
+    "deleteChannel": "Kanalı sil",
+    "deleteConfirm": "\"{{name}}\" kanalını silmek istediğinizden emin misiniz?",
+    "noChannels": "Henüz Discord kanalı yapılandırılmadı",
+    "noChannelsForMessage": "Mesaj göndermek için en az bir kanal ekleyin",
+    "channelAdded": "Discord kanalı başarıyla eklendi",
+    "channelAddFailed": "Discord kanalı eklenemedi",
+    "channelUpdated": "Discord kanalı başarıyla güncellendi",
+    "channelUpdateFailed": "Discord kanalı güncellenemedi",
+    "channelDeleted": "Discord kanalı başarıyla silindi",
+    "channelDeleteFailed": "Discord kanalı silinemedi",
+    "editChannel": "Kanalı düzenle",
+    "editChannelTitle": "Kanal düzenleniyor:",
+    "loadFailed": "Discord kanalları yüklenemedi",
+    "sendMessageTitle": "Mesaj Gönder",
+    "sendMessageSubtitle": "Bir kanal seçin, mesajı gerekirse ayarlayın ve gönderin",
+    "selectChannel": "Kanal Seç",
+    "messageContent": "Mesaj",
+    "messageContentPlaceholder": "⏰ Hatırlatma: GE sıralamanızı girin",
+    "sendMessage": "Discord'a Gönder",
+    "messageSent": "Mesaj Discord'a başarıyla gönderildi",
+    "messageSendFailed": "Mesaj Discord'a gönderilemedi",
+    "errors": {
+      "invalidWebhookUrl": "Geçerli bir Discord webhook URL'si olmalıdır (https://discord.com/api/webhooks/...)"
+    }
+  },
+  "guides": {
+    "title": "Rehberler",
+    "community": "Topluluk",
+    "my_guides": "Rehberlerim",
+    "create": "Rehber oluştur",
+    "limit_reached": "10 rehber sınırına ulaşıldı",
+    "no_guides": "Henüz rehber yok",
+    "count": "{{ count }}/10 rehber",
+    "categories": {
+      "formation": "Formasyon",
+      "evenement": "Etkinlik",
+      "general": "Genel"
+    },
+    "status": {
+      "published": "Yayınlandı",
+      "draft": "Taslak"
+    },
+    "by": "Yazan",
+    "view": "Görüntüle",
+    "edit": "Düzenle",
+    "publish": "Yayınla",
+    "unpublish": "Yayından Kaldır",
+    "delete": "Sil",
+    "published_success": "Rehber yayınlandı",
+    "unpublished_success": "Rehber yayından kaldırıldı",
+    "champion": "Şampiyon",
+    "champion_slot": "Şampiyon Yuvası",
+    "add_champion": "Şampiyon ekle",
+    "champion_count": "{{ count }} şampiyon yapılandırıldı",
+    "formation_hint": "3'e kadar şampiyon yapılandırın. Yeniden sıralamak için sürükleyin.",
+    "skill": "Beceri",
+    "skills": "Beceriler",
+    "gems": "Mücevherler",
+    "hero_section": "Kahraman",
+    "horse_section": "At",
+    "traits": "At özellikleri",
+    "trait": "Özellik",
+    "add_trait": "Özellik ekle",
+    "ornament": "Süs",
+    "ring": "Yüzük",
+    "description": "Açıklama / Yazar notları",
+    "editor": {
+      "title_new": "Rehber oluştur",
+      "title_edit": "Rehberi düzenle",
+      "step_basic": "Bilgiler",
+      "step_content": "İçerik",
+      "step_review": "Özet",
+      "title_label": "Rehber başlığı",
+      "category_label": "Kategori",
+      "description_label": "Açıklama",
+      "publish_now": "Şimdi yayınla",
+      "save_draft": "Taslak olarak kaydet",
+      "save": "Kaydet"
+    },
+    "confirm_delete": "Bu rehberi sil?",
+    "confirm_delete_msg": "Bu işlem geri alınamaz.",
+    "errors": {
+      "limitReached": "Maksimum 10 rehber sınırına ulaştınız.",
+      "slugDuplicate": "Bu başlık mevcut bir rehbere çok benziyor. Lütfen başlığı değiştirin.",
+      "notFound": "Rehber bulunamadı.",
+      "unauthorized": "Bu rehberi değiştirme yetkiniz yok.",
+      "unknown": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin.",
+      "invalidFileType": "Geçersiz dosya türü. İzin verilenler: PNG, JPEG, WebP."
+    },
+    "public_list_title": "Topluluk Rehberleri",
+    "public_list_empty": "Henüz rehber yayınlanmadı",
+    "copy_link": "Bağlantıyı kopyala",
+    "link_copied": "Bağlantı kopyalandı!",
+    "back_to_list": "Rehberlere dön",
+    "guide_not_found": "Rehber bulunamadı",
+    "upvote": "Upvote",
+    "upvoted": "Upvoted",
+    "champion_slot": "Şampiyon {{n}}",
+    "author_notes": "Yazar notları"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "İttifak Aktivite Takipçisi",
+      "title1": "Akıllıca Oyna.",
+      "title2": "Birlikte Kazan.",
+      "subtitleBefore": "Her aktif oyuncu için tasarlandı — yalnızca harcayanlar için değil. İttifak aktivitelerinizi takip edin, stratejik puanlar kazanın ve",
+      "subtitleStrong": "Top 10 En Güçlü Vali",
+      "subtitleAfter": "olmayı çok daha az speed-up ve kaynak harcayarak başarın.",
+      "ctaLogin": "Giriş Yap",
+      "ctaJoin": "Davet ile Katıl"
+    },
+    "steps": {
+      "label": "NASIL ÇALIŞIR",
+      "title": "Zirveye üç adım",
+      "step1": {
+        "title": "Aktivitelerinizi Kaydedin",
+        "description": "KvK savaşları, Legion mücadeleleri, Altın Keşifler ve daha fazlasını gönderin. Her etkinlik, her hafta — katkınız kaydedildi."
+      },
+      "step2": {
+        "title": "Stratejik Puan Kazanın",
+        "description": "Puanlar konumunuza ve performansınıza göre hesaplanır. Yapılandırılabilir kurallar, katılan ve rekabet eden oyuncuları ödüllendirir."
+      },
+      "step3": {
+        "title": "Sıralamada Yüksel",
+        "description": "6 haftalık kayan sıralama rekabeti taze tutar ve süreklilik yerine bireysel atılımları ödüllendirir."
+      }
+    },
+    "benefits": {
+      "label": "NEDEN ÖNEMLİ",
+      "title": "Tüm sunucunuz kazanır",
+      "benefit1": {
+        "title": "Aktif Oyuncular İçin Geliştirildi",
+        "description": "Para kazanma yok. Saf aktivite ve akıllı katılım sizi sıralamada yukarı taşır — herkes rekabet edebilir."
+      },
+      "benefit2": {
+        "title": "İttifak Genelinde Kaynak Tasarrufu",
+        "description": "Yapılandırılmış takip, kimin ne zaman katılacağını optimize ederek KvK hazırlığı ve En Güçlü İmparatorluk için speed-up ve kaynakları korur."
+      },
+      "benefit3": {
+        "title": "Top 10 En Güçlü Vali'ye Ulaşın",
+        "description": "En güçlü kahramanları daha az kaynaklarla edinin. Neredeyse ve şampiyon arasındaki fark organize çabayla ölçülür."
+      }
+    },
+    "cta": {
+      "title": "İttifakınıza liderlik etmeye hazır mısınız?",
+      "subtitle": "İttifakınızı oluşturun ve üyelerinizin ilerlemesini bugünden takip etmeye başlayın.",
+      "button": "İttifakınızı Oluşturun"
+    },
+    "footer": "Activity Tracker — Daha akıllı oyna, daha güçlü rekabet et."
+  }
+}

@@ -390,7 +390,9 @@
     "markAsSeen": "Segna come letto"
   },
   "tools": {
-    "gemCalcDesc": "Calcola il guadagno di punteggio equipaggiando una gemma sul tuo comandante."
+    "gemCalcDesc": "Calcola il guadagno di punteggio equipaggiando una gemma sul tuo comandante.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Trova le migliori combinazioni di temperamenti per i tuoi comandanti."
   },
   "packValue": {
     "title": "Calcolatore Valore Pack",

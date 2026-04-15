@@ -7,7 +7,20 @@ import type { UserPreferences } from '@app/shared/models/user.model';
 /**
  * Supported languages in the application
  */
-export type SupportedLanguage = 'en' | 'fr' | 'es' | 'it';
+export type SupportedLanguage =
+  | 'en'
+  | 'fr'
+  | 'es'
+  | 'it'
+  | 'de'
+  | 'tr'
+  | 'pt'
+  | 'el'
+  | 'ko'
+  | 'hi'
+  | 'zh'
+  | 'ku'
+  | 'ar';
 
 /**
  * Language information with metadata
@@ -39,6 +52,15 @@ export class LanguageService {
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
     { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
+    { code: 'pt', name: 'Português', flag: '🇧🇷' },
+    { code: 'el', name: 'Ελληνικά', flag: '🇬🇷' },
+    { code: 'ko', name: '한국어', flag: '🇰🇷' },
+    { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'ku', name: 'Kurdî', flag: '☀️' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
   ];
 
   /**

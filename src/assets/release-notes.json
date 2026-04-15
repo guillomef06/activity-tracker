@@ -9,7 +9,16 @@
           "en": "Strategy Guides — create and share formation guides with full champion builds (skills, gems, temperaments, ornaments and rings), browse community guides, and upvote your favorites",
           "fr": "Guides stratégiques — créez et partagez des guides de formation avec des compositions complètes (compétences, gemmes, tempéraments, ornements et anneaux), parcourez les guides de la communauté et votez pour vos favoris",
           "es": "Guías estratégicas — crea y comparte guías de formación con builds completos de campeones (habilidades, gemas, temperamentos, ornamentos y anillos), explora las guías de la comunidad y vota por tus favoritas",
-          "it": "Guide strategiche — crea e condividi guide di formazione con build completi dei campioni (abilità, gemme, temperamenti, ornamenti e anelli), sfoglia le guide della community e vota le tue preferite"
+          "it": "Guide strategiche — crea e condividi guide di formazione con build completi dei campioni (abilità, gemme, temperamenti, ornamenti e anelli), sfoglia le guide della community e vota le tue preferite",
+          "de": "Strategie-Guides — erstelle und teile Formationsguides mit vollständigen Champion-Builds (Fähigkeiten, Edelsteine, Temperamente, Ornamente und Ringe), durchsuche Community-Guides und stimme für deine Favoriten ab",
+          "tr": "Strateji Rehberleri — tam şampiyon yapılarıyla (beceriler, mücevherler, mizaçlar, süslemeler ve yüzükler) formasyon rehberleri oluştur ve paylaş, topluluk rehberlerini keşfet ve favorilerini oyla",
+          "pt": "Guias estratégicos — crie e compartilhe guias de formação com builds completos de campeões (habilidades, gemas, temperamentos, ornamentos e anéis), navegue pelos guias da comunidade e vote nos seus favoritos",
+          "el": "Στρατηγικοί οδηγοί — δημιουργήστε και μοιραστείτε οδηγούς σχηματισμού με πλήρη builds για πρωταθλητές (δεξιότητες, πολύτιμοι λίθοι, ιδιοσυγκρασίες, στολίδια και δαχτυλίδια), περιηγηθείτε στους οδηγούς της κοινότητας και ψηφίστε τους αγαπημένους σας",
+          "ko": "전략 가이드 — 완전한 챔피언 빌드(기술, 보석, 기질, 장식품, 반지)로 편성 가이드를 만들고 공유하고, 커뮤니티 가이드를 탐색하고 즐겨찾기를 추천하세요",
+          "hi": "रणनीति गाइड — पूर्ण चैंपियन बिल्ड (कौशल, रत्न, स्वभाव, आभूषण और अंगूठियां) के साथ गठन गाइड बनाएं और साझा करें, समुदाय गाइड ब्राउज़ करें और अपने पसंदीदा को वोट करें",
+          "zh": "战略指南 — 创建并分享包含完整英雄配置（技能、宝石、性情、装饰品和戒指）的阵型指南，浏览社区指南，为您的最爱点赞",
+          "ku": "Rênimêjên Stratejîk — rênimêjên avakariyê bi avahiyên şampiyonî yên tevahî (jêhatîbûn, kevirên giranbiha, temperament, xemilk û zengil) biafirîne û parve bike, rênimêjên civakê bigere û ji yên bijare xwe re deng bide",
+          "ar": "أدلة استراتيجية — أنشئ وشارك أدلة تشكيل مع بنيات كاملة للأبطال (المهارات والجواهر والمزاجات والزخارف والخواتم)، تصفح أدلة المجتمع وصوت لصالح مفضلاتك"
         }
       }
     ]
@@ -24,7 +33,16 @@
           "en": "Leaderboard season multiplier — admins can now configure how many weeks count for the ranking (6, 12 or 18 weeks)",
           "fr": "Multiplicateur de saison — les admins peuvent désormais configurer le nombre de semaines du classement (6, 12 ou 18 semaines)",
           "es": "Multiplicador de temporada — los admins ahora pueden configurar cuántas semanas cuentan para el clasificación (6, 12 o 18 semanas)",
-          "it": "Moltiplicatore di stagione — gli admin possono ora configurare quante settimane contano per la classifica (6, 12 o 18 settimane)"
+          "it": "Moltiplicatore di stagione — gli admin possono ora configurare quante settimane contano per la classifica (6, 12 o 18 settimane)",
+          "de": "Saison-Multiplikator — Admins können jetzt konfigurieren, wie viele Wochen für das Ranking zählen (6, 12 oder 18 Wochen)",
+          "tr": "Sezon çarpanı — yöneticiler artık sıralama için kaç haftanın sayılacağını yapılandırabilir (6, 12 veya 18 hafta)",
+          "pt": "Multiplicador de temporada — os admins agora podem configurar quantas semanas contam para o ranking (6, 12 ou 18 semanas)",
+          "el": "Πολλαπλασιαστής σεζόν — οι διαχειριστές μπορούν τώρα να ρυθμίσουν πόσες εβδομάδες μετράνε για την κατάταξη (6, 12 ή 18 εβδομάδες)",
+          "ko": "시즌 배율 — 관리자가 이제 랭킹에 몇 주를 포함할지 설정할 수 있습니다 (6, 12 또는 18주)",
+          "hi": "सीजन गुणक — अब एडमिन रैंकिंग के लिए कितने हफ्ते गिने जाएं यह कॉन्फ़िगर कर सकते हैं (6, 12 या 18 हफ्ते)",
+          "zh": "赛季倍率 — 管理员现在可以配置排名计算包含多少周（6、12或18周）",
+          "ku": "Pirjimêra demsalê — rêvebir niha dikarin mîheng bikin ka çend hefte ji bo rêzkirinê dihên jimartin (6, 12 an 18 hefte)",
+          "ar": "مضاعف الموسم — يمكن للمسؤولين الآن تكوين عدد الأسابيع التي تُحسب في الترتيب (6 أو 12 أو 18 أسبوعاً)"
         }
       },
       {
@@ -33,7 +51,16 @@
           "en": "Tiebreaker activity no longer counts toward the total score — it is used only to break ties",
           "fr": "L'activité tiebreaker ne compte plus dans le score total — elle sert uniquement à départager les égalités",
           "es": "La actividad tiebreaker ya no cuenta para la puntuación total — solo se usa para desempatar",
-          "it": "L'attività tiebreaker non conta più nel punteggio totale — viene usata solo per gli spareggi"
+          "it": "L'attività tiebreaker non conta più nel punteggio totale — viene usata solo per gli spareggi",
+          "de": "Die Tiebreaker-Aktivität zählt nicht mehr zum Gesamtscore — sie wird nur zur Auflösung von Gleichständen verwendet",
+          "tr": "Tiebreaker aktivitesi artık toplam puana sayılmıyor — yalnızca eşitlikleri bozmak için kullanılıyor",
+          "pt": "A atividade tiebreaker não conta mais para a pontuação total — é usada apenas para desempates",
+          "el": "Η δραστηριότητα tiebreaker δεν μετράει πλέον στο συνολικό σκορ — χρησιμοποιείται μόνο για να σπάσει ισοπαλίες",
+          "ko": "타이브레이커 활동은 더 이상 총 점수에 포함되지 않습니다 — 동점을 가릴 때만 사용됩니다",
+          "hi": "टाईब्रेकर गतिविधि अब कुल स्कोर में नहीं गिनी जाती — यह केवल टाई तोड़ने के लिए उपयोग होती है",
+          "zh": "平局决胜活动不再计入总分——仅用于打破平局",
+          "ku": "Çalakiya hevbirêkerê êdî di xala tevahî de nayê jimartin — ew tenê ji bo şikandina hevbiriyê tê bikaranîn",
+          "ar": "نشاط كسر التعادل لم يعد يُحسب في النقاط الإجمالية — يُستخدم فقط لكسر التعادل"
         }
       }
     ]
@@ -48,7 +75,16 @@
           "en": "Landing page — the app now has a public welcome page introducing the concept to new members",
           "fr": "Page d'accueil — l'app dispose désormais d'une page publique de présentation pour les nouveaux membres",
           "es": "Página de inicio — la app ahora tiene una página pública de presentación para los nuevos miembros",
-          "it": "Pagina di benvenuto — l'app ha ora una pagina pubblica di presentazione per i nuovi membri"
+          "it": "Pagina di benvenuto — l'app ha ora una pagina pubblica di presentazione per i nuovi membri",
+          "de": "Startseite — die App hat jetzt eine öffentliche Begrüßungsseite, die neuen Mitgliedern das Konzept vorstellt",
+          "tr": "Açılış sayfası — uygulama artık yeni üyelere konsepti tanıtan bir genel karşılama sayfasına sahip",
+          "pt": "Página inicial — o app agora tem uma página pública de boas-vindas apresentando o conceito para novos membros",
+          "el": "Σελίδα υποδοχής — η εφαρμογή έχει τώρα μια δημόσια σελίδα εισαγωγής που παρουσιάζει την ιδέα στα νέα μέλη",
+          "ko": "랜딩 페이지 — 이제 앱에 새 멤버에게 개념을 소개하는 공개 환영 페이지가 생겼습니다",
+          "hi": "लैंडिंग पेज — अब ऐप में नए सदस्यों को अवधारणा से परिचित कराने वाला एक सार्वजनिक स्वागत पेज है",
+          "zh": "落地页 — 应用现在拥有公开的欢迎页面，向新成员介绍概念",
+          "ku": "Rûpela sereke — niha sepan xwediyê rûpeleke pêşwaziyê ya giştî ye ku têgehê ji endamên nû re dide nasandin",
+          "ar": "صفحة الترحيب — يمتلك التطبيق الآن صفحة عامة لتعريف الأعضاء الجدد بالمفهوم"
         }
       },
       {
@@ -57,7 +93,16 @@
           "en": "Home page split into 3 tabs: Submit Activity, Leaderboard, and Tools",
           "fr": "Page principale divisée en 3 onglets : Soumettre une activité, Classement et Outils",
           "es": "Página principal dividida en 3 pestañas: Enviar actividad, Clasificación y Herramientas",
-          "it": "Pagina principale divisa in 3 schede: Invia attività, Classifica e Strumenti"
+          "it": "Pagina principale divisa in 3 schede: Invia attività, Classifica e Strumenti",
+          "de": "Hauptseite in 3 Tabs aufgeteilt: Aktivität einreichen, Rangliste und Werkzeuge",
+          "tr": "Ana sayfa 3 sekmeye bölündü: Aktivite Gönder, Liderler Tablosu ve Araçlar",
+          "pt": "Página inicial dividida em 3 abas: Enviar Atividade, Placar e Ferramentas",
+          "el": "Η αρχική σελίδα χωρίστηκε σε 3 καρτέλες: Υποβολή Δραστηριότητας, Κατάταξη και Εργαλεία",
+          "ko": "홈 페이지가 3개 탭으로 분리됨: 활동 제출, 리더보드, 도구",
+          "hi": "होम पेज 3 टैब में विभाजित: गतिविधि सबमिट करें, लीडरबोर्ड और टूल्स",
+          "zh": "首页分为3个标签：提交活动、排行榜和工具",
+          "ku": "Rûpela sereke li 3 tabê hate dabeşkirin: Çalakiyê Bişîne, Tabloya Pêşveçûnê û Amûr",
+          "ar": "تم تقسيم الصفحة الرئيسية إلى 3 تبويبات: تقديم نشاط، لوحة المتصدرين والأدوات"
         }
       },
       {
@@ -66,7 +111,16 @@
           "en": "Tools tab — Gem Calculator is now available to everyone, no longer hidden as an easter egg",
           "fr": "Onglet Outils — le Gem Calculator est désormais accessible à tous, plus besoin de le débusquer",
           "es": "Pestaña Herramientas — la Calculadora de Gemas ya está disponible para todos, sin necesidad de descubrirla",
-          "it": "Scheda Strumenti — il Calcolatore di Gemme è ora disponibile a tutti, non più nascosto come easter egg"
+          "it": "Scheda Strumenti — il Calcolatore di Gemme è ora disponibile a tutti, non più nascosto come easter egg",
+          "de": "Werkzeuge-Tab — der Edelstein-Rechner ist jetzt für alle verfügbar, nicht mehr als Easter Egg versteckt",
+          "tr": "Araçlar sekmesi — Mücevher Hesaplayıcı artık herkese açık, artık easter egg olarak gizlenmiyor",
+          "pt": "Aba Ferramentas — a Calculadora de Gemas agora está disponível para todos, não mais oculta como easter egg",
+          "el": "Καρτέλα Εργαλεία — η Αριθμομηχανή Πολύτιμων Λίθων είναι πλέον διαθέσιμη σε όλους, δεν κρύβεται πλέον ως easter egg",
+          "ko": "도구 탭 — 보석 계산기가 이제 모든 사람이 사용 가능하며, 더 이상 이스터에그로 숨겨져 있지 않습니다",
+          "hi": "टूल्स टैब — जेम कैलकुलेटर अब सभी के लिए उपलब्ध है, अब ईस्टर एग के रूप में नहीं छुपा है",
+          "zh": "工具标签 — 宝石计算器现在对所有人开放，不再隐藏为彩蛋",
+          "ku": "Taba Amûran — Hesabkera Kevirên Giranbiha niha ji bo her kesî peyda ye, êdî wekî easter egg veşartî niye",
+          "ar": "تبويب الأدوات — حاسبة الجواهر متاحة الآن للجميع، لم تعد مخفية كـ easter egg"
         }
       },
       {
@@ -75,7 +129,16 @@
           "en": "Invitation link — fixed an error incorrectly rejecting valid invitation tokens on the join page",
           "fr": "Lien d'invitation — correction d'une erreur rejetant à tort les tokens d'invitation valides sur la page de rejoindre",
           "es": "Enlace de invitación — corregido un error que rechazaba incorrectamente tokens de invitación válidos",
-          "it": "Link di invito — corretto un errore che rifiutava erroneamente token di invito validi nella pagina di accesso"
+          "it": "Link di invito — corretto un errore che rifiutava erroneamente token di invito validi nella pagina di accesso",
+          "de": "Einladungslink — ein Fehler wurde behoben, der gültige Einladungstoken auf der Beitrittsseite fälschlicherweise ablehnte",
+          "tr": "Davet bağlantısı — katılma sayfasında geçerli davet tokenlarını yanlışlıkla reddeden bir hata düzeltildi",
+          "pt": "Link de convite — corrigido um erro que rejeitava incorretamente tokens de convite válidos na página de entrada",
+          "el": "Σύνδεσμος πρόσκλησης — διορθώθηκε σφάλμα που απέρριπτε εσφαλμένα έγκυρα tokens πρόσκλησης στη σελίδα εισόδου",
+          "ko": "초대 링크 — 가입 페이지에서 유효한 초대 토큰을 잘못 거부하는 오류를 수정했습니다",
+          "hi": "निमंत्रण लिंक — जॉइन पेज पर वैध निमंत्रण टोकन को गलती से अस्वीकार करने की गड़बड़ी ठीक की गई",
+          "zh": "邀请链接 — 修复了加入页面错误拒绝有效邀请令牌的问题",
+          "ku": "Girêdana vexwendinê — xeletiyek ku li ser rûpela tevlîbûnê tokenên vexwendinê yên derbasdar bi şaşitî red dikir hat rastkirin",
+          "ar": "رابط الدعوة — تم إصلاح خطأ كان يرفض بشكل غير صحيح رموز الدعوة الصالحة في صفحة الانضمام"
         }
       }
     ]
@@ -90,7 +153,16 @@
           "en": "High Contrast theme — new accessibility option available in preferences (6 themes total)",
           "fr": "Thème Contraste élevé — nouvelle option d'accessibilité disponible dans les préférences (6 thèmes au total)",
           "es": "Tema Alto Contraste — nueva opción de accesibilidad disponible en las preferencias (6 temas en total)",
-          "it": "Tema Alto Contrasto — nuova opzione di accessibilità disponibile nelle preferenze (6 temi in totale)"
+          "it": "Tema Alto Contrasto — nuova opzione di accessibilità disponibile nelle preferenze (6 temi in totale)",
+          "de": "Hohes-Kontrast-Design — neue Barrierefreiheitsoption in den Einstellungen verfügbar (6 Designs insgesamt)",
+          "tr": "Yüksek Kontrast teması — tercihlerde yeni erişilebilirlik seçeneği mevcut (toplam 6 tema)",
+          "pt": "Tema Alto Contraste — nova opção de acessibilidade disponível nas preferências (6 temas no total)",
+          "el": "Θέμα Υψηλής Αντίθεσης — νέα επιλογή προσβασιμότητας στις προτιμήσεις (6 θέματα συνολικά)",
+          "ko": "고대비 테마 — 설정에서 새로운 접근성 옵션 사용 가능 (총 6가지 테마)",
+          "hi": "हाई कंट्रास्ट थीम — प्राथमिकताओं में नया एक्सेसिबिलिटी विकल्प उपलब्ध (कुल 6 थीम)",
+          "zh": "高对比度主题 — 偏好设置中新增无障碍选项（共6个主题）",
+          "ku": "Dîmena Kontrastê Bilind — vebijêrkek nû ya xwepelatiyê di tercîhan de peyda ye (6 dîmen tevahî)",
+          "ar": "سمة التباين العالي — خيار إمكانية وصول جديد متاح في التفضيلات (6 سمات إجمالاً)"
         }
       },
       {
@@ -99,7 +171,16 @@
           "en": "Visual refresh — tinted page backgrounds, card depth shadows, and Inter typography across all themes",
           "fr": "Rafraîchissement visuel — fonds de page teintés, ombres sur les cards et typographie Inter pour tous les thèmes",
           "es": "Renovación visual — fondos de página con tinte, sombras en las tarjetas y tipografía Inter en todos los temas",
-          "it": "Aggiornamento visivo — sfondi pagina colorati, ombre sulle card e tipografia Inter per tutti i temi"
+          "it": "Aggiornamento visivo — sfondi pagina colorati, ombre sulle card e tipografia Inter per tutti i temi",
+          "de": "Visuelles Update — getönte Seitenhintergründe, Karten-Tiefenschatten und Inter-Typografie für alle Designs",
+          "tr": "Görsel yenileme — tüm temalarda tonlu sayfa arka planları, kart derinlik gölgeleri ve Inter tipografisi",
+          "pt": "Atualização visual — fundos de página coloridos, sombras de profundidade nos cards e tipografia Inter em todos os temas",
+          "el": "Οπτική ανανέωση — έγχρωμα φόντα σελίδων, σκιές βάθους καρτών και τυπογραφία Inter σε όλα τα θέματα",
+          "ko": "비주얼 새로고침 — 모든 테마에서 색조 페이지 배경, 카드 깊이 그림자, Inter 타이포그래피",
+          "hi": "विजुअल रिफ्रेश — सभी थीम में रंगीन पेज बैकग्राउंड, कार्ड डेप्थ शैडो और Inter टाइपोग्राफी",
+          "zh": "视觉更新 — 所有主题中采用色调页面背景、卡片深度阴影和Inter字体",
+          "ku": "Nûvekirina Dîtbarî — paşxaneyên rûpela rengdar, siyên kûrahiya kartê û tîpnasiya Inter ji bo hemû dîmenan",
+          "ar": "تحديث بصري — خلفيات صفحات ملونة وظلال عمق للبطاقات وخط Inter في جميع السمات"
         }
       }
     ]
@@ -114,7 +195,16 @@
           "en": "Account management dialog — update display name, password, and recovery question",
           "fr": "Dialog de gestion du compte — modifier le nom affiché, le mot de passe et la question de récupération",
           "es": "Diálogo de gestión de cuenta — actualizar nombre visible, contraseña y pregunta de recuperación",
-          "it": "Dialogo gestione account — aggiorna nome visualizzato, password e domanda di recupero"
+          "it": "Dialogo gestione account — aggiorna nome visualizzato, password e domanda di recupero",
+          "de": "Kontoverwaltungs-Dialog — Anzeigename, Passwort und Wiederherstellungsfrage aktualisieren",
+          "tr": "Hesap yönetimi diyaloğu — görünen ad, şifre ve kurtarma sorusunu güncelle",
+          "pt": "Diálogo de gerenciamento de conta — atualizar nome de exibição, senha e pergunta de recuperação",
+          "el": "Παράθυρο διαχείρισης λογαριασμού — ενημέρωση εμφανιζόμενου ονόματος, κωδικού και ερώτησης ανάκτησης",
+          "ko": "계정 관리 대화상자 — 표시 이름, 비밀번호, 복구 질문 업데이트",
+          "hi": "खाता प्रबंधन डायलॉग — प्रदर्शन नाम, पासवर्ड और रिकवरी प्रश्न अपडेट करें",
+          "zh": "账户管理对话框 — 更新显示名称、密码和密保问题",
+          "ku": "Diyaloga rêvebiriya hesabê — navê nîşandayî, şîfre û pirsa vegerandinê nûve bike",
+          "ar": "نافذة إدارة الحساب — تحديث الاسم المعروض وكلمة المرور وسؤال الاسترداد"
         }
       },
       {
@@ -123,7 +213,16 @@
           "en": "Account recovery — regain access using your secret question if you forget your password",
           "fr": "Récupération de compte — retrouvez l'accès via votre question secrète en cas d'oubli du mot de passe",
           "es": "Recuperación de cuenta — recupera el acceso usando tu pregunta secreta si olvidaste la contraseña",
-          "it": "Recupero account — recupera l'accesso tramite domanda segreta in caso di password dimenticata"
+          "it": "Recupero account — recupera l'accesso tramite domanda segreta in caso di password dimenticata",
+          "de": "Kontowiederherstellung — erhalte Zugriff mithilfe deiner geheimen Frage, wenn du dein Passwort vergessen hast",
+          "tr": "Hesap kurtarma — şifreni unutursan gizli soruyu kullanarak erişimi yeniden kazan",
+          "pt": "Recuperação de conta — recupere o acesso usando sua pergunta secreta se esquecer a senha",
+          "el": "Ανάκτηση λογαριασμού — ανακτήστε την πρόσβαση χρησιμοποιώντας τη μυστική σας ερώτηση αν ξεχάσετε τον κωδικό",
+          "ko": "계정 복구 — 비밀번호를 잊어버린 경우 비밀 질문을 사용하여 접근을 되찾으세요",
+          "hi": "खाता रिकवरी — पासवर्ड भूलने पर अपने गुप्त प्रश्न का उपयोग करके पहुंच वापस पाएं",
+          "zh": "账户恢复 — 忘记密码时使用密保问题重新获得访问权限",
+          "ku": "Vegerandina hesabê — heke şîfreya xwe ji bîr kir, bi pirsa veşartî ya xwe ve gihîştinê ji nû ve bistîne",
+          "ar": "استرداد الحساب — استعد الوصول باستخدام سؤالك السري إذا نسيت كلمة المرور"
         }
       },
       {
@@ -132,7 +231,16 @@
           "en": "Week date ranges now display correctly regardless of the user's timezone",
           "fr": "Les plages de dates par semaine s'affichent désormais correctement quelle que soit la timezone de l'utilisateur",
           "es": "Los rangos de fechas semanales ahora se muestran correctamente independientemente de la zona horaria del usuario",
-          "it": "Gli intervalli di date settimanali ora vengono visualizzati correttamente indipendentemente dal fuso orario dell'utente"
+          "it": "Gli intervalli di date settimanali ora vengono visualizzati correttamente indipendentemente dal fuso orario dell'utente",
+          "de": "Wochendatumsbereiche werden jetzt unabhängig von der Zeitzone des Benutzers korrekt angezeigt",
+          "tr": "Haftalık tarih aralıkları artık kullanıcının saat diliminden bağımsız olarak doğru görüntüleniyor",
+          "pt": "Os intervalos de datas semanais agora são exibidos corretamente independente do fuso horário do usuário",
+          "el": "Τα εβδομαδιαία εύρη ημερομηνιών εμφανίζονται πλέον σωστά ανεξάρτητα από τη ζώνη ώρας του χρήστη",
+          "ko": "주 날짜 범위가 이제 사용자의 시간대에 관계없이 올바르게 표시됩니다",
+          "hi": "साप्ताहिक तारीख रेंज अब उपयोगकर्ता के टाइमज़ोन की परवाह किए बिना सही तरह से दिखती है",
+          "zh": "周日期范围现在无论用户时区如何都能正确显示",
+          "ku": "Rêzên tarîxa hefteyî niha bêyî girêdana bi timezone a bikarhêner ve rast tên nîşandan",
+          "ar": "نطاقات تواريخ الأسبوع تُعرض الآن بشكل صحيح بغض النظر عن المنطقة الزمنية للمستخدم"
         }
       }
     ]
@@ -147,7 +255,16 @@
           "en": "Batch import of retroactive activities from Excel/CSV file",
           "fr": "Import en masse d'activités rétroactives depuis un fichier Excel/CSV",
           "es": "Importación masiva de actividades retroactivas desde Excel/CSV",
-          "it": "Importazione massiva di attività retroattive da file Excel/CSV"
+          "it": "Importazione massiva di attività retroattive da file Excel/CSV",
+          "de": "Massenimport von rückwirkenden Aktivitäten aus Excel/CSV-Dateien",
+          "tr": "Excel/CSV dosyasından geriye dönük aktivitelerin toplu içe aktarımı",
+          "pt": "Importação em lote de atividades retroativas de arquivo Excel/CSV",
+          "el": "Μαζική εισαγωγή αναδρομικών δραστηριοτήτων από αρχείο Excel/CSV",
+          "ko": "Excel/CSV 파일에서 소급 활동 일괄 가져오기",
+          "hi": "Excel/CSV फ़ाइल से पूर्वव्यापी गतिविधियों का बैच इम्पोर्ट",
+          "zh": "从Excel/CSV文件批量导入补录活动",
+          "ku": "Import bi komî yê çalakiyên paşdemsal ji pelê Excel/CSV",
+          "ar": "استيراد جماعي للأنشطة بأثر رجعي من ملف Excel/CSV"
         }
       },
       {
@@ -156,7 +273,16 @@
           "en": "Tiebreaker activity — configure a secondary ranking criterion for equal scores",
           "fr": "Activité de départage — configurer un critère de classement secondaire en cas d'égalité",
           "es": "Actividad de desempate — configura un criterio de clasificación secundario para puntuaciones iguales",
-          "it": "Attività spareggio — configura un criterio di classifica secondario per punteggi uguali"
+          "it": "Attività spareggio — configura un criterio di classifica secondario per punteggi uguali",
+          "de": "Tiebreaker-Aktivität — konfiguriere ein sekundäres Ranking-Kriterium bei Gleichstand",
+          "tr": "Tiebreaker aktivitesi — eşit puanlar için ikincil bir sıralama kriteri yapılandır",
+          "pt": "Atividade tiebreaker — configure um critério de classificação secundário para pontuações iguais",
+          "el": "Δραστηριότητα tiebreaker — ρυθμίστε ένα δευτερεύον κριτήριο κατάταξης για ίσα σκορ",
+          "ko": "타이브레이커 활동 — 동점 시 보조 순위 기준을 설정하세요",
+          "hi": "टाईब्रेकर गतिविधि — समान स्कोर के लिए द्वितीयक रैंकिंग मानदंड कॉन्फ़िगर करें",
+          "zh": "平局决胜活动 — 为相同分数配置次要排名标准",
+          "ku": "Çalakiya hevbirêkerê — ji bo xalên wekhev pîvana rêzkirinê ya duyemîn mîheng bike",
+          "ar": "نشاط كسر التعادل — تكوين معيار تصنيف ثانوي للنقاط المتساوية"
         }
       },
       {
@@ -165,7 +291,16 @@
           "en": "Enable or disable individual activities per alliance",
           "fr": "Activer ou désactiver individuellement chaque activité par alliance",
           "es": "Activar o desactivar actividades individualmente por alianza",
-          "it": "Abilitare o disabilitare singole attività per alleanza"
+          "it": "Abilitare o disabilitare singole attività per alleanza",
+          "de": "Einzelne Aktivitäten pro Allianz aktivieren oder deaktivieren",
+          "tr": "İttifak başına bireysel aktiviteleri etkinleştir veya devre dışı bırak",
+          "pt": "Ativar ou desativar atividades individualmente por aliança",
+          "el": "Ενεργοποίηση ή απενεργοποίηση μεμονωμένων δραστηριοτήτων ανά συμμαχία",
+          "ko": "동맹별로 개별 활동 활성화 또는 비활성화",
+          "hi": "प्रति गठबंधन व्यक्तिगत गतिविधियां सक्षम या अक्षम करें",
+          "zh": "按联盟启用或禁用单个活动",
+          "ku": "Çalakiyên takekesî per hevbendiyê çalak an neçalak bike",
+          "ar": "تفعيل أو تعطيل الأنشطة الفردية لكل تحالف"
         }
       }
     ]
@@ -180,7 +315,16 @@
           "en": "Activity submission with position/rank tracking",
           "fr": "Soumission d'activité avec suivi de position/classement",
           "es": "Envío de actividades con seguimiento de posición",
-          "it": "Invio attività con tracciamento posizione"
+          "it": "Invio attività con tracciamento posizione",
+          "de": "Aktivitätseinreichung mit Positions-/Rangverfolgung",
+          "tr": "Konum/sıralama takibi ile aktivite gönderimi",
+          "pt": "Envio de atividades com rastreamento de posição/classificação",
+          "el": "Υποβολή δραστηριότητας με παρακολούθηση θέσης/κατάταξης",
+          "ko": "순위/위치 추적을 통한 활동 제출",
+          "hi": "स्थान/रैंक ट्रैकिंग के साथ गतिविधि सबमिशन",
+          "zh": "带位置/排名追踪的活动提交",
+          "ku": "Şandina çalakiyê bi şopandina cih/rêzê",
+          "ar": "تقديم النشاط مع تتبع المركز/الترتيب"
         }
       },
       {
@@ -189,7 +333,16 @@
           "en": "Rolling 6-week score dashboard",
           "fr": "Tableau de bord des scores sur 6 semaines glissantes",
           "es": "Panel de puntuaciones de las últimas 6 semanas",
-          "it": "Dashboard punteggi su 6 settimane"
+          "it": "Dashboard punteggi su 6 settimane",
+          "de": "Dashboard mit rollierenden 6-Wochen-Scores",
+          "tr": "6 haftalık kayan puan gösterge paneli",
+          "pt": "Painel de pontuações das últimas 6 semanas",
+          "el": "Πίνακας ελέγχου βαθμολογιών 6 κυλιόμενων εβδομάδων",
+          "ko": "6주 누적 점수 대시보드",
+          "hi": "रोलिंग 6-सप्ताह स्कोर डैशबोर्ड",
+          "zh": "6周滚动积分仪表板",
+          "ku": "Daneyên 6 hefteyên gerêkî yên xalê",
+          "ar": "لوحة تحكم نقاط الأسابيع الستة المتداولة"
         }
       },
       {
@@ -198,7 +351,16 @@
           "en": "Alliance management (members, invitations, point rules)",
           "fr": "Gestion de l'alliance (membres, invitations, règles de points)",
           "es": "Gestión de alianza (miembros, invitaciones, reglas de puntos)",
-          "it": "Gestione alleanza (membri, inviti, regole punti)"
+          "it": "Gestione alleanza (membri, inviti, regole punti)",
+          "de": "Allianz-Verwaltung (Mitglieder, Einladungen, Punkteregeln)",
+          "tr": "İttifak yönetimi (üyeler, davetler, puan kuralları)",
+          "pt": "Gerenciamento de aliança (membros, convites, regras de pontos)",
+          "el": "Διαχείριση συμμαχίας (μέλη, προσκλήσεις, κανόνες βαθμών)",
+          "ko": "동맹 관리 (멤버, 초대, 점수 규칙)",
+          "hi": "गठबंधन प्रबंधन (सदस्य, निमंत्रण, अंक नियम)",
+          "zh": "联盟管理（成员、邀请、积分规则）",
+          "ku": "Rêvebiriya hevbendiyê (endam, vexwendin, rêgezên xalê)",
+          "ar": "إدارة التحالف (الأعضاء والدعوات وقواعد النقاط)"
         }
       },
       {
@@ -207,7 +369,16 @@
           "en": "Retroactive activity submission for admins",
           "fr": "Saisie rétroactive d'activités pour les administrateurs",
           "es": "Envío retroactivo de actividades para administradores",
-          "it": "Inserimento retroattivo attività per amministratori"
+          "it": "Inserimento retroattivo attività per amministratori",
+          "de": "Rückwirkende Aktivitätseinreichung für Admins",
+          "tr": "Yöneticiler için geriye dönük aktivite gönderimi",
+          "pt": "Envio retroativo de atividades para administradores",
+          "el": "Αναδρομική υποβολή δραστηριότητας για διαχειριστές",
+          "ko": "관리자를 위한 소급 활동 제출",
+          "hi": "एडमिन के लिए पूर्वव्यापी गतिविधि सबमिशन",
+          "zh": "管理员的补录活动提交",
+          "ku": "Şandina çalakiya paşdemsal ji bo rêvebiran",
+          "ar": "تقديم النشاط بأثر رجعي للمسؤولين"
         }
       },
       {
@@ -216,7 +387,16 @@
           "en": "Token-based invitation system",
           "fr": "Système d'invitation par jeton",
           "es": "Sistema de invitación por token",
-          "it": "Sistema di invito tramite token"
+          "it": "Sistema di invito tramite token",
+          "de": "Token-basiertes Einladungssystem",
+          "tr": "Token tabanlı davet sistemi",
+          "pt": "Sistema de convite baseado em token",
+          "el": "Σύστημα πρόσκλησης βάσει token",
+          "ko": "토큰 기반 초대 시스템",
+          "hi": "टोकन-आधारित निमंत्रण प्रणाली",
+          "zh": "基于令牌的邀请系统",
+          "ku": "Pergala vexwendinê ya tokenbingehîn",
+          "ar": "نظام دعوة قائم على الرمز المميز"
         }
       },
       {
@@ -225,7 +405,16 @@
           "en": "Multi-language support (EN, FR, ES, IT)",
           "fr": "Support multilingue (EN, FR, ES, IT)",
           "es": "Soporte multilingüe (EN, FR, ES, IT)",
-          "it": "Supporto multilingua (EN, FR, ES, IT)"
+          "it": "Supporto multilingua (EN, FR, ES, IT)",
+          "de": "Mehrsprachige Unterstützung (EN, FR, ES, IT)",
+          "tr": "Çok dil desteği (EN, FR, ES, IT)",
+          "pt": "Suporte a múltiplos idiomas (EN, FR, ES, IT)",
+          "el": "Υποστήριξη πολλών γλωσσών (EN, FR, ES, IT)",
+          "ko": "다국어 지원 (EN, FR, ES, IT)",
+          "hi": "बहु-भाषा समर्थन (EN, FR, ES, IT)",
+          "zh": "多语言支持（EN, FR, ES, IT）",
+          "ku": "Piştgiriya gelek zimanan (EN, FR, ES, IT)",
+          "ar": "دعم متعدد اللغات (EN, FR, ES, IT)"
         }
       },
       {
@@ -234,7 +423,16 @@
           "en": "PWA support — install on home screen, offline mode",
           "fr": "Support PWA — installation sur l'écran d'accueil, mode hors ligne",
           "es": "Soporte PWA — instalar en pantalla de inicio, modo sin conexión",
-          "it": "Supporto PWA — installa nella schermata home, modalità offline"
+          "it": "Supporto PWA — installa nella schermata home, modalità offline",
+          "de": "PWA-Unterstützung — auf dem Startbildschirm installieren, Offline-Modus",
+          "tr": "PWA desteği — ana ekrana yükle, çevrimdışı mod",
+          "pt": "Suporte PWA — instalar na tela inicial, modo offline",
+          "el": "Υποστήριξη PWA — εγκατάσταση στην αρχική οθόνη, λειτουργία εκτός σύνδεσης",
+          "ko": "PWA 지원 — 홈 화면에 설치, 오프라인 모드",
+          "hi": "PWA समर्थन — होम स्क्रीन पर इंस्टॉल करें, ऑफलाइन मोड",
+          "zh": "PWA支持 — 安装到主屏幕，离线模式",
+          "ku": "Piştgiriya PWA — li ser ekrana sereke saz bike, moda offline",
+          "ar": "دعم PWA — تثبيت على الشاشة الرئيسية، وضع عدم الاتصال"
         }
       },
       {
@@ -243,7 +441,16 @@
           "en": "Connectivity indicator in header",
           "fr": "Indicateur de connectivité dans l'en-tête",
           "es": "Indicador de conectividad en el encabezado",
-          "it": "Indicatore di connettività nell'intestazione"
+          "it": "Indicatore di connettività nell'intestazione",
+          "de": "Konnektivitätsindikator in der Kopfzeile",
+          "tr": "Başlıkta bağlantı göstergesi",
+          "pt": "Indicador de conectividade no cabeçalho",
+          "el": "Δείκτης συνδεσιμότητας στην κεφαλίδα",
+          "ko": "헤더의 연결 상태 표시기",
+          "hi": "हेडर में कनेक्टिविटी इंडिकेटर",
+          "zh": "标题栏连接状态指示器",
+          "ku": "Nîşana girêdanê di sernavê de",
+          "ar": "مؤشر الاتصال في الرأس"
         }
       }
     ]

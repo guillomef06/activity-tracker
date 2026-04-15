@@ -16,6 +16,17 @@
 }
 
 .page-header {
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .back-btn {
+    margin-right: var(--space-2);
+    color: var(--mat-sys-on-surface-variant);
+  }
+
   .header-icon {
     font-size: 2rem;
     width: 2rem;
