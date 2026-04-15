@@ -14,10 +14,7 @@
         </div>
       }
       <h3 class="champion-name">
-        {{ 'guides.champion_slot' | translate: { n: champion().position + 1 } }}
-        @if (champion().champions?.name) {
-          — {{ champion().champions!.name }}
-        }
+        {{ champion().champions?.name ?? ('guides.champion_slot' | translate: { n: champion().position + 1 }) }}
       </h3>
     </div>
 
@@ -25,7 +22,7 @@
       <!-- Skills -->
       @if (champion().guide_champion_skills && champion().guide_champion_skills!.length > 0) {
         <div class="detail-row">
-          <mat-icon class="detail-icon">flash_on</mat-icon>
+          <span class="detail-label">{{ 'guides.skills' | translate }}</span>
           <div class="item-list">
             @for (skillEntry of champion().guide_champion_skills!; track skillEntry.id) {
               @if (skillEntry.skills) {
@@ -44,7 +41,7 @@
       <!-- Gems -->
       @if (champion().guide_champion_gems && champion().guide_champion_gems!.length > 0) {
         <div class="detail-row">
-          <mat-icon class="detail-icon">diamond</mat-icon>
+          <span class="detail-label">{{ 'guides.gems' | translate }}</span>
           <div class="item-list">
             @for (gemEntry of champion().guide_champion_gems!; track gemEntry.id) {
               @if (gemEntry.gems) {
@@ -63,7 +60,7 @@
       <!-- Horse traits -->
       @if (champion().guide_champion_horse_traits && champion().guide_champion_horse_traits!.length > 0) {
         <div class="detail-row">
-          <mat-icon class="detail-icon">psychology</mat-icon>
+          <span class="detail-label">{{ 'guides.traits' | translate }}</span>
           <div class="item-list">
             @for (traitEntry of champion().guide_champion_horse_traits!; track traitEntry.id) {
               @if (traitEntry.horse_temperaments) {
@@ -77,7 +74,7 @@
       <!-- Ornament -->
       @if (champion().ornaments) {
         <div class="detail-row">
-          <mat-icon class="detail-icon">auto_awesome</mat-icon>
+          <span class="detail-label">{{ 'guides.ornament' | translate }}</span>
           <span class="item-chip">
             @if (champion().ornaments!.image_url) {
               <img [src]="champion().ornaments!.image_url!" [alt]="champion().ornaments!.name" class="item-img" />
@@ -90,7 +87,7 @@
       <!-- Ring -->
       @if (champion().rings) {
         <div class="detail-row">
-          <mat-icon class="detail-icon">album</mat-icon>
+          <span class="detail-label">{{ 'guides.ring' | translate }}</span>
           <span class="item-chip">
             @if (champion().rings!.icon_url) {
               <img [src]="champion().rings!.icon_url!" [alt]="champion().rings!.name" class="item-img" />

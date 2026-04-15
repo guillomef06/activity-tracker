@@ -1,0 +1,724 @@
+{
+  "app": {
+    "subtitle": "تتبع الأنشطة وعرض نقاط الأسابيع الستة المتداولة"
+  },
+  "home": {
+    "tabs": {
+      "submit": "تقديم نشاط",
+      "leaderboard": "لوحة المتصدرين",
+      "mightiestGovernor": "الحاكم الأقوى",
+      "tools": "الأدوات"
+    }
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "displayName": "الاسم المعروض",
+    "allianceName": "اسم التحالف",
+    "invitationToken": "رمز الدعوة",
+    "welcomeBack": "مرحباً بعودتك",
+    "signInSubtitle": "سجّل دخولك إلى حسابك",
+    "signupTitle": "إنشاء تحالف",
+    "signupSubtitle": "سجّل كمسؤول تحالف",
+    "joinTitle": "الانضمام إلى تحالف",
+    "joinSubtitle": "استخدم دعوتك للانضمام إلى تحالف",
+    "setupTitle": "إعداد المسؤول الرئيسي",
+    "setupSubtitle": "إنشاء أول حساب للمسؤول الرئيسي",
+    "setupWarning": "هذا إعداد لمرة واحدة. يتمتع المسؤول الرئيسي بصلاحية كاملة لإدارة جميع التحالفات والمستخدمين.",
+    "signingIn": "جاري تسجيل الدخول...",
+    "creatingAlliance": "جاري إنشاء التحالف...",
+    "joining": "جاري الانضمام...",
+    "createSuperAdmin": "إنشاء مسؤول رئيسي",
+    "creating": "جاري الإنشاء...",
+    "usernamePlaceholder": "اختر اسم مستخدم فريداً",
+    "usernameHint": "3-30 حرفاً — أحرف وأرقام و - و _ فقط",
+    "displayNamePlaceholder": "أدخل اسمك الكامل",
+    "displayNameHint": "اسمك كما سيظهر للآخرين",
+    "allianceNamePlaceholder": "أدخل اسم تحالفك",
+    "allianceNameHint": "اختر اسماً لتحالفك الجديد",
+    "passwordPlaceholder": "مثال: MyPass123!",
+    "passwordHint": "6 أحرف على الأقل، يجب أن تتضمن حرفاً واحداً ورقماً واحداً على الأقل",
+    "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+    "tokenPlaceholder": "أدخل رمز الدعوة",
+    "tokenHint": "مقدم من مسؤول تحالفك",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "noAccount": "ليس لديك حساب؟",
+    "haveInvitation": "لديك دعوة؟",
+    "wantCreateAlliance": "تريد إنشاء تحالف؟",
+    "errors": {
+      "usernameExists": "اسم المستخدم موجود بالفعل",
+      "usernameInvalidChars": "أحرف وأرقام و - و _ فقط",
+      "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة",
+      "userNotFound": "المستخدم غير موجود",
+      "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+      "signupFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+      "joinFailed": "فشل الانضمام. يرجى المحاولة مرة أخرى.",
+      "setupFailed": "فشل الإعداد. يرجى المحاولة مرة أخرى.",
+      "superAdminExists": "المسؤول الرئيسي موجود بالفعل",
+      "allianceCreationFailed": "فشل إنشاء التحالف",
+      "invalidToken": "رمز الدعوة غير صالح أو منتهي الصلاحية"
+    },
+    "recovery": {
+      "forgotPassword": "نسيت كلمة المرور؟"
+    },
+    "signupForm": {
+      "recoveryQuestion": "السؤال السري",
+      "recoveryAnswer": "الجواب السري",
+      "recoveryAnswerHint": "الجواب غير حساس لحالة الأحرف"
+    }
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "minLength": "لم يتم استيفاء الحد الأدنى للطول",
+    "maxLength": "تم تجاوز الحد الأقصى للطول",
+    "min": "القيمة أقل من الحد الأدنى المسموح به",
+    "max": "القيمة تتجاوز الحد الأقصى المسموح به",
+    "email": "عنوان البريد الإلكتروني غير صالح",
+    "pattern": "التنسيق غير صالح",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين"
+  },
+  "nav": {
+    "superAdminDashboard": "المسؤول الرئيسي",
+    "allianceSettings": "إعدادات التحالف",
+    "home": "الرئيسية",
+    "guides": "الأدلة"
+  },
+  "alliance": {
+    "settings": {
+      "title": "إعدادات التحالف",
+      "tabs": {
+        "overview": "التحالف",
+        "invitations": "الدعوات",
+        "activitySettings": "إعدادات الأنشطة",
+        "retroactive": "الأنشطة بأثر رجعي",
+        "importExcel": "استيراد Excel",
+        "discord": "Discord"
+      },
+      "allianceInfo": "معلومات التحالف",
+      "allianceName": "اسم التحالف",
+      "allianceTag": "وسم التحالف",
+      "allianceTagHint": "معرّف اختياري من 3 أحرف (مثال: RgW)",
+      "updateName": "تحديث",
+      "memberList": "قائمة الأعضاء",
+      "members": "أعضاء",
+      "noMembers": "لا يوجد أعضاء بعد",
+      "displayName": "الاسم",
+      "role": "الدور",
+      "joinedDate": "تاريخ الانضمام",
+      "invitationManagement": "إدارة الدعوات",
+      "invitationDuration": "المدة (أيام)",
+      "durationHint": "عدد الأيام حتى انتهاء صلاحية الدعوة",
+      "createInvitation": "إنشاء دعوة",
+      "noInvitations": "لم يتم إنشاء دعوات بعد",
+      "expiresAt": "تنتهي في",
+      "createdAt": "أُنشئت في",
+      "copyLink": "نسخ رابط الدعوة",
+      "revokeInvitation": "إلغاء الدعوة",
+      "revokeConfirm": "هل أنت متأكد أنك تريد إلغاء هذه الدعوة؟",
+      "membersJoined": "الأعضاء الذين انضموا عبر هذه الدعوة",
+      "nameUpdated": "تم تحديث التحالف بنجاح!",
+      "nameUpdateFailed": "فشل تحديث التحالف",
+      "invitationCreated": "تم إنشاء الدعوة ونسخ الرابط إلى الحافظة!",
+      "invitationCreateFailed": "فشل إنشاء الدعوة",
+      "invitationRevoked": "تم إلغاء الدعوة بنجاح",
+      "invitationRevokeFailed": "فشل إلغاء الدعوة",
+      "invitationLinkCopied": "تم نسخ رابط الدعوة إلى الحافظة!",
+      "pointRules": {
+        "addRule": "إضافة قاعدة جديدة",
+        "currentRules": "القواعد الحالية",
+        "activityType": "نوع النشاط",
+        "positionMin": "الحد الأدنى للمركز",
+        "positionMax": "الحد الأقصى للمركز",
+        "positionRange": "نطاق المركز",
+        "points": "النقاط",
+        "create": "إنشاء قاعدة",
+        "noRules": "لم يتم تكوين قواعد النقاط بعد",
+        "noRulesHint": "أنشئ قواعد لحساب النقاط بناءً على المركز/الترتيب. بدون قواعد، ستُستخدم النقاط الافتراضية.",
+        "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذه القاعدة؟",
+        "activityConfiguration": "تكوين النشاط",
+        "activityConfigurationHint": "تفعيل أو تعطيل كل نشاط، وتكوين وضع المشاركة وإعدادات كسر التعادل",
+        "participationMode": "وضع المشاركة",
+        "participationPoints": "نقاط المشاركة",
+        "positionRangeError": "لا يمكن أن يكون الحد الأدنى للمركز أكبر من الحد الأقصى",
+        "created": "تم إنشاء قاعدة النقاط بنجاح",
+        "createFailed": "فشل إنشاء قاعدة النقاط",
+        "deleted": "تم حذف قاعدة النقاط بنجاح",
+        "deleteFailed": "فشل حذف قاعدة النقاط",
+        "participationModeFailed": "فشل تحديث وضع المشاركة",
+        "participationPointsFailed": "فشل تحديث نقاط المشاركة",
+        "activityEnabled": "تم تفعيل النشاط",
+        "activityEnabledFailed": "فشل تحديث حالة النشاط",
+        "tiebreaker": "كسر التعادل",
+        "tiebreakerFailed": "فشل تحديث كسر التعادل"
+      },
+      "leaderboard": {
+        "title": "إعدادات لوحة المتصدرين",
+        "hint": "تكوين عدد الأسابيع المدرجة في الترتيب",
+        "weeksMultiplier": "مضاعف الموسم",
+        "multiplierOption": "{{weeks}} أسابيع (×{{multiplier}})",
+        "weeksHint": "{{weeks}} أسابيع مدرجة في لوحة المتصدرين",
+        "multiplierUpdated": "تم تحديث مضاعف الموسم",
+        "multiplierFailed": "فشل تحديث مضاعف الموسم"
+      },
+      "dangerZone": {
+        "title": "المنطقة الخطرة",
+        "deleteAllActivities": "حذف جميع الأنشطة",
+        "deleteAllActivitiesDescription": "حذف جميع الأنشطة المقدمة من أعضاء التحالف بشكل دائم. لا يمكن التراجع عن هذا الإجراء.",
+        "deleteAllActivitiesConfirm": "هل أنت متأكد أنك تريد حذف جميع الأنشطة؟ سيؤدي ذلك إلى محو سجل الأنشطة الكامل لجميع الأعضاء بشكل دائم.",
+        "deleteAllActivitiesSuccess": "تم حذف جميع الأنشطة",
+        "deleteAllActivitiesFailed": "فشل حذف الأنشطة"
+      }
+    },
+    "retroactive": {
+      "title": "إضافة نشاط بأثر رجعي",
+      "description": "بوصفك مسؤولاً، يمكنك إضافة أنشطة لأعضاء التحالف للأسابيع الستة الماضية. اختر عضواً، واختر أسبوعاً، وأدخل تفاصيل نشاطه.",
+      "selectMember": "اختر عضواً",
+      "memberHint": "اختر عضو التحالف الذي تريد إضافة نشاط له",
+      "selectWeek": "اختر الأسبوع",
+      "weekHint": "اختر الأسبوع الذي جرى فيه النشاط",
+      "currentWeek": "الأسبوع الحالي",
+      "weeksAgo": "منذ {{count}} أسابيع",
+      "selectActivity": "نوع النشاط",
+      "activityHint": "تُعرض فقط الأنشطة المتاحة للأسبوع المحدد",
+      "noActivities": "لا توجد أنشطة متاحة لهذا الأسبوع",
+      "position": "المركز",
+      "positionHint": "أدخل مركز العضو أو ترتيبه",
+      "pointsPreview": "النقاط التي ستُمنح",
+      "submit": "إضافة نشاط",
+      "submitting": "جاري إضافة النشاط...",
+      "success": "تمت إضافة النشاط بنجاح!",
+      "error": "فشل إضافة النشاط. يرجى المحاولة مرة أخرى."
+    },
+    "import": {
+      "title": "استيراد الأنشطة من Excel",
+      "description": "قم برفع قالب مملوء لاستيراد الأنشطة الرجعية لأعضاء تحالفك بالجملة.",
+      "templateHint": "أولاً، قم بتنزيل قالب الاستيراد وملئه.",
+      "downloadTemplate": "تنزيل القالب",
+      "activityFilter": "تصفية حسب النشاط",
+      "activityFilterAll": "جميع الأنشطة",
+      "uploadFile": "اختر ملفاً",
+      "fileHint": "يقبل .xlsx و.xls و.csv",
+      "back": "رجوع",
+      "preview": {
+        "title": "معاينة",
+        "rowsFound": "تم العثور على {{count}} صف",
+        "playerColumn": "اللاعب",
+        "activityColumn": "النشاط",
+        "positionColumn": "المركز",
+        "weekColumn": "الأسبوع",
+        "pointsColumn": "النقاط",
+        "statusColumn": "الحالة",
+        "updateColumn": "تحديث؟",
+        "selectPlayer": "اختر لاعباً",
+        "updateAll": "تحديث جميع السجلات الموجودة"
+      },
+      "status": {
+        "ready": "جاهز للإدراج",
+        "willUpdate": "سيتم تحديث السجل الموجود",
+        "unmatched": "اللاعب غير موجود — اختر يدوياً",
+        "invalid": {
+          "invalid_activity": "نوع نشاط غير معروف أو معطل",
+          "disabled_activity": "نوع النشاط هذا معطل",
+          "invalid_date": "تاريخ غير صالح أو مفقود",
+          "invalid_position": "مركز غير صالح (يجب أن يكون ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "استيراد",
+        "importing": "جاري الاستيراد..."
+      },
+      "result": {
+        "title": "اكتمل الاستيراد",
+        "inserted": "تم إدراجه",
+        "updated": "تم تحديثه",
+        "skipped": "تم تخطيه",
+        "error": "فشل الاستيراد. يرجى المحاولة مرة أخرى."
+      },
+      "reset": "استيراد ملف آخر"
+    }
+  },
+  "activityInput": {
+    "title": "تقديم نشاط",
+    "subtitle": "سجّل نشاطك واكسب النقاط",
+    "activityType": "نوع النشاط",
+    "position": "المركز/الترتيب",
+    "positionPlaceholder": "مثال: 1، 5، 10...",
+    "positionHint": "أدخل مركزك أو ترتيبك",
+    "submit": "تقديم النشاط",
+    "submitting": "جاري التقديم...",
+    "typeHint": "تُعرض فقط الأنشطة المتاحة للأسبوع المحدد",
+    "success": "تم تقديم النشاط بنجاح!",
+    "error": "فشل تقديم النشاط",
+    "participated": "شاركت هذا الأسبوع",
+    "fillAllFields": "يرجى ملء جميع الحقول المطلوبة"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "لا توجد أنشطة متاحة هذا الأسبوع",
+    "totalPoints": "إجمالي النقاط",
+    "pointsShort": "نقطة",
+    "currentWeek": "هذا الأسبوع",
+    "lastWeek": "الأسبوع الماضي",
+    "weeksAgo": "أسابيع مضت"
+  },
+  "activitiesDetails": {
+    "title": "تفاصيل الأنشطة"
+  },
+  "common": {
+    "points": "نقاط",
+    "close": "إغلاق",
+    "actions": "إجراءات",
+    "delete": "حذف",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "update": "تحديث",
+    "back": "رجوع",
+    "add": "إضافة",
+    "edit": "تعديل",
+    "name": "الاسم",
+    "description": "الوصف",
+    "image": "صورة",
+    "icon": "أيقونة",
+    "order": "الترتيب",
+    "active": "نشط",
+    "all": "الكل",
+    "none": "لا شيء",
+    "saved": "تم الحفظ",
+    "created": "تم الإنشاء",
+    "deleted": "تم الحذف",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟",
+    "uploadImage": "رفع صورة",
+    "next": "التالي",
+    "clear": "مسح"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "لوحة تحكم المسؤول الرئيسي",
+      "subtitle": "نظرة عامة على النظام العالمي وإدارته",
+      "totalAlliances": "إجمالي التحالفات",
+      "totalUsers": "إجمالي المستخدمين",
+      "totalActivities": "إجمالي الأنشطة",
+      "activeInvitations": "الدعوات النشطة",
+      "quickActions": "الإجراءات السريعة",
+      "manageAlliances": "إدارة التحالفات",
+      "manageAlliancesDesc": "عرض وإدارة جميع التحالفات",
+      "manageUsers": "إدارة المستخدمين",
+      "manageUsersDesc": "عرض وإدارة جميع المستخدمين",
+      "manageGuidesData": "بيانات مرجع الأدلة",
+      "manageGuidesDataDesc": "إدارة الأبطال والمهارات والخيول والجواهر"
+    },
+    "alliances": {
+      "title": "إدارة التحالفات",
+      "subtitle": "إدارة جميع التحالفات في النظام",
+      "noAlliances": "لم يتم إنشاء تحالفات بعد",
+      "name": "اسم التحالف",
+      "tag": "الوسم",
+      "admin": "المسؤول",
+      "members": "الأعضاء",
+      "created": "تاريخ الإنشاء",
+      "actions": "الإجراءات",
+      "deleteConfirm": "هل أنت متأكد أنك تريد حذف التحالف \"{{name}}\"؟ سيؤدي ذلك أيضاً إلى حذف جميع المستخدمين والأنشطة والدعوات المرتبطة به.",
+      "loadFailed": "فشل تحميل التحالفات",
+      "updated": "تم تحديث التحالف بنجاح",
+      "updateFailed": "فشل تحديث التحالف",
+      "deleted": "تم حذف التحالف بنجاح",
+      "deleteFailed": "فشل حذف التحالف"
+    },
+    "users": {
+      "title": "إدارة المستخدمين",
+      "subtitle": "إدارة جميع المستخدمين في النظام",
+      "noUsers": "لم يتم العثور على مستخدمين",
+      "displayName": "الاسم المعروض",
+      "username": "اسم المستخدم",
+      "role": "الدور",
+      "alliance": "التحالف",
+      "noAlliance": "لا يوجد تحالف",
+      "created": "تاريخ الإنشاء",
+      "actions": "الإجراءات",
+      "deleteConfirm": "هل أنت متأكد أنك تريد حذف المستخدم \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+      "loadFailed": "فشل تحميل المستخدمين",
+      "updated": "تم تحديث المستخدم بنجاح",
+      "updateFailed": "فشل تحديث المستخدم",
+      "deleted": "تم حذف المستخدم بنجاح"
+    },
+    "guidesData": "بيانات مرجع الأدلة",
+    "guidesDataSubtitle": "إدارة الأبطال والمهارات والخيول والزخارف والجواهر",
+    "champions": "الأبطال",
+    "skills": "المهارات",
+    "assignSkills": "تعيين المهارات",
+    "temperaments": "المزاجات",
+    "ornaments": "الزخارف",
+    "gems": "الجواهر",
+    "rings": "الخواتم",
+    "gemType": {
+      "label": "النوع",
+      "strategy": "الاستراتيجية",
+      "hero": "البطل",
+      "tactics": "التكتيكات"
+    }
+  },
+  "super_admin": "مسؤول رئيسي",
+  "admin": "مسؤول",
+  "member": "عضو",
+  "pwa": {
+    "offline": "أنت غير متصل بالإنترنت",
+    "online": "أنت متصل بالإنترنت",
+    "updateAvailable": "يتوفر إصدار جديد",
+    "reload": "إعادة التحميل",
+    "install": "ثبّت التطبيق للحصول على تجربة أفضل",
+    "installButton": "تثبيت",
+    "iosInstruction": "انقر على زر المشاركة ثم 'إضافة إلى الشاشة الرئيسية'",
+    "installDismiss": "إغلاق لافتة التثبيت"
+  },
+  "releaseNotes": {
+    "title": "الجديد",
+    "markAsSeen": "وضع علامة مقروء"
+  },
+  "tools": {
+    "gemCalcDesc": "احسب مكسب النقاط من تجهيز قائدك بجوهرة.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "ابحث عن أفضل مجموعات مزاج الحصان لقادتك."
+  },
+  "packValue": {
+    "title": "حاسبة قيمة الحزمة",
+    "description": "تقييم قيمة حزمة داخل اللعبة",
+    "addItem": "إضافة عنصر",
+    "packPrice": "سعر الحزمة (عملات Apex)",
+    "calculate": "احسب",
+    "reset": "إعادة تعيين",
+    "noItems": "أضف عنصراً واحداً على الأقل للحساب",
+    "units": {
+      "hours": "ساعات",
+      "qty": "الكمية"
+    },
+    "result": {
+      "title": "النتيجة",
+      "tier": {
+        "terrible": "سيئ جداً",
+        "average": "متوسط",
+        "good": "جيد",
+        "excellent": "ممتاز"
+      },
+      "breakdown": "التفصيل"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "الحاكم الأقوى",
+    "subtitle": "تكاليف التسجيل حسب الترتيب",
+    "description": "للمشاركة في حدث الحاكم الأقوى، يجب على اللاعبين إنفاق نقاط النتيجة. كلما كان الترتيب المستهدف أعلى، كانت التكلفة أعلى.",
+    "rank": "الترتيب",
+    "weeklyTarget": "الهدف الأسبوعي",
+    "cost": "التكلفة",
+    "notice": "نظام DKP قيد التطوير. التكاليف المعروضة استرشادية وقد تتغير."
+  },
+  "gemCalculator": {
+    "title": "حاسبة الجواهر",
+    "back": "رجوع",
+    "troopType": "نوع القوات",
+    "troopSwordsmen": "حاملو السيوف",
+    "troopArchers": "الرماة",
+    "troopPikemen": "حاملو الرماح",
+    "troopCavalry": "الفرسان",
+    "troopTier": "مستوى القوات",
+    "troopSize": "حجم القوات",
+    "troopSizeHint": "عدد القوات (الحد الأقصى 500,000)",
+    "healthBonus": "مكافأة الصحة (%)",
+    "mightAttack": "قوة الهجوم (%)",
+    "mightDefense": "قوة الدفاع (%)",
+    "gemType": "نوع الجوهرة",
+    "gemHealth": "جوهرة الصحة",
+    "gemCapacity": "جوهرة السعة",
+    "gemRarity": "ندرة الجوهرة",
+    "verbose": "الوضع التفصيلي (تفاصيل الحساب)",
+    "analyze": "تحليل",
+    "score": "المكسب",
+    "rawBonus": "المكافأة الخام",
+    "verboseTitle": "تفاصيل الحساب",
+    "verboseScoreBefore": "النتيجة قبل",
+    "verboseScoreAfter": "النتيجة بعد",
+    "verboseGain": "المكسب",
+    "verboseLegionSize": "حجم الفيلق",
+    "verbosePerUnit": "النقاط لكل وحدة (قبل)",
+    "verbosePerUnitAfter": "النقاط لكل وحدة (بعد)",
+    "verboseGemValue": "مكافأة الجوهرة",
+    "verboseNewHealthBonus": "مكافأة الصحة الجديدة",
+    "noResult": "املأ النموذج وانقر على تحليل"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "ما اسم أول حيوان أليف لديك؟",
+      "q2": "في أي مدينة وُلدت؟",
+      "q3": "ما الاسم الأول لأعز أصدقائك في الطفولة؟",
+      "q4": "ما كان لقبك في الطفولة؟",
+      "q5": "ما اسم والدتك قبل الزواج؟",
+      "q6": "ما اسم مدرستك الابتدائية؟",
+      "q7": "في أي مدينة التقيت بشريك حياتك؟",
+      "q8": "ما هو طعامك المفضل؟",
+      "q9": "ما كانت ماركة سيارتك الأولى؟",
+      "q10": "ما كانت وجهة سفرك الأولى إلى الخارج؟"
+    },
+    "page": {
+      "title": "استرداد الحساب",
+      "step1": {
+        "usernamePlaceholder": "أدخل اسم المستخدم",
+        "submit": "البحث عن حسابي"
+      },
+      "step2": {
+        "answerPlaceholder": "إجابتك",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "submit": "إعادة تعيين كلمة المرور"
+      },
+      "step3": {
+        "success": "تمت إعادة تعيين كلمة المرور بنجاح!"
+      },
+      "backToLogin": "العودة إلى تسجيل الدخول"
+    },
+    "errors": {
+      "userNotFound": "لم يتم العثور على حساب لهذا الاسم.",
+      "wrongAnswer": "إجابة خاطئة.",
+      "wrongAnswerRemaining": "{{count}} محاولة متبقية.",
+      "locked": "الحساب مقفل حتى {{time}}.",
+      "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."
+    }
+  },
+  "accountSettings": {
+    "title": "حسابي",
+    "tabAccount": "حسابي",
+    "tabPreferences": "تفضيلاتي",
+    "displayName": {
+      "title": "الاسم المعروض",
+      "save": "حفظ",
+      "success": "تم تحديث الاسم المعروض",
+      "error": "فشل تحديث الاسم المعروض"
+    },
+    "password": {
+      "title": "تغيير كلمة المرور",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "save": "تغيير كلمة المرور",
+      "success": "تم تحديث كلمة المرور بنجاح",
+      "error": "فشل تحديث كلمة المرور"
+    },
+    "recovery": {
+      "title": "سؤال الاسترداد",
+      "question": "السؤال السري",
+      "answer": "الإجابة الجديدة",
+      "answerHint": "الإجابة غير حساسة لحالة الأحرف",
+      "save": "تحديث",
+      "success": "تم تحديث سؤال الاسترداد",
+      "error": "فشل تحديث سؤال الاسترداد"
+    },
+    "language": {
+      "title": "لغة التطبيق"
+    },
+    "colorScheme": {
+      "title": "المظهر",
+      "light": "فاتح",
+      "dark": "داكن",
+      "auto": "تلقائي (النظام)",
+      "glass": "زجاجي فاتح",
+      "glassDark": "زجاجي داكن",
+      "highContrast": "تباين عالٍ"
+    }
+  },
+  "discord": {
+    "channelsTitle": "قنوات Discord",
+    "channelsSubtitle": "تكوين قنوات webhook الخاصة بـ Discord لإرسال الرسائل إليها",
+    "channelName": "اسم القناة",
+    "channelNamePlaceholder": "مثال: general-reminder",
+    "webhookUrl": "رابط Webhook",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "رابط webhook الخاص بـ Discord من إعدادات الخادم > التكاملات",
+    "defaultMessage": "الرسالة الافتراضية (اختياري)",
+    "defaultMessagePlaceholder": "⏰ تذكير: أدخل ترتيبك في GE",
+    "defaultMessageHint": "يتم تحميله مسبقاً عند اختيار هذه القناة — قابل للتعديل قبل الإرسال",
+    "addChannel": "إضافة قناة",
+    "deleteChannel": "حذف القناة",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف القناة \"{{name}}\"؟",
+    "noChannels": "لم يتم تكوين قنوات Discord بعد",
+    "noChannelsForMessage": "أضف قناة واحدة على الأقل لإرسال الرسائل",
+    "channelAdded": "تمت إضافة قناة Discord بنجاح",
+    "channelAddFailed": "فشل إضافة قناة Discord",
+    "channelUpdated": "تم تحديث قناة Discord بنجاح",
+    "channelUpdateFailed": "فشل تحديث قناة Discord",
+    "channelDeleted": "تم حذف قناة Discord بنجاح",
+    "channelDeleteFailed": "فشل حذف قناة Discord",
+    "editChannel": "تعديل القناة",
+    "editChannelTitle": "جاري تعديل القناة:",
+    "loadFailed": "فشل تحميل قنوات Discord",
+    "sendMessageTitle": "إرسال رسالة",
+    "sendMessageSubtitle": "اختر قناة، عدّل الرسالة إذا لزم الأمر، ثم أرسل",
+    "selectChannel": "اختر قناة",
+    "messageContent": "الرسالة",
+    "messageContentPlaceholder": "⏰ تذكير: أدخل ترتيبك في GE",
+    "sendMessage": "إرسال إلى Discord",
+    "messageSent": "تم إرسال الرسالة إلى Discord بنجاح",
+    "messageSendFailed": "فشل إرسال رسالة Discord",
+    "errors": {
+      "invalidWebhookUrl": "يجب أن يكون رابط webhook صالحاً لـ Discord (https://discord.com/api/webhooks/...)"
+    }
+  },
+  "guides": {
+    "title": "الأدلة",
+    "community": "المجتمع",
+    "my_guides": "أدلتي",
+    "create": "إنشاء دليل",
+    "limit_reached": "تم الوصول إلى حد 10 أدلة",
+    "no_guides": "لا توجد أدلة بعد",
+    "count": "{{ count }}/10 أدلة",
+    "categories": {
+      "formation": "التشكيل",
+      "evenement": "الحدث",
+      "general": "عام"
+    },
+    "status": {
+      "published": "منشور",
+      "draft": "مسودة"
+    },
+    "by": "بقلم",
+    "view": "عرض",
+    "edit": "تعديل",
+    "publish": "نشر",
+    "unpublish": "إلغاء النشر",
+    "delete": "حذف",
+    "published_success": "تم نشر الدليل",
+    "unpublished_success": "تم إلغاء نشر الدليل",
+    "champion": "البطل",
+    "champion_slot": "خانة البطل",
+    "add_champion": "إضافة بطل",
+    "champion_count": "{{ count }} بطل تم تكوينه",
+    "formation_hint": "تكوين ما يصل إلى 3 أبطال. اسحب لإعادة الترتيب.",
+    "skill": "مهارة",
+    "skills": "المهارات",
+    "gems": "الجواهر",
+    "hero_section": "البطل",
+    "horse_section": "الحصان",
+    "traits": "صفات الحصان",
+    "trait": "صفة",
+    "add_trait": "إضافة صفة",
+    "ornament": "الزخرفة",
+    "ring": "الخاتم",
+    "description": "الوصف / ملاحظات المؤلف",
+    "editor": {
+      "title_new": "إنشاء دليل",
+      "title_edit": "تعديل الدليل",
+      "step_basic": "المعلومات",
+      "step_content": "المحتوى",
+      "step_review": "الملخص",
+      "title_label": "عنوان الدليل",
+      "category_label": "الفئة",
+      "description_label": "الوصف",
+      "publish_now": "نشر الآن",
+      "save_draft": "حفظ كمسودة",
+      "save": "حفظ"
+    },
+    "confirm_delete": "حذف هذا الدليل؟",
+    "confirm_delete_msg": "لا يمكن التراجع عن هذا الإجراء.",
+    "errors": {
+      "limitReached": "لقد وصلت إلى الحد الأقصى وهو 10 أدلة.",
+      "slugDuplicate": "هذا العنوان مشابه جداً لدليل موجود. يرجى تعديل العنوان.",
+      "notFound": "الدليل غير موجود.",
+      "unauthorized": "ليس لديك صلاحية لتعديل هذا الدليل.",
+      "unknown": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+      "invalidFileType": "نوع الملف غير صالح. المسموح به: PNG، JPEG، WebP."
+    },
+    "public_list_title": "أدلة المجتمع",
+    "public_list_empty": "لم يتم نشر أي أدلة بعد",
+    "copy_link": "نسخ الرابط",
+    "link_copied": "تم نسخ الرابط!",
+    "back_to_list": "العودة إلى الأدلة",
+    "guide_not_found": "الدليل غير موجود",
+    "upvote": "تأييد",
+    "upvoted": "تم التأييد",
+    "champion_slot": "البطل {{n}}",
+    "author_notes": "ملاحظات المؤلف"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "متتبع نشاط التحالف",
+      "title1": "العب بذكاء.",
+      "title2": "انتصر معاً.",
+      "subtitleBefore": "مصمم لكل لاعب نشط — وليس فقط للمنفقين. تتبع أنشطة تحالفك، واكسب نقاطاً استراتيجية، وحقق",
+      "subtitleStrong": "أفضل 10 في الحاكم الأقوى",
+      "subtitleAfter": "بموارد وتسريعات أقل بكثير.",
+      "ctaLogin": "تسجيل الدخول",
+      "ctaJoin": "انضم بدعوة"
+    },
+    "steps": {
+      "label": "كيف يعمل",
+      "title": "ثلاث خطوات للقمة",
+      "step1": {
+        "title": "سجّل أنشطتك",
+        "description": "قدّم معارك KvK ومعارك الفيلق والرحلات الذهبية والمزيد. كل حدث، كل أسبوع — مساهمتك مسجلة."
+      },
+      "step2": {
+        "title": "اكسب نقاطاً استراتيجية",
+        "description": "تُحسب النقاط من مركزك وأدائك. تكافئ القواعد القابلة للتكوين اللاعبين الذين يشاركون وينافسون."
+      },
+      "step3": {
+        "title": "ارتقِ في التصنيفات",
+        "description": "لوحة المتصدرين المتداولة لمدة 6 أسابيع تُبقي المنافسة منتعشة وتكافئ الاتساق على الانفجارات الفردية."
+      }
+    },
+    "benefits": {
+      "label": "لماذا يهم",
+      "title": "يفوز كامل الخادم",
+      "benefit1": {
+        "title": "مبني للاعبين النشطين",
+        "description": "لا فوز بالمال. النشاط الخالص والمشاركة الذكية هما ما يرفعك في لوحة المتصدرين — يمكن لأي شخص المنافسة."
+      },
+      "benefit2": {
+        "title": "وفّر الموارد على مستوى التحالف",
+        "description": "يحسّن التتبع المنظم من يشارك ومتى، مما يحافظ على التسريعات والموارد لتحضير KvK وأقوى إمبراطورية."
+      },
+      "benefit3": {
+        "title": "حقق أفضل 10 في الحاكم الأقوى",
+        "description": "احصل على أقوى الأبطال بموارد أقل. الفرق بين المحاولة والبطولة يُقاس بالجهد المنظم."
+      }
+    },
+    "cta": {
+      "title": "هل أنت مستعد لقيادة تحالفك؟",
+      "subtitle": "أنشئ تحالفك وابدأ تتبع تقدم أعضائك اليوم.",
+      "button": "أنشئ تحالفك"
+    },
+    "footer": "Activity Tracker — العب بذكاء أكبر، نافس بقوة أكبر."
+  }
+}

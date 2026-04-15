@@ -1,0 +1,724 @@
+{
+  "app": {
+    "subtitle": "Acompanhe atividades e veja pontuações das últimas 6 semanas"
+  },
+  "home": {
+    "tabs": {
+      "submit": "Enviar Atividade",
+      "leaderboard": "Classificação",
+      "mightiestGovernor": "Gov. Mais Poderoso",
+      "tools": "Ferramentas"
+    }
+  },
+  "auth": {
+    "login": "Entrar",
+    "signup": "Cadastrar",
+    "logout": "Sair",
+    "username": "Nome de usuário",
+    "password": "Senha",
+    "confirmPassword": "Confirmar senha",
+    "displayName": "Nome de exibição",
+    "allianceName": "Nome da aliança",
+    "invitationToken": "Token de convite",
+    "welcomeBack": "Bem-vindo de volta",
+    "signInSubtitle": "Entre na sua conta",
+    "signupTitle": "Criar Aliança",
+    "signupSubtitle": "Cadastre-se como Administrador de Aliança",
+    "joinTitle": "Entrar na Aliança",
+    "joinSubtitle": "Use seu convite para entrar em uma aliança",
+    "setupTitle": "Configuração do Super Admin",
+    "setupSubtitle": "Crie a primeira conta de super administrador",
+    "setupWarning": "Esta é uma configuração única. O super admin tem acesso completo para gerenciar todas as alianças e usuários.",
+    "signingIn": "Entrando...",
+    "creatingAlliance": "Criando aliança...",
+    "joining": "Entrando...",
+    "createSuperAdmin": "Criar Super Admin",
+    "creating": "Criando...",
+    "usernamePlaceholder": "Escolha um nome de usuário único",
+    "usernameHint": "3–30 caracteres — apenas letras, números, - e _",
+    "displayNamePlaceholder": "Digite seu nome completo",
+    "displayNameHint": "Seu nome como aparecerá para outros",
+    "allianceNamePlaceholder": "Digite o nome da aliança",
+    "allianceNameHint": "Escolha um nome para sua nova aliança",
+    "passwordPlaceholder": "ex. MinhaSenha123!",
+    "passwordHint": "Mín. 6 caracteres, deve incluir pelo menos uma letra e um número",
+    "confirmPasswordPlaceholder": "Digite a senha novamente",
+    "tokenPlaceholder": "Digite o token de convite",
+    "tokenHint": "Fornecido pelo seu administrador de aliança",
+    "haveAccount": "Já tem uma conta?",
+    "noAccount": "Não tem uma conta?",
+    "haveInvitation": "Tem um convite?",
+    "wantCreateAlliance": "Quer criar uma aliança?",
+    "errors": {
+      "usernameExists": "Nome de usuário já existe",
+      "usernameInvalidChars": "Apenas letras, números, - e _",
+      "invalidCredentials": "Nome de usuário ou senha inválidos",
+      "userNotFound": "Usuário não encontrado",
+      "loginFailed": "Login falhou. Por favor, tente novamente.",
+      "signupFailed": "Cadastro falhou. Por favor, tente novamente.",
+      "joinFailed": "Falha ao entrar. Por favor, tente novamente.",
+      "setupFailed": "Configuração falhou. Por favor, tente novamente.",
+      "superAdminExists": "Super admin já existe",
+      "allianceCreationFailed": "Falha ao criar aliança",
+      "invalidToken": "Token de convite inválido ou expirado"
+    },
+    "recovery": {
+      "forgotPassword": "Esqueceu a senha?"
+    },
+    "signupForm": {
+      "recoveryQuestion": "Pergunta secreta",
+      "recoveryAnswer": "Resposta secreta",
+      "recoveryAnswerHint": "A resposta não diferencia maiúsculas de minúsculas"
+    }
+  },
+  "errors": {
+    "required": "Este campo é obrigatório",
+    "minLength": "Tamanho mínimo não atingido",
+    "maxLength": "Tamanho máximo excedido",
+    "min": "Valor abaixo do mínimo permitido",
+    "max": "Valor excede o máximo permitido",
+    "email": "Endereço de e-mail inválido",
+    "pattern": "Formato inválido",
+    "passwordMismatch": "As senhas não coincidem"
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "allianceSettings": "Configurações da Aliança",
+    "home": "Início",
+    "guides": "Guias"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Configurações da Aliança",
+      "tabs": {
+        "overview": "Aliança",
+        "invitations": "Convites",
+        "activitySettings": "Config. de Atividades",
+        "retroactive": "Atividades Retroativas",
+        "importExcel": "Importar Excel",
+        "discord": "Discord"
+      },
+      "allianceInfo": "Informações da Aliança",
+      "allianceName": "Nome da Aliança",
+      "allianceTag": "Tag da Aliança",
+      "allianceTagHint": "Identificador opcional de 3 caracteres (ex. RgW)",
+      "updateName": "Atualizar",
+      "memberList": "Lista de Membros",
+      "members": "membros",
+      "noMembers": "Nenhum membro ainda",
+      "displayName": "Nome",
+      "role": "Função",
+      "joinedDate": "Entrou",
+      "invitationManagement": "Gerenciamento de Convites",
+      "invitationDuration": "Duração (dias)",
+      "durationHint": "Dias até o convite expirar",
+      "createInvitation": "Criar Convite",
+      "noInvitations": "Nenhum convite criado ainda",
+      "expiresAt": "Expira",
+      "createdAt": "Criado",
+      "copyLink": "Copiar link de convite",
+      "revokeInvitation": "Revogar convite",
+      "revokeConfirm": "Tem certeza que deseja revogar este convite?",
+      "membersJoined": "Membros que entraram por este convite",
+      "nameUpdated": "Aliança atualizada com sucesso!",
+      "nameUpdateFailed": "Falha ao atualizar aliança",
+      "invitationCreated": "Convite criado e link copiado para a área de transferência!",
+      "invitationCreateFailed": "Falha ao criar convite",
+      "invitationRevoked": "Convite revogado com sucesso",
+      "invitationRevokeFailed": "Falha ao revogar convite",
+      "invitationLinkCopied": "Link de convite copiado para a área de transferência!",
+      "pointRules": {
+        "addRule": "Adicionar Nova Regra",
+        "currentRules": "Regras Atuais",
+        "activityType": "Tipo de Atividade",
+        "positionMin": "Posição Mín.",
+        "positionMax": "Posição Máx.",
+        "positionRange": "Faixa de Posição",
+        "points": "Pontos",
+        "create": "Criar Regra",
+        "noRules": "Nenhuma regra de pontos configurada ainda",
+        "noRulesHint": "Crie regras para calcular pontos com base na posição/rank. Sem regras, os pontos padrão serão usados.",
+        "deleteConfirm": "Tem certeza que deseja excluir esta regra?",
+        "activityConfiguration": "Configuração de Atividades",
+        "activityConfigurationHint": "Ative ou desative cada atividade, configure o modo de participação e o tiebreaker",
+        "participationMode": "Modo de Participação",
+        "participationPoints": "Pontos por participação",
+        "positionRangeError": "A posição mínima não pode ser maior que a posição máxima",
+        "created": "Regra de pontos criada com sucesso",
+        "createFailed": "Falha ao criar regra de pontos",
+        "deleted": "Regra de pontos excluída com sucesso",
+        "deleteFailed": "Falha ao excluir regra de pontos",
+        "participationModeFailed": "Falha ao atualizar modo de participação",
+        "participationPointsFailed": "Falha ao atualizar pontos de participação",
+        "activityEnabled": "Atividade habilitada",
+        "activityEnabledFailed": "Falha ao atualizar status da atividade",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Falha ao atualizar tiebreaker"
+      },
+      "leaderboard": {
+        "title": "Configurações da Classificação",
+        "hint": "Configure quantas semanas são incluídas na classificação",
+        "weeksMultiplier": "Multiplicador de temporada",
+        "multiplierOption": "{{weeks}} semanas (×{{multiplier}})",
+        "weeksHint": "{{weeks}} semanas incluídas na classificação",
+        "multiplierUpdated": "Multiplicador de temporada atualizado",
+        "multiplierFailed": "Falha ao atualizar multiplicador de temporada"
+      },
+      "dangerZone": {
+        "title": "Zona de Perigo",
+        "deleteAllActivities": "Excluir todas as atividades",
+        "deleteAllActivitiesDescription": "Exclua permanentemente todas as atividades enviadas pelos membros da aliança. Esta ação não pode ser desfeita.",
+        "deleteAllActivitiesConfirm": "Tem certeza que deseja excluir TODAS as atividades? Isso apagará permanentemente o histórico completo de atividades de todos os membros.",
+        "deleteAllActivitiesSuccess": "Todas as atividades foram excluídas",
+        "deleteAllActivitiesFailed": "Falha ao excluir atividades"
+      }
+    },
+    "retroactive": {
+      "title": "Adicionar Atividade Retroativa",
+      "description": "Como admin, você pode adicionar atividades para membros da aliança das últimas 6 semanas. Selecione um membro, escolha uma semana e insira os detalhes.",
+      "selectMember": "Selecionar Membro",
+      "memberHint": "Escolha o membro da aliança para quem deseja adicionar uma atividade",
+      "selectWeek": "Selecionar Semana",
+      "weekHint": "Escolha a semana em que a atividade ocorreu",
+      "currentWeek": "Semana Atual",
+      "weeksAgo": "{{count}} semana(s) atrás",
+      "selectActivity": "Tipo de Atividade",
+      "activityHint": "Apenas atividades disponíveis para a semana selecionada são exibidas",
+      "noActivities": "Nenhuma atividade disponível para esta semana",
+      "position": "Posição",
+      "positionHint": "Digite a posição ou rank do membro",
+      "pointsPreview": "Pontos a serem concedidos",
+      "submit": "Adicionar Atividade",
+      "submitting": "Adicionando atividade...",
+      "success": "Atividade adicionada com sucesso!",
+      "error": "Falha ao adicionar atividade. Por favor, tente novamente."
+    },
+    "import": {
+      "title": "Importar Atividades do Excel",
+      "description": "Faça upload de um modelo preenchido para importar atividades retroativas em lote para os membros da sua aliança.",
+      "templateHint": "Primeiro, baixe e preencha o modelo de importação.",
+      "downloadTemplate": "Baixar Modelo",
+      "activityFilter": "Filtrar por atividade",
+      "activityFilterAll": "Todas as atividades",
+      "uploadFile": "Escolher arquivo",
+      "fileHint": "Aceita .xlsx, .xls, .csv",
+      "back": "Voltar",
+      "preview": {
+        "title": "Pré-visualização",
+        "rowsFound": "{{count}} linhas encontradas",
+        "playerColumn": "Jogador",
+        "activityColumn": "Atividade",
+        "positionColumn": "Posição",
+        "weekColumn": "Semana",
+        "pointsColumn": "Pontos",
+        "statusColumn": "Status",
+        "updateColumn": "Atualizar?",
+        "selectPlayer": "Selecionar jogador",
+        "updateAll": "Atualizar todos os existentes"
+      },
+      "status": {
+        "ready": "Pronto para inserir",
+        "willUpdate": "Irá atualizar entrada existente",
+        "unmatched": "Jogador não encontrado — selecione manualmente",
+        "invalid": {
+          "invalid_activity": "Tipo de atividade desconhecido ou desativado",
+          "disabled_activity": "Este tipo de atividade está desativado",
+          "invalid_date": "Data inválida ou ausente",
+          "invalid_position": "Posição inválida (deve ser ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "Importar",
+        "importing": "Importando..."
+      },
+      "result": {
+        "title": "Importação concluída",
+        "inserted": "inserido(s)",
+        "updated": "atualizado(s)",
+        "skipped": "ignorado(s)",
+        "error": "Falha na importação. Por favor, tente novamente."
+      },
+      "reset": "Importar outro arquivo"
+    }
+  },
+  "activityInput": {
+    "title": "Enviar Atividade",
+    "subtitle": "Registre sua atividade e ganhe pontos",
+    "activityType": "Tipo de Atividade",
+    "position": "Posição/Rank",
+    "positionPlaceholder": "ex. 1, 5, 10...",
+    "positionHint": "Digite sua posição ou rank",
+    "submit": "Enviar Atividade",
+    "submitting": "Enviando...",
+    "typeHint": "Apenas atividades disponíveis para a semana selecionada são exibidas",
+    "success": "Atividade enviada com sucesso!",
+    "error": "Falha ao enviar atividade",
+    "participated": "Participei esta semana",
+    "fillAllFields": "Por favor, preencha todos os campos obrigatórios"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "Nenhuma atividade disponível esta semana",
+    "totalPoints": "pontos totais",
+    "pointsShort": "pts",
+    "currentWeek": "Semana Atual",
+    "lastWeek": "Semana Passada",
+    "weeksAgo": "semanas atrás"
+  },
+  "activitiesDetails": {
+    "title": "Detalhes das Atividades"
+  },
+  "common": {
+    "points": "pontos",
+    "close": "Fechar",
+    "actions": "Ações",
+    "delete": "Excluir",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "update": "Atualizar",
+    "back": "Voltar",
+    "add": "Adicionar",
+    "edit": "Editar",
+    "name": "Nome",
+    "description": "Descrição",
+    "image": "Imagem",
+    "icon": "Ícone",
+    "order": "Ordem",
+    "active": "Ativo",
+    "all": "Todos",
+    "none": "Nenhum",
+    "saved": "Salvo",
+    "created": "Criado",
+    "deleted": "Excluído",
+    "deleteConfirm": "Tem certeza que deseja excluir \"{{name}}\"?",
+    "uploadImage": "Fazer upload de imagem",
+    "next": "Próximo",
+    "clear": "Limpar"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Painel do Super Admin",
+      "subtitle": "Visão geral e gerenciamento global do sistema",
+      "totalAlliances": "Total de Alianças",
+      "totalUsers": "Total de Usuários",
+      "totalActivities": "Total de Atividades",
+      "activeInvitations": "Convites Ativos",
+      "quickActions": "Ações Rápidas",
+      "manageAlliances": "Gerenciar Alianças",
+      "manageAlliancesDesc": "Visualizar e gerenciar todas as alianças",
+      "manageUsers": "Gerenciar Usuários",
+      "manageUsersDesc": "Visualizar e gerenciar todos os usuários",
+      "manageGuidesData": "Dados de Referência dos Guias",
+      "manageGuidesDataDesc": "Gerenciar campeões, habilidades, cavalos e gemas"
+    },
+    "alliances": {
+      "title": "Gerenciamento de Alianças",
+      "subtitle": "Gerencie todas as alianças do sistema",
+      "noAlliances": "Nenhuma aliança criada ainda",
+      "name": "Nome da Aliança",
+      "tag": "Tag",
+      "admin": "Admin",
+      "members": "Membros",
+      "created": "Criado",
+      "actions": "Ações",
+      "deleteConfirm": "Tem certeza que deseja excluir a aliança \"{{name}}\"? Isso também excluirá todos os usuários, atividades e convites associados.",
+      "loadFailed": "Falha ao carregar alianças",
+      "updated": "Aliança atualizada com sucesso",
+      "updateFailed": "Falha ao atualizar aliança",
+      "deleted": "Aliança excluída com sucesso",
+      "deleteFailed": "Falha ao excluir aliança"
+    },
+    "users": {
+      "title": "Gerenciamento de Usuários",
+      "subtitle": "Gerencie todos os usuários do sistema",
+      "noUsers": "Nenhum usuário encontrado",
+      "displayName": "Nome de Exibição",
+      "username": "Nome de Usuário",
+      "role": "Função",
+      "alliance": "Aliança",
+      "noAlliance": "Sem aliança",
+      "created": "Criado",
+      "actions": "Ações",
+      "deleteConfirm": "Tem certeza que deseja excluir o usuário \"{{name}}\"? Esta ação não pode ser desfeita.",
+      "loadFailed": "Falha ao carregar usuários",
+      "updated": "Usuário atualizado com sucesso",
+      "updateFailed": "Falha ao atualizar usuário",
+      "deleted": "Usuário excluído com sucesso"
+    },
+    "guidesData": "Dados de Referência dos Guias",
+    "guidesDataSubtitle": "Gerenciar campeões, habilidades, cavalos, ornamentos e gemas",
+    "champions": "Campeões",
+    "skills": "Habilidades",
+    "assignSkills": "Atribuir Habilidades",
+    "temperaments": "Temperamentos",
+    "ornaments": "Ornamentos",
+    "gems": "Gemas",
+    "rings": "Anéis",
+    "gemType": {
+      "label": "Tipo",
+      "strategy": "Estratégia",
+      "hero": "Herói",
+      "tactics": "Táticas"
+    }
+  },
+  "super_admin": "Super Admin",
+  "admin": "Admin",
+  "member": "Membro",
+  "pwa": {
+    "offline": "Você está offline",
+    "online": "Você está online",
+    "updateAvailable": "Uma nova versão está disponível",
+    "reload": "Recarregar",
+    "install": "Instale o app para uma melhor experiência",
+    "installButton": "Instalar",
+    "iosInstruction": "Toque no botão de compartilhar e depois em 'Adicionar à Tela Inicial'",
+    "installDismiss": "Fechar banner de instalação"
+  },
+  "releaseNotes": {
+    "title": "Novidades",
+    "markAsSeen": "Marcar como lido"
+  },
+  "tools": {
+    "gemCalcDesc": "Calcule o ganho de pontos ao equipar uma gema no seu comandante.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Encontre as melhores combinações de temperamento para os seus comandantes."
+  },
+  "packValue": {
+    "title": "Calculadora de Valor de Pack",
+    "description": "Avalie o valor de um pack do jogo",
+    "addItem": "Adicionar item",
+    "packPrice": "Preço do pack (Apex Coins)",
+    "calculate": "Calcular",
+    "reset": "Resetar",
+    "noItems": "Adicione pelo menos um item para calcular",
+    "units": {
+      "hours": "Horas",
+      "qty": "Qtd"
+    },
+    "result": {
+      "title": "Resultado",
+      "tier": {
+        "terrible": "Terrível",
+        "average": "Médio",
+        "good": "Bom",
+        "excellent": "Excelente"
+      },
+      "breakdown": "Detalhamento"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "Governador Mais Poderoso",
+    "subtitle": "Custos de registro por rank",
+    "description": "Para participar do evento Governador Mais Poderoso, os jogadores devem gastar pontos. Quanto maior o rank alvo, maior o custo.",
+    "rank": "Rank",
+    "weeklyTarget": "Meta Semanal",
+    "cost": "Custo",
+    "notice": "O sistema DKP está em desenvolvimento. Os custos mostrados são indicativos e podem mudar."
+  },
+  "gemCalculator": {
+    "title": "Calculadora de Gemas",
+    "back": "Voltar",
+    "troopType": "Tipo de Tropa",
+    "troopSwordsmen": "Espadachins",
+    "troopArchers": "Arqueiros",
+    "troopPikemen": "Lanceiros",
+    "troopCavalry": "Cavalaria",
+    "troopTier": "Tier da Tropa",
+    "troopSize": "Tamanho da Tropa",
+    "troopSizeHint": "Número de tropas (máx 500.000)",
+    "healthBonus": "Bônus de Saúde (%)",
+    "mightAttack": "Ataque de Força (%)",
+    "mightDefense": "Defesa de Força (%)",
+    "gemType": "Tipo de Gema",
+    "gemHealth": "Gema de Saúde",
+    "gemCapacity": "Gema de Capacidade",
+    "gemRarity": "Raridade da Gema",
+    "verbose": "Modo verboso (detalhes do cálculo)",
+    "analyze": "Analisar",
+    "score": "Ganho",
+    "rawBonus": "Bônus Bruto",
+    "verboseTitle": "Detalhes do Cálculo",
+    "verboseScoreBefore": "Pontuação antes",
+    "verboseScoreAfter": "Pontuação depois",
+    "verboseGain": "Ganho",
+    "verboseLegionSize": "Tamanho da legião",
+    "verbosePerUnit": "Pontuação por unidade (antes)",
+    "verbosePerUnitAfter": "Pontuação por unidade (depois)",
+    "verboseGemValue": "Bônus da gema",
+    "verboseNewHealthBonus": "Novo bônus de saúde",
+    "noResult": "Preencha o formulário e clique em Analisar"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "Qual era o nome do seu primeiro animal de estimação?",
+      "q2": "Em qual cidade você nasceu?",
+      "q3": "Qual é o primeiro nome do seu melhor amigo de infância?",
+      "q4": "Qual era seu apelido de infância?",
+      "q5": "Qual é o sobrenome de solteira da sua mãe?",
+      "q6": "Qual era o nome da sua escola primária?",
+      "q7": "Em qual cidade você conheceu seu parceiro(a)?",
+      "q8": "Qual é sua comida favorita?",
+      "q9": "Qual era a marca do seu primeiro carro?",
+      "q10": "Qual foi seu primeiro destino de viagem ao exterior?"
+    },
+    "page": {
+      "title": "Recuperação de Conta",
+      "step1": {
+        "usernamePlaceholder": "Digite seu nome de usuário",
+        "submit": "Encontrar minha conta"
+      },
+      "step2": {
+        "answerPlaceholder": "Sua resposta",
+        "newPassword": "Nova senha",
+        "confirmPassword": "Confirmar senha",
+        "submit": "Redefinir senha"
+      },
+      "step3": {
+        "success": "Senha redefinida com sucesso!"
+      },
+      "backToLogin": "Voltar ao login"
+    },
+    "errors": {
+      "userNotFound": "Nenhuma conta encontrada para este nome de usuário.",
+      "wrongAnswer": "Resposta incorreta.",
+      "wrongAnswerRemaining": "{{count}} tentativa(s) restante(s).",
+      "locked": "Conta bloqueada até {{time}}.",
+      "passwordTooShort": "A senha deve ter pelo menos 6 caracteres."
+    }
+  },
+  "accountSettings": {
+    "title": "Minha Conta",
+    "tabAccount": "Minha Conta",
+    "tabPreferences": "Minhas Preferências",
+    "displayName": {
+      "title": "Nome de Exibição",
+      "save": "Salvar",
+      "success": "Nome de exibição atualizado",
+      "error": "Falha ao atualizar nome de exibição"
+    },
+    "password": {
+      "title": "Alterar Senha",
+      "newPassword": "Nova Senha",
+      "confirmPassword": "Confirmar Senha",
+      "save": "Alterar Senha",
+      "success": "Senha atualizada com sucesso",
+      "error": "Falha ao atualizar senha"
+    },
+    "recovery": {
+      "title": "Pergunta de Recuperação",
+      "question": "Pergunta Secreta",
+      "answer": "Nova Resposta",
+      "answerHint": "A resposta não diferencia maiúsculas de minúsculas",
+      "save": "Atualizar",
+      "success": "Pergunta de recuperação atualizada",
+      "error": "Falha ao atualizar pergunta de recuperação"
+    },
+    "language": {
+      "title": "Idioma do Aplicativo"
+    },
+    "colorScheme": {
+      "title": "Aparência",
+      "light": "Claro",
+      "dark": "Escuro",
+      "auto": "Automático (sistema)",
+      "glass": "Vidro Claro",
+      "glassDark": "Vidro Escuro",
+      "highContrast": "Alto Contraste"
+    }
+  },
+  "discord": {
+    "channelsTitle": "Canais do Discord",
+    "channelsSubtitle": "Configure canais webhook do Discord para enviar mensagens",
+    "channelName": "Nome do Canal",
+    "channelNamePlaceholder": "ex. general-reminder",
+    "webhookUrl": "URL do Webhook",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "URL do webhook do Discord em Configurações do Servidor > Integrações",
+    "defaultMessage": "Mensagem Padrão (opcional)",
+    "defaultMessagePlaceholder": "⏰ Lembrete: Digite seu ranking do GE",
+    "defaultMessageHint": "Pré-carregada quando você seleciona este canal — editável antes de enviar",
+    "addChannel": "Adicionar Canal",
+    "deleteChannel": "Excluir canal",
+    "deleteConfirm": "Tem certeza que deseja excluir o canal \"{{name}}\"?",
+    "noChannels": "Nenhum canal do Discord configurado ainda",
+    "noChannelsForMessage": "Adicione pelo menos um canal para enviar mensagens",
+    "channelAdded": "Canal do Discord adicionado com sucesso",
+    "channelAddFailed": "Falha ao adicionar canal do Discord",
+    "channelUpdated": "Canal do Discord atualizado com sucesso",
+    "channelUpdateFailed": "Falha ao atualizar canal do Discord",
+    "channelDeleted": "Canal do Discord excluído com sucesso",
+    "channelDeleteFailed": "Falha ao excluir canal do Discord",
+    "editChannel": "Editar canal",
+    "editChannelTitle": "Editando canal:",
+    "loadFailed": "Falha ao carregar canais do Discord",
+    "sendMessageTitle": "Enviar Mensagem",
+    "sendMessageSubtitle": "Selecione um canal, ajuste a mensagem se necessário e envie",
+    "selectChannel": "Selecionar Canal",
+    "messageContent": "Mensagem",
+    "messageContentPlaceholder": "⏰ Lembrete: Digite seu ranking do GE",
+    "sendMessage": "Enviar para o Discord",
+    "messageSent": "Mensagem enviada para o Discord com sucesso",
+    "messageSendFailed": "Falha ao enviar mensagem para o Discord",
+    "errors": {
+      "invalidWebhookUrl": "Deve ser uma URL de webhook válida do Discord (https://discord.com/api/webhooks/...)"
+    }
+  },
+  "guides": {
+    "title": "Guias",
+    "community": "Comunidade",
+    "my_guides": "Meus Guias",
+    "create": "Criar um guia",
+    "limit_reached": "Limite de 10 guias atingido",
+    "no_guides": "Nenhum guia ainda",
+    "count": "{{ count }}/10 guias",
+    "categories": {
+      "formation": "Formação",
+      "evenement": "Evento",
+      "general": "Geral"
+    },
+    "status": {
+      "published": "Publicado",
+      "draft": "Rascunho"
+    },
+    "by": "Por",
+    "view": "Ver",
+    "edit": "Editar",
+    "publish": "Publicar",
+    "unpublish": "Despublicar",
+    "delete": "Excluir",
+    "published_success": "Guia publicado",
+    "unpublished_success": "Guia despublicado",
+    "champion": "Campeão",
+    "champion_slot": "Slot de Campeão",
+    "add_champion": "Adicionar campeão",
+    "champion_count": "{{ count }} campeão(ões) configurado(s)",
+    "formation_hint": "Configure até 3 campeões. Arraste para reordenar.",
+    "skill": "Habilidade",
+    "skills": "Habilidades",
+    "gems": "Gemas",
+    "hero_section": "Herói",
+    "horse_section": "Cavalo",
+    "traits": "Temperamentos do cavalo",
+    "trait": "Temperamento",
+    "add_trait": "Adicionar temperamento",
+    "ornament": "Ornamento",
+    "ring": "Anel",
+    "description": "Descrição / Notas do autor",
+    "editor": {
+      "title_new": "Criar um guia",
+      "title_edit": "Editar guia",
+      "step_basic": "Informações",
+      "step_content": "Conteúdo",
+      "step_review": "Resumo",
+      "title_label": "Título do guia",
+      "category_label": "Categoria",
+      "description_label": "Descrição",
+      "publish_now": "Publicar agora",
+      "save_draft": "Salvar como rascunho",
+      "save": "Salvar"
+    },
+    "confirm_delete": "Excluir este guia?",
+    "confirm_delete_msg": "Esta ação não pode ser desfeita.",
+    "errors": {
+      "limitReached": "Você atingiu o máximo de 10 guias.",
+      "slugDuplicate": "Este título é muito semelhante a um guia existente. Por favor, ajuste o título.",
+      "notFound": "Guia não encontrado.",
+      "unauthorized": "Você não está autorizado a modificar este guia.",
+      "unknown": "Ocorreu um erro inesperado. Por favor, tente novamente.",
+      "invalidFileType": "Tipo de arquivo inválido. Permitidos: PNG, JPEG, WebP."
+    },
+    "public_list_title": "Guias da Comunidade",
+    "public_list_empty": "Nenhum guia publicado ainda",
+    "copy_link": "Copiar link",
+    "link_copied": "Link copiado!",
+    "back_to_list": "Voltar aos guias",
+    "guide_not_found": "Guia não encontrado",
+    "upvote": "Upvote",
+    "upvoted": "Upvotado",
+    "champion_slot": "Campeão {{n}}",
+    "author_notes": "Notas do autor"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "Rastreador de Atividades da Aliança",
+      "title1": "Jogue com Inteligência.",
+      "title2": "Vença Juntos.",
+      "subtitleBefore": "Desenvolvido para cada jogador ativo — não apenas para quem gasta. Acompanhe as atividades da aliança, ganhe pontos estratégicos e alcance o",
+      "subtitleStrong": "Top 10 Governador Mais Poderoso",
+      "subtitleAfter": "com significativamente menos speed-ups e recursos.",
+      "ctaLogin": "Entrar",
+      "ctaJoin": "Entrar com Convite"
+    },
+    "steps": {
+      "label": "COMO FUNCIONA",
+      "title": "Três passos para o topo",
+      "step1": {
+        "title": "Registre Suas Atividades",
+        "description": "Envie batalhas KvK, lutas de Legião, Expedições Douradas e mais. Cada evento, cada semana — sua contribuição registrada."
+      },
+      "step2": {
+        "title": "Ganhe Pontos Estratégicos",
+        "description": "Os pontos são calculados com base na sua posição e desempenho. Regras configuráveis recompensam os jogadores que aparecem e competem."
+      },
+      "step3": {
+        "title": "Suba na Classificação",
+        "description": "Um placar rotativo de 6 semanas mantém a competição fresca e recompensa a consistência em vez de explosões individuais."
+      }
+    },
+    "benefits": {
+      "label": "POR QUE IMPORTA",
+      "title": "Todo o seu servidor ganha",
+      "benefit1": {
+        "title": "Desenvolvido para Jogadores Ativos",
+        "description": "Sem pay-to-win. Atividade pura e participação inteligente são o que te move na classificação — qualquer um pode competir."
+      },
+      "benefit2": {
+        "title": "Economize Recursos em Toda a Aliança",
+        "description": "O rastreamento estruturado otimiza quem participa e quando, preservando speed-ups e recursos para preparação do KvK e Império Mais Poderoso."
+      },
+      "benefit3": {
+        "title": "Alcance o Top 10 Governador Mais Poderoso",
+        "description": "Conquiste os heróis mais poderosos com menos recursos. A diferença entre quase e campeão é medida em esforço organizado."
+      }
+    },
+    "cta": {
+      "title": "Pronto para liderar sua aliança?",
+      "subtitle": "Crie sua aliança e comece a acompanhar o progresso dos seus membros hoje.",
+      "button": "Criar sua Aliança"
+    },
+    "footer": "Activity Tracker — Jogue mais inteligente, compita mais forte."
+  }
+}

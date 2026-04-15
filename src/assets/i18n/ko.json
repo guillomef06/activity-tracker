@@ -1,0 +1,724 @@
+{
+  "app": {
+    "subtitle": "활동을 추적하고 6주 누적 점수를 확인하세요"
+  },
+  "home": {
+    "tabs": {
+      "submit": "활동 제출",
+      "leaderboard": "리더보드",
+      "mightiestGovernor": "최강 총독",
+      "tools": "도구"
+    }
+  },
+  "auth": {
+    "login": "로그인",
+    "signup": "회원가입",
+    "logout": "로그아웃",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "confirmPassword": "비밀번호 확인",
+    "displayName": "표시 이름",
+    "allianceName": "동맹 이름",
+    "invitationToken": "초대 토큰",
+    "welcomeBack": "다시 오신 것을 환영합니다",
+    "signInSubtitle": "계정에 로그인하세요",
+    "signupTitle": "동맹 만들기",
+    "signupSubtitle": "동맹 관리자로 가입하세요",
+    "joinTitle": "동맹 참가",
+    "joinSubtitle": "초대를 이용해 동맹에 참가하세요",
+    "setupTitle": "슈퍼 관리자 설정",
+    "setupSubtitle": "첫 번째 슈퍼 관리자 계정 만들기",
+    "setupWarning": "이것은 일회성 설정입니다. 슈퍼 관리자는 모든 동맹과 사용자를 관리할 완전한 권한을 가집니다.",
+    "signingIn": "로그인 중...",
+    "creatingAlliance": "동맹 만드는 중...",
+    "joining": "참가 중...",
+    "createSuperAdmin": "슈퍼 관리자 만들기",
+    "creating": "만드는 중...",
+    "usernamePlaceholder": "고유한 사용자 이름 선택",
+    "usernameHint": "3-30자 — 영문자, 숫자, - 및 _ 만 사용 가능",
+    "displayNamePlaceholder": "전체 이름 입력",
+    "displayNameHint": "다른 사람에게 표시될 이름",
+    "allianceNamePlaceholder": "동맹 이름 입력",
+    "allianceNameHint": "새 동맹의 이름을 선택하세요",
+    "passwordPlaceholder": "예: MyPass123!",
+    "passwordHint": "최소 6자, 영문자 및 숫자 각 1개 이상 포함",
+    "confirmPasswordPlaceholder": "비밀번호 재입력",
+    "tokenPlaceholder": "초대 토큰 입력",
+    "tokenHint": "동맹 관리자가 제공한 토큰",
+    "haveAccount": "이미 계정이 있으신가요?",
+    "noAccount": "계정이 없으신가요?",
+    "haveInvitation": "초대장이 있으신가요?",
+    "wantCreateAlliance": "동맹을 만들고 싶으신가요?",
+    "errors": {
+      "usernameExists": "이미 사용 중인 사용자 이름입니다",
+      "usernameInvalidChars": "영문자, 숫자, - 및 _ 만 사용 가능",
+      "invalidCredentials": "잘못된 사용자 이름 또는 비밀번호",
+      "userNotFound": "사용자를 찾을 수 없습니다",
+      "loginFailed": "로그인 실패. 다시 시도해 주세요.",
+      "signupFailed": "가입 실패. 다시 시도해 주세요.",
+      "joinFailed": "참가 실패. 다시 시도해 주세요.",
+      "setupFailed": "설정 실패. 다시 시도해 주세요.",
+      "superAdminExists": "슈퍼 관리자가 이미 존재합니다",
+      "allianceCreationFailed": "동맹 생성 실패",
+      "invalidToken": "유효하지 않거나 만료된 초대 토큰"
+    },
+    "recovery": {
+      "forgotPassword": "비밀번호를 잊으셨나요?"
+    },
+    "signupForm": {
+      "recoveryQuestion": "비밀 질문",
+      "recoveryAnswer": "비밀 답변",
+      "recoveryAnswerHint": "답변은 대소문자를 구분하지 않습니다"
+    }
+  },
+  "errors": {
+    "required": "이 필드는 필수입니다",
+    "minLength": "최소 길이를 충족하지 않습니다",
+    "maxLength": "최대 길이를 초과했습니다",
+    "min": "값이 허용된 최솟값보다 낮습니다",
+    "max": "값이 허용된 최댓값을 초과합니다",
+    "email": "유효하지 않은 이메일 주소",
+    "pattern": "형식이 올바르지 않습니다",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다"
+  },
+  "nav": {
+    "superAdminDashboard": "슈퍼 관리자",
+    "allianceSettings": "동맹 설정",
+    "home": "홈",
+    "guides": "가이드"
+  },
+  "alliance": {
+    "settings": {
+      "title": "동맹 설정",
+      "tabs": {
+        "overview": "동맹",
+        "invitations": "초대",
+        "activitySettings": "활동 설정",
+        "retroactive": "소급 활동",
+        "importExcel": "엑셀 가져오기",
+        "discord": "Discord"
+      },
+      "allianceInfo": "동맹 정보",
+      "allianceName": "동맹 이름",
+      "allianceTag": "동맹 태그",
+      "allianceTagHint": "선택적 3자 식별자 (예: RgW)",
+      "updateName": "업데이트",
+      "memberList": "멤버 목록",
+      "members": "멤버",
+      "noMembers": "아직 멤버가 없습니다",
+      "displayName": "이름",
+      "role": "역할",
+      "joinedDate": "가입일",
+      "invitationManagement": "초대 관리",
+      "invitationDuration": "기간 (일)",
+      "durationHint": "초대가 만료되는 일수",
+      "createInvitation": "초대 만들기",
+      "noInvitations": "아직 생성된 초대가 없습니다",
+      "expiresAt": "만료일",
+      "createdAt": "생성일",
+      "copyLink": "초대 링크 복사",
+      "revokeInvitation": "초대 취소",
+      "revokeConfirm": "이 초대를 취소하시겠습니까?",
+      "membersJoined": "이 초대로 가입한 멤버",
+      "nameUpdated": "동맹이 성공적으로 업데이트되었습니다!",
+      "nameUpdateFailed": "동맹 업데이트 실패",
+      "invitationCreated": "초대가 생성되었고 링크가 클립보드에 복사되었습니다!",
+      "invitationCreateFailed": "초대 생성 실패",
+      "invitationRevoked": "초대가 성공적으로 취소되었습니다",
+      "invitationRevokeFailed": "초대 취소 실패",
+      "invitationLinkCopied": "초대 링크가 클립보드에 복사되었습니다!",
+      "pointRules": {
+        "addRule": "새 규칙 추가",
+        "currentRules": "현재 규칙",
+        "activityType": "활동 유형",
+        "positionMin": "최소 순위",
+        "positionMax": "최대 순위",
+        "positionRange": "순위 범위",
+        "points": "점수",
+        "create": "규칙 만들기",
+        "noRules": "아직 점수 규칙이 설정되지 않았습니다",
+        "noRulesHint": "순위/위치에 따른 점수 계산 규칙을 만드세요. 규칙이 없으면 기본 점수가 사용됩니다.",
+        "deleteConfirm": "이 규칙을 삭제하시겠습니까?",
+        "activityConfiguration": "활동 설정",
+        "activityConfigurationHint": "각 활동을 활성화 또는 비활성화하고, 참가 모드 및 타이브레이커 설정 구성",
+        "participationMode": "참가 모드",
+        "participationPoints": "참가 점수",
+        "positionRangeError": "최소 순위는 최대 순위보다 클 수 없습니다",
+        "created": "점수 규칙이 성공적으로 생성되었습니다",
+        "createFailed": "점수 규칙 생성 실패",
+        "deleted": "점수 규칙이 성공적으로 삭제되었습니다",
+        "deleteFailed": "점수 규칙 삭제 실패",
+        "participationModeFailed": "참가 모드 업데이트 실패",
+        "participationPointsFailed": "참가 점수 업데이트 실패",
+        "activityEnabled": "활동 활성화됨",
+        "activityEnabledFailed": "활동 상태 업데이트 실패",
+        "tiebreaker": "타이브레이커",
+        "tiebreakerFailed": "타이브레이커 업데이트 실패"
+      },
+      "leaderboard": {
+        "title": "리더보드 설정",
+        "hint": "랭킹에 포함될 주 수를 설정하세요",
+        "weeksMultiplier": "시즌 배율",
+        "multiplierOption": "{{weeks}}주 (×{{multiplier}})",
+        "weeksHint": "리더보드에 포함된 {{weeks}}주",
+        "multiplierUpdated": "시즌 배율이 업데이트되었습니다",
+        "multiplierFailed": "시즌 배율 업데이트 실패"
+      },
+      "dangerZone": {
+        "title": "위험 구역",
+        "deleteAllActivities": "모든 활동 삭제",
+        "deleteAllActivitiesDescription": "동맹 멤버가 제출한 모든 활동을 영구적으로 삭제합니다. 이 작업은 취소할 수 없습니다.",
+        "deleteAllActivitiesConfirm": "모든 활동을 삭제하시겠습니까? 이 작업은 모든 멤버의 전체 활동 기록을 영구적으로 삭제합니다.",
+        "deleteAllActivitiesSuccess": "모든 활동이 삭제되었습니다",
+        "deleteAllActivitiesFailed": "활동 삭제 실패"
+      }
+    },
+    "retroactive": {
+      "title": "소급 활동 추가",
+      "description": "관리자로서 지난 6주 동안의 동맹 멤버 활동을 추가할 수 있습니다. 멤버를 선택하고 주와 활동 세부 정보를 입력하세요.",
+      "selectMember": "멤버 선택",
+      "memberHint": "활동을 추가할 동맹 멤버를 선택하세요",
+      "selectWeek": "주 선택",
+      "weekHint": "활동이 일어난 주를 선택하세요",
+      "currentWeek": "이번 주",
+      "weeksAgo": "{{count}}주 전",
+      "selectActivity": "활동 유형",
+      "activityHint": "선택한 주에 사용 가능한 활동만 표시됩니다",
+      "noActivities": "이번 주에 사용 가능한 활동이 없습니다",
+      "position": "순위",
+      "positionHint": "멤버의 순위 또는 위치를 입력하세요",
+      "pointsPreview": "부여될 점수",
+      "submit": "활동 추가",
+      "submitting": "활동 추가 중...",
+      "success": "활동이 성공적으로 추가되었습니다!",
+      "error": "활동 추가 실패. 다시 시도해 주세요."
+    },
+    "import": {
+      "title": "엑셀에서 활동 가져오기",
+      "description": "작성된 템플릿을 업로드하여 동맹 멤버의 소급 활동을 일괄 가져오기 합니다.",
+      "templateHint": "먼저 가져오기 템플릿을 다운로드하고 작성하세요.",
+      "downloadTemplate": "템플릿 다운로드",
+      "activityFilter": "활동으로 필터",
+      "activityFilterAll": "모든 활동",
+      "uploadFile": "파일 선택",
+      "fileHint": ".xlsx, .xls, .csv 허용",
+      "back": "뒤로",
+      "preview": {
+        "title": "미리보기",
+        "rowsFound": "{{count}}개 행 발견",
+        "playerColumn": "플레이어",
+        "activityColumn": "활동",
+        "positionColumn": "순위",
+        "weekColumn": "주",
+        "pointsColumn": "점수",
+        "statusColumn": "상태",
+        "updateColumn": "업데이트?",
+        "selectPlayer": "플레이어 선택",
+        "updateAll": "기존 항목 모두 업데이트"
+      },
+      "status": {
+        "ready": "삽입 준비 완료",
+        "willUpdate": "기존 항목 업데이트 예정",
+        "unmatched": "플레이어를 찾을 수 없습니다 — 수동으로 선택하세요",
+        "invalid": {
+          "invalid_activity": "알 수 없거나 비활성화된 활동 유형",
+          "disabled_activity": "이 활동 유형은 비활성화되어 있습니다",
+          "invalid_date": "유효하지 않거나 누락된 날짜",
+          "invalid_position": "유효하지 않은 순위 (1 이상이어야 합니다)"
+        }
+      },
+      "confirm": {
+        "button": "가져오기",
+        "importing": "가져오는 중..."
+      },
+      "result": {
+        "title": "가져오기 완료",
+        "inserted": "삽입됨",
+        "updated": "업데이트됨",
+        "skipped": "건너뜀",
+        "error": "가져오기 실패. 다시 시도해 주세요."
+      },
+      "reset": "다른 파일 가져오기"
+    }
+  },
+  "activityInput": {
+    "title": "활동 제출",
+    "subtitle": "활동을 기록하고 점수를 획득하세요",
+    "activityType": "활동 유형",
+    "position": "순위/위치",
+    "positionPlaceholder": "예: 1, 5, 10...",
+    "positionHint": "순위 또는 위치를 입력하세요",
+    "submit": "활동 제출",
+    "submitting": "제출 중...",
+    "typeHint": "선택한 주에 사용 가능한 활동만 표시됩니다",
+    "success": "활동이 성공적으로 제출되었습니다!",
+    "error": "활동 제출 실패",
+    "participated": "이번 주에 참가했습니다",
+    "fillAllFields": "필수 필드를 모두 입력해 주세요"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "이번 주 사용 가능한 활동이 없습니다",
+    "totalPoints": "총 점수",
+    "pointsShort": "점",
+    "currentWeek": "이번 주",
+    "lastWeek": "지난 주",
+    "weeksAgo": "주 전"
+  },
+  "activitiesDetails": {
+    "title": "활동 세부 정보"
+  },
+  "common": {
+    "points": "점수",
+    "close": "닫기",
+    "actions": "작업",
+    "delete": "삭제",
+    "confirm": "확인",
+    "cancel": "취소",
+    "save": "저장",
+    "saving": "저장 중...",
+    "update": "업데이트",
+    "back": "뒤로",
+    "add": "추가",
+    "edit": "편집",
+    "name": "이름",
+    "description": "설명",
+    "image": "이미지",
+    "icon": "아이콘",
+    "order": "순서",
+    "active": "활성",
+    "all": "전체",
+    "none": "없음",
+    "saved": "저장됨",
+    "created": "생성됨",
+    "deleted": "삭제됨",
+    "deleteConfirm": "\"{{name}}\"을(를) 삭제하시겠습니까?",
+    "uploadImage": "이미지 업로드",
+    "next": "다음",
+    "clear": "지우기"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "슈퍼 관리자 대시보드",
+      "subtitle": "글로벌 시스템 개요 및 관리",
+      "totalAlliances": "총 동맹 수",
+      "totalUsers": "총 사용자 수",
+      "totalActivities": "총 활동 수",
+      "activeInvitations": "활성 초대",
+      "quickActions": "빠른 작업",
+      "manageAlliances": "동맹 관리",
+      "manageAlliancesDesc": "모든 동맹 보기 및 관리",
+      "manageUsers": "사용자 관리",
+      "manageUsersDesc": "모든 사용자 보기 및 관리",
+      "manageGuidesData": "가이드 참조 데이터",
+      "manageGuidesDataDesc": "챔피언, 기술, 말 및 보석 관리"
+    },
+    "alliances": {
+      "title": "동맹 관리",
+      "subtitle": "시스템의 모든 동맹 관리",
+      "noAlliances": "아직 생성된 동맹이 없습니다",
+      "name": "동맹 이름",
+      "tag": "태그",
+      "admin": "관리자",
+      "members": "멤버",
+      "created": "생성일",
+      "actions": "작업",
+      "deleteConfirm": "동맹 \"{{name}}\"을(를) 삭제하시겠습니까? 관련된 모든 사용자, 활동 및 초대도 삭제됩니다.",
+      "loadFailed": "동맹 로드 실패",
+      "updated": "동맹이 성공적으로 업데이트되었습니다",
+      "updateFailed": "동맹 업데이트 실패",
+      "deleted": "동맹이 성공적으로 삭제되었습니다",
+      "deleteFailed": "동맹 삭제 실패"
+    },
+    "users": {
+      "title": "사용자 관리",
+      "subtitle": "시스템의 모든 사용자 관리",
+      "noUsers": "사용자를 찾을 수 없습니다",
+      "displayName": "표시 이름",
+      "username": "사용자 이름",
+      "role": "역할",
+      "alliance": "동맹",
+      "noAlliance": "동맹 없음",
+      "created": "생성일",
+      "actions": "작업",
+      "deleteConfirm": "사용자 \"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+      "loadFailed": "사용자 로드 실패",
+      "updated": "사용자가 성공적으로 업데이트되었습니다",
+      "updateFailed": "사용자 업데이트 실패",
+      "deleted": "사용자가 성공적으로 삭제되었습니다"
+    },
+    "guidesData": "가이드 참조 데이터",
+    "guidesDataSubtitle": "챔피언, 기술, 말, 장식품 및 보석 관리",
+    "champions": "챔피언",
+    "skills": "기술",
+    "assignSkills": "기술 할당",
+    "temperaments": "기질",
+    "ornaments": "장식품",
+    "gems": "보석",
+    "rings": "반지",
+    "gemType": {
+      "label": "유형",
+      "strategy": "전략",
+      "hero": "영웅",
+      "tactics": "전술"
+    }
+  },
+  "super_admin": "슈퍼 관리자",
+  "admin": "관리자",
+  "member": "멤버",
+  "pwa": {
+    "offline": "오프라인 상태입니다",
+    "online": "온라인 상태입니다",
+    "updateAvailable": "새 버전이 있습니다",
+    "reload": "새로고침",
+    "install": "더 나은 경험을 위해 앱을 설치하세요",
+    "installButton": "설치",
+    "iosInstruction": "공유 버튼을 탭한 후 '홈 화면에 추가'를 선택하세요",
+    "installDismiss": "설치 배너 닫기"
+  },
+  "releaseNotes": {
+    "title": "새로운 기능",
+    "markAsSeen": "읽음으로 표시"
+  },
+  "tools": {
+    "gemCalcDesc": "지휘관에게 보석을 장착했을 때의 점수 향상을 계산합니다.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "지휘관에게 최적의 말 기질 조합을 찾아보세요."
+  },
+  "packValue": {
+    "title": "팩 가치 계산기",
+    "description": "게임 내 팩의 가치를 평가합니다",
+    "addItem": "아이템 추가",
+    "packPrice": "팩 가격 (Apex 코인)",
+    "calculate": "계산",
+    "reset": "초기화",
+    "noItems": "계산하려면 최소 하나의 아이템을 추가하세요",
+    "units": {
+      "hours": "시간",
+      "qty": "수량"
+    },
+    "result": {
+      "title": "결과",
+      "tier": {
+        "terrible": "나쁨",
+        "average": "보통",
+        "good": "좋음",
+        "excellent": "훌륭함"
+      },
+      "breakdown": "세부 내역"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "최강 총독",
+    "subtitle": "순위별 등록 비용",
+    "description": "최강 총독 이벤트에 참가하려면 플레이어가 점수 포인트를 사용해야 합니다. 목표 순위가 높을수록 비용이 높아집니다.",
+    "rank": "순위",
+    "weeklyTarget": "주간 목표",
+    "cost": "비용",
+    "notice": "DKP 시스템은 개발 중입니다. 표시된 비용은 참고용이며 변경될 수 있습니다."
+  },
+  "gemCalculator": {
+    "title": "보석 계산기",
+    "back": "뒤로",
+    "troopType": "병종",
+    "troopSwordsmen": "검병",
+    "troopArchers": "궁수",
+    "troopPikemen": "창병",
+    "troopCavalry": "기병",
+    "troopTier": "병종 티어",
+    "troopSize": "병력 규모",
+    "troopSizeHint": "병력 수 (최대 500,000)",
+    "healthBonus": "체력 보너스 (%)",
+    "mightAttack": "전투력 공격 (%)",
+    "mightDefense": "전투력 방어 (%)",
+    "gemType": "보석 유형",
+    "gemHealth": "체력 보석",
+    "gemCapacity": "수용량 보석",
+    "gemRarity": "보석 희귀도",
+    "verbose": "상세 모드 (계산 세부 정보)",
+    "analyze": "분석",
+    "score": "획득",
+    "rawBonus": "원시 보너스",
+    "verboseTitle": "계산 세부 정보",
+    "verboseScoreBefore": "이전 점수",
+    "verboseScoreAfter": "이후 점수",
+    "verboseGain": "획득",
+    "verboseLegionSize": "군단 규모",
+    "verbosePerUnit": "단위당 점수 (이전)",
+    "verbosePerUnitAfter": "단위당 점수 (이후)",
+    "verboseGemValue": "보석 보너스",
+    "verboseNewHealthBonus": "새 체력 보너스",
+    "noResult": "양식을 작성하고 분석을 클릭하세요"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "첫 번째 반려동물의 이름은 무엇인가요?",
+      "q2": "태어난 도시는 어디인가요?",
+      "q3": "어린 시절 가장 친한 친구의 이름은 무엇인가요?",
+      "q4": "어린 시절 별명은 무엇이었나요?",
+      "q5": "어머니의 결혼 전 성은 무엇인가요?",
+      "q6": "초등학교 이름은 무엇인가요?",
+      "q7": "파트너를 만난 도시는 어디인가요?",
+      "q8": "좋아하는 음식은 무엇인가요?",
+      "q9": "첫 번째 자동차의 브랜드는 무엇이었나요?",
+      "q10": "첫 번째 해외 여행지는 어디였나요?"
+    },
+    "page": {
+      "title": "계정 복구",
+      "step1": {
+        "usernamePlaceholder": "사용자 이름 입력",
+        "submit": "계정 찾기"
+      },
+      "step2": {
+        "answerPlaceholder": "답변",
+        "newPassword": "새 비밀번호",
+        "confirmPassword": "비밀번호 확인",
+        "submit": "비밀번호 재설정"
+      },
+      "step3": {
+        "success": "비밀번호가 성공적으로 재설정되었습니다!"
+      },
+      "backToLogin": "로그인으로 돌아가기"
+    },
+    "errors": {
+      "userNotFound": "이 사용자 이름에 해당하는 계정을 찾을 수 없습니다.",
+      "wrongAnswer": "잘못된 답변입니다.",
+      "wrongAnswerRemaining": "{{count}}회 시도 남았습니다.",
+      "locked": "{{time}}까지 계정이 잠겨 있습니다.",
+      "passwordTooShort": "비밀번호는 최소 6자 이상이어야 합니다."
+    }
+  },
+  "accountSettings": {
+    "title": "내 계정",
+    "tabAccount": "내 계정",
+    "tabPreferences": "내 설정",
+    "displayName": {
+      "title": "표시 이름",
+      "save": "저장",
+      "success": "표시 이름이 업데이트되었습니다",
+      "error": "표시 이름 업데이트 실패"
+    },
+    "password": {
+      "title": "비밀번호 변경",
+      "newPassword": "새 비밀번호",
+      "confirmPassword": "비밀번호 확인",
+      "save": "비밀번호 변경",
+      "success": "비밀번호가 성공적으로 업데이트되었습니다",
+      "error": "비밀번호 업데이트 실패"
+    },
+    "recovery": {
+      "title": "복구 질문",
+      "question": "비밀 질문",
+      "answer": "새 답변",
+      "answerHint": "답변은 대소문자를 구분하지 않습니다",
+      "save": "업데이트",
+      "success": "복구 질문이 업데이트되었습니다",
+      "error": "복구 질문 업데이트 실패"
+    },
+    "language": {
+      "title": "앱 언어"
+    },
+    "colorScheme": {
+      "title": "외관",
+      "light": "라이트",
+      "dark": "다크",
+      "auto": "자동 (시스템)",
+      "glass": "유리 라이트",
+      "glassDark": "유리 다크",
+      "highContrast": "고대비"
+    }
+  },
+  "discord": {
+    "channelsTitle": "Discord 채널",
+    "channelsSubtitle": "메시지를 보낼 Discord 웹훅 채널 설정",
+    "channelName": "채널 이름",
+    "channelNamePlaceholder": "예: general-reminder",
+    "webhookUrl": "웹훅 URL",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "서버 설정 > 연동에서 Discord 웹훅 URL",
+    "defaultMessage": "기본 메시지 (선택)",
+    "defaultMessagePlaceholder": "⏰ 알림: GE 순위를 입력하세요",
+    "defaultMessageHint": "이 채널 선택 시 미리 불러옴 — 전송 전 수정 가능",
+    "addChannel": "채널 추가",
+    "deleteChannel": "채널 삭제",
+    "deleteConfirm": "채널 \"{{name}}\"을(를) 삭제하시겠습니까?",
+    "noChannels": "아직 Discord 채널이 설정되지 않았습니다",
+    "noChannelsForMessage": "메시지를 보내려면 최소 하나의 채널을 추가하세요",
+    "channelAdded": "Discord 채널이 성공적으로 추가되었습니다",
+    "channelAddFailed": "Discord 채널 추가 실패",
+    "channelUpdated": "Discord 채널이 성공적으로 업데이트되었습니다",
+    "channelUpdateFailed": "Discord 채널 업데이트 실패",
+    "channelDeleted": "Discord 채널이 성공적으로 삭제되었습니다",
+    "channelDeleteFailed": "Discord 채널 삭제 실패",
+    "editChannel": "채널 편집",
+    "editChannelTitle": "채널 편집 중:",
+    "loadFailed": "Discord 채널 로드 실패",
+    "sendMessageTitle": "메시지 보내기",
+    "sendMessageSubtitle": "채널 선택 후 메시지를 조정하고 전송하세요",
+    "selectChannel": "채널 선택",
+    "messageContent": "메시지",
+    "messageContentPlaceholder": "⏰ 알림: GE 순위를 입력하세요",
+    "sendMessage": "Discord로 보내기",
+    "messageSent": "메시지가 Discord로 성공적으로 전송되었습니다",
+    "messageSendFailed": "Discord 메시지 전송 실패",
+    "errors": {
+      "invalidWebhookUrl": "유효한 Discord 웹훅 URL이어야 합니다 (https://discord.com/api/webhooks/...)"
+    }
+  },
+  "guides": {
+    "title": "가이드",
+    "community": "커뮤니티",
+    "my_guides": "내 가이드",
+    "create": "가이드 만들기",
+    "limit_reached": "가이드 10개 한도에 도달했습니다",
+    "no_guides": "아직 가이드가 없습니다",
+    "count": "{{ count }}/10 가이드",
+    "categories": {
+      "formation": "편성",
+      "evenement": "이벤트",
+      "general": "일반"
+    },
+    "status": {
+      "published": "게시됨",
+      "draft": "초안"
+    },
+    "by": "작성자:",
+    "view": "보기",
+    "edit": "편집",
+    "publish": "게시",
+    "unpublish": "게시 취소",
+    "delete": "삭제",
+    "published_success": "가이드가 게시되었습니다",
+    "unpublished_success": "가이드 게시가 취소되었습니다",
+    "champion": "챔피언",
+    "champion_slot": "챔피언 슬롯",
+    "add_champion": "챔피언 추가",
+    "champion_count": "{{ count }}명의 챔피언 설정됨",
+    "formation_hint": "최대 3명의 챔피언을 설정하세요. 드래그하여 순서를 변경하세요.",
+    "skill": "기술",
+    "skills": "기술들",
+    "gems": "보석",
+    "hero_section": "영웅",
+    "horse_section": "말",
+    "traits": "말 특성",
+    "trait": "특성",
+    "add_trait": "특성 추가",
+    "ornament": "장식품",
+    "ring": "반지",
+    "description": "설명 / 작성자 노트",
+    "editor": {
+      "title_new": "가이드 만들기",
+      "title_edit": "가이드 편집",
+      "step_basic": "정보",
+      "step_content": "내용",
+      "step_review": "요약",
+      "title_label": "가이드 제목",
+      "category_label": "카테고리",
+      "description_label": "설명",
+      "publish_now": "지금 게시",
+      "save_draft": "초안으로 저장",
+      "save": "저장"
+    },
+    "confirm_delete": "이 가이드를 삭제하시겠습니까?",
+    "confirm_delete_msg": "이 작업은 취소할 수 없습니다.",
+    "errors": {
+      "limitReached": "가이드 최대 10개 한도에 도달했습니다.",
+      "slugDuplicate": "이 제목은 기존 가이드와 너무 유사합니다. 제목을 수정해 주세요.",
+      "notFound": "가이드를 찾을 수 없습니다.",
+      "unauthorized": "이 가이드를 수정할 권한이 없습니다.",
+      "unknown": "예기치 않은 오류가 발생했습니다. 다시 시도해 주세요.",
+      "invalidFileType": "유효하지 않은 파일 형식. 허용: PNG, JPEG, WebP."
+    },
+    "public_list_title": "커뮤니티 가이드",
+    "public_list_empty": "아직 게시된 가이드가 없습니다",
+    "copy_link": "링크 복사",
+    "link_copied": "링크가 복사되었습니다!",
+    "back_to_list": "가이드 목록으로 돌아가기",
+    "guide_not_found": "가이드를 찾을 수 없습니다",
+    "upvote": "추천",
+    "upvoted": "추천됨",
+    "champion_slot": "챔피언 {{n}}",
+    "author_notes": "작성자 노트"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "동맹 활동 추적기",
+      "title1": "스마트하게 플레이하세요.",
+      "title2": "함께 승리하세요.",
+      "subtitleBefore": "모든 활동적인 플레이어를 위해 설계되었습니다 — 소비자만을 위한 것이 아닙니다. 동맹 활동을 추적하고, 전략적 점수를 획득하고,",
+      "subtitleStrong": "최강 총독 Top 10",
+      "subtitleAfter": "에 훨씬 적은 속도 향상과 자원으로 도달하세요.",
+      "ctaLogin": "로그인",
+      "ctaJoin": "초대로 참가"
+    },
+    "steps": {
+      "label": "사용 방법",
+      "title": "Top에 오르는 세 단계",
+      "step1": {
+        "title": "활동 기록",
+        "description": "KvK 전투, 군단 전투, 황금 원정 등을 제출하세요. 모든 이벤트, 매주 — 당신의 기여가 기록됩니다."
+      },
+      "step2": {
+        "title": "전략적 점수 획득",
+        "description": "점수는 순위와 성과에 따라 계산됩니다. 설정 가능한 규칙이 참가하고 경쟁하는 플레이어에게 보상을 줍니다."
+      },
+      "step3": {
+        "title": "순위 상승",
+        "description": "6주 순환 리더보드는 경쟁을 신선하게 유지하고 개인적인 폭발보다 꾸준함을 보상합니다."
+      }
+    },
+    "benefits": {
+      "label": "중요한 이유",
+      "title": "전체 서버가 승리합니다",
+      "benefit1": {
+        "title": "활동적인 플레이어를 위해 제작",
+        "description": "Pay-to-win 없음. 순수한 활동과 스마트한 참가가 리더보드에서 당신을 올려줍니다 — 누구나 경쟁할 수 있습니다."
+      },
+      "benefit2": {
+        "title": "동맹 전체의 자원 절약",
+        "description": "구조화된 추적은 참가자와 시기를 최적화하여 KvK 준비와 최강 제국을 위한 속도 향상과 자원을 보존합니다."
+      },
+      "benefit3": {
+        "title": "최강 총독 Top 10 달성",
+        "description": "더 적은 자원으로 가장 강한 영웅을 획득하세요. 거의와 챔피언의 차이는 조직적인 노력으로 측정됩니다."
+      }
+    },
+    "cta": {
+      "title": "동맹을 이끌 준비가 되셨나요?",
+      "subtitle": "동맹을 만들고 오늘부터 멤버의 진행 상황을 추적하세요.",
+      "button": "동맹 만들기"
+    },
+    "footer": "Activity Tracker — 더 스마트하게 플레이하고, 더 강하게 경쟁하세요."
+  }
+}

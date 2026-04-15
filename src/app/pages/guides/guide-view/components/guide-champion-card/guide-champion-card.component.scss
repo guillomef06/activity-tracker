@@ -40,7 +40,7 @@
 }
 
 .champion-name {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
   line-height: 1.2;
@@ -54,19 +54,17 @@
 
 .detail-row {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-2, 8px);
-  font-size: 0.875rem;
+  gap: var(--space-2);
   line-height: 1.5;
 }
 
-.detail-icon {
-  font-size: 1.125rem;
-  width: 1.125rem;
-  height: 1.125rem;
+.detail-label {
   flex-shrink: 0;
-  color: var(--mat-sys-primary, #6750a4);
-  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  text-transform: uppercase;
 }
 
 .item-list {
@@ -78,18 +76,17 @@
 .item-chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1, 4px);
-  background: var(--mat-sys-surface-container, #ece6f0);
+  gap: var(--space-1);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 8px;
-  padding: 2px var(--space-2, 8px) 2px 2px;
-  font-size: 0.8125rem;
+  padding: var(--space-1) var(--space-2);
+  font-size: 1rem;
   line-height: 1.4;
 }
 
 .item-img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 4px;
   object-fit: cover;
   flex-shrink: 0;

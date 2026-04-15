@@ -390,7 +390,9 @@
     "markAsSeen": "Mark as read"
   },
   "tools": {
-    "gemCalcDesc": "Calculate the score gain from equipping a gem on your commander."
+    "gemCalcDesc": "Calculate the score gain from equipping a gem on your commander.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Find the best horse temperament combinations for your commanders."
   },
   "packValue": {
     "title": "Pack Value Calculator",

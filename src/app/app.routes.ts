@@ -96,14 +96,21 @@ export const routes: Routes = [
     ],
   },
 
-  // Public guides routes (no auth required, no layout wrapper)
+  // Public guides routes (no auth required, wrapped in public layout with header)
   {
     path: 'guides',
-    loadComponent: () => import('./pages/guides/guides-list/guides-list.page').then(m => m.GuidesListPage),
-  },
-  {
-    path: 'guides/:slug',
-    loadComponent: () => import('./pages/guides/guide-view/guide-view.page').then(m => m.GuideViewPage),
+    loadComponent: () =>
+      import('./core/layout/public-layout/public-layout.component').then(m => m.PublicLayoutComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/guides/guides-list/guides-list.page').then(m => m.GuidesListPage),
+      },
+      {
+        path: ':slug',
+        loadComponent: () => import('./pages/guides/guide-view/guide-view.page').then(m => m.GuideViewPage),
+      },
+    ],
   },
 
   // Fallback route

@@ -94,7 +94,8 @@
       "mcp__plugin_playwright_playwright__browser_press_key",
       "mcp__plugin_playwright_playwright__browser_wait_for",
       "Bash(git -C D:/workplace/activity-tracker/activity-tracker log --oneline dev..feature/guides --name-only -- supabase/)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(npx prettier *)"
     ]
   }
 }

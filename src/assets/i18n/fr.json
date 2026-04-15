@@ -390,7 +390,9 @@
     "markAsSeen": "Marquer comme lu"
   },
   "tools": {
-    "gemCalcDesc": "Calculez le gain de score obtenu en équipant une gemme sur votre commandant."
+    "gemCalcDesc": "Calculez le gain de score obtenu en équipant une gemme sur votre commandant.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Trouvez les meilleures combinaisons de tempéraments pour vos commandants."
   },
   "packValue": {
     "title": "Calculateur de valeur de pack",
