@@ -31,7 +31,7 @@ describe('DiscordService', () => {
     };
 
     const authSpy = {
-      getAllianceId: vi.fn().mockReturnValue('a1'),
+      getServerId: vi.fn().mockReturnValue('a1'),
       isAdmin: vi.fn().mockReturnValue(true),
     };
 
@@ -57,8 +57,8 @@ describe('DiscordService', () => {
   });
 
   describe('loadWebhooks', () => {
-    it('should return empty and set no webhooks when no alliance ID', async () => {
-      authService.getAllianceId.mockReturnValue(null);
+    it('should return empty and set no webhooks when no server ID', async () => {
+      authService.getServerId.mockReturnValue(null);
       const result = await service.loadWebhooks();
       expect(result.error).toBeNull();
       expect(service.webhooks()).toEqual([]);
@@ -97,8 +97,8 @@ describe('DiscordService', () => {
       expect(result.error).toBeInstanceOf(Error);
     });
 
-    it('should return error when no alliance ID', async () => {
-      authService.getAllianceId.mockReturnValue(null);
+    it('should return error when no server ID', async () => {
+      authService.getServerId.mockReturnValue(null);
       const result = await service.createWebhook({ channel_name: 'test', webhook_url: 'https://discord.com/...' });
       expect(result.error).toBeInstanceOf(Error);
     });

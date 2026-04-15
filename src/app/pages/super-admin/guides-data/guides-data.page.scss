@@ -187,12 +187,22 @@
   align-items: center;
 }
 
+// Detail row — no border, zero height when collapsed
+.detail-row {
+  height: 0;
+
+  td {
+    padding: 0;
+    border-bottom: none;
+  }
+}
+
 // Skills assignment panel
 .skills-panel {
   background: var(--mat-sys-surface-variant);
   border-radius: 8px;
   padding: 1rem;
-  margin-top: 1rem;
+  margin: 0.25rem 0 0.5rem;
 
   .skills-panel-title {
     margin: 0 0 0.75rem;

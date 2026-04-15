@@ -46,7 +46,7 @@ describe('SignupPage', () => {
       password: 'SecurePassword123',
       confirmPassword: 'SecurePassword123',
       displayName: 'New Admin',
-      allianceName: 'Test Alliance',
+      serverName: 'Test Server',
       recoveryQuestionId: 1,
       recoveryAnswer: 'Fluffy',
     });
@@ -62,7 +62,7 @@ describe('SignupPage', () => {
       password: 'SecurePassword123',
       confirmPassword: 'SecurePassword123',
       displayName: 'New Admin',
-      allianceName: 'Test Alliance',
+      serverName: 'Test Server',
     });
 
     expect(component['signupForm'].valid).toBe(false);
@@ -74,7 +74,7 @@ describe('SignupPage', () => {
       password: 'Password123',
       confirmPassword: 'Different123',
       displayName: 'Admin',
-      allianceName: 'Alliance',
+      serverName: 'Server',
     });
 
     expect(component['signupForm'].hasError('passwordMismatch')).toBe(true);

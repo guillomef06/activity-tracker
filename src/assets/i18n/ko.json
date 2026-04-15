@@ -18,19 +18,19 @@
     "password": "비밀번호",
     "confirmPassword": "비밀번호 확인",
     "displayName": "표시 이름",
-    "allianceName": "동맹 이름",
+    "serverName": "서버 이름",
     "invitationToken": "초대 토큰",
     "welcomeBack": "다시 오신 것을 환영합니다",
     "signInSubtitle": "계정에 로그인하세요",
-    "signupTitle": "동맹 만들기",
-    "signupSubtitle": "동맹 관리자로 가입하세요",
-    "joinTitle": "동맹 참가",
-    "joinSubtitle": "초대를 이용해 동맹에 참가하세요",
+    "signupTitle": "서버 만들기",
+    "signupSubtitle": "서버 관리자로 가입하세요",
+    "joinTitle": "서버 참가",
+    "joinSubtitle": "초대를 이용해 서버에 참가하세요",
     "setupTitle": "슈퍼 관리자 설정",
     "setupSubtitle": "첫 번째 슈퍼 관리자 계정 만들기",
-    "setupWarning": "이것은 일회성 설정입니다. 슈퍼 관리자는 모든 동맹과 사용자를 관리할 완전한 권한을 가집니다.",
+    "setupWarning": "이것은 일회성 설정입니다. 슈퍼 관리자는 모든 서버과 사용자를 관리할 완전한 권한을 가집니다.",
     "signingIn": "로그인 중...",
-    "creatingAlliance": "동맹 만드는 중...",
+    "creatingServer": "서버 만드는 중...",
     "joining": "참가 중...",
     "createSuperAdmin": "슈퍼 관리자 만들기",
     "creating": "만드는 중...",
@@ -38,17 +38,17 @@
     "usernameHint": "3-30자 — 영문자, 숫자, - 및 _ 만 사용 가능",
     "displayNamePlaceholder": "전체 이름 입력",
     "displayNameHint": "다른 사람에게 표시될 이름",
-    "allianceNamePlaceholder": "동맹 이름 입력",
-    "allianceNameHint": "새 동맹의 이름을 선택하세요",
+    "serverNamePlaceholder": "서버 이름 입력",
+    "serverNameHint": "새 서버의 이름을 선택하세요",
     "passwordPlaceholder": "예: MyPass123!",
     "passwordHint": "최소 6자, 영문자 및 숫자 각 1개 이상 포함",
     "confirmPasswordPlaceholder": "비밀번호 재입력",
     "tokenPlaceholder": "초대 토큰 입력",
-    "tokenHint": "동맹 관리자가 제공한 토큰",
+    "tokenHint": "서버 관리자가 제공한 토큰",
     "haveAccount": "이미 계정이 있으신가요?",
     "noAccount": "계정이 없으신가요?",
     "haveInvitation": "초대장이 있으신가요?",
-    "wantCreateAlliance": "동맹을 만들고 싶으신가요?",
+    "wantCreateServer": "서버을 만들고 싶으신가요?",
     "errors": {
       "usernameExists": "이미 사용 중인 사용자 이름입니다",
       "usernameInvalidChars": "영문자, 숫자, - 및 _ 만 사용 가능",
@@ -59,7 +59,7 @@
       "joinFailed": "참가 실패. 다시 시도해 주세요.",
       "setupFailed": "설정 실패. 다시 시도해 주세요.",
       "superAdminExists": "슈퍼 관리자가 이미 존재합니다",
-      "allianceCreationFailed": "동맹 생성 실패",
+      "serverCreationFailed": "서버 생성 실패",
       "invalidToken": "유효하지 않거나 만료된 초대 토큰"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "슈퍼 관리자",
-    "allianceSettings": "동맹 설정",
+    "serverSettings": "서버 설정",
     "home": "홈",
     "guides": "가이드"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "동맹 설정",
+      "title": "서버 설정",
       "tabs": {
-        "overview": "동맹",
+        "overview": "서버",
         "invitations": "초대",
         "activitySettings": "활동 설정",
         "retroactive": "소급 활동",
         "importExcel": "엑셀 가져오기",
         "discord": "Discord"
       },
-      "allianceInfo": "동맹 정보",
-      "allianceName": "동맹 이름",
-      "allianceTag": "동맹 태그",
-      "allianceTagHint": "선택적 3자 식별자 (예: RgW)",
+      "serverInfo": "서버 정보",
+      "serverName": "서버 이름",
+      "serverTag": "서버 태그",
+      "serverTagHint": "선택적 3자 식별자 (예: RgW)",
       "updateName": "업데이트",
       "memberList": "멤버 목록",
       "members": "멤버",
@@ -120,8 +120,8 @@
       "revokeInvitation": "초대 취소",
       "revokeConfirm": "이 초대를 취소하시겠습니까?",
       "membersJoined": "이 초대로 가입한 멤버",
-      "nameUpdated": "동맹이 성공적으로 업데이트되었습니다!",
-      "nameUpdateFailed": "동맹 업데이트 실패",
+      "nameUpdated": "서버이 성공적으로 업데이트되었습니다!",
+      "nameUpdateFailed": "서버 업데이트 실패",
       "invitationCreated": "초대가 생성되었고 링크가 클립보드에 복사되었습니다!",
       "invitationCreateFailed": "초대 생성 실패",
       "invitationRevoked": "초대가 성공적으로 취소되었습니다",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "위험 구역",
         "deleteAllActivities": "모든 활동 삭제",
-        "deleteAllActivitiesDescription": "동맹 멤버가 제출한 모든 활동을 영구적으로 삭제합니다. 이 작업은 취소할 수 없습니다.",
+        "deleteAllActivitiesDescription": "서버 멤버가 제출한 모든 활동을 영구적으로 삭제합니다. 이 작업은 취소할 수 없습니다.",
         "deleteAllActivitiesConfirm": "모든 활동을 삭제하시겠습니까? 이 작업은 모든 멤버의 전체 활동 기록을 영구적으로 삭제합니다.",
         "deleteAllActivitiesSuccess": "모든 활동이 삭제되었습니다",
         "deleteAllActivitiesFailed": "활동 삭제 실패"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "소급 활동 추가",
-      "description": "관리자로서 지난 6주 동안의 동맹 멤버 활동을 추가할 수 있습니다. 멤버를 선택하고 주와 활동 세부 정보를 입력하세요.",
+      "description": "관리자로서 지난 6주 동안의 서버 멤버 활동을 추가할 수 있습니다. 멤버를 선택하고 주와 활동 세부 정보를 입력하세요.",
       "selectMember": "멤버 선택",
-      "memberHint": "활동을 추가할 동맹 멤버를 선택하세요",
+      "memberHint": "활동을 추가할 서버 멤버를 선택하세요",
       "selectWeek": "주 선택",
       "weekHint": "활동이 일어난 주를 선택하세요",
       "currentWeek": "이번 주",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "엑셀에서 활동 가져오기",
-      "description": "작성된 템플릿을 업로드하여 동맹 멤버의 소급 활동을 일괄 가져오기 합니다.",
+      "description": "작성된 템플릿을 업로드하여 서버 멤버의 소급 활동을 일괄 가져오기 합니다.",
       "templateHint": "먼저 가져오기 템플릿을 다운로드하고 작성하세요.",
       "downloadTemplate": "템플릿 다운로드",
       "activityFilter": "활동으로 필터",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "슈퍼 관리자 대시보드",
       "subtitle": "글로벌 시스템 개요 및 관리",
-      "totalAlliances": "총 동맹 수",
+      "totalServers": "총 서버 수",
       "totalUsers": "총 사용자 수",
       "totalActivities": "총 활동 수",
       "activeInvitations": "활성 초대",
       "quickActions": "빠른 작업",
-      "manageAlliances": "동맹 관리",
-      "manageAlliancesDesc": "모든 동맹 보기 및 관리",
+      "manageServers": "서버 관리",
+      "manageServersDesc": "모든 서버 보기 및 관리",
       "manageUsers": "사용자 관리",
       "manageUsersDesc": "모든 사용자 보기 및 관리",
       "manageGuidesData": "가이드 참조 데이터",
       "manageGuidesDataDesc": "챔피언, 기술, 말 및 보석 관리"
     },
-    "alliances": {
-      "title": "동맹 관리",
-      "subtitle": "시스템의 모든 동맹 관리",
-      "noAlliances": "아직 생성된 동맹이 없습니다",
-      "name": "동맹 이름",
+    "servers": {
+      "title": "서버 관리",
+      "subtitle": "시스템의 모든 서버 관리",
+      "noServers": "아직 생성된 서버이 없습니다",
+      "name": "서버 이름",
       "tag": "태그",
       "admin": "관리자",
       "members": "멤버",
       "created": "생성일",
       "actions": "작업",
-      "deleteConfirm": "동맹 \"{{name}}\"을(를) 삭제하시겠습니까? 관련된 모든 사용자, 활동 및 초대도 삭제됩니다.",
-      "loadFailed": "동맹 로드 실패",
-      "updated": "동맹이 성공적으로 업데이트되었습니다",
-      "updateFailed": "동맹 업데이트 실패",
-      "deleted": "동맹이 성공적으로 삭제되었습니다",
-      "deleteFailed": "동맹 삭제 실패"
+      "deleteConfirm": "서버 \"{{name}}\"을(를) 삭제하시겠습니까? 관련된 모든 사용자, 활동 및 초대도 삭제됩니다.",
+      "loadFailed": "서버 로드 실패",
+      "updated": "서버이 성공적으로 업데이트되었습니다",
+      "updateFailed": "서버 업데이트 실패",
+      "deleted": "서버이 성공적으로 삭제되었습니다",
+      "deleteFailed": "서버 삭제 실패"
     },
     "users": {
       "title": "사용자 관리",
@@ -346,8 +346,8 @@
       "displayName": "표시 이름",
       "username": "사용자 이름",
       "role": "역할",
-      "alliance": "동맹",
-      "noAlliance": "동맹 없음",
+      "server": "서버",
+      "noServer": "서버 없음",
       "created": "생성일",
       "actions": "작업",
       "deleteConfirm": "사용자 \"{{name}}\"을(를) 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
@@ -362,7 +362,7 @@
     "skills": "기술",
     "assignSkills": "기술 할당",
     "temperaments": "기질",
-    "ornaments": "장식품",
+    "adornments": "장식품",
     "gems": "보석",
     "rings": "반지",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "말 특성",
     "trait": "특성",
     "add_trait": "특성 추가",
-    "ornament": "장식품",
+    "adornment": "장식품",
     "ring": "반지",
     "description": "설명 / 작성자 노트",
     "editor": {
@@ -673,10 +673,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "동맹 활동 추적기",
+      "eyebrow": "서버 활동 추적기",
       "title1": "스마트하게 플레이하세요.",
       "title2": "함께 승리하세요.",
-      "subtitleBefore": "모든 활동적인 플레이어를 위해 설계되었습니다 — 소비자만을 위한 것이 아닙니다. 동맹 활동을 추적하고, 전략적 점수를 획득하고,",
+      "subtitleBefore": "모든 활동적인 플레이어를 위해 설계되었습니다 — 소비자만을 위한 것이 아닙니다. 서버 활동을 추적하고, 전략적 점수를 획득하고,",
       "subtitleStrong": "최강 총독 Top 10",
       "subtitleAfter": "에 훨씬 적은 속도 향상과 자원으로 도달하세요.",
       "ctaLogin": "로그인",
@@ -706,7 +706,7 @@
         "description": "Pay-to-win 없음. 순수한 활동과 스마트한 참가가 리더보드에서 당신을 올려줍니다 — 누구나 경쟁할 수 있습니다."
       },
       "benefit2": {
-        "title": "동맹 전체의 자원 절약",
+        "title": "서버 전체의 자원 절약",
         "description": "구조화된 추적은 참가자와 시기를 최적화하여 KvK 준비와 최강 제국을 위한 속도 향상과 자원을 보존합니다."
       },
       "benefit3": {
@@ -715,9 +715,9 @@
       }
     },
     "cta": {
-      "title": "동맹을 이끌 준비가 되셨나요?",
-      "subtitle": "동맹을 만들고 오늘부터 멤버의 진행 상황을 추적하세요.",
-      "button": "동맹 만들기"
+      "title": "서버을 이끌 준비가 되셨나요?",
+      "subtitle": "서버을 만들고 오늘부터 멤버의 진행 상황을 추적하세요.",
+      "button": "서버 만들기"
     },
     "footer": "Activity Tracker — 더 스마트하게 플레이하고, 더 강하게 경쟁하세요."
   }

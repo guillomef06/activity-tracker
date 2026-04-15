@@ -22,8 +22,8 @@ import { InfiniteScrollDirective } from '@app/shared/directives/infinite-scroll/
 import type { UserProfile } from '@app/shared/models';
 import { firstValueFrom } from 'rxjs';
 
-interface UserWithAlliance extends UserProfile {
-  alliance_name: string | null;
+interface UserWithServer extends UserProfile {
+  server_name: string | null;
 }
 
 @Component({
@@ -59,18 +59,11 @@ export class SuperAdminUsersPage implements OnInit {
 
   private readonly PAGE_SIZE = 20;
 
-  protected readonly users = signal<UserWithAlliance[]>([]);
+  protected readonly users = signal<UserWithServer[]>([]);
   protected readonly hasMore = signal(true);
   protected readonly isLoadingMore = signal(false);
   private lastCursor: string | null = null;
-  protected readonly displayedColumns: string[] = [
-    'displayName',
-    'username',
-    'role',
-    'alliance',
-    'createdAt',
-    'actions',
-  ];
+  protected readonly displayedColumns: string[] = ['displayName', 'username', 'role', 'server', 'createdAt', 'actions'];
 
   protected readonly editForm: FormGroup = this.fb.group({
     id: [''],
@@ -97,7 +90,7 @@ export class SuperAdminUsersPage implements OnInit {
       try {
         const { data, error } = await this.supabase.client
           .from('user_profiles')
-          .select('*, alliances(name)')
+          .select('*, servers(name)')
           .order('created_at', { ascending: false })
           .limit(this.PAGE_SIZE);
 
@@ -121,7 +114,7 @@ export class SuperAdminUsersPage implements OnInit {
     try {
       const baseQuery = this.supabase.client
         .from('user_profiles')
-        .select('*, alliances(name)')
+        .select('*, servers(name)')
         .order('created_at', { ascending: false })
         .limit(this.PAGE_SIZE);
 
@@ -141,8 +134,8 @@ export class SuperAdminUsersPage implements OnInit {
     }
   }
 
-  private mapUsers(data: ({ alliances?: { name: string } | null } & UserProfile)[]): UserWithAlliance[] {
-    return data.map(user => ({ ...user, alliance_name: user.alliances?.name ?? null }));
+  private mapUsers(data: ({ servers?: { name: string } | null } & UserProfile)[]): UserWithServer[] {
+    return data.map(user => ({ ...user, server_name: user.servers?.name ?? null }));
   }
 
   protected startEdit(user: UserProfile): void {

@@ -142,18 +142,18 @@
       </button>
     }
 
-    <!-- Ornament -->
+    <!-- Adornment -->
     <p class="section-label">
       <mat-icon class="section-icon">auto_awesome</mat-icon>
-      {{ 'guides.ornament' | translate }}
+      {{ 'guides.adornment' | translate }}
     </p>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>{{ 'guides.ornament' | translate }}</mat-label>
-      <mat-select formControlName="ornament_id">
+      <mat-label>{{ 'guides.adornment' | translate }}</mat-label>
+      <mat-select formControlName="adornment_id">
         <mat-option [value]="null">—</mat-option>
-        @for (ornament of data.ornaments; track ornament.id) {
-          <mat-option [value]="ornament.id">{{ ornament.name }}</mat-option>
+        @for (adornment of data.adornments; track adornment.id) {
+          <mat-option [value]="adornment.id">{{ adornment.name }}</mat-option>
         }
       </mat-select>
     </mat-form-field>

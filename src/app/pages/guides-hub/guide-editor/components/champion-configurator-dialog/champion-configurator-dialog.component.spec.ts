@@ -13,7 +13,7 @@ const MOCK_DATA: ChampionConfiguratorDialogData = {
   skills: [{ id: 's1', name: 'Fury', description: null, icon_url: null, is_active: true, sort_order: 0 }],
   gems: [{ id: 'g1', name: 'Ruby', type: 'strategy', icon_url: null, is_active: true }],
   temperaments: [{ id: 't1', name: 'Ardent', description: null, sort_order: 0 }],
-  ornaments: [{ id: 'o1', name: 'Crown', image_url: null, is_active: true, sort_order: 0 }],
+  adornments: [{ id: 'o1', name: 'Crown', image_url: null, is_active: true, sort_order: 0 }],
   rings: [{ id: 'r1', name: 'Iron Ring', description: null, icon_url: null, is_active: true, sort_order: 0 }],
   usedRingIds: [],
   championSkillsMap: new Map([

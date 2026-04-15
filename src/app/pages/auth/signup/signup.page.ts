@@ -65,7 +65,7 @@ export class SignupPage {
         [usernameAvailableValidator(u => from(this.authService.checkUsernameAvailable(u)))],
       ],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      allianceName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      serverName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
       recoveryQuestionId: [null, [Validators.required]],
@@ -87,7 +87,7 @@ export class SignupPage {
     pattern: 'auth.errors.usernameInvalidChars',
   });
   protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName', this.destroyRef);
-  protected readonly allianceNameError = createFieldErrorSignal(this.signupForm, 'allianceName', this.destroyRef);
+  protected readonly serverNameError = createFieldErrorSignal(this.signupForm, 'serverName', this.destroyRef);
   protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
   protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
   protected readonly confirmPasswordValid = createFieldValidSignal(this.signupForm, 'confirmPassword', this.destroyRef);
@@ -108,14 +108,13 @@ export class SignupPage {
     this.errorMessage.set(null);
 
     try {
-      const { username, displayName, allianceName, password, recoveryQuestionId, recoveryAnswer } =
-        this.signupForm.value;
+      const { username, displayName, serverName, password, recoveryQuestionId, recoveryAnswer } = this.signupForm.value;
 
       const request: AdminSignUpRequest = {
         username,
         password,
         displayName,
-        allianceName,
+        serverName,
         recoveryQuestionId,
         recoveryAnswer,
       };
@@ -131,8 +130,8 @@ export class SignupPage {
 
       if (errorMessage.includes('already exists') || errorMessage.includes('duplicate')) {
         this.errorMessage.set('auth.errors.usernameExists');
-      } else if (errorMessage.includes('alliance')) {
-        this.errorMessage.set('auth.errors.allianceCreationFailed');
+      } else if (errorMessage.includes('server')) {
+        this.errorMessage.set('auth.errors.serverCreationFailed');
       } else {
         this.errorMessage.set('auth.errors.signupFailed');
       }

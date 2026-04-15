@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivityInputComponent } from './activity-input.component';
 import { ActivityService } from '@core/services/activity.service';
-import { AllianceService } from '@core/services/alliance.service';
+import { ServerService } from '@core/services/server.service';
 import { AuthService } from '@core/services/auth.service';
 import { SnackbarService } from '@core/services/snackbar.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ describe('ActivityInputComponent', () => {
     getUserScores: vi.fn().mockReturnValue([]),
   };
 
-  const mockAllianceService = {
+  const mockServerService = {
     isParticipationMode: vi.fn().mockReturnValue(false),
     getParticipationPoints: vi.fn().mockReturnValue(5),
     calculatePoints: vi.fn().mockReturnValue({ points: 10 }),
@@ -39,7 +39,7 @@ describe('ActivityInputComponent', () => {
       imports: [ActivityInputComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
         { provide: ActivityService, useValue: mockActivityService },
-        { provide: AllianceService, useValue: mockAllianceService },
+        { provide: ServerService, useValue: mockServerService },
         { provide: AuthService, useValue: mockAuthService },
         { provide: SnackbarService, useValue: mockSnackbarService },
         provideZonelessChangeDetection(),
@@ -69,21 +69,21 @@ describe('ActivityInputComponent', () => {
   });
 
   it('should call addActivity on valid submission in position mode', async () => {
-    mockAllianceService.isParticipationMode.mockReturnValue(false);
+    mockServerService.isParticipationMode.mockReturnValue(false);
     component['activityForm'].patchValue({ activityType: 'kvk-prep', position: 3 });
     await component['onSubmit']();
     expect(mockActivityService.addActivity).toHaveBeenCalled();
   });
 
   it('should exclude disabled activities from availableActivities', () => {
-    mockAllianceService.isActivityEnabled.mockReturnValue(false);
+    mockServerService.isActivityEnabled.mockReturnValue(false);
     // Change week to force the computed signal to re-evaluate
     component['activityForm'].patchValue({ week: 1 });
     expect(component['availableActivities']().length).toBe(0);
   });
 
   it('should include enabled activities in availableActivities', () => {
-    mockAllianceService.isActivityEnabled.mockReturnValue(true);
+    mockServerService.isActivityEnabled.mockReturnValue(true);
     // Change week to force the computed signal to re-evaluate with updated mock
     component['activityForm'].patchValue({ week: 1 });
     expect(component['availableActivities']().length).toBeGreaterThan(0);

@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivityService } from '@core/services/activity.service';
-import { AllianceService } from '@core/services/alliance.service';
+import { ServerService } from '@core/services/server.service';
 import { ProgressBarService } from '@core/services/progress-bar.service';
 import { UserScore } from '@shared/models/activity.model';
 import { ActivityInputComponent } from './components/activity-input/activity-input.component';
@@ -32,14 +32,14 @@ import { SwipeTabsDirective } from '@shared/directives/swipe-tabs/swipe-tabs.dir
 })
 export class HomePage implements OnInit {
   private readonly activityService = inject(ActivityService);
-  private readonly allianceService = inject(AllianceService);
+  private readonly serverService = inject(ServerService);
   private readonly progressBarService = inject(ProgressBarService);
 
   readonly userScores = computed<UserScore[]>(() => this.activityService.getUserScores());
 
   async ngOnInit(): Promise<void> {
     await this.progressBarService.withProgress(() =>
-      Promise.all([this.allianceService.loadSettings(), this.activityService.initialize()])
+      Promise.all([this.serverService.loadSettings(), this.activityService.initialize()])
     );
   }
 }

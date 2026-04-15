@@ -4,9 +4,9 @@ import { signal } from '@angular/core';
 import { ActivityService } from './activity.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
-import { AllianceService } from './alliance.service';
+import { ServerService } from './server.service';
 import type { UserScore, BatchImportEntry } from '@app/shared/models';
-import type { Alliance } from '@app/shared/models/alliance.model';
+import type { Server } from '@app/shared/models/server.model';
 
 interface ActivityRow {
   activityType: string;
@@ -17,10 +17,10 @@ interface ActivityRow {
 
 describe('ActivityService', () => {
   let service: ActivityService;
-  let allianceServiceMock: {
-    alliance: ReturnType<typeof signal<Alliance | null>>;
+  let serverServiceMock: {
+    server: ReturnType<typeof signal<Server | null>>;
     rules: ReturnType<typeof signal>;
-    loadAlliance: ReturnType<typeof vi.fn>;
+    loadServer: ReturnType<typeof vi.fn>;
     loadRules: ReturnType<typeof vi.fn>;
     calculatePoints: ReturnType<typeof vi.fn>;
     scoringWeeks: ReturnType<typeof signal<number>>;
@@ -37,10 +37,10 @@ describe('ActivityService', () => {
   };
 
   beforeEach(() => {
-    allianceServiceMock = {
-      alliance: signal<Alliance | null>(null),
+    serverServiceMock = {
+      server: signal<Server | null>(null),
       rules: signal([]),
-      loadAlliance: vi.fn().mockResolvedValue(undefined),
+      loadServer: vi.fn().mockResolvedValue(undefined),
       loadRules: vi.fn().mockResolvedValue({ error: null }),
       calculatePoints: vi.fn().mockReturnValue({ points: 0, usedFallback: true }),
       scoringWeeks: signal(6),
@@ -58,7 +58,7 @@ describe('ActivityService', () => {
     };
 
     const authMock = {
-      getAllianceId: vi.fn().mockReturnValue(null),
+      getServerId: vi.fn().mockReturnValue(null),
       getUserId: vi.fn().mockReturnValue(null),
       userProfile: signal(null),
     };
@@ -68,7 +68,7 @@ describe('ActivityService', () => {
         ActivityService,
         { provide: SupabaseService, useValue: supabaseMock },
         { provide: AuthService, useValue: authMock },
-        { provide: AllianceService, useValue: allianceServiceMock },
+        { provide: ServerService, useValue: serverServiceMock },
       ],
     });
 
@@ -82,7 +82,7 @@ describe('ActivityService', () => {
   describe('getUserScores() tiebreaker', () => {
     it('should exclude tiebreaker activity points from totalPoints and sixWeekTotal', () => {
       // Arrange
-      allianceServiceMock.alliance.set({
+      serverServiceMock.server.set({
         id: '1',
         name: 'test',
         tag: null,
@@ -130,7 +130,7 @@ describe('ActivityService', () => {
 
     it('should include all activity points when no tiebreaker is configured', () => {
       // Arrange
-      allianceServiceMock.alliance.set(null);
+      serverServiceMock.server.set(null);
 
       const now = new Date();
       service['activitiesSignal'].set([
@@ -185,7 +185,7 @@ describe('ActivityService', () => {
       };
 
       // Set tiebreaker to 'stellar glory' → Bob (20 pts) should rank above Alice (10 pts)
-      allianceServiceMock.alliance.set({
+      serverServiceMock.server.set({
         id: '1',
         name: 'test',
         tag: null,
@@ -201,7 +201,7 @@ describe('ActivityService', () => {
         const diff = b.sixWeekTotal - a.sixWeekTotal;
         if (diff !== 0) return diff;
 
-        const tiebreaker = allianceServiceMock.alliance()?.tiebreaker_activity_type ?? null;
+        const tiebreaker = serverServiceMock.server()?.tiebreaker_activity_type ?? null;
         if (!tiebreaker) return 0;
 
         const tiebreakerScore = (u: UserScore) =>
@@ -220,7 +220,7 @@ describe('ActivityService', () => {
     });
 
     it('should keep original order when no tiebreaker is configured', () => {
-      allianceServiceMock.alliance.set(null);
+      serverServiceMock.server.set(null);
 
       const userA: UserScore = { userId: 'a', displayName: 'Alice', sixWeekTotal: 30, weeklyScores: [] };
       const userB: UserScore = { userId: 'b', displayName: 'Bob', sixWeekTotal: 30, weeklyScores: [] };
@@ -229,7 +229,7 @@ describe('ActivityService', () => {
         const diff = b.sixWeekTotal - a.sixWeekTotal;
         if (diff !== 0) return diff;
 
-        const tiebreaker = allianceServiceMock.alliance()?.tiebreaker_activity_type ?? null;
+        const tiebreaker = serverServiceMock.server()?.tiebreaker_activity_type ?? null;
         if (!tiebreaker) return 0;
         return 0;
       });
@@ -262,7 +262,7 @@ describe('ActivityService', () => {
       };
 
       const adminAuthMock = {
-        getAllianceId: vi.fn().mockReturnValue('alliance-1'),
+        getServerId: vi.fn().mockReturnValue('server-1'),
         getUserId: vi.fn().mockReturnValue('user-1'),
         userProfile: signal({ id: 'user-1', role: 'admin' as const, display_name: 'Admin', username: 'admin' }),
       };
@@ -273,7 +273,7 @@ describe('ActivityService', () => {
           ActivityService,
           { provide: SupabaseService, useValue: supabaseWithUpsert },
           { provide: AuthService, useValue: adminAuthMock },
-          { provide: AllianceService, useValue: allianceServiceMock },
+          { provide: ServerService, useValue: serverServiceMock },
         ],
       });
 
@@ -363,12 +363,12 @@ describe('ActivityService', () => {
           {
             provide: AuthService,
             useValue: {
-              getAllianceId: vi.fn().mockReturnValue(null),
+              getServerId: vi.fn().mockReturnValue(null),
               getUserId: vi.fn().mockReturnValue(null),
               userProfile: signal(null),
             },
           },
-          { provide: AllianceService, useValue: allianceServiceMock },
+          { provide: ServerService, useValue: serverServiceMock },
         ],
       });
 

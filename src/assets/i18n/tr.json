@@ -18,19 +18,19 @@
     "password": "Şifre",
     "confirmPassword": "Şifreyi Onayla",
     "displayName": "Görünen Ad",
-    "allianceName": "İttifak Adı",
+    "serverName": "Sunucu Adı",
     "invitationToken": "Davet Kodu",
     "welcomeBack": "Tekrar Hoş Geldiniz",
     "signInSubtitle": "Hesabınıza giriş yapın",
-    "signupTitle": "İttifak Oluştur",
-    "signupSubtitle": "İttifak yöneticisi olarak kaydolun",
-    "joinTitle": "İttifaka Katıl",
-    "joinSubtitle": "Bir ittifaka katılmak için davetinizi kullanın",
+    "signupTitle": "Sunucu Oluştur",
+    "signupSubtitle": "Sunucu yöneticisi olarak kaydolun",
+    "joinTitle": "Sunucua Katıl",
+    "joinSubtitle": "Bir sunucua katılmak için davetinizi kullanın",
     "setupTitle": "Süper Admin Kurulumu",
     "setupSubtitle": "İlk süper yönetici hesabını oluşturun",
-    "setupWarning": "Bu tek seferlik bir kurulumdur. Süper yönetici tüm ittifak ve kullanıcılara tam erişime sahiptir.",
+    "setupWarning": "Bu tek seferlik bir kurulumdur. Süper yönetici tüm sunucu ve kullanıcılara tam erişime sahiptir.",
     "signingIn": "Giriş yapılıyor...",
-    "creatingAlliance": "İttifak oluşturuluyor...",
+    "creatingServer": "Sunucu oluşturuluyor...",
     "joining": "Katılıyor...",
     "createSuperAdmin": "Süper Admin Oluştur",
     "creating": "Oluşturuluyor...",
@@ -38,17 +38,17 @@
     "usernameHint": "3–30 karakter — yalnızca harf, rakam, - ve _",
     "displayNamePlaceholder": "Tam adınızı girin",
     "displayNameHint": "Diğerlerine görünecek adınız",
-    "allianceNamePlaceholder": "İttifak adı girin",
-    "allianceNameHint": "Yeni ittifakınız için bir ad seçin",
+    "serverNamePlaceholder": "Sunucu adı girin",
+    "serverNameHint": "Yeni sunucuınız için bir ad seçin",
     "passwordPlaceholder": "örn. Sifrem123!",
     "passwordHint": "Min. 6 karakter, en az bir harf ve bir rakam içermelidir",
     "confirmPasswordPlaceholder": "Şifrenizi tekrar girin",
     "tokenPlaceholder": "Davet kodunu girin",
-    "tokenHint": "İttifak yöneticiniz tarafından sağlanır",
+    "tokenHint": "Sunucu yöneticiniz tarafından sağlanır",
     "haveAccount": "Zaten hesabınız var mı?",
     "noAccount": "Hesabınız yok mu?",
     "haveInvitation": "Davetiniz var mı?",
-    "wantCreateAlliance": "İttifak oluşturmak ister misiniz?",
+    "wantCreateServer": "Sunucu oluşturmak ister misiniz?",
     "errors": {
       "usernameExists": "Kullanıcı adı zaten mevcut",
       "usernameInvalidChars": "Yalnızca harf, rakam, - ve _",
@@ -59,7 +59,7 @@
       "joinFailed": "Katılım başarısız. Lütfen tekrar deneyin.",
       "setupFailed": "Kurulum başarısız. Lütfen tekrar deneyin.",
       "superAdminExists": "Süper admin zaten mevcut",
-      "allianceCreationFailed": "İttifak oluşturulamadı",
+      "serverCreationFailed": "Sunucu oluşturulamadı",
       "invalidToken": "Geçersiz veya süresi dolmuş davet kodu"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "Süper Admin",
-    "allianceSettings": "İttifak Ayarları",
+    "serverSettings": "Sunucu Ayarları",
     "home": "Ana Sayfa",
     "guides": "Rehberler"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "İttifak Ayarları",
+      "title": "Sunucu Ayarları",
       "tabs": {
-        "overview": "İttifak",
+        "overview": "Sunucu",
         "invitations": "Davetler",
         "activitySettings": "Aktivite Ayarları",
         "retroactive": "Geçmiş Aktiviteler",
         "importExcel": "Excel İçe Aktar",
         "discord": "Discord"
       },
-      "allianceInfo": "İttifak Bilgileri",
-      "allianceName": "İttifak Adı",
-      "allianceTag": "İttifak Etiketi",
-      "allianceTagHint": "İsteğe bağlı 3 karakterlik tanımlayıcı (örn. RgW)",
+      "serverInfo": "Sunucu Bilgileri",
+      "serverName": "Sunucu Adı",
+      "serverTag": "Sunucu Etiketi",
+      "serverTagHint": "İsteğe bağlı 3 karakterlik tanımlayıcı (örn. RgW)",
       "updateName": "Güncelle",
       "memberList": "Üye Listesi",
       "members": "üyeler",
@@ -120,8 +120,8 @@
       "revokeInvitation": "Daveti iptal et",
       "revokeConfirm": "Bu daveti iptal etmek istediğinizden emin misiniz?",
       "membersJoined": "Bu davet aracılığıyla katılan üyeler",
-      "nameUpdated": "İttifak başarıyla güncellendi!",
-      "nameUpdateFailed": "İttifak güncellenemedi",
+      "nameUpdated": "Sunucu başarıyla güncellendi!",
+      "nameUpdateFailed": "Sunucu güncellenemedi",
       "invitationCreated": "Davet oluşturuldu ve bağlantı panoya kopyalandı!",
       "invitationCreateFailed": "Davet oluşturulamadı",
       "invitationRevoked": "Davet başarıyla iptal edildi",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "Tehlike Bölgesi",
         "deleteAllActivities": "Tüm aktiviteleri sil",
-        "deleteAllActivitiesDescription": "İttifak üyeleri tarafından gönderilen tüm aktiviteleri kalıcı olarak silin. Bu işlem geri alınamaz.",
+        "deleteAllActivitiesDescription": "Sunucu üyeleri tarafından gönderilen tüm aktiviteleri kalıcı olarak silin. Bu işlem geri alınamaz.",
         "deleteAllActivitiesConfirm": "TÜM aktiviteleri silmek istediğinizden emin misiniz? Bu, tüm üyeler için tüm aktivite geçmişini kalıcı olarak silecektir.",
         "deleteAllActivitiesSuccess": "Tüm aktiviteler silindi",
         "deleteAllActivitiesFailed": "Aktiviteler silinemedi"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "Geçmiş Aktivite Ekle",
-      "description": "Yönetici olarak, ittifak üyeleri için son 6 haftanın aktivitelerini ekleyebilirsiniz. Bir üye, hafta seçin ve aktivite bilgilerini girin.",
+      "description": "Yönetici olarak, sunucu üyeleri için son 6 haftanın aktivitelerini ekleyebilirsiniz. Bir üye, hafta seçin ve aktivite bilgilerini girin.",
       "selectMember": "Üye Seç",
-      "memberHint": "Aktivite eklemek istediğiniz ittifak üyesini seçin",
+      "memberHint": "Aktivite eklemek istediğiniz sunucu üyesini seçin",
       "selectWeek": "Hafta Seç",
       "weekHint": "Aktivitenin gerçekleştiği haftayı seçin",
       "currentWeek": "Bu Hafta",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "Excel'den Aktivite İçe Aktar",
-      "description": "İttifak üyeleriniz için toplu geçmiş aktiviteleri içe aktarmak için doldurulmuş bir şablon yükleyin.",
+      "description": "Sunucu üyeleriniz için toplu geçmiş aktiviteleri içe aktarmak için doldurulmuş bir şablon yükleyin.",
       "templateHint": "Önce içe aktarma şablonunu indirip doldurun.",
       "downloadTemplate": "Şablonu İndir",
       "activityFilter": "Aktiviteye göre filtrele",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "Süper Admin Paneli",
       "subtitle": "Global sistem genel bakışı ve yönetimi",
-      "totalAlliances": "Toplam İttifaklar",
+      "totalServers": "Toplam Sunucular",
       "totalUsers": "Toplam Kullanıcılar",
       "totalActivities": "Toplam Aktiviteler",
       "activeInvitations": "Aktif Davetler",
       "quickActions": "Hızlı Eylemler",
-      "manageAlliances": "İttifakları Yönet",
-      "manageAlliancesDesc": "Tüm ittifakları görüntüle ve yönet",
+      "manageServers": "Sunucuları Yönet",
+      "manageServersDesc": "Tüm sunucuları görüntüle ve yönet",
       "manageUsers": "Kullanıcıları Yönet",
       "manageUsersDesc": "Tüm kullanıcıları görüntüle ve yönet",
       "manageGuidesData": "Rehber Referans Verileri",
       "manageGuidesDataDesc": "Şampiyonlar, beceriler, atlar ve mücevherleri yönet"
     },
-    "alliances": {
-      "title": "İttifak Yönetimi",
-      "subtitle": "Sistemdeki tüm ittifakları yönetin",
-      "noAlliances": "Henüz ittifak oluşturulmadı",
-      "name": "İttifak Adı",
+    "servers": {
+      "title": "Sunucu Yönetimi",
+      "subtitle": "Sistemdeki tüm sunucuları yönetin",
+      "noServers": "Henüz sunucu oluşturulmadı",
+      "name": "Sunucu Adı",
       "tag": "Etiket",
       "admin": "Yönetici",
       "members": "Üyeler",
       "created": "Oluşturuldu",
       "actions": "Eylemler",
-      "deleteConfirm": "\"{{name}}\" ittifakını silmek istediğinizden emin misiniz? Tüm ilgili kullanıcılar, aktiviteler ve davetler de silinecektir.",
-      "loadFailed": "İttifaklar yüklenemedi",
-      "updated": "İttifak başarıyla güncellendi",
-      "updateFailed": "İttifak güncellenemedi",
-      "deleted": "İttifak başarıyla silindi",
-      "deleteFailed": "İttifak silinemedi"
+      "deleteConfirm": "\"{{name}}\" sunucuını silmek istediğinizden emin misiniz? Tüm ilgili kullanıcılar, aktiviteler ve davetler de silinecektir.",
+      "loadFailed": "Sunucular yüklenemedi",
+      "updated": "Sunucu başarıyla güncellendi",
+      "updateFailed": "Sunucu güncellenemedi",
+      "deleted": "Sunucu başarıyla silindi",
+      "deleteFailed": "Sunucu silinemedi"
     },
     "users": {
       "title": "Kullanıcı Yönetimi",
@@ -346,8 +346,8 @@
       "displayName": "Görünen Ad",
       "username": "Kullanıcı Adı",
       "role": "Rol",
-      "alliance": "İttifak",
-      "noAlliance": "İttifak yok",
+      "server": "Sunucu",
+      "noServer": "Sunucu yok",
       "created": "Oluşturuldu",
       "actions": "Eylemler",
       "deleteConfirm": "\"{{name}}\" kullanıcısını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
@@ -362,7 +362,7 @@
     "skills": "Beceriler",
     "assignSkills": "Becerileri Ata",
     "temperaments": "Temperamentler",
-    "ornaments": "Süsler",
+    "adornments": "Süsler",
     "gems": "Mücevherler",
     "rings": "Yüzükler",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "At özellikleri",
     "trait": "Özellik",
     "add_trait": "Özellik ekle",
-    "ornament": "Süs",
+    "adornment": "Süs",
     "ring": "Yüzük",
     "description": "Açıklama / Yazar notları",
     "editor": {
@@ -673,10 +673,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "İttifak Aktivite Takipçisi",
+      "eyebrow": "Sunucu Aktivite Takipçisi",
       "title1": "Akıllıca Oyna.",
       "title2": "Birlikte Kazan.",
-      "subtitleBefore": "Her aktif oyuncu için tasarlandı — yalnızca harcayanlar için değil. İttifak aktivitelerinizi takip edin, stratejik puanlar kazanın ve",
+      "subtitleBefore": "Her aktif oyuncu için tasarlandı — yalnızca harcayanlar için değil. Sunucu aktivitelerinizi takip edin, stratejik puanlar kazanın ve",
       "subtitleStrong": "Top 10 En Güçlü Vali",
       "subtitleAfter": "olmayı çok daha az speed-up ve kaynak harcayarak başarın.",
       "ctaLogin": "Giriş Yap",
@@ -706,7 +706,7 @@
         "description": "Para kazanma yok. Saf aktivite ve akıllı katılım sizi sıralamada yukarı taşır — herkes rekabet edebilir."
       },
       "benefit2": {
-        "title": "İttifak Genelinde Kaynak Tasarrufu",
+        "title": "Sunucu Genelinde Kaynak Tasarrufu",
         "description": "Yapılandırılmış takip, kimin ne zaman katılacağını optimize ederek KvK hazırlığı ve En Güçlü İmparatorluk için speed-up ve kaynakları korur."
       },
       "benefit3": {
@@ -715,9 +715,9 @@
       }
     },
     "cta": {
-      "title": "İttifakınıza liderlik etmeye hazır mısınız?",
-      "subtitle": "İttifakınızı oluşturun ve üyelerinizin ilerlemesini bugünden takip etmeye başlayın.",
-      "button": "İttifakınızı Oluşturun"
+      "title": "Sunucuınıza liderlik etmeye hazır mısınız?",
+      "subtitle": "Sunucuınızı oluşturun ve üyelerinizin ilerlemesini bugünden takip etmeye başlayın.",
+      "button": "Sunucuınızı Oluşturun"
     },
     "footer": "Activity Tracker — Daha akıllı oyna, daha güçlü rekabet et."
   }

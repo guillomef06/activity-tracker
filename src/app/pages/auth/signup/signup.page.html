@@ -41,16 +41,16 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>groups</mat-icon>
-          <mat-label>{{ 'auth.allianceName' | translate }}</mat-label>
+          <mat-label>{{ 'auth.serverName' | translate }}</mat-label>
           <input
             matInput
-            formControlName="allianceName"
+            formControlName="serverName"
             type="text"
-            [placeholder]="'auth.allianceNamePlaceholder' | translate"
+            [placeholder]="'auth.serverNamePlaceholder' | translate"
           />
-          <mat-hint>{{ 'auth.allianceNameHint' | translate }}</mat-hint>
-          @if (allianceNameError()) {
-            <mat-error>{{ allianceNameError() | translate }}</mat-error>
+          <mat-hint>{{ 'auth.serverNameHint' | translate }}</mat-hint>
+          @if (serverNameError()) {
+            <mat-error>{{ serverNameError() | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -148,7 +148,7 @@
         <app-loading-button
           type="submit"
           [text]="'auth.signup' | translate"
-          [loadingText]="'auth.creatingAlliance' | translate"
+          [loadingText]="'auth.creatingServer' | translate"
           [submitting]="isLoading()"
           buttonClass="submit-button"
         />

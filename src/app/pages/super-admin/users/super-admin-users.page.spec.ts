@@ -68,7 +68,7 @@ describe('SuperAdminUsersPage', () => {
       'displayName',
       'username',
       'role',
-      'alliance',
+      'server',
       'createdAt',
       'actions',
     ]);

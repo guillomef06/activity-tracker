@@ -18,19 +18,19 @@
     "password": "Password",
     "confirmPassword": "Conferma Password",
     "displayName": "Nome visualizzato",
-    "allianceName": "Nome dell'alleanza",
+    "serverName": "Nome del server",
     "invitationToken": "Token di invito",
     "welcomeBack": "Bentornato",
     "signInSubtitle": "Accedi al tuo account",
-    "signupTitle": "Crea un'Alleanza",
-    "signupSubtitle": "Registrati come Amministratore di Alleanza",
-    "joinTitle": "Unisciti a un'Alleanza",
-    "joinSubtitle": "Usa il tuo invito per unirti a un'alleanza",
+    "signupTitle": "Crea un Server",
+    "signupSubtitle": "Registrati come Amministratore di Server",
+    "joinTitle": "Unisciti a un Server",
+    "joinSubtitle": "Usa il tuo invito per unirti a un server",
     "setupTitle": "Configurazione Super Admin",
     "setupSubtitle": "Crea il primo account super amministratore",
     "setupWarning": "Questa è una configurazione unica. Il super amministratore ha accesso completo per gestire tutte le alleanze e gli utenti.",
     "signingIn": "Accesso in corso...",
-    "creatingAlliance": "Creazione alleanza...",
+    "creatingServer": "Creazione server...",
     "joining": "Adesione in corso...",
     "createSuperAdmin": "Crea Super Admin",
     "creating": "Creazione...",
@@ -38,17 +38,17 @@
     "usernameHint": "3-30 caratteri — solo lettere, numeri, - e _",
     "displayNamePlaceholder": "Inserisci il tuo nome completo",
     "displayNameHint": "Il tuo nome come apparirà agli altri",
-    "allianceNamePlaceholder": "Inserisci il nome della tua alleanza",
-    "allianceNameHint": "Scegli un nome per la tua nuova alleanza",
+    "serverNamePlaceholder": "Inserisci il nome del tuo server",
+    "serverNameHint": "Scegli un nome per il tuo nuovo server",
     "passwordPlaceholder": "es. MiaPass123!",
     "passwordHint": "Min. 6 caratteri, deve includere almeno una lettera e un numero",
     "confirmPasswordPlaceholder": "Reinserisci la tua password",
     "tokenPlaceholder": "Inserisci il token di invito",
-    "tokenHint": "Fornito dall'amministratore della tua alleanza",
+    "tokenHint": "Fornito dall'amministratore del tuo server",
     "haveAccount": "Hai già un account?",
     "noAccount": "Non hai un account?",
     "haveInvitation": "Hai un invito?",
-    "wantCreateAlliance": "Vuoi creare un'alleanza?",
+    "wantCreateServer": "Vuoi creare un server?",
     "errors": {
       "usernameExists": "Il nome utente esiste già",
       "usernameInvalidChars": "Solo lettere, numeri, - e _",
@@ -59,7 +59,7 @@
       "joinFailed": "Adesione non riuscita. Riprova.",
       "setupFailed": "Configurazione non riuscita. Riprova.",
       "superAdminExists": "Il super amministratore esiste già",
-      "allianceCreationFailed": "Creazione dell'alleanza non riuscita",
+      "serverCreationFailed": "Creazione del server non riuscita",
       "invalidToken": "Token di invito non valido o scaduto"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "allianceSettings": "Impostazioni Alleanza",
+    "serverSettings": "Impostazioni Server",
     "home": "Home",
     "guides": "Guide"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "Impostazioni Alleanza",
+      "title": "Impostazioni Server",
       "tabs": {
-        "overview": "Alleanza",
+        "overview": "Server",
         "invitations": "Inviti",
         "activitySettings": "Impostazioni Attività",
         "retroactive": "Attività Retroattive",
         "importExcel": "Importa Excel",
         "discord": "Discord"
       },
-      "allianceInfo": "Informazioni Alleanza",
-      "allianceName": "Nome Alleanza",
-      "allianceTag": "Tag Alleanza",
-      "allianceTagHint": "Identificatore opzionale di 3 caratteri (es. RgW)",
+      "serverInfo": "Informazioni Server",
+      "serverName": "Nome Server",
+      "serverTag": "Tag Server",
+      "serverTagHint": "Identificatore opzionale di 3 caratteri (es. RgW)",
       "updateName": "Aggiorna",
       "memberList": "Elenco Membri",
       "members": "membri",
@@ -120,8 +120,8 @@
       "revokeInvitation": "Revoca invito",
       "revokeConfirm": "Sei sicuro di voler revocare questo invito?",
       "membersJoined": "Membri che si sono iscritti tramite questo invito",
-      "nameUpdated": "Alleanza aggiornata con successo!",
-      "nameUpdateFailed": "Impossibile aggiornare l'alleanza",
+      "nameUpdated": "Server aggiornata con successo!",
+      "nameUpdateFailed": "Impossibile aggiornare l'server",
       "invitationCreated": "Invito creato e link copiato negli appunti!",
       "invitationCreateFailed": "Impossibile creare l'invito",
       "invitationRevoked": "Invito revocato con successo",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "Zona di pericolo",
         "deleteAllActivities": "Elimina tutte le attività",
-        "deleteAllActivitiesDescription": "Elimina definitivamente tutte le attività inviate dai membri dell'alleanza. Questa azione non può essere annullata.",
+        "deleteAllActivitiesDescription": "Elimina definitivamente tutte le attività inviate dai membri del server. Questa azione non può essere annullata.",
         "deleteAllActivitiesConfirm": "Sei sicuro di voler eliminare TUTTE le attività? Questo cancellerà definitivamente la cronologia completa per tutti i membri.",
         "deleteAllActivitiesSuccess": "Tutte le attività sono state eliminate",
         "deleteAllActivitiesFailed": "Impossibile eliminare le attività"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "Aggiungi attività retroattiva",
-      "description": "Come amministratore, puoi aggiungere attività per i membri dell'alleanza delle ultime 6 settimane. Seleziona un membro, scegli una settimana e inserisci i dettagli dell'attività.",
+      "description": "Come amministratore, puoi aggiungere attività per i membri del server delle ultime 6 settimane. Seleziona un membro, scegli una settimana e inserisci i dettagli dell'attività.",
       "selectMember": "Seleziona membro",
-      "memberHint": "Scegli il membro dell'alleanza per cui vuoi aggiungere un'attività",
+      "memberHint": "Scegli il membro del server per cui vuoi aggiungere un'attività",
       "selectWeek": "Seleziona Settimana",
       "weekHint": "Scegli la settimana in cui si è svolta l'attività",
       "currentWeek": "Settimana corrente",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "Importa attività da Excel",
-      "description": "Carica un modello compilato per importare in batch attività retroattive per i membri della tua alleanza.",
+      "description": "Carica un modello compilato per importare in batch attività retroattive per i membri del tuo server.",
       "templateHint": "Prima, scarica e compila il modello di importazione.",
       "downloadTemplate": "Scarica modello",
       "activityFilter": "Filtra per attività",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "Dashboard Super Amministratore",
       "subtitle": "Panoramica globale e gestione del sistema",
-      "totalAlliances": "Totale Alleanze",
+      "totalServers": "Totale Alleanze",
       "totalUsers": "Totale Utenti",
       "totalActivities": "Totale Attività",
       "activeInvitations": "Inviti Attivi",
       "quickActions": "Azioni Rapide",
-      "manageAlliances": "Gestisci Alleanze",
-      "manageAlliancesDesc": "Visualizza e gestisci tutte le alleanze",
+      "manageServers": "Gestisci Alleanze",
+      "manageServersDesc": "Visualizza e gestisci tutte le alleanze",
       "manageUsers": "Gestisci Utenti",
       "manageUsersDesc": "Visualizza e gestisci tutti gli utenti",
       "manageGuidesData": "Dati di Riferimento Guide",
       "manageGuidesDataDesc": "Gestisci campioni, abilità, cavalli e gemme"
     },
-    "alliances": {
+    "servers": {
       "title": "Gestione Alleanze",
       "subtitle": "Gestisci tutte le alleanze del sistema",
-      "noAlliances": "Nessuna alleanza creata ancora",
-      "name": "Nome Alleanza",
+      "noServers": "Nessuna server creata ancora",
+      "name": "Nome Server",
       "tag": "Tag",
       "admin": "Amministratore",
       "members": "Membri",
       "created": "Creata",
       "actions": "Azioni",
-      "deleteConfirm": "Sei sicuro di voler eliminare l'alleanza \"{{name}}\"? Questo eliminerà anche tutti gli utenti, le attività e gli inviti associati.",
+      "deleteConfirm": "Sei sicuro di voler eliminare l'server \"{{name}}\"? Questo eliminerà anche tutti gli utenti, le attività e gli inviti associati.",
       "loadFailed": "Impossibile caricare le alleanze",
-      "updated": "Alleanza aggiornata con successo",
-      "updateFailed": "Impossibile aggiornare l'alleanza",
-      "deleted": "Alleanza eliminata con successo",
-      "deleteFailed": "Impossibile eliminare l'alleanza"
+      "updated": "Server aggiornata con successo",
+      "updateFailed": "Impossibile aggiornare l'server",
+      "deleted": "Server eliminata con successo",
+      "deleteFailed": "Impossibile eliminare l'server"
     },
     "users": {
       "title": "Gestione Utenti",
@@ -346,8 +346,8 @@
       "displayName": "Nome Visualizzato",
       "username": "Nome Utente",
       "role": "Ruolo",
-      "alliance": "Alleanza",
-      "noAlliance": "Nessuna alleanza",
+      "server": "Server",
+      "noServer": "Nessuna server",
       "created": "Creato",
       "actions": "Azioni",
       "deleteConfirm": "Sei sicuro di voler eliminare l'utente \"{{name}}\"? Questa azione non può essere annullata.",
@@ -362,7 +362,7 @@
     "skills": "Abilità",
     "assignSkills": "Assegna Abilità",
     "temperaments": "Temperamenti",
-    "ornaments": "Ornamenti",
+    "adornments": "Ornamenti",
     "gems": "Gemme",
     "rings": "Anelli",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "Tratti del cavallo",
     "trait": "Tratto",
     "add_trait": "Aggiungi tratto",
-    "ornament": "Ornamento",
+    "adornment": "Ornamento",
     "ring": "Anello",
     "description": "Descrizione / Note dell'autore",
     "editor": {
@@ -673,10 +673,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Monitoraggio Attività dell'Alleanza",
+      "eyebrow": "Monitoraggio Attività del Server",
       "title1": "Gioca Furbo.",
       "title2": "Vinci Insieme.",
-      "subtitleBefore": "Pensato per ogni giocatore attivo — non solo per chi spende di più. Registra le attività della tua alleanza, accumula punti strategici e conquista",
+      "subtitleBefore": "Pensato per ogni giocatore attivo — non solo per chi spende di più. Registra le attività del tuo server, accumula punti strategici e conquista",
       "subtitleStrong": "la Top 10 del Governatore Più Potente",
       "subtitleAfter": "con molti meno acceleratori e risorse.",
       "ctaLogin": "Accedi",
@@ -706,7 +706,7 @@
         "description": "Nessun pay-to-win. Attività costante e partecipazione intelligente sono ciò che ti fa salire in classifica — chiunque può arrivare in cima."
       },
       "benefit2": {
-        "title": "Risparmia Risorse in Tutta l'Alleanza",
+        "title": "Risparmia Risorse in Tutta l'Server",
         "description": "Il monitoraggio strutturato ottimizza chi partecipa e quando, conservando acceleratori e risorse per il KvK e il Mightiest Empire."
       },
       "benefit3": {
@@ -715,9 +715,9 @@
       }
     },
     "cta": {
-      "title": "Pronto a guidare la tua alleanza verso la vittoria?",
-      "subtitle": "Crea la tua alleanza e inizia a monitorare i progressi dei tuoi membri da oggi.",
-      "button": "Crea la tua Alleanza"
+      "title": "Pronto a guidare il tuo server verso la vittoria?",
+      "subtitle": "Crea il tuo server e inizia a monitorare i progressi dei tuoi membri da oggi.",
+      "button": "Crea la tua Server"
     },
     "footer": "Activity Tracker — Gioca furbo, conquista la vittoria."
   }

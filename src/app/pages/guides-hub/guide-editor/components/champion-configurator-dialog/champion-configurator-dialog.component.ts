@@ -14,7 +14,7 @@ import type {
   Skill,
   Gem,
   HorseTemperament,
-  Ornament,
+  Adornment,
   Ring,
   ChampionSlotConfig,
   ChampionPosition,
@@ -41,7 +41,7 @@ export interface ChampionConfiguratorDialogData {
   skills: Skill[];
   gems: Gem[];
   temperaments: HorseTemperament[];
-  ornaments: Ornament[];
+  adornments: Adornment[];
   rings: Ring[];
   /** Ring IDs already assigned to other champion slots — excluded from selection */
   usedRingIds: string[];
@@ -155,7 +155,7 @@ export class ChampionConfiguratorDialogComponent implements OnInit {
         trait1_id: existing.traits[0]?.id ?? null,
         trait2_id: existing.traits[1]?.id ?? null,
         trait3_id: existing.traits[2]?.id ?? null,
-        ornament_id: existing.ornament?.id ?? null,
+        ornament_id: existing.adornment?.id ?? null,
         ring_id: existing.ring?.id ?? null,
       });
       this.selectedChampionId.set(existing.champion.id);
@@ -200,7 +200,7 @@ export class ChampionConfiguratorDialogComponent implements OnInit {
     const findSkill = (id: string | null) => (id ? (this.allAvailableSkills().find(s => s.id === id) ?? null) : null);
     const findGem = (id: string | null) => (id ? (this.data.gems.find(g => g.id === id) ?? null) : null);
     const findTrait = (id: string | null) => (id ? (this.data.temperaments.find(t => t.id === id) ?? null) : null);
-    const findOrnament = (id: string | null) => (id ? (this.data.ornaments.find(o => o.id === id) ?? null) : null);
+    const findAdornment = (id: string | null) => (id ? (this.data.adornments.find(o => o.id === id) ?? null) : null);
     const findRing = (id: string | null) => (id ? (this.data.rings.find(r => r.id === id) ?? null) : null);
 
     const result: ChampionSlotConfig = {
@@ -210,7 +210,7 @@ export class ChampionConfiguratorDialogComponent implements OnInit {
       // slot1=strategy, slot2=hero, slot3=tactics
       gems: [findGem(v.gem_strategy_id), findGem(v.gem_hero_id), findGem(v.gem_tactics_id)],
       traits: [findTrait(v.trait1_id), findTrait(v.trait2_id), findTrait(v.trait3_id)],
-      ornament: findOrnament(v.ornament_id),
+      adornment: findAdornment(v.ornament_id),
       ring: findRing(v.ring_id),
     };
 

@@ -32,7 +32,7 @@ import type {
   Skill,
   Gem,
   HorseTemperament,
-  Ornament,
+  Adornment,
   Ring,
   ChampionSlotConfig,
   ChampionPosition,
@@ -140,7 +140,7 @@ export class GuideEditorPage implements OnInit {
   private readonly skills = signal<Skill[]>([]);
   private readonly gems = signal<Gem[]>([]);
   private readonly temperaments = signal<HorseTemperament[]>([]);
-  private readonly ornaments = signal<Ornament[]>([]);
+  private readonly adornments = signal<Adornment[]>([]);
   private readonly rings = signal<Ring[]>([]);
 
   /** Skills indexed by champion ID — built once reference data is loaded */
@@ -170,12 +170,12 @@ export class GuideEditorPage implements OnInit {
   }
 
   private async loadReferenceData(): Promise<void> {
-    const [champions, skills, gems, temperaments, ornaments, rings] = await Promise.all([
+    const [champions, skills, gems, temperaments, adornments, rings] = await Promise.all([
       this.guideAdminService.getChampions(),
       this.guideAdminService.getSkills(),
       this.guideAdminService.getGems(),
       this.guideAdminService.getHorseTemperaments(),
-      this.guideAdminService.getOrnaments(),
+      this.guideAdminService.getAdornments(),
       this.guideAdminService.getRings(),
     ]);
 
@@ -183,7 +183,7 @@ export class GuideEditorPage implements OnInit {
     this.skills.set(skills.filter(s => s.is_active));
     this.gems.set(gems.filter(g => g.is_active));
     this.temperaments.set(temperaments);
-    this.ornaments.set(ornaments.filter(o => o.is_active));
+    this.adornments.set(adornments.filter(o => o.is_active));
     this.rings.set(rings.filter(r => r.is_active));
 
     // Build champion → skills map
@@ -250,7 +250,7 @@ export class GuideEditorPage implements OnInit {
       skills,
       gems,
       traits,
-      ornament: gc.ornaments ?? null,
+      adornment: gc.adornments ?? null,
       ring: gc.rings ?? null,
     };
   }
@@ -272,7 +272,7 @@ export class GuideEditorPage implements OnInit {
       skills: this.skills(),
       gems: this.gems(),
       temperaments: this.temperaments(),
-      ornaments: this.ornaments(),
+      adornments: this.adornments(),
       rings: this.rings(),
       usedRingIds,
       championSkillsMap: this.championSkillsMap(),
