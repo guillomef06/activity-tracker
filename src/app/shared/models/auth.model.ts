@@ -4,19 +4,19 @@
  */
 
 /**
- * Request to sign up as admin (creates alliance)
+ * Request to sign up as admin (creates server)
  */
 export interface AdminSignUpRequest {
   username: string;
   password: string;
   displayName: string;
-  allianceName: string;
+  serverName: string;
   recoveryQuestionId: number;
   recoveryAnswer: string;
 }
 
 /**
- * Request to sign up as member (joins existing alliance)
+ * Request to sign up as member (joins existing server)
  */
 export interface MemberSignUpRequest {
   username: string;

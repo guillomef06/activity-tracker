@@ -385,7 +385,7 @@ export class GuideService {
       const serializedSlots = slots.map(slot => ({
         position: slot.position,
         champion_id: slot.champion.id,
-        ornament_id: slot.ornament?.id ?? null,
+        ornament_id: slot.adornment?.id ?? null,
         ring_id: slot.ring?.id ?? null,
         skills: slot.skills
           .map((skill, i) => (skill ? { skill_id: skill.id, slot: i + 1 } : null))

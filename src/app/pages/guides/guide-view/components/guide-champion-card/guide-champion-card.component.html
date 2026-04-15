@@ -71,15 +71,15 @@
         </div>
       }
 
-      <!-- Ornament -->
-      @if (champion().ornaments) {
+      <!-- Adornment -->
+      @if (champion().adornments) {
         <div class="detail-row">
-          <span class="detail-label">{{ 'guides.ornament' | translate }}</span>
+          <span class="detail-label">{{ 'guides.adornment' | translate }}</span>
           <span class="item-chip">
-            @if (champion().ornaments!.image_url) {
-              <img [src]="champion().ornaments!.image_url!" [alt]="champion().ornaments!.name" class="item-img" />
+            @if (champion().adornments!.image_url) {
+              <img [src]="champion().adornments!.image_url!" [alt]="champion().adornments!.name" class="item-img" />
             }
-            {{ champion().ornaments!.name }}
+            {{ champion().adornments!.name }}
           </span>
         </div>
       }

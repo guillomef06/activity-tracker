@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
-import type { Champion, Skill, HorseTemperament, Ornament, Gem, Ring } from '@shared/models';
+import type { Champion, Skill, HorseTemperament, Adornment, Gem, Ring } from '@shared/models';
 
 /**
  * Admin service for CRUD operations on guide reference data.
@@ -288,10 +288,10 @@ export class GuideAdminService {
   }
 
   // ============================================
-  // Ornaments
+  // Adornments
   // ============================================
 
-  async getOrnaments(): Promise<Ornament[]> {
+  async getAdornments(): Promise<Adornment[]> {
     try {
       const { data, error } = await this.supabase
         .from('ornaments')
@@ -299,44 +299,44 @@ export class GuideAdminService {
         .order('sort_order', { ascending: true });
 
       if (error) throw error;
-      return (data ?? []) as Ornament[];
+      return (data ?? []) as Adornment[];
     } catch (error) {
-      console.error('GuideAdminService.getOrnaments error:', error);
+      console.error('GuideAdminService.getAdornments error:', error);
       return [];
     }
   }
 
-  async createOrnament(data: Omit<Ornament, 'id'>): Promise<{ ornament: Ornament | null; error: string | null }> {
+  async createAdornment(data: Omit<Adornment, 'id'>): Promise<{ adornment: Adornment | null; error: string | null }> {
     try {
       const { data: created, error } = await this.supabase.from('ornaments').insert(data).select().single();
 
       if (error) throw error;
-      return { ornament: created as Ornament, error: null };
+      return { adornment: created as Adornment, error: null };
     } catch (error) {
-      console.error('GuideAdminService.createOrnament error:', error);
-      return { ornament: null, error: (error as Error).message };
+      console.error('GuideAdminService.createAdornment error:', error);
+      return { adornment: null, error: (error as Error).message };
     }
   }
 
-  async updateOrnament(id: string, data: Partial<Omit<Ornament, 'id'>>): Promise<{ error: string | null }> {
+  async updateAdornment(id: string, data: Partial<Omit<Adornment, 'id'>>): Promise<{ error: string | null }> {
     try {
       const { error } = await this.supabase.from('ornaments').update(data).eq('id', id);
 
       if (error) throw error;
       return { error: null };
     } catch (error) {
-      console.error('GuideAdminService.updateOrnament error:', error);
+      console.error('GuideAdminService.updateAdornment error:', error);
       return { error: (error as Error).message };
     }
   }
 
-  async deleteOrnament(id: string): Promise<{ error: string | null }> {
+  async deleteAdornment(id: string): Promise<{ error: string | null }> {
     try {
       const { error } = await this.supabase.from('ornaments').delete().eq('id', id);
       if (error) throw error;
       return { error: null };
     } catch (error) {
-      console.error('GuideAdminService.deleteOrnament error:', error);
+      console.error('GuideAdminService.deleteAdornment error:', error);
       return { error: (error as Error).message };
     }
   }

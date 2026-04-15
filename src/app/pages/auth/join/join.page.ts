@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
-import { AllianceService } from '@app/core/services/alliance.service';
+import { ServerService } from '@app/core/services/server.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import { AuthBackgroundComponent } from '@app/shared/components/auth-background/auth-background.component';
 import type { MemberSignUpRequest } from '@app/shared/models';
@@ -43,7 +43,7 @@ import {
 })
 export class JoinPage implements OnInit {
   private readonly authService = inject(AuthService);
-  private readonly allianceService = inject(AllianceService);
+  private readonly serverService = inject(ServerService);
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -55,7 +55,7 @@ export class JoinPage implements OnInit {
   protected readonly isLoading = signal(false);
   protected readonly isValidatingToken = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
-  protected readonly allianceName = signal<string | null>(null);
+  protected readonly serverName = signal<string | null>(null);
   protected readonly invitationToken = signal<string | null>(null);
 
   protected readonly joinForm: FormGroup = this.fb.group(
@@ -117,7 +117,7 @@ export class JoinPage implements OnInit {
     const tokenValue = token || this.joinForm.get('token')?.value;
 
     if (!tokenValue || tokenValue.length < 6) {
-      this.allianceName.set(null);
+      this.serverName.set(null);
       this.invitationToken.set(null);
       return;
     }
@@ -126,21 +126,21 @@ export class JoinPage implements OnInit {
     this.errorMessage.set(null);
 
     try {
-      const response = await this.allianceService.validateInvitation(tokenValue);
+      const response = await this.serverService.validateInvitation(tokenValue);
 
-      if (response.valid && response.alliance) {
+      if (response.valid && response.server) {
         this.invitationToken.set(tokenValue);
-        this.allianceName.set(response.alliance.name);
+        this.serverName.set(response.server.name);
         this.errorMessage.set(null);
       } else {
-        this.allianceName.set(null);
+        this.serverName.set(null);
         this.invitationToken.set(null);
         this.errorMessage.set(response.error || 'auth.errors.invalidToken');
       }
     } catch (error: unknown) {
       console.error('Token validation error:', error);
       this.errorMessage.set('auth.errors.invalidToken');
-      this.allianceName.set(null);
+      this.serverName.set(null);
       this.invitationToken.set(null);
     } finally {
       this.isValidatingToken.set(false);

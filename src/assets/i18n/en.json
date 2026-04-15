@@ -18,19 +18,19 @@
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "displayName": "Display Name",
-    "allianceName": "Alliance Name",
+    "serverName": "Server Name",
     "invitationToken": "Invitation Token",
     "welcomeBack": "Welcome Back",
     "signInSubtitle": "Sign in to your account",
-    "signupTitle": "Create Alliance",
-    "signupSubtitle": "Sign up as an Alliance Administrator",
-    "joinTitle": "Join Alliance",
-    "joinSubtitle": "Use your invitation to join an alliance",
+    "signupTitle": "Create Server",
+    "signupSubtitle": "Sign up as an Server Administrator",
+    "joinTitle": "Join Server",
+    "joinSubtitle": "Use your invitation to join an server",
     "setupTitle": "Super Admin Setup",
     "setupSubtitle": "Create the first super administrator account",
-    "setupWarning": "This is a one-time setup. The super admin has complete access to manage all alliances and users.",
+    "setupWarning": "This is a one-time setup. The super admin has complete access to manage all servers and users.",
     "signingIn": "Signing in...",
-    "creatingAlliance": "Creating Alliance...",
+    "creatingServer": "Creating Server...",
     "joining": "Joining...",
     "createSuperAdmin": "Create Super Admin",
     "creating": "Creating...",
@@ -38,17 +38,17 @@
     "usernameHint": "3-30 characters — letters, numbers, - and _ only",
     "displayNamePlaceholder": "Enter your full name",
     "displayNameHint": "Your name as it will appear to others",
-    "allianceNamePlaceholder": "Enter your alliance name",
-    "allianceNameHint": "Choose a name for your new alliance",
+    "serverNamePlaceholder": "Enter your server name",
+    "serverNameHint": "Choose a name for your new server",
     "passwordPlaceholder": "e.g. MyPass123!",
     "passwordHint": "Min. 6 characters, must include at least one letter and one number",
     "confirmPasswordPlaceholder": "Re-enter your password",
     "tokenPlaceholder": "Enter invitation token",
-    "tokenHint": "Provided by your alliance administrator",
+    "tokenHint": "Provided by your server administrator",
     "haveAccount": "Already have an account?",
     "noAccount": "Don't have an account?",
     "haveInvitation": "Have an invitation?",
-    "wantCreateAlliance": "Want to create an alliance?",
+    "wantCreateServer": "Want to create an server?",
     "errors": {
       "usernameExists": "Username already exists",
       "usernameInvalidChars": "Letters, numbers, - and _ only",
@@ -59,7 +59,7 @@
       "joinFailed": "Join failed. Please try again.",
       "setupFailed": "Setup failed. Please try again.",
       "superAdminExists": "Super admin already exists",
-      "allianceCreationFailed": "Failed to create alliance",
+      "serverCreationFailed": "Failed to create server",
       "invalidToken": "Invalid or expired invitation token"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "allianceSettings": "Alliance Settings",
+    "serverSettings": "Server Settings",
     "home": "Home",
     "guides": "Guides"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "Alliance Settings",
+      "title": "Server Settings",
       "tabs": {
-        "overview": "Alliance",
+        "overview": "Server",
         "invitations": "Invitations",
         "activitySettings": "Activity Settings",
         "retroactive": "Retroactive Activities",
         "importExcel": "Import Excel",
         "discord": "Discord"
       },
-      "allianceInfo": "Alliance Information",
-      "allianceName": "Alliance Name",
-      "allianceTag": "Alliance Tag",
-      "allianceTagHint": "Optional 3-character identifier (e.g. RgW)",
+      "serverInfo": "Server Information",
+      "serverName": "Server Name",
+      "serverTag": "Server Tag",
+      "serverTagHint": "Optional 3-character identifier (e.g. RgW)",
       "updateName": "Update",
       "memberList": "Member List",
       "members": "members",
@@ -120,8 +120,8 @@
       "revokeInvitation": "Revoke invitation",
       "revokeConfirm": "Are you sure you want to revoke this invitation?",
       "membersJoined": "Members who joined via this invitation",
-      "nameUpdated": "Alliance updated successfully!",
-      "nameUpdateFailed": "Failed to update alliance",
+      "nameUpdated": "Server updated successfully!",
+      "nameUpdateFailed": "Failed to update server",
       "invitationCreated": "Invitation created and link copied to clipboard!",
       "invitationCreateFailed": "Failed to create invitation",
       "invitationRevoked": "Invitation revoked successfully",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "Danger Zone",
         "deleteAllActivities": "Delete all activities",
-        "deleteAllActivitiesDescription": "Permanently delete all activities submitted by alliance members. This action cannot be undone.",
+        "deleteAllActivitiesDescription": "Permanently delete all activities submitted by server members. This action cannot be undone.",
         "deleteAllActivitiesConfirm": "Are you sure you want to delete ALL activities? This will permanently erase the complete activity history for all members.",
         "deleteAllActivitiesSuccess": "All activities have been deleted",
         "deleteAllActivitiesFailed": "Failed to delete activities"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "Add Retroactive Activity",
-      "description": "As an admin, you can add activities for alliance members for the past 6 weeks. Select a member, choose a week, and enter their activity details.",
+      "description": "As an admin, you can add activities for server members for the past 6 weeks. Select a member, choose a week, and enter their activity details.",
       "selectMember": "Select Member",
-      "memberHint": "Choose the alliance member for whom you want to add an activity",
+      "memberHint": "Choose the server member for whom you want to add an activity",
       "selectWeek": "Select Week",
       "weekHint": "Choose the week when the activity took place",
       "currentWeek": "Current Week",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "Import Activities from Excel",
-      "description": "Upload a filled-in template to batch-import retroactive activities for your alliance members.",
+      "description": "Upload a filled-in template to batch-import retroactive activities for your server members.",
       "templateHint": "First, download and fill in the import template.",
       "downloadTemplate": "Download Template",
       "activityFilter": "Filter by activity",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "Super Admin Dashboard",
       "subtitle": "Global system overview and management",
-      "totalAlliances": "Total Alliances",
+      "totalServers": "Total Servers",
       "totalUsers": "Total Users",
       "totalActivities": "Total Activities",
       "activeInvitations": "Active Invitations",
       "quickActions": "Quick Actions",
-      "manageAlliances": "Manage Alliances",
-      "manageAlliancesDesc": "View and manage all alliances",
+      "manageServers": "Manage Servers",
+      "manageServersDesc": "View and manage all servers",
       "manageUsers": "Manage Users",
       "manageUsersDesc": "View and manage all users",
       "manageGuidesData": "Guide Reference Data",
       "manageGuidesDataDesc": "Manage champions, skills, horses and gems"
     },
-    "alliances": {
-      "title": "Alliances Management",
-      "subtitle": "Manage all alliances across the system",
-      "noAlliances": "No alliances created yet",
-      "name": "Alliance Name",
+    "servers": {
+      "title": "Servers Management",
+      "subtitle": "Manage all servers across the system",
+      "noServers": "No servers created yet",
+      "name": "Server Name",
       "tag": "Tag",
       "admin": "Admin",
       "members": "Members",
       "created": "Created",
       "actions": "Actions",
-      "deleteConfirm": "Are you sure you want to delete alliance \"{{name}}\"? This will also delete all associated users, activities, and invitations.",
-      "loadFailed": "Failed to load alliances",
-      "updated": "Alliance updated successfully",
-      "updateFailed": "Failed to update alliance",
-      "deleted": "Alliance deleted successfully",
-      "deleteFailed": "Failed to delete alliance"
+      "deleteConfirm": "Are you sure you want to delete server \"{{name}}\"? This will also delete all associated users, activities, and invitations.",
+      "loadFailed": "Failed to load servers",
+      "updated": "Server updated successfully",
+      "updateFailed": "Failed to update server",
+      "deleted": "Server deleted successfully",
+      "deleteFailed": "Failed to delete server"
     },
     "users": {
       "title": "Users Management",
@@ -346,8 +346,8 @@
       "displayName": "Display Name",
       "username": "Username",
       "role": "Role",
-      "alliance": "Alliance",
-      "noAlliance": "No alliance",
+      "server": "Server",
+      "noServer": "No server",
       "created": "Created",
       "actions": "Actions",
       "deleteConfirm": "Are you sure you want to delete user \"{{name}}\"? This action cannot be undone.",
@@ -357,12 +357,12 @@
       "deleted": "User deleted successfully"
     },
     "guidesData": "Guide Reference Data",
-    "guidesDataSubtitle": "Manage champions, skills, horses, ornaments and gems",
+    "guidesDataSubtitle": "Manage champions, skills, horses, adornments and gems",
     "champions": "Champions",
     "skills": "Skills",
     "assignSkills": "Assign Skills",
     "temperaments": "Temperaments",
-    "ornaments": "Ornaments",
+    "adornments": "Adornments",
     "gems": "Gems",
     "rings": "Rings",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "Horse traits",
     "trait": "Trait",
     "add_trait": "Add trait",
-    "ornament": "Ornament",
+    "adornment": "Adornment",
     "ring": "Ring",
     "description": "Description / Author notes",
     "editor": {
@@ -673,10 +673,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Alliance Activity Tracker",
+      "eyebrow": "Server Activity Tracker",
       "title1": "Play Smart.",
       "title2": "Win Together.",
-      "subtitleBefore": "Designed for every active player — not just spenders. Track your alliance activities, earn strategic points, and reach",
+      "subtitleBefore": "Designed for every active player — not just spenders. Track your server activities, earn strategic points, and reach",
       "subtitleStrong": "Top 10 Mightiest Governor",
       "subtitleAfter": "with significantly fewer speed-ups and resources.",
       "ctaLogin": "Login",
@@ -706,7 +706,7 @@
         "description": "No pay-to-win. Raw activity and smart participation are what move you up the leaderboard — anyone can compete."
       },
       "benefit2": {
-        "title": "Save Resources Alliance-Wide",
+        "title": "Save Resources Server-Wide",
         "description": "Structured tracking optimizes who participates and when, preserving speed-ups and resources for KvK preparation and Mightiest Empire."
       },
       "benefit3": {
@@ -715,9 +715,9 @@
       }
     },
     "cta": {
-      "title": "Ready to lead your alliance?",
-      "subtitle": "Create your alliance and start tracking your members' progress today.",
-      "button": "Create your Alliance"
+      "title": "Ready to lead your server?",
+      "subtitle": "Create your server and start tracking your members' progress today.",
+      "button": "Create your Server"
     },
     "footer": "Activity Tracker — Play smarter, compete stronger."
   }

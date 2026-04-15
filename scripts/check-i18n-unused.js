@@ -20,7 +20,7 @@ const SRC_DIR = path.join(__dirname, '../src/app');
 const SOURCE_EXTENSIONS = ['.ts', '.html'];
 
 // Add a new locale here whenever a new language file is created.
-const ALL_LOCALES = ['fr', 'en', 'es', 'it', 'de', 'tr', 'pt', 'el', 'ko', 'hi', 'zh', 'ku', 'ar'];
+const ALL_LOCALES = ['fr', 'en', 'es', 'it', 'de', 'tr', 'pt', 'el', 'ko', 'hi', 'zh', 'ku', 'ar', 'id'];
 
 // ---------------------------------------------------------------------------
 // CLI flags

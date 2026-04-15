@@ -9,7 +9,7 @@ import { SupabaseService } from '@app/core/services/supabase.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 
 interface DashboardStats {
-  totalAlliances: number;
+  totalServers: number;
   totalUsers: number;
   totalActivities: number;
   activeInvitations: number;
@@ -27,7 +27,7 @@ export class SuperAdminDashboardPage implements OnInit {
   protected readonly progressBarService = inject(ProgressBarService);
 
   protected readonly stats = signal<DashboardStats>({
-    totalAlliances: 0,
+    totalServers: 0,
     totalUsers: 0,
     totalActivities: 0,
     activeInvitations: 0,
@@ -40,7 +40,7 @@ export class SuperAdminDashboardPage implements OnInit {
   private async loadStats(): Promise<void> {
     await this.progressBarService.withProgress(async () => {
       try {
-        const [alliances, users, activities, invitations] = await Promise.all([
+        const [servers, users, activities, invitations] = await Promise.all([
           this.supabase.client.from('alliances').select('count', { count: 'exact', head: true }),
           this.supabase.client.from('user_profiles').select('count', { count: 'exact', head: true }),
           this.supabase.client.from('activities').select('count', { count: 'exact', head: true }),
@@ -51,7 +51,7 @@ export class SuperAdminDashboardPage implements OnInit {
         ]);
 
         this.stats.set({
-          totalAlliances: alliances.count || 0,
+          totalServers: servers.count || 0,
           totalUsers: users.count || 0,
           totalActivities: activities.count || 0,
           activeInvitations: invitations.count || 0,

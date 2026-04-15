@@ -1,0 +1,76 @@
+<div class="server-settings-container">
+  <mat-card class="page-header">
+    <mat-card-header>
+      <mat-icon class="header-icon">settings</mat-icon>
+      <div class="header-content">
+        <mat-card-title>{{ 'server.settings.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ server()?.name }}</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  <mat-tab-group class="settings-tabs" appSwipeTabs>
+    <!-- Server Overview Tab (Information + Members + Invitations merged) -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">manage_accounts</mat-icon>
+        {{ 'server.settings.tabs.overview' | translate }}
+      </ng-template>
+
+      <app-server-overview-tab
+        [server]="server()"
+        [members]="members()"
+        [invitations]="invitations()"
+        [isLoading]="progressBarService.isLoading()"
+        (serverUpdated)="handleServerUpdated()"
+        (invitationCreated)="handleInvitationCreated()"
+        (invitationRevoked)="handleInvitationRevoked()"
+      />
+    </mat-tab>
+
+    <!-- Activity Settings Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">rule</mat-icon>
+        {{ 'server.settings.tabs.activitySettings' | translate }}
+      </ng-template>
+
+      <app-activity-settings-tab
+        [pointRules]="pointRules()"
+        [isLoading]="progressBarService.isLoading()"
+        (ruleCreated)="handleRuleCreated()"
+        (ruleDeleted)="handleRuleDeleted()"
+      />
+    </mat-tab>
+
+    <!-- Retroactive Activities Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">history</mat-icon>
+        {{ 'server.settings.tabs.retroactive' | translate }}
+      </ng-template>
+
+      <app-retroactive-activities-tab [members]="members()" />
+    </mat-tab>
+
+    <!-- Import Excel Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">upload_file</mat-icon>
+        {{ 'server.settings.tabs.importExcel' | translate }}
+      </ng-template>
+
+      <app-import-excel-tab [members]="members()" />
+    </mat-tab>
+
+    <!-- Discord Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">forum</mat-icon>
+        {{ 'server.settings.tabs.discord' | translate }}
+      </ng-template>
+
+      <app-discord-tab />
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -5,7 +5,7 @@ import type { DiscordWebhook, CreateDiscordWebhookRequest } from '@shared/models
 
 /**
  * Discord Service
- * Manages Discord webhook configurations and message sending for an alliance.
+ * Manages Discord webhook configurations and message sending for an server.
  * Messages are sent directly to Discord's webhook API from the client.
  */
 @Injectable({
@@ -19,11 +19,11 @@ export class DiscordService {
   readonly webhooks = this.webhooksSignal.asReadonly();
 
   /**
-   * Load all Discord webhooks for the current alliance
+   * Load all Discord webhooks for the current server
    */
   async loadWebhooks(): Promise<{ error: Error | null }> {
-    const allianceId = this.authService.getAllianceId();
-    if (!allianceId) {
+    const serverId = this.authService.getServerId();
+    if (!serverId) {
       this.webhooksSignal.set([]);
       return { error: null };
     }
@@ -31,7 +31,7 @@ export class DiscordService {
     const { data, error } = await this.supabase
       .from('discord_webhooks')
       .select('*')
-      .eq('alliance_id', allianceId)
+      .eq('alliance_id', serverId)
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -46,9 +46,9 @@ export class DiscordService {
    * Create a new Discord webhook (admin only)
    */
   async createWebhook(request: CreateDiscordWebhookRequest): Promise<{ error: Error | null }> {
-    const allianceId = this.authService.getAllianceId();
-    if (!allianceId) {
-      return { error: new Error('No alliance ID') };
+    const serverId = this.authService.getServerId();
+    if (!serverId) {
+      return { error: new Error('No server ID') };
     }
 
     if (!this.authService.isAdmin()) {
@@ -56,7 +56,7 @@ export class DiscordService {
     }
 
     const { error } = await this.supabase.from('discord_webhooks').insert({
-      alliance_id: allianceId,
+      alliance_id: serverId,
       channel_name: request.channel_name,
       webhook_url: request.webhook_url,
       default_message: request.default_message ?? null,

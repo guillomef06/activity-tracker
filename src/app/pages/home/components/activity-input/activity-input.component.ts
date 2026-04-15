@@ -11,7 +11,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivityService } from '@core/services/activity.service';
 import { AuthService } from '@core/services/auth.service';
-import { AllianceService } from '@core/services/alliance.service';
+import { ServerService } from '@core/services/server.service';
 import { SnackbarService } from '@core/services/snackbar.service';
 import { APP_CONSTANTS } from '@shared/constants/constants';
 import { PointCalculationResult } from '@shared/models';
@@ -46,7 +46,7 @@ interface WeekOption {
 export class ActivityInputComponent {
   private readonly activityService = inject(ActivityService);
   protected readonly authService = inject(AuthService);
-  private readonly allianceService = inject(AllianceService);
+  private readonly serverService = inject(ServerService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly translate = inject(TranslateService);
   private readonly fb = inject(FormBuilder);
@@ -79,12 +79,12 @@ export class ActivityInputComponent {
 
   protected readonly isParticipationMode = computed(() => {
     const type = this.activityTypeValue();
-    return type ? this.allianceService.isParticipationMode(type) : false;
+    return type ? this.serverService.isParticipationMode(type) : false;
   });
 
   protected readonly participationPoints = computed(() => {
     const type = this.activityTypeValue();
-    return type ? this.allianceService.getParticipationPoints(type) : 5;
+    return type ? this.serverService.getParticipationPoints(type) : 5;
   });
 
   protected readonly points = computed<number | null>(() => {
@@ -108,8 +108,8 @@ export class ActivityInputComponent {
   protected readonly positionError = createFieldErrorSignal(this.activityForm, 'position', this.destroyRef);
 
   protected readonly weekOptions = computed<WeekOption[]>(() => {
-    const currentWeekLabel = this.translate.instant('alliance.retroactive.currentWeek');
-    const weeksAgoLabel = this.translate.instant('alliance.retroactive.weeksAgo');
+    const currentWeekLabel = this.translate.instant('server.retroactive.currentWeek');
+    const weeksAgoLabel = this.translate.instant('server.retroactive.weeksAgo');
     const options: WeekOption[] = [];
 
     for (let i = 0; i <= 5; i++) {
@@ -131,7 +131,7 @@ export class ActivityInputComponent {
   protected readonly availableActivities = computed(() => {
     const selectedWeekNumber = getWeekNumberForWeeksAgo(this.weekValue() ?? 0);
     return APP_CONSTANTS.ACTIVITY_TYPES.filter(
-      type => type.availableWeeks.includes(selectedWeekNumber) && this.allianceService.isActivityEnabled(type.value)
+      type => type.availableWeeks.includes(selectedWeekNumber) && this.serverService.isActivityEnabled(type.value)
     );
   });
 
@@ -140,7 +140,7 @@ export class ActivityInputComponent {
       const type = this.activityForm.value.activityType;
       const pos = this.activityForm.value.position;
       if (type && pos > 0 && !this.isParticipationMode()) {
-        const result = this.allianceService.calculatePoints(type, pos);
+        const result = this.serverService.calculatePoints(type, pos);
         this.calculatedPointsResult.set(result);
       } else {
         this.calculatedPointsResult.set(null);

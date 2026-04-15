@@ -51,7 +51,7 @@
           }
 
           <div class="table-container">
-            <table mat-table [dataSource]="champions()" class="data-table">
+            <table mat-table [dataSource]="champions()" multiTemplateDataRows class="data-table">
               <!-- Image -->
               <ng-container matColumnDef="image">
                 <th mat-header-cell *matHeaderCellDef>{{ 'common.image' | translate }}</th>
@@ -168,50 +168,55 @@
                 </td>
               </ng-container>
 
+              <!-- Skills inline detail row -->
+              <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let champion" [attr.colspan]="championColumns.length">
+                  @if (isChampionExpanded(champion.id)) {
+                    <div class="skills-panel">
+                      <h3 class="skills-panel-title">{{ 'superAdmin.assignSkills' | translate }}</h3>
+
+                      @if (isLoadingChampionSkills()) {
+                        <div class="loading-row">
+                          <mat-spinner diameter="24"></mat-spinner>
+                        </div>
+                      } @else {
+                        <div class="champion-skills-list">
+                          @for (skill of championSkills(); track skill.id) {
+                            <mat-chip (removed)="removeSkillFromChampion(skill)">
+                              {{ skill.name }}
+                              <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                              </button>
+                            </mat-chip>
+                          } @empty {
+                            <span class="empty-text">{{ 'common.none' | translate }}</span>
+                          }
+                        </div>
+
+                        <mat-form-field appearance="outline" class="skill-assign-field">
+                          <mat-label>{{ 'superAdmin.assignSkills' | translate }}</mat-label>
+                          <input matInput [formControl]="skillSearchControl" [matAutocomplete]="skillAuto" />
+                          <mat-autocomplete
+                            #skillAuto="matAutocomplete"
+                            [displayWith]="displaySkillName"
+                            (optionSelected)="assignSkillToChampion($event.option.value)"
+                          >
+                            @for (skill of filteredSkillsForAssign(); track skill.id) {
+                              <mat-option [value]="skill">{{ skill.name }}</mat-option>
+                            }
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      }
+                    </div>
+                  }
+                </td>
+              </ng-container>
+
               <tr mat-header-row *matHeaderRowDef="championColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: championColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
             </table>
           </div>
-
-          <!-- Skills assignment panel -->
-          @if (expandedChampionId()) {
-            <div class="skills-panel">
-              <h3 class="skills-panel-title">{{ 'superAdmin.assignSkills' | translate }}</h3>
-
-              @if (isLoadingChampionSkills()) {
-                <div class="loading-row">
-                  <mat-spinner diameter="24"></mat-spinner>
-                </div>
-              } @else {
-                <div class="champion-skills-list">
-                  @for (skill of championSkills(); track skill.id) {
-                    <mat-chip (removed)="removeSkillFromChampion(skill)">
-                      {{ skill.name }}
-                      <button matChipRemove>
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip>
-                  } @empty {
-                    <span class="empty-text">{{ 'common.none' | translate }}</span>
-                  }
-                </div>
-
-                <mat-form-field appearance="outline" class="skill-assign-field">
-                  <mat-label>{{ 'superAdmin.assignSkills' | translate }}</mat-label>
-                  <input matInput [formControl]="skillSearchControl" [matAutocomplete]="skillAuto" />
-                  <mat-autocomplete
-                    #skillAuto="matAutocomplete"
-                    [displayWith]="displaySkillName"
-                    (optionSelected)="assignSkillToChampion($event.option.value)"
-                  >
-                    @for (skill of filteredSkillsForAssign(); track skill.id) {
-                      <mat-option [value]="skill">{{ skill.name }}</mat-option>
-                    }
-                  </mat-autocomplete>
-                </mat-form-field>
-              }
-            </div>
-          }
         </div>
       </mat-tab>
 
@@ -497,18 +502,18 @@
       <!-- ══════════════════════════════════════════════════════════
            Tab 5 — Ornements
       ══════════════════════════════════════════════════════════ -->
-      <mat-tab [label]="'superAdmin.ornaments' | translate">
+      <mat-tab [label]="'superAdmin.adornments' | translate">
         <div class="tab-content">
           <div class="tab-toolbar">
-            <button mat-raised-button color="primary" (click)="showAddOrnament.set(!showAddOrnament())">
+            <button mat-raised-button color="primary" (click)="showAddAdornment.set(!showAddAdornment())">
               <mat-icon>add</mat-icon>
               {{ 'common.add' | translate }}
             </button>
           </div>
 
-          @if (showAddOrnament()) {
+          @if (showAddAdornment()) {
             <div class="add-row-form">
-              <form [formGroup]="ornamentForm" (ngSubmit)="addOrnament()" class="inline-form">
+              <form [formGroup]="adornmentForm" (ngSubmit)="addAdornment()" class="inline-form">
                 <mat-form-field appearance="outline">
                   <mat-label>{{ 'common.name' | translate }}</mat-label>
                   <input matInput formControlName="name" />
@@ -518,10 +523,10 @@
                   <input matInput type="number" formControlName="sort_order" />
                 </mat-form-field>
                 <div class="form-actions">
-                  <button mat-raised-button color="primary" type="submit" [disabled]="ornamentForm.invalid">
+                  <button mat-raised-button color="primary" type="submit" [disabled]="adornmentForm.invalid">
                     <mat-icon>save</mat-icon>
                   </button>
-                  <button mat-icon-button type="button" (click)="showAddOrnament.set(false)">
+                  <button mat-icon-button type="button" (click)="showAddAdornment.set(false)">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
@@ -530,12 +535,12 @@
           }
 
           <div class="table-container">
-            <table mat-table [dataSource]="ornaments()" class="data-table">
+            <table mat-table [dataSource]="adornments()" class="data-table">
               <ng-container matColumnDef="image">
                 <th mat-header-cell *matHeaderCellDef>{{ 'common.image' | translate }}</th>
-                <td mat-cell *matCellDef="let ornament">
-                  @if (ornament.image_url) {
-                    <img [src]="ornament.image_url" class="thumbnail" [alt]="ornament.name" />
+                <td mat-cell *matCellDef="let adornment">
+                  @if (adornment.image_url) {
+                    <img [src]="adornment.image_url" class="thumbnail" [alt]="adornment.name" />
                   } @else {
                     <mat-icon class="no-image-icon">image_not_supported</mat-icon>
                   }
@@ -544,25 +549,25 @@
 
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
-                <td mat-cell *matCellDef="let ornament">
-                  @if (isEditingOrnament(ornament.id)) {
-                    <form [formGroup]="editOrnamentForm">
+                <td mat-cell *matCellDef="let adornment">
+                  @if (isEditingAdornment(adornment.id)) {
+                    <form [formGroup]="editAdornmentForm">
                       <mat-form-field appearance="outline" class="edit-field">
                         <input matInput formControlName="name" />
                       </mat-form-field>
                     </form>
                   } @else {
-                    <strong>{{ ornament.name }}</strong>
+                    <strong>{{ adornment.name }}</strong>
                   }
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="active">
                 <th mat-header-cell *matHeaderCellDef>{{ 'common.active' | translate }}</th>
-                <td mat-cell *matCellDef="let ornament">
+                <td mat-cell *matCellDef="let adornment">
                   <mat-slide-toggle
-                    [checked]="ornament.is_active"
-                    (change)="toggleOrnamentActive(ornament)"
+                    [checked]="adornment.is_active"
+                    (change)="toggleAdornmentActive(adornment)"
                     color="primary"
                   ></mat-slide-toggle>
                 </td>
@@ -570,37 +575,37 @@
 
               <ng-container matColumnDef="order">
                 <th mat-header-cell *matHeaderCellDef>{{ 'common.order' | translate }}</th>
-                <td mat-cell *matCellDef="let ornament">
-                  @if (isEditingOrnament(ornament.id)) {
-                    <form [formGroup]="editOrnamentForm">
+                <td mat-cell *matCellDef="let adornment">
+                  @if (isEditingAdornment(adornment.id)) {
+                    <form [formGroup]="editAdornmentForm">
                       <mat-form-field appearance="outline" class="edit-field-narrow">
                         <input matInput type="number" formControlName="sort_order" />
                       </mat-form-field>
                     </form>
                   } @else {
-                    {{ ornament.sort_order }}
+                    {{ adornment.sort_order }}
                   }
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
-                <td mat-cell *matCellDef="let ornament">
-                  @if (isEditingOrnament(ornament.id)) {
+                <td mat-cell *matCellDef="let adornment">
+                  @if (isEditingAdornment(adornment.id)) {
                     <div class="row-actions">
-                      <button mat-icon-button (click)="saveOrnament(ornament)" [disabled]="editOrnamentForm.invalid">
+                      <button mat-icon-button (click)="saveAdornment(adornment)" [disabled]="editAdornmentForm.invalid">
                         <mat-icon>save</mat-icon>
                       </button>
-                      <button mat-icon-button (click)="cancelEditOrnament()">
+                      <button mat-icon-button (click)="cancelEditAdornment()">
                         <mat-icon>cancel</mat-icon>
                       </button>
                     </div>
                   } @else {
                     <div class="row-actions">
-                      <button mat-icon-button (click)="startEditOrnament(ornament)">
+                      <button mat-icon-button (click)="startEditAdornment(adornment)">
                         <mat-icon>edit</mat-icon>
                       </button>
-                      <button mat-icon-button class="btn-danger" (click)="deleteOrnament(ornament)">
+                      <button mat-icon-button class="btn-danger" (click)="deleteAdornment(adornment)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </div>
@@ -608,8 +613,8 @@
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="ornamentColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: ornamentColumns"></tr>
+              <tr mat-header-row *matHeaderRowDef="adornmentColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: adornmentColumns"></tr>
             </table>
           </div>
         </div>

@@ -18,19 +18,19 @@
     "password": "Passwort",
     "confirmPassword": "Passwort bestätigen",
     "displayName": "Anzeigename",
-    "allianceName": "Allianzname",
+    "serverName": "Servername",
     "invitationToken": "Einladungstoken",
     "welcomeBack": "Willkommen zurück",
     "signInSubtitle": "Bei deinem Konto anmelden",
-    "signupTitle": "Allianz erstellen",
-    "signupSubtitle": "Als Allianz-Administrator registrieren",
-    "joinTitle": "Allianz beitreten",
-    "joinSubtitle": "Verwende deine Einladung, um einer Allianz beizutreten",
+    "signupTitle": "Server erstellen",
+    "signupSubtitle": "Als Server-Administrator registrieren",
+    "joinTitle": "Server beitreten",
+    "joinSubtitle": "Verwende deine Einladung, um einer Server beizutreten",
     "setupTitle": "Super-Admin-Einrichtung",
     "setupSubtitle": "Erstelle das erste Super-Administrator-Konto",
-    "setupWarning": "Dies ist eine einmalige Einrichtung. Der Super-Admin hat vollständigen Zugriff auf alle Allianzen und Benutzer.",
+    "setupWarning": "Dies ist eine einmalige Einrichtung. Der Super-Admin hat vollständigen Zugriff auf alle Serveren und Benutzer.",
     "signingIn": "Anmelden...",
-    "creatingAlliance": "Allianz wird erstellt...",
+    "creatingServer": "Server wird erstellt...",
     "joining": "Beitreten...",
     "createSuperAdmin": "Super-Admin erstellen",
     "creating": "Erstellen...",
@@ -38,17 +38,17 @@
     "usernameHint": "3–30 Zeichen — nur Buchstaben, Zahlen, - und _",
     "displayNamePlaceholder": "Vollständigen Namen eingeben",
     "displayNameHint": "Dein Name, wie er für andere sichtbar ist",
-    "allianceNamePlaceholder": "Allianzname eingeben",
-    "allianceNameHint": "Wähle einen Namen für deine neue Allianz",
+    "serverNamePlaceholder": "Servername eingeben",
+    "serverNameHint": "Wähle einen Namen für deine neue Server",
     "passwordPlaceholder": "z.B. MeinPass123!",
     "passwordHint": "Min. 6 Zeichen, muss mindestens einen Buchstaben und eine Zahl enthalten",
     "confirmPasswordPlaceholder": "Passwort erneut eingeben",
     "tokenPlaceholder": "Einladungstoken eingeben",
-    "tokenHint": "Von deinem Allianz-Administrator bereitgestellt",
+    "tokenHint": "Von deinem Server-Administrator bereitgestellt",
     "haveAccount": "Bereits ein Konto?",
     "noAccount": "Noch kein Konto?",
     "haveInvitation": "Hast du eine Einladung?",
-    "wantCreateAlliance": "Möchtest du eine Allianz erstellen?",
+    "wantCreateServer": "Möchtest du eine Server erstellen?",
     "errors": {
       "usernameExists": "Benutzername bereits vergeben",
       "usernameInvalidChars": "Nur Buchstaben, Zahlen, - und _",
@@ -59,7 +59,7 @@
       "joinFailed": "Beitreten fehlgeschlagen. Bitte erneut versuchen.",
       "setupFailed": "Einrichtung fehlgeschlagen. Bitte erneut versuchen.",
       "superAdminExists": "Super-Admin existiert bereits",
-      "allianceCreationFailed": "Allianz konnte nicht erstellt werden",
+      "serverCreationFailed": "Server konnte nicht erstellt werden",
       "invalidToken": "Ungültiger oder abgelaufener Einladungstoken"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "Super-Admin",
-    "allianceSettings": "Allianzeinstellungen",
+    "serverSettings": "Servereinstellungen",
     "home": "Start",
     "guides": "Guides"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "Allianzeinstellungen",
+      "title": "Servereinstellungen",
       "tabs": {
-        "overview": "Allianz",
+        "overview": "Server",
         "invitations": "Einladungen",
         "activitySettings": "Aktivitätseinstellungen",
         "retroactive": "Rückwirkende Aktivitäten",
         "importExcel": "Excel importieren",
         "discord": "Discord"
       },
-      "allianceInfo": "Allianzinformationen",
-      "allianceName": "Allianzname",
-      "allianceTag": "Allianztag",
-      "allianceTagHint": "Optionaler 3-Zeichen-Bezeichner (z.B. RgW)",
+      "serverInfo": "Serverinformationen",
+      "serverName": "Servername",
+      "serverTag": "Servertag",
+      "serverTagHint": "Optionaler 3-Zeichen-Bezeichner (z.B. RgW)",
       "updateName": "Aktualisieren",
       "memberList": "Mitgliederliste",
       "members": "Mitglieder",
@@ -120,8 +120,8 @@
       "revokeInvitation": "Einladung widerrufen",
       "revokeConfirm": "Möchtest du diese Einladung wirklich widerrufen?",
       "membersJoined": "Mitglieder, die über diese Einladung beigetreten sind",
-      "nameUpdated": "Allianz erfolgreich aktualisiert!",
-      "nameUpdateFailed": "Allianz konnte nicht aktualisiert werden",
+      "nameUpdated": "Server erfolgreich aktualisiert!",
+      "nameUpdateFailed": "Server konnte nicht aktualisiert werden",
       "invitationCreated": "Einladung erstellt und Link in Zwischenablage kopiert!",
       "invitationCreateFailed": "Einladung konnte nicht erstellt werden",
       "invitationRevoked": "Einladung erfolgreich widerrufen",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "Gefahrenzone",
         "deleteAllActivities": "Alle Aktivitäten löschen",
-        "deleteAllActivitiesDescription": "Alle von Allianzmitgliedern eingereichten Aktivitäten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "deleteAllActivitiesDescription": "Alle von Servermitgliedern eingereichten Aktivitäten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
         "deleteAllActivitiesConfirm": "Möchtest du wirklich ALLE Aktivitäten löschen? Dies löscht dauerhaft den gesamten Aktivitätsverlauf aller Mitglieder.",
         "deleteAllActivitiesSuccess": "Alle Aktivitäten wurden gelöscht",
         "deleteAllActivitiesFailed": "Aktivitäten konnten nicht gelöscht werden"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "Rückwirkende Aktivität hinzufügen",
-      "description": "Als Admin kannst du Aktivitäten für Allianzmitglieder der letzten 6 Wochen hinzufügen. Wähle ein Mitglied, eine Woche und gib die Aktivitätsdetails ein.",
+      "description": "Als Admin kannst du Aktivitäten für Servermitglieder der letzten 6 Wochen hinzufügen. Wähle ein Mitglied, eine Woche und gib die Aktivitätsdetails ein.",
       "selectMember": "Mitglied auswählen",
-      "memberHint": "Wähle das Allianzmitglied, für das du eine Aktivität hinzufügen möchtest",
+      "memberHint": "Wähle das Servermitglied, für das du eine Aktivität hinzufügen möchtest",
       "selectWeek": "Woche auswählen",
       "weekHint": "Wähle die Woche, in der die Aktivität stattgefunden hat",
       "currentWeek": "Aktuelle Woche",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "Aktivitäten aus Excel importieren",
-      "description": "Lade eine ausgefüllte Vorlage hoch, um Aktivitäten für deine Allianzmitglieder gebündelt zu importieren.",
+      "description": "Lade eine ausgefüllte Vorlage hoch, um Aktivitäten für deine Servermitglieder gebündelt zu importieren.",
       "templateHint": "Lade zuerst die Importvorlage herunter und fülle sie aus.",
       "downloadTemplate": "Vorlage herunterladen",
       "activityFilter": "Nach Aktivität filtern",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "Super-Admin-Dashboard",
       "subtitle": "Globale Systemübersicht und Verwaltung",
-      "totalAlliances": "Allianzen gesamt",
+      "totalServers": "Serveren gesamt",
       "totalUsers": "Benutzer gesamt",
       "totalActivities": "Aktivitäten gesamt",
       "activeInvitations": "Aktive Einladungen",
       "quickActions": "Schnellaktionen",
-      "manageAlliances": "Allianzen verwalten",
-      "manageAlliancesDesc": "Alle Allianzen anzeigen und verwalten",
+      "manageServers": "Serveren verwalten",
+      "manageServersDesc": "Alle Serveren anzeigen und verwalten",
       "manageUsers": "Benutzer verwalten",
       "manageUsersDesc": "Alle Benutzer anzeigen und verwalten",
       "manageGuidesData": "Guide-Referenzdaten",
       "manageGuidesDataDesc": "Champions, Fähigkeiten, Pferde und Edelsteine verwalten"
     },
-    "alliances": {
-      "title": "Allianzverwaltung",
-      "subtitle": "Alle Allianzen im System verwalten",
-      "noAlliances": "Noch keine Allianzen erstellt",
-      "name": "Allianzname",
+    "servers": {
+      "title": "Serververwaltung",
+      "subtitle": "Alle Serveren im System verwalten",
+      "noServers": "Noch keine Serveren erstellt",
+      "name": "Servername",
       "tag": "Tag",
       "admin": "Admin",
       "members": "Mitglieder",
       "created": "Erstellt",
       "actions": "Aktionen",
-      "deleteConfirm": "Möchtest du die Allianz \"{{name}}\" wirklich löschen? Dadurch werden auch alle zugehörigen Benutzer, Aktivitäten und Einladungen gelöscht.",
-      "loadFailed": "Allianzen konnten nicht geladen werden",
-      "updated": "Allianz erfolgreich aktualisiert",
-      "updateFailed": "Allianz konnte nicht aktualisiert werden",
-      "deleted": "Allianz erfolgreich gelöscht",
-      "deleteFailed": "Allianz konnte nicht gelöscht werden"
+      "deleteConfirm": "Möchtest du die Server \"{{name}}\" wirklich löschen? Dadurch werden auch alle zugehörigen Benutzer, Aktivitäten und Einladungen gelöscht.",
+      "loadFailed": "Serveren konnten nicht geladen werden",
+      "updated": "Server erfolgreich aktualisiert",
+      "updateFailed": "Server konnte nicht aktualisiert werden",
+      "deleted": "Server erfolgreich gelöscht",
+      "deleteFailed": "Server konnte nicht gelöscht werden"
     },
     "users": {
       "title": "Benutzerverwaltung",
@@ -346,8 +346,8 @@
       "displayName": "Anzeigename",
       "username": "Benutzername",
       "role": "Rolle",
-      "alliance": "Allianz",
-      "noAlliance": "Keine Allianz",
+      "server": "Server",
+      "noServer": "Keine Server",
       "created": "Erstellt",
       "actions": "Aktionen",
       "deleteConfirm": "Möchtest du den Benutzer \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -362,7 +362,7 @@
     "skills": "Fähigkeiten",
     "assignSkills": "Fähigkeiten zuweisen",
     "temperaments": "Temperamente",
-    "ornaments": "Ornamente",
+    "adornments": "Ornamente",
     "gems": "Edelsteine",
     "rings": "Ringe",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "Pferdecharaktere",
     "trait": "Charakter",
     "add_trait": "Charakter hinzufügen",
-    "ornament": "Ornament",
+    "adornment": "Ornament",
     "ring": "Ring",
     "description": "Beschreibung / Autorennotizen",
     "editor": {
@@ -673,10 +673,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Allianz-Aktivitäts-Tracker",
+      "eyebrow": "Server-Aktivitäts-Tracker",
       "title1": "Clever spielen.",
       "title2": "Gemeinsam gewinnen.",
-      "subtitleBefore": "Entwickelt für jeden aktiven Spieler — nicht nur für Spender. Verfolge Allianzaktivitäten, verdiene strategische Punkte und erreiche",
+      "subtitleBefore": "Entwickelt für jeden aktiven Spieler — nicht nur für Spender. Verfolge Serveraktivitäten, verdiene strategische Punkte und erreiche",
       "subtitleStrong": "Top 10 Mächtigster Gouverneur",
       "subtitleAfter": "mit deutlich weniger Speed-Ups und Ressourcen.",
       "ctaLogin": "Anmelden",
@@ -706,7 +706,7 @@
         "description": "Kein Pay-to-Win. Reine Aktivität und kluge Teilnahme bringen dich in der Rangliste nach oben — jeder kann mitmachen."
       },
       "benefit2": {
-        "title": "Ressourcen allianzweit sparen",
+        "title": "Ressourcen serverweit sparen",
         "description": "Strukturiertes Tracking optimiert, wer wann teilnimmt, und schont Speed-Ups und Ressourcen für KvK-Vorbereitung und Mächtigstes Imperium."
       },
       "benefit3": {
@@ -715,9 +715,9 @@
       }
     },
     "cta": {
-      "title": "Bereit, deine Allianz anzuführen?",
-      "subtitle": "Erstelle deine Allianz und beginne noch heute, den Fortschritt deiner Mitglieder zu verfolgen.",
-      "button": "Deine Allianz erstellen"
+      "title": "Bereit, deine Server anzuführen?",
+      "subtitle": "Erstelle deine Server und beginne noch heute, den Fortschritt deiner Mitglieder zu verfolgen.",
+      "button": "Deine Server erstellen"
     },
     "footer": "Activity Tracker — Cleverer spielen, stärker kämpfen."
   }

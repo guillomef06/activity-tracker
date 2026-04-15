@@ -1,0 +1,724 @@
+{
+  "app": {
+    "subtitle": "Lacak aktivitas dan lihat skor 6 minggu bergulir"
+  },
+  "home": {
+    "tabs": {
+      "submit": "Kirim Aktivitas",
+      "leaderboard": "Papan Peringkat",
+      "mightiestGovernor": "Gov. Terkuat",
+      "tools": "Alat"
+    }
+  },
+  "auth": {
+    "login": "Masuk",
+    "signup": "Daftar",
+    "logout": "Keluar",
+    "username": "Nama Pengguna",
+    "password": "Kata Sandi",
+    "confirmPassword": "Konfirmasi Kata Sandi",
+    "displayName": "Nama Tampilan",
+    "serverName": "Nama Server",
+    "invitationToken": "Token Undangan",
+    "welcomeBack": "Selamat Datang Kembali",
+    "signInSubtitle": "Masuk ke akun Anda",
+    "signupTitle": "Buat Server",
+    "signupSubtitle": "Daftar sebagai Administrator Server",
+    "joinTitle": "Bergabung dengan Server",
+    "joinSubtitle": "Gunakan undangan Anda untuk bergabung dengan server",
+    "setupTitle": "Pengaturan Super Admin",
+    "setupSubtitle": "Buat akun super administrator pertama",
+    "setupWarning": "Ini adalah pengaturan satu kali. Super admin memiliki akses penuh untuk mengelola semua server dan pengguna.",
+    "signingIn": "Sedang masuk...",
+    "creatingServer": "Membuat Server...",
+    "joining": "Bergabung...",
+    "createSuperAdmin": "Buat Super Admin",
+    "creating": "Membuat...",
+    "usernamePlaceholder": "Pilih nama pengguna unik",
+    "usernameHint": "3–30 karakter — huruf, angka, - dan _ saja",
+    "displayNamePlaceholder": "Masukkan nama lengkap Anda",
+    "displayNameHint": "Nama Anda yang akan terlihat oleh orang lain",
+    "serverNamePlaceholder": "Masukkan nama server Anda",
+    "serverNameHint": "Pilih nama untuk server baru Anda",
+    "passwordPlaceholder": "cth. KataSandi123!",
+    "passwordHint": "Min. 6 karakter, harus mengandung setidaknya satu huruf dan satu angka",
+    "confirmPasswordPlaceholder": "Masukkan ulang kata sandi Anda",
+    "tokenPlaceholder": "Masukkan token undangan",
+    "tokenHint": "Diberikan oleh administrator server Anda",
+    "haveAccount": "Sudah punya akun?",
+    "noAccount": "Belum punya akun?",
+    "haveInvitation": "Punya undangan?",
+    "wantCreateServer": "Ingin membuat server?",
+    "errors": {
+      "usernameExists": "Nama pengguna sudah ada",
+      "usernameInvalidChars": "Huruf, angka, - dan _ saja",
+      "invalidCredentials": "Nama pengguna atau kata sandi tidak valid",
+      "userNotFound": "Pengguna tidak ditemukan",
+      "loginFailed": "Masuk gagal. Silakan coba lagi.",
+      "signupFailed": "Pendaftaran gagal. Silakan coba lagi.",
+      "joinFailed": "Bergabung gagal. Silakan coba lagi.",
+      "setupFailed": "Pengaturan gagal. Silakan coba lagi.",
+      "superAdminExists": "Super admin sudah ada",
+      "serverCreationFailed": "Gagal membuat server",
+      "invalidToken": "Token undangan tidak valid atau kadaluarsa"
+    },
+    "recovery": {
+      "forgotPassword": "Lupa kata sandi?"
+    },
+    "signupForm": {
+      "recoveryQuestion": "Pertanyaan rahasia",
+      "recoveryAnswer": "Jawaban rahasia",
+      "recoveryAnswerHint": "Jawaban tidak peka huruf besar/kecil"
+    }
+  },
+  "errors": {
+    "required": "Kolom ini wajib diisi",
+    "minLength": "Panjang minimum tidak terpenuhi",
+    "maxLength": "Panjang maksimum terlampaui",
+    "min": "Nilai di bawah minimum yang diizinkan",
+    "max": "Nilai melebihi maksimum yang diizinkan",
+    "email": "Alamat email tidak valid",
+    "pattern": "Format tidak valid",
+    "passwordMismatch": "Kata sandi tidak cocok"
+  },
+  "nav": {
+    "superAdminDashboard": "Super Admin",
+    "serverSettings": "Pengaturan Server",
+    "home": "Beranda",
+    "guides": "Panduan"
+  },
+  "server": {
+    "settings": {
+      "title": "Pengaturan Server",
+      "tabs": {
+        "overview": "Server",
+        "invitations": "Undangan",
+        "activitySettings": "Pengaturan Aktivitas",
+        "retroactive": "Aktivitas Retroaktif",
+        "importExcel": "Impor Excel",
+        "discord": "Discord"
+      },
+      "serverInfo": "Informasi Server",
+      "serverName": "Nama Server",
+      "serverTag": "Tag Server",
+      "serverTagHint": "Identifikasi 3 karakter opsional (cth. RgW)",
+      "updateName": "Perbarui",
+      "memberList": "Daftar Anggota",
+      "members": "anggota",
+      "noMembers": "Belum ada anggota",
+      "displayName": "Nama",
+      "role": "Peran",
+      "joinedDate": "Bergabung",
+      "invitationManagement": "Manajemen Undangan",
+      "invitationDuration": "Durasi (hari)",
+      "durationHint": "Hari hingga undangan kedaluwarsa",
+      "createInvitation": "Buat Undangan",
+      "noInvitations": "Belum ada undangan yang dibuat",
+      "expiresAt": "Kedaluwarsa",
+      "createdAt": "Dibuat",
+      "copyLink": "Salin tautan undangan",
+      "revokeInvitation": "Batalkan undangan",
+      "revokeConfirm": "Apakah Anda yakin ingin membatalkan undangan ini?",
+      "membersJoined": "Anggota yang bergabung melalui undangan ini",
+      "nameUpdated": "Server berhasil diperbarui!",
+      "nameUpdateFailed": "Gagal memperbarui server",
+      "invitationCreated": "Undangan dibuat dan tautan disalin ke clipboard!",
+      "invitationCreateFailed": "Gagal membuat undangan",
+      "invitationRevoked": "Undangan berhasil dibatalkan",
+      "invitationRevokeFailed": "Gagal membatalkan undangan",
+      "invitationLinkCopied": "Tautan undangan disalin ke clipboard!",
+      "pointRules": {
+        "addRule": "Tambah Aturan Baru",
+        "currentRules": "Aturan Saat Ini",
+        "activityType": "Jenis Aktivitas",
+        "positionMin": "Posisi Min",
+        "positionMax": "Posisi Max",
+        "positionRange": "Rentang Posisi",
+        "points": "Poin",
+        "create": "Buat Aturan",
+        "noRules": "Belum ada aturan poin yang dikonfigurasi",
+        "noRulesHint": "Buat aturan untuk menghitung poin berdasarkan posisi/peringkat. Tanpa aturan, poin default akan digunakan.",
+        "deleteConfirm": "Apakah Anda yakin ingin menghapus aturan ini?",
+        "activityConfiguration": "Konfigurasi Aktivitas",
+        "activityConfigurationHint": "Aktifkan atau nonaktifkan setiap aktivitas, konfigurasikan mode partisipasi dan pengaturan tiebreaker",
+        "participationMode": "Mode Partisipasi",
+        "participationPoints": "Poin untuk partisipasi",
+        "positionRangeError": "Posisi minimum tidak boleh lebih besar dari posisi maksimum",
+        "created": "Aturan poin berhasil dibuat",
+        "createFailed": "Gagal membuat aturan poin",
+        "deleted": "Aturan poin berhasil dihapus",
+        "deleteFailed": "Gagal menghapus aturan poin",
+        "participationModeFailed": "Gagal memperbarui mode partisipasi",
+        "participationPointsFailed": "Gagal memperbarui poin partisipasi",
+        "activityEnabled": "Aktivitas diaktifkan",
+        "activityEnabledFailed": "Gagal memperbarui status aktivitas",
+        "tiebreaker": "Tiebreaker",
+        "tiebreakerFailed": "Gagal memperbarui tiebreaker"
+      },
+      "leaderboard": {
+        "title": "Pengaturan Papan Peringkat",
+        "hint": "Konfigurasikan berapa minggu yang disertakan dalam peringkat",
+        "weeksMultiplier": "Pengganda musim",
+        "multiplierOption": "{{weeks}} minggu (×{{multiplier}})",
+        "weeksHint": "{{weeks}} minggu disertakan dalam papan peringkat",
+        "multiplierUpdated": "Pengganda musim diperbarui",
+        "multiplierFailed": "Gagal memperbarui pengganda musim"
+      },
+      "dangerZone": {
+        "title": "Zona Bahaya",
+        "deleteAllActivities": "Hapus semua aktivitas",
+        "deleteAllActivitiesDescription": "Hapus secara permanen semua aktivitas yang dikirimkan oleh anggota server. Tindakan ini tidak dapat dibatalkan.",
+        "deleteAllActivitiesConfirm": "Apakah Anda yakin ingin menghapus SEMUA aktivitas? Ini akan menghapus secara permanen seluruh riwayat aktivitas semua anggota.",
+        "deleteAllActivitiesSuccess": "Semua aktivitas telah dihapus",
+        "deleteAllActivitiesFailed": "Gagal menghapus aktivitas"
+      }
+    },
+    "retroactive": {
+      "title": "Tambah Aktivitas Retroaktif",
+      "description": "Sebagai admin, Anda dapat menambahkan aktivitas untuk anggota server selama 6 minggu terakhir. Pilih anggota, pilih minggu, dan masukkan detail aktivitas mereka.",
+      "selectMember": "Pilih Anggota",
+      "memberHint": "Pilih anggota server yang ingin Anda tambahkan aktivitasnya",
+      "selectWeek": "Pilih Minggu",
+      "weekHint": "Pilih minggu ketika aktivitas berlangsung",
+      "currentWeek": "Minggu Ini",
+      "weeksAgo": "{{count}} minggu lalu",
+      "selectActivity": "Jenis Aktivitas",
+      "activityHint": "Hanya aktivitas yang tersedia untuk minggu yang dipilih yang ditampilkan",
+      "noActivities": "Tidak ada aktivitas tersedia untuk minggu ini",
+      "position": "Posisi",
+      "positionHint": "Masukkan posisi atau peringkat anggota",
+      "pointsPreview": "Poin yang akan diberikan",
+      "submit": "Tambah Aktivitas",
+      "submitting": "Menambahkan aktivitas...",
+      "success": "Aktivitas berhasil ditambahkan!",
+      "error": "Gagal menambahkan aktivitas. Silakan coba lagi."
+    },
+    "import": {
+      "title": "Impor Aktivitas dari Excel",
+      "description": "Unggah template yang sudah diisi untuk mengimpor aktivitas retroaktif secara massal untuk anggota server Anda.",
+      "templateHint": "Pertama, unduh dan isi template impor.",
+      "downloadTemplate": "Unduh Template",
+      "activityFilter": "Filter berdasarkan aktivitas",
+      "activityFilterAll": "Semua aktivitas",
+      "uploadFile": "Pilih file",
+      "fileHint": "Menerima .xlsx, .xls, .csv",
+      "back": "Kembali",
+      "preview": {
+        "title": "Pratinjau",
+        "rowsFound": "{{count}} baris ditemukan",
+        "playerColumn": "Pemain",
+        "activityColumn": "Aktivitas",
+        "positionColumn": "Posisi",
+        "weekColumn": "Minggu",
+        "pointsColumn": "Poin",
+        "statusColumn": "Status",
+        "updateColumn": "Perbarui?",
+        "selectPlayer": "Pilih pemain",
+        "updateAll": "Perbarui semua yang sudah ada"
+      },
+      "status": {
+        "ready": "Siap untuk dimasukkan",
+        "willUpdate": "Akan memperbarui entri yang ada",
+        "unmatched": "Pemain tidak ditemukan — pilih secara manual",
+        "invalid": {
+          "invalid_activity": "Jenis aktivitas tidak dikenal atau dinonaktifkan",
+          "disabled_activity": "Jenis aktivitas ini dinonaktifkan",
+          "invalid_date": "Tanggal tidak valid atau hilang",
+          "invalid_position": "Posisi tidak valid (harus ≥ 1)"
+        }
+      },
+      "confirm": {
+        "button": "Impor",
+        "importing": "Mengimpor..."
+      },
+      "result": {
+        "title": "Impor selesai",
+        "inserted": "dimasukkan",
+        "updated": "diperbarui",
+        "skipped": "dilewati",
+        "error": "Impor gagal. Silakan coba lagi."
+      },
+      "reset": "Impor file lain"
+    }
+  },
+  "activityInput": {
+    "title": "Kirim Aktivitas",
+    "subtitle": "Catat aktivitas Anda dan dapatkan poin",
+    "activityType": "Jenis Aktivitas",
+    "position": "Posisi/Peringkat",
+    "positionPlaceholder": "cth. 1, 5, 10...",
+    "positionHint": "Masukkan posisi atau peringkat Anda",
+    "submit": "Kirim Aktivitas",
+    "submitting": "Mengirim...",
+    "typeHint": "Hanya aktivitas yang tersedia untuk minggu yang dipilih yang ditampilkan",
+    "success": "Aktivitas berhasil dikirim!",
+    "error": "Gagal mengirim aktivitas",
+    "participated": "Saya berpartisipasi minggu ini",
+    "fillAllFields": "Harap isi semua kolom yang diperlukan"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "Tidak ada aktivitas tersedia minggu ini",
+    "totalPoints": "total poin",
+    "pointsShort": "poin",
+    "currentWeek": "Minggu Ini",
+    "lastWeek": "Minggu Lalu",
+    "weeksAgo": "minggu lalu"
+  },
+  "activitiesDetails": {
+    "title": "Detail Aktivitas"
+  },
+  "common": {
+    "points": "poin",
+    "close": "Tutup",
+    "actions": "Tindakan",
+    "delete": "Hapus",
+    "confirm": "Konfirmasi",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "saving": "Menyimpan...",
+    "update": "Perbarui",
+    "back": "Kembali",
+    "add": "Tambah",
+    "edit": "Edit",
+    "name": "Nama",
+    "description": "Deskripsi",
+    "image": "Gambar",
+    "icon": "Ikon",
+    "order": "Urutan",
+    "active": "Aktif",
+    "all": "Semua",
+    "none": "Tidak ada",
+    "saved": "Tersimpan",
+    "created": "Dibuat",
+    "deleted": "Dihapus",
+    "deleteConfirm": "Apakah Anda yakin ingin menghapus \"{{name}}\"?",
+    "uploadImage": "Unggah gambar",
+    "next": "Lanjut",
+    "clear": "Hapus"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Dasbor Super Admin",
+      "subtitle": "Ikhtisar dan manajemen sistem global",
+      "totalServers": "Total Server",
+      "totalUsers": "Total Pengguna",
+      "totalActivities": "Total Aktivitas",
+      "activeInvitations": "Undangan Aktif",
+      "quickActions": "Tindakan Cepat",
+      "manageServers": "Kelola Server",
+      "manageServersDesc": "Lihat dan kelola semua server",
+      "manageUsers": "Kelola Pengguna",
+      "manageUsersDesc": "Lihat dan kelola semua pengguna",
+      "manageGuidesData": "Data Referensi Panduan",
+      "manageGuidesDataDesc": "Kelola champion, skill, kuda dan permata"
+    },
+    "servers": {
+      "title": "Manajemen Server",
+      "subtitle": "Kelola semua server di seluruh sistem",
+      "noServers": "Belum ada server yang dibuat",
+      "name": "Nama Server",
+      "tag": "Tag",
+      "admin": "Admin",
+      "members": "Anggota",
+      "created": "Dibuat",
+      "actions": "Tindakan",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus server \"{{name}}\"? Ini juga akan menghapus semua pengguna, aktivitas, dan undangan terkait.",
+      "loadFailed": "Gagal memuat server",
+      "updated": "Server berhasil diperbarui",
+      "updateFailed": "Gagal memperbarui server",
+      "deleted": "Server berhasil dihapus",
+      "deleteFailed": "Gagal menghapus server"
+    },
+    "users": {
+      "title": "Manajemen Pengguna",
+      "subtitle": "Kelola semua pengguna di seluruh sistem",
+      "noUsers": "Tidak ada pengguna ditemukan",
+      "displayName": "Nama Tampilan",
+      "username": "Nama Pengguna",
+      "role": "Peran",
+      "server": "Server",
+      "noServer": "Tidak ada server",
+      "created": "Dibuat",
+      "actions": "Tindakan",
+      "deleteConfirm": "Apakah Anda yakin ingin menghapus pengguna \"{{name}}\"? Tindakan ini tidak dapat dibatalkan.",
+      "loadFailed": "Gagal memuat pengguna",
+      "updated": "Pengguna berhasil diperbarui",
+      "updateFailed": "Gagal memperbarui pengguna",
+      "deleted": "Pengguna berhasil dihapus"
+    },
+    "guidesData": "Data Referensi Panduan",
+    "guidesDataSubtitle": "Kelola champion, skill, kuda, adornment dan permata",
+    "champions": "Champion",
+    "skills": "Skill",
+    "assignSkills": "Tetapkan Skill",
+    "temperaments": "Temperamen",
+    "adornments": "Adornment",
+    "gems": "Permata",
+    "rings": "Cincin",
+    "gemType": {
+      "label": "Jenis",
+      "strategy": "Strategi",
+      "hero": "Pahlawan",
+      "tactics": "Taktik"
+    }
+  },
+  "super_admin": "Super Admin",
+  "admin": "Admin",
+  "member": "Anggota",
+  "pwa": {
+    "offline": "Anda sedang offline",
+    "online": "Anda sedang online",
+    "updateAvailable": "Versi baru tersedia",
+    "reload": "Muat ulang",
+    "install": "Instal aplikasi untuk pengalaman yang lebih baik",
+    "installButton": "Instal",
+    "iosInstruction": "Ketuk tombol Bagikan lalu pilih 'Tambahkan ke Layar Utama'",
+    "installDismiss": "Tutup banner instal"
+  },
+  "releaseNotes": {
+    "title": "Yang Baru",
+    "markAsSeen": "Tandai sebagai dibaca"
+  },
+  "tools": {
+    "gemCalcDesc": "Hitung keuntungan skor dari memasang permata pada komandan Anda.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Temukan kombinasi temperamen kuda terbaik untuk komandan Anda."
+  },
+  "packValue": {
+    "title": "Kalkulator Nilai Paket",
+    "description": "Evaluasi nilai paket dalam game",
+    "addItem": "Tambah item",
+    "packPrice": "Harga paket (Apex Coins)",
+    "calculate": "Hitung",
+    "reset": "Reset",
+    "noItems": "Tambahkan setidaknya satu item untuk menghitung",
+    "units": {
+      "hours": "Jam",
+      "qty": "Jml"
+    },
+    "result": {
+      "title": "Hasil",
+      "tier": {
+        "terrible": "Buruk Sekali",
+        "average": "Rata-rata",
+        "good": "Bagus",
+        "excellent": "Sangat Bagus"
+      },
+      "breakdown": "Rincian"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "Governor Terkuat",
+    "subtitle": "Biaya pendaftaran berdasarkan peringkat",
+    "description": "Untuk berpartisipasi dalam acara Governor Terkuat, pemain harus menghabiskan poin skor. Semakin tinggi target peringkat, semakin tinggi biayanya.",
+    "rank": "Peringkat",
+    "weeklyTarget": "Target Mingguan",
+    "cost": "Biaya",
+    "notice": "Sistem DKP sedang dalam pengembangan. Biaya yang ditampilkan bersifat indikatif dan dapat berubah."
+  },
+  "gemCalculator": {
+    "title": "Kalkulator Permata",
+    "back": "Kembali",
+    "troopType": "Jenis Pasukan",
+    "troopSwordsmen": "Pedang",
+    "troopArchers": "Pemanah",
+    "troopPikemen": "Tombak",
+    "troopCavalry": "Kavaleri",
+    "troopTier": "Tier Pasukan",
+    "troopSize": "Ukuran Pasukan",
+    "troopSizeHint": "Jumlah pasukan (maks 500.000)",
+    "healthBonus": "Bonus Kesehatan (%)",
+    "mightAttack": "Serangan Kekuatan (%)",
+    "mightDefense": "Pertahanan Kekuatan (%)",
+    "gemType": "Jenis Permata",
+    "gemHealth": "Permata Kesehatan",
+    "gemCapacity": "Permata Kapasitas",
+    "gemRarity": "Kelangkaan Permata",
+    "verbose": "Mode verbose (detail perhitungan)",
+    "analyze": "Analisis",
+    "score": "Keuntungan",
+    "rawBonus": "Bonus Mentah",
+    "verboseTitle": "Detail Perhitungan",
+    "verboseScoreBefore": "Skor sebelum",
+    "verboseScoreAfter": "Skor sesudah",
+    "verboseGain": "Keuntungan",
+    "verboseLegionSize": "Ukuran legiun",
+    "verbosePerUnit": "Skor per unit (sebelum)",
+    "verbosePerUnitAfter": "Skor per unit (sesudah)",
+    "verboseGemValue": "Bonus permata",
+    "verboseNewHealthBonus": "Bonus kesehatan baru",
+    "noResult": "Isi formulir dan klik Analisis"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "Siapa nama hewan peliharaan pertama Anda?",
+      "q2": "Di kota mana Anda dilahirkan?",
+      "q3": "Siapa nama depan sahabat masa kecil Anda?",
+      "q4": "Apa julukan masa kecil Anda?",
+      "q5": "Apa nama gadis ibu Anda?",
+      "q6": "Apa nama sekolah dasar Anda?",
+      "q7": "Di kota mana Anda bertemu pasangan Anda?",
+      "q8": "Apa makanan favorit Anda?",
+      "q9": "Apa merek mobil pertama Anda?",
+      "q10": "Apa tujuan perjalanan luar negeri pertama Anda?"
+    },
+    "page": {
+      "title": "Pemulihan Akun",
+      "step1": {
+        "usernamePlaceholder": "Masukkan nama pengguna Anda",
+        "submit": "Temukan akun saya"
+      },
+      "step2": {
+        "answerPlaceholder": "Jawaban Anda",
+        "newPassword": "Kata sandi baru",
+        "confirmPassword": "Konfirmasi kata sandi",
+        "submit": "Reset kata sandi"
+      },
+      "step3": {
+        "success": "Kata sandi berhasil direset!"
+      },
+      "backToLogin": "Kembali ke login"
+    },
+    "errors": {
+      "userNotFound": "Tidak ada akun yang ditemukan untuk nama pengguna ini.",
+      "wrongAnswer": "Jawaban salah.",
+      "wrongAnswerRemaining": "{{count}} percobaan tersisa.",
+      "locked": "Akun terkunci hingga {{time}}.",
+      "passwordTooShort": "Kata sandi harus minimal 6 karakter."
+    }
+  },
+  "accountSettings": {
+    "title": "Akun Saya",
+    "tabAccount": "Akun Saya",
+    "tabPreferences": "Preferensi Saya",
+    "displayName": {
+      "title": "Nama Tampilan",
+      "save": "Simpan",
+      "success": "Nama tampilan diperbarui",
+      "error": "Gagal memperbarui nama tampilan"
+    },
+    "password": {
+      "title": "Ganti Kata Sandi",
+      "newPassword": "Kata Sandi Baru",
+      "confirmPassword": "Konfirmasi Kata Sandi",
+      "save": "Ganti Kata Sandi",
+      "success": "Kata sandi berhasil diperbarui",
+      "error": "Gagal memperbarui kata sandi"
+    },
+    "recovery": {
+      "title": "Pertanyaan Pemulihan",
+      "question": "Pertanyaan Rahasia",
+      "answer": "Jawaban Baru",
+      "answerHint": "Jawaban tidak peka huruf besar/kecil",
+      "save": "Perbarui",
+      "success": "Pertanyaan pemulihan diperbarui",
+      "error": "Gagal memperbarui pertanyaan pemulihan"
+    },
+    "language": {
+      "title": "Bahasa Aplikasi"
+    },
+    "colorScheme": {
+      "title": "Tampilan",
+      "light": "Terang",
+      "dark": "Gelap",
+      "auto": "Otomatis (sistem)",
+      "glass": "Kaca Terang",
+      "glassDark": "Kaca Gelap",
+      "highContrast": "Kontras Tinggi"
+    }
+  },
+  "discord": {
+    "channelsTitle": "Saluran Discord",
+    "channelsSubtitle": "Konfigurasikan saluran webhook Discord untuk mengirim pesan",
+    "channelName": "Nama Saluran",
+    "channelNamePlaceholder": "cth. pengingat-umum",
+    "webhookUrl": "URL Webhook",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "URL webhook Discord dari Pengaturan Server > Integrasi",
+    "defaultMessage": "Pesan Default (opsional)",
+    "defaultMessagePlaceholder": "⏰ Pengingat: Masukkan peringkat GE Anda",
+    "defaultMessageHint": "Dimuat sebelumnya saat Anda memilih saluran ini — dapat diedit sebelum dikirim",
+    "addChannel": "Tambah Saluran",
+    "deleteChannel": "Hapus saluran",
+    "deleteConfirm": "Apakah Anda yakin ingin menghapus saluran \"{{name}}\"?",
+    "noChannels": "Belum ada saluran Discord yang dikonfigurasi",
+    "noChannelsForMessage": "Tambahkan setidaknya satu saluran untuk mengirim pesan",
+    "channelAdded": "Saluran Discord berhasil ditambahkan",
+    "channelAddFailed": "Gagal menambahkan saluran Discord",
+    "channelUpdated": "Saluran Discord berhasil diperbarui",
+    "channelUpdateFailed": "Gagal memperbarui saluran Discord",
+    "channelDeleted": "Saluran Discord berhasil dihapus",
+    "channelDeleteFailed": "Gagal menghapus saluran Discord",
+    "editChannel": "Edit saluran",
+    "editChannelTitle": "Mengedit saluran:",
+    "loadFailed": "Gagal memuat saluran Discord",
+    "sendMessageTitle": "Kirim Pesan",
+    "sendMessageSubtitle": "Pilih saluran, sesuaikan pesan jika perlu, lalu kirim",
+    "selectChannel": "Pilih Saluran",
+    "messageContent": "Pesan",
+    "messageContentPlaceholder": "⏰ Pengingat: Masukkan peringkat GE Anda",
+    "sendMessage": "Kirim ke Discord",
+    "messageSent": "Pesan berhasil dikirim ke Discord",
+    "messageSendFailed": "Gagal mengirim pesan ke Discord",
+    "errors": {
+      "invalidWebhookUrl": "Harus berupa URL webhook Discord yang valid (https://discord.com/api/webhooks/...)"
+    }
+  },
+  "guides": {
+    "title": "Panduan",
+    "community": "Komunitas",
+    "my_guides": "Panduan Saya",
+    "create": "Buat panduan",
+    "limit_reached": "Batas 10 panduan tercapai",
+    "no_guides": "Belum ada panduan",
+    "count": "{{ count }}/10 panduan",
+    "categories": {
+      "formation": "Formasi",
+      "evenement": "Event",
+      "general": "Umum"
+    },
+    "status": {
+      "published": "Diterbitkan",
+      "draft": "Draf"
+    },
+    "by": "Oleh",
+    "view": "Lihat",
+    "edit": "Edit",
+    "publish": "Terbitkan",
+    "unpublish": "Batalkan Penerbitan",
+    "delete": "Hapus",
+    "published_success": "Panduan diterbitkan",
+    "unpublished_success": "Panduan dibatalkan penerbitannya",
+    "champion": "Champion",
+    "champion_slot": "Slot Champion",
+    "add_champion": "Tambah champion",
+    "champion_count": "{{ count }} champion dikonfigurasi",
+    "formation_hint": "Konfigurasikan hingga 3 champion. Seret untuk mengurutkan ulang.",
+    "skill": "Skill",
+    "skills": "Skill",
+    "gems": "Permata",
+    "hero_section": "Pahlawan",
+    "horse_section": "Kuda",
+    "traits": "Sifat kuda",
+    "trait": "Sifat",
+    "add_trait": "Tambah sifat",
+    "adornment": "Adornment",
+    "ring": "Cincin",
+    "description": "Deskripsi / Catatan penulis",
+    "editor": {
+      "title_new": "Buat panduan",
+      "title_edit": "Edit panduan",
+      "step_basic": "Informasi",
+      "step_content": "Konten",
+      "step_review": "Ringkasan",
+      "title_label": "Judul panduan",
+      "category_label": "Kategori",
+      "description_label": "Deskripsi",
+      "publish_now": "Terbitkan sekarang",
+      "save_draft": "Simpan sebagai draf",
+      "save": "Simpan"
+    },
+    "confirm_delete": "Hapus panduan ini?",
+    "confirm_delete_msg": "Tindakan ini tidak dapat dibatalkan.",
+    "errors": {
+      "limitReached": "Anda telah mencapai maksimum 10 panduan.",
+      "slugDuplicate": "Judul ini terlalu mirip dengan panduan yang sudah ada. Harap sesuaikan judul.",
+      "notFound": "Panduan tidak ditemukan.",
+      "unauthorized": "Anda tidak berwenang untuk mengubah panduan ini.",
+      "unknown": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi.",
+      "invalidFileType": "Jenis file tidak valid. Diizinkan: PNG, JPEG, WebP."
+    },
+    "public_list_title": "Panduan Komunitas",
+    "public_list_empty": "Belum ada panduan yang diterbitkan",
+    "copy_link": "Salin tautan",
+    "link_copied": "Tautan disalin!",
+    "back_to_list": "Kembali ke panduan",
+    "guide_not_found": "Panduan tidak ditemukan",
+    "upvote": "Upvote",
+    "upvoted": "Upvoted",
+    "champion_slot": "Champion {{n}}",
+    "author_notes": "Catatan penulis"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "Pelacak Aktivitas Server",
+      "title1": "Bermain Cerdas.",
+      "title2": "Menang Bersama.",
+      "subtitleBefore": "Dirancang untuk setiap pemain aktif — bukan hanya yang banyak belanja. Lacak aktivitas server Anda, dapatkan poin strategis, dan raih",
+      "subtitleStrong": "Top 10 Governor Terkuat",
+      "subtitleAfter": "dengan jauh lebih sedikit speed-up dan sumber daya.",
+      "ctaLogin": "Masuk",
+      "ctaJoin": "Bergabung dengan Undangan"
+    },
+    "steps": {
+      "label": "CARA KERJANYA",
+      "title": "Tiga langkah menuju puncak",
+      "step1": {
+        "title": "Catat Aktivitas Anda",
+        "description": "Kirimkan pertempuran KvK, pertarungan Legion, Ekspedisi Emas dan lainnya. Setiap acara, setiap minggu — kontribusi Anda tercatat."
+      },
+      "step2": {
+        "title": "Dapatkan Poin Strategis",
+        "description": "Poin dihitung dari posisi dan performa Anda. Aturan yang dapat dikonfigurasi memberi penghargaan kepada pemain yang hadir dan bersaing."
+      },
+      "step3": {
+        "title": "Naiki Peringkat",
+        "description": "Papan peringkat bergulir 6 minggu menjaga persaingan tetap segar dan memberi penghargaan atas konsistensi."
+      }
+    },
+    "benefits": {
+      "label": "MENGAPA INI PENTING",
+      "title": "Seluruh server Anda menang",
+      "benefit1": {
+        "title": "Dibuat untuk Pemain Aktif",
+        "description": "Tanpa pay-to-win. Aktivitas murni dan partisipasi cerdas yang mengangkat Anda di papan peringkat — siapa pun bisa bersaing."
+      },
+      "benefit2": {
+        "title": "Hemat Sumber Daya Seluruh Server",
+        "description": "Pelacakan terstruktur mengoptimalkan siapa yang berpartisipasi dan kapan, menghemat speed-up dan sumber daya untuk persiapan KvK."
+      },
+      "benefit3": {
+        "title": "Raih Top 10 Governor Terkuat",
+        "description": "Dapatkan pahlawan terkuat dengan lebih sedikit sumber daya. Perbedaan antara hampir dan juara diukur dengan upaya yang terorganisir."
+      }
+    },
+    "cta": {
+      "title": "Siap memimpin server Anda?",
+      "subtitle": "Buat server Anda dan mulai lacak kemajuan anggota Anda hari ini.",
+      "button": "Buat Server Anda"
+    },
+    "footer": "Activity Tracker — Bermain lebih cerdas, bersaing lebih kuat."
+  }
+}

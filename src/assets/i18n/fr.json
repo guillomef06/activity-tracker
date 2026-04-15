@@ -18,19 +18,19 @@
     "password": "Mot de passe",
     "confirmPassword": "Confirmer le mot de passe",
     "displayName": "Nom d'affichage",
-    "allianceName": "Nom de l'alliance",
+    "serverName": "Nom du serveur",
     "invitationToken": "Jeton d'invitation",
     "welcomeBack": "Bon retour",
     "signInSubtitle": "Connectez-vous à votre compte",
-    "signupTitle": "Créer une Alliance",
-    "signupSubtitle": "Inscrivez-vous en tant qu'Administrateur d'Alliance",
-    "joinTitle": "Rejoindre une Alliance",
-    "joinSubtitle": "Utilisez votre invitation pour rejoindre une alliance",
+    "signupTitle": "Créer un serveur",
+    "signupSubtitle": "Inscrivez-vous en tant qu'Administrateur de serveur",
+    "joinTitle": "Rejoindre un serveur",
+    "joinSubtitle": "Utilisez votre invitation pour rejoindre un serveur",
     "setupTitle": "Configuration Super Admin",
     "setupSubtitle": "Créez le premier compte super administrateur",
     "setupWarning": "Il s'agit d'une configuration unique. Le super administrateur a un accès complet pour gérer toutes les alliances et utilisateurs.",
     "signingIn": "Connexion en cours...",
-    "creatingAlliance": "Création de l'alliance...",
+    "creatingServer": "Création du serveur...",
     "joining": "Adhésion en cours...",
     "createSuperAdmin": "Créer le Super Admin",
     "creating": "Création...",
@@ -38,17 +38,17 @@
     "usernameHint": "3-30 caractères — lettres, chiffres, - et _ uniquement",
     "displayNamePlaceholder": "Entrez votre nom complet",
     "displayNameHint": "Votre nom tel qu'il apparaîtra aux autres",
-    "allianceNamePlaceholder": "Entrez le nom de votre alliance",
-    "allianceNameHint": "Choisissez un nom pour votre nouvelle alliance",
+    "serverNamePlaceholder": "Entrez le nom de votre serveur",
+    "serverNameHint": "Choisissez un nom pour votre nouveau serveur",
     "passwordPlaceholder": "ex. MonPass123!",
     "passwordHint": "Min. 6 caractères, doit contenir au moins une lettre et un chiffre",
     "confirmPasswordPlaceholder": "Ressaisissez votre mot de passe",
     "tokenPlaceholder": "Entrez le jeton d'invitation",
-    "tokenHint": "Fourni par l'administrateur de votre alliance",
+    "tokenHint": "Fourni par l'administrateur de votre serveur",
     "haveAccount": "Vous avez déjà un compte ?",
     "noAccount": "Vous n'avez pas de compte ?",
     "haveInvitation": "Vous avez une invitation ?",
-    "wantCreateAlliance": "Vous voulez créer une alliance ?",
+    "wantCreateServer": "Vous voulez créer un serveur ?",
     "errors": {
       "usernameExists": "Ce nom d'utilisateur existe déjà",
       "usernameInvalidChars": "Lettres, chiffres, - et _ uniquement",
@@ -59,7 +59,7 @@
       "joinFailed": "Échec de l'adhésion. Veuillez réessayer.",
       "setupFailed": "Échec de la configuration. Veuillez réessayer.",
       "superAdminExists": "Le super administrateur existe déjà",
-      "allianceCreationFailed": "Échec de la création de l'alliance",
+      "serverCreationFailed": "Échec de la création du serveur",
       "invalidToken": "Jeton d'invitation invalide ou expiré"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "allianceSettings": "Paramètres Alliance",
+    "serverSettings": "Paramètres Serveur",
     "home": "Accueil",
     "guides": "Guides"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "Paramètres de l'Alliance",
+      "title": "Paramètres du serveur",
       "tabs": {
-        "overview": "Alliance",
+        "overview": "Serveur",
         "invitations": "Invitations",
         "activitySettings": "Paramètres des Activités",
         "retroactive": "Activités Rétroactives",
         "importExcel": "Import Excel",
         "discord": "Discord"
       },
-      "allianceInfo": "Informations de l'Alliance",
-      "allianceName": "Nom de l'Alliance",
-      "allianceTag": "Tag de l'Alliance",
-      "allianceTagHint": "Identifiant optionnel de 3 caractères (ex. RgW)",
+      "serverInfo": "Informations du serveur",
+      "serverName": "Nom du serveur",
+      "serverTag": "Tag du serveur",
+      "serverTagHint": "Identifiant optionnel de 3 caractères (ex. RgW)",
       "updateName": "Mettre à Jour",
       "memberList": "Liste des Membres",
       "members": "membres",
@@ -120,8 +120,8 @@
       "revokeInvitation": "Révoquer l'invitation",
       "revokeConfirm": "Êtes-vous sûr de vouloir révoquer cette invitation ?",
       "membersJoined": "Membres ayant rejoint via cette invitation",
-      "nameUpdated": "Alliance mise à jour avec succès !",
-      "nameUpdateFailed": "Échec de la mise à jour de l'alliance",
+      "nameUpdated": "Serveur mis à jour avec succès !",
+      "nameUpdateFailed": "Échec de la mise à jour du serveur",
       "invitationCreated": "Invitation créée et lien copié dans le presse-papiers !",
       "invitationCreateFailed": "Échec de la création de l'invitation",
       "invitationRevoked": "Invitation révoquée avec succès",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "Zone de danger",
         "deleteAllActivities": "Supprimer toutes les activités",
-        "deleteAllActivitiesDescription": "Supprime définitivement toutes les activités soumises par les membres de l'alliance. Cette action est irréversible.",
+        "deleteAllActivitiesDescription": "Supprime définitivement toutes les activités soumises par les membres du serveur. Cette action est irréversible.",
         "deleteAllActivitiesConfirm": "Êtes-vous sûr de vouloir supprimer TOUTES les activités ? Cela effacera définitivement l'historique complet pour tous les membres.",
         "deleteAllActivitiesSuccess": "Toutes les activités ont été supprimées",
         "deleteAllActivitiesFailed": "Échec de la suppression des activités"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "Ajouter une activité rétroactive",
-      "description": "En tant qu'admin, vous pouvez ajouter des activités pour les membres de l'alliance pour les 6 dernières semaines. Sélectionnez un membre, choisissez une semaine et entrez les détails de l'activité.",
+      "description": "En tant qu'admin, vous pouvez ajouter des activités pour les membres du serveur pour les 6 dernières semaines. Sélectionnez un membre, choisissez une semaine et entrez les détails de l'activité.",
       "selectMember": "Sélectionner un membre",
-      "memberHint": "Choisissez le membre de l'alliance pour lequel vous souhaitez ajouter une activité",
+      "memberHint": "Choisissez le membre du serveur pour lequel vous souhaitez ajouter une activité",
       "selectWeek": "Sélectionner la Semaine",
       "weekHint": "Choisissez la semaine pour laquelle soumettre votre activité.",
       "currentWeek": "Semaine actuelle",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "Importer des activités depuis Excel",
-      "description": "Téléchargez un modèle rempli pour importer des activités rétroactives en lot pour les membres de votre alliance.",
+      "description": "Téléchargez un modèle rempli pour importer des activités rétroactives en lot pour les membres de votre serveur.",
       "templateHint": "Commencez par télécharger et remplir le modèle d'import.",
       "downloadTemplate": "Télécharger le modèle",
       "activityFilter": "Filtrer par activité",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "Tableau de Bord Super Admin",
       "subtitle": "Vue d'ensemble et gestion globale du système",
-      "totalAlliances": "Total Alliances",
+      "totalServers": "Total Serveurs",
       "totalUsers": "Total Utilisateurs",
       "totalActivities": "Total Activités",
       "activeInvitations": "Invitations Actives",
       "quickActions": "Actions Rapides",
-      "manageAlliances": "Gérer les Alliances",
-      "manageAlliancesDesc": "Voir et gérer toutes les alliances",
+      "manageServers": "Gérer les Serveurs",
+      "manageServersDesc": "Voir et gérer toutes les alliances",
       "manageUsers": "Gérer les Utilisateurs",
       "manageUsersDesc": "Voir et gérer tous les utilisateurs",
       "manageGuidesData": "Données de Référence Guides",
       "manageGuidesDataDesc": "Gérer les champions, skills, chevaux et gemmes"
     },
-    "alliances": {
-      "title": "Gestion des Alliances",
+    "servers": {
+      "title": "Gestion des Serveurs",
       "subtitle": "Gérer toutes les alliances du système",
-      "noAlliances": "Aucune alliance créée pour le moment",
-      "name": "Nom de l'Alliance",
+      "noServers": "Aucun serveur créé pour le moment",
+      "name": "Nom du serveur",
       "tag": "Tag",
       "admin": "Administrateur",
       "members": "Membres",
       "created": "Créée",
       "actions": "Actions",
-      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'alliance \"{{name}}\" ? Cela supprimera également tous les utilisateurs, activités et invitations associés.",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer le serveur \"{{name}}\" ? Cela supprimera également tous les utilisateurs, activités et invitations associés.",
       "loadFailed": "Échec du chargement des alliances",
-      "updated": "Alliance mise à jour avec succès",
-      "updateFailed": "Échec de la mise à jour de l'alliance",
-      "deleted": "Alliance supprimée avec succès",
-      "deleteFailed": "Échec de la suppression de l'alliance"
+      "updated": "Serveur mis à jour avec succès",
+      "updateFailed": "Échec de la mise à jour du serveur",
+      "deleted": "Serveur supprimé avec succès",
+      "deleteFailed": "Échec de la suppression du serveur"
     },
     "users": {
       "title": "Gestion des Utilisateurs",
@@ -346,8 +346,8 @@
       "displayName": "Nom d'Affichage",
       "username": "Nom d'Utilisateur",
       "role": "Rôle",
-      "alliance": "Alliance",
-      "noAlliance": "Aucune alliance",
+      "server": "Serveur",
+      "noServer": "Aucun serveur",
       "created": "Créé",
       "actions": "Actions",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer l'utilisateur \"{{name}}\" ? Cette action ne peut pas être annulée.",
@@ -362,7 +362,7 @@
     "skills": "Skills",
     "assignSkills": "Assigner des Skills",
     "temperaments": "Caractères",
-    "ornaments": "Ornements",
+    "adornments": "Ornements",
     "gems": "Gemmes",
     "rings": "Anneaux",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "Traits du cheval",
     "trait": "Trait",
     "add_trait": "Ajouter un trait",
-    "ornament": "Ornement",
+    "adornment": "Ornement",
     "ring": "Anneau",
     "description": "Description / Notes de l'auteur",
     "editor": {
@@ -673,10 +673,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Suivi d'Activités d'Alliance",
+      "eyebrow": "Suivi d'Activités de serveur",
       "title1": "Jouez Malin.",
       "title2": "Gagnez Ensemble.",
-      "subtitleBefore": "Conçu pour tous les joueurs actifs — pas seulement les gros dépensiers. Suivez les activités de votre alliance, accumulez des points stratégiques et décrochez",
+      "subtitleBefore": "Conçu pour tous les joueurs actifs — pas seulement les gros dépensiers. Suivez les activités de votre serveur, accumulez des points stratégiques et décrochez",
       "subtitleStrong": "le Top 10 Gouverneur le Plus Puissant",
       "subtitleAfter": "avec bien moins d'accélérations et de ressources.",
       "ctaLogin": "Connexion",
@@ -706,7 +706,7 @@
         "description": "Pas de pay-to-win. Une activité régulière et une participation intelligente font grimper dans le classement — tout le monde a sa chance."
       },
       "benefit2": {
-        "title": "Préservez les Ressources de l'Alliance",
+        "title": "Préservez les Ressources du serveur",
         "description": "Le suivi structuré optimise qui participe et à quel moment, pour économiser accélérations et ressources avant le KvK et le Mightiest Empire."
       },
       "benefit3": {
@@ -715,9 +715,9 @@
       }
     },
     "cta": {
-      "title": "Prêt à mener votre alliance au sommet ?",
-      "subtitle": "Créez votre alliance et commencez à suivre les progrès de vos membres dès aujourd'hui.",
-      "button": "Créer votre Alliance"
+      "title": "Prêt à mener votre serveur au sommet ?",
+      "subtitle": "Créez votre serveur et commencez à suivre les progrès de vos membres dès aujourd'hui.",
+      "button": "Créer votre Serveur"
     },
     "footer": "Activity Tracker — Jouez malin, assurez la victoire."
   }

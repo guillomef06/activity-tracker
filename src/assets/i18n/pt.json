@@ -18,19 +18,19 @@
     "password": "Senha",
     "confirmPassword": "Confirmar senha",
     "displayName": "Nome de exibição",
-    "allianceName": "Nome da aliança",
+    "serverName": "Nome da servidor",
     "invitationToken": "Token de convite",
     "welcomeBack": "Bem-vindo de volta",
     "signInSubtitle": "Entre na sua conta",
-    "signupTitle": "Criar Aliança",
-    "signupSubtitle": "Cadastre-se como Administrador de Aliança",
-    "joinTitle": "Entrar na Aliança",
-    "joinSubtitle": "Use seu convite para entrar em uma aliança",
+    "signupTitle": "Criar Servidor",
+    "signupSubtitle": "Cadastre-se como Administrador de Servidor",
+    "joinTitle": "Entrar na Servidor",
+    "joinSubtitle": "Use seu convite para entrar em uma servidor",
     "setupTitle": "Configuração do Super Admin",
     "setupSubtitle": "Crie a primeira conta de super administrador",
-    "setupWarning": "Esta é uma configuração única. O super admin tem acesso completo para gerenciar todas as alianças e usuários.",
+    "setupWarning": "Esta é uma configuração única. O super admin tem acesso completo para gerenciar todas as servidors e usuários.",
     "signingIn": "Entrando...",
-    "creatingAlliance": "Criando aliança...",
+    "creatingServer": "Criando servidor...",
     "joining": "Entrando...",
     "createSuperAdmin": "Criar Super Admin",
     "creating": "Criando...",
@@ -38,17 +38,17 @@
     "usernameHint": "3–30 caracteres — apenas letras, números, - e _",
     "displayNamePlaceholder": "Digite seu nome completo",
     "displayNameHint": "Seu nome como aparecerá para outros",
-    "allianceNamePlaceholder": "Digite o nome da aliança",
-    "allianceNameHint": "Escolha um nome para sua nova aliança",
+    "serverNamePlaceholder": "Digite o nome da servidor",
+    "serverNameHint": "Escolha um nome para sua nova servidor",
     "passwordPlaceholder": "ex. MinhaSenha123!",
     "passwordHint": "Mín. 6 caracteres, deve incluir pelo menos uma letra e um número",
     "confirmPasswordPlaceholder": "Digite a senha novamente",
     "tokenPlaceholder": "Digite o token de convite",
-    "tokenHint": "Fornecido pelo seu administrador de aliança",
+    "tokenHint": "Fornecido pelo seu administrador de servidor",
     "haveAccount": "Já tem uma conta?",
     "noAccount": "Não tem uma conta?",
     "haveInvitation": "Tem um convite?",
-    "wantCreateAlliance": "Quer criar uma aliança?",
+    "wantCreateServer": "Quer criar uma servidor?",
     "errors": {
       "usernameExists": "Nome de usuário já existe",
       "usernameInvalidChars": "Apenas letras, números, - e _",
@@ -59,7 +59,7 @@
       "joinFailed": "Falha ao entrar. Por favor, tente novamente.",
       "setupFailed": "Configuração falhou. Por favor, tente novamente.",
       "superAdminExists": "Super admin já existe",
-      "allianceCreationFailed": "Falha ao criar aliança",
+      "serverCreationFailed": "Falha ao criar servidor",
       "invalidToken": "Token de convite inválido ou expirado"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "Super Admin",
-    "allianceSettings": "Configurações da Aliança",
+    "serverSettings": "Configurações da Servidor",
     "home": "Início",
     "guides": "Guias"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "Configurações da Aliança",
+      "title": "Configurações da Servidor",
       "tabs": {
-        "overview": "Aliança",
+        "overview": "Servidor",
         "invitations": "Convites",
         "activitySettings": "Config. de Atividades",
         "retroactive": "Atividades Retroativas",
         "importExcel": "Importar Excel",
         "discord": "Discord"
       },
-      "allianceInfo": "Informações da Aliança",
-      "allianceName": "Nome da Aliança",
-      "allianceTag": "Tag da Aliança",
-      "allianceTagHint": "Identificador opcional de 3 caracteres (ex. RgW)",
+      "serverInfo": "Informações da Servidor",
+      "serverName": "Nome da Servidor",
+      "serverTag": "Tag da Servidor",
+      "serverTagHint": "Identificador opcional de 3 caracteres (ex. RgW)",
       "updateName": "Atualizar",
       "memberList": "Lista de Membros",
       "members": "membros",
@@ -120,8 +120,8 @@
       "revokeInvitation": "Revogar convite",
       "revokeConfirm": "Tem certeza que deseja revogar este convite?",
       "membersJoined": "Membros que entraram por este convite",
-      "nameUpdated": "Aliança atualizada com sucesso!",
-      "nameUpdateFailed": "Falha ao atualizar aliança",
+      "nameUpdated": "Servidor atualizada com sucesso!",
+      "nameUpdateFailed": "Falha ao atualizar servidor",
       "invitationCreated": "Convite criado e link copiado para a área de transferência!",
       "invitationCreateFailed": "Falha ao criar convite",
       "invitationRevoked": "Convite revogado com sucesso",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "Zona de Perigo",
         "deleteAllActivities": "Excluir todas as atividades",
-        "deleteAllActivitiesDescription": "Exclua permanentemente todas as atividades enviadas pelos membros da aliança. Esta ação não pode ser desfeita.",
+        "deleteAllActivitiesDescription": "Exclua permanentemente todas as atividades enviadas pelos membros da servidor. Esta ação não pode ser desfeita.",
         "deleteAllActivitiesConfirm": "Tem certeza que deseja excluir TODAS as atividades? Isso apagará permanentemente o histórico completo de atividades de todos os membros.",
         "deleteAllActivitiesSuccess": "Todas as atividades foram excluídas",
         "deleteAllActivitiesFailed": "Falha ao excluir atividades"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "Adicionar Atividade Retroativa",
-      "description": "Como admin, você pode adicionar atividades para membros da aliança das últimas 6 semanas. Selecione um membro, escolha uma semana e insira os detalhes.",
+      "description": "Como admin, você pode adicionar atividades para membros da servidor das últimas 6 semanas. Selecione um membro, escolha uma semana e insira os detalhes.",
       "selectMember": "Selecionar Membro",
-      "memberHint": "Escolha o membro da aliança para quem deseja adicionar uma atividade",
+      "memberHint": "Escolha o membro da servidor para quem deseja adicionar uma atividade",
       "selectWeek": "Selecionar Semana",
       "weekHint": "Escolha a semana em que a atividade ocorreu",
       "currentWeek": "Semana Atual",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "Importar Atividades do Excel",
-      "description": "Faça upload de um modelo preenchido para importar atividades retroativas em lote para os membros da sua aliança.",
+      "description": "Faça upload de um modelo preenchido para importar atividades retroativas em lote para os membros da sua servidor.",
       "templateHint": "Primeiro, baixe e preencha o modelo de importação.",
       "downloadTemplate": "Baixar Modelo",
       "activityFilter": "Filtrar por atividade",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "Painel do Super Admin",
       "subtitle": "Visão geral e gerenciamento global do sistema",
-      "totalAlliances": "Total de Alianças",
+      "totalServers": "Total de Servidors",
       "totalUsers": "Total de Usuários",
       "totalActivities": "Total de Atividades",
       "activeInvitations": "Convites Ativos",
       "quickActions": "Ações Rápidas",
-      "manageAlliances": "Gerenciar Alianças",
-      "manageAlliancesDesc": "Visualizar e gerenciar todas as alianças",
+      "manageServers": "Gerenciar Servidors",
+      "manageServersDesc": "Visualizar e gerenciar todas as servidors",
       "manageUsers": "Gerenciar Usuários",
       "manageUsersDesc": "Visualizar e gerenciar todos os usuários",
       "manageGuidesData": "Dados de Referência dos Guias",
       "manageGuidesDataDesc": "Gerenciar campeões, habilidades, cavalos e gemas"
     },
-    "alliances": {
-      "title": "Gerenciamento de Alianças",
-      "subtitle": "Gerencie todas as alianças do sistema",
-      "noAlliances": "Nenhuma aliança criada ainda",
-      "name": "Nome da Aliança",
+    "servers": {
+      "title": "Gerenciamento de Servidors",
+      "subtitle": "Gerencie todas as servidors do sistema",
+      "noServers": "Nenhuma servidor criada ainda",
+      "name": "Nome da Servidor",
       "tag": "Tag",
       "admin": "Admin",
       "members": "Membros",
       "created": "Criado",
       "actions": "Ações",
-      "deleteConfirm": "Tem certeza que deseja excluir a aliança \"{{name}}\"? Isso também excluirá todos os usuários, atividades e convites associados.",
-      "loadFailed": "Falha ao carregar alianças",
-      "updated": "Aliança atualizada com sucesso",
-      "updateFailed": "Falha ao atualizar aliança",
-      "deleted": "Aliança excluída com sucesso",
-      "deleteFailed": "Falha ao excluir aliança"
+      "deleteConfirm": "Tem certeza que deseja excluir a servidor \"{{name}}\"? Isso também excluirá todos os usuários, atividades e convites associados.",
+      "loadFailed": "Falha ao carregar servidors",
+      "updated": "Servidor atualizada com sucesso",
+      "updateFailed": "Falha ao atualizar servidor",
+      "deleted": "Servidor excluída com sucesso",
+      "deleteFailed": "Falha ao excluir servidor"
     },
     "users": {
       "title": "Gerenciamento de Usuários",
@@ -346,8 +346,8 @@
       "displayName": "Nome de Exibição",
       "username": "Nome de Usuário",
       "role": "Função",
-      "alliance": "Aliança",
-      "noAlliance": "Sem aliança",
+      "server": "Servidor",
+      "noServer": "Sem servidor",
       "created": "Criado",
       "actions": "Ações",
       "deleteConfirm": "Tem certeza que deseja excluir o usuário \"{{name}}\"? Esta ação não pode ser desfeita.",
@@ -362,7 +362,7 @@
     "skills": "Habilidades",
     "assignSkills": "Atribuir Habilidades",
     "temperaments": "Temperamentos",
-    "ornaments": "Ornamentos",
+    "adornments": "Ornamentos",
     "gems": "Gemas",
     "rings": "Anéis",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "Temperamentos do cavalo",
     "trait": "Temperamento",
     "add_trait": "Adicionar temperamento",
-    "ornament": "Ornamento",
+    "adornment": "Ornamento",
     "ring": "Anel",
     "description": "Descrição / Notas do autor",
     "editor": {
@@ -673,10 +673,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "Rastreador de Atividades da Aliança",
+      "eyebrow": "Rastreador de Atividades da Servidor",
       "title1": "Jogue com Inteligência.",
       "title2": "Vença Juntos.",
-      "subtitleBefore": "Desenvolvido para cada jogador ativo — não apenas para quem gasta. Acompanhe as atividades da aliança, ganhe pontos estratégicos e alcance o",
+      "subtitleBefore": "Desenvolvido para cada jogador ativo — não apenas para quem gasta. Acompanhe as atividades da servidor, ganhe pontos estratégicos e alcance o",
       "subtitleStrong": "Top 10 Governador Mais Poderoso",
       "subtitleAfter": "com significativamente menos speed-ups e recursos.",
       "ctaLogin": "Entrar",
@@ -706,7 +706,7 @@
         "description": "Sem pay-to-win. Atividade pura e participação inteligente são o que te move na classificação — qualquer um pode competir."
       },
       "benefit2": {
-        "title": "Economize Recursos em Toda a Aliança",
+        "title": "Economize Recursos em Toda a Servidor",
         "description": "O rastreamento estruturado otimiza quem participa e quando, preservando speed-ups e recursos para preparação do KvK e Império Mais Poderoso."
       },
       "benefit3": {
@@ -715,9 +715,9 @@
       }
     },
     "cta": {
-      "title": "Pronto para liderar sua aliança?",
-      "subtitle": "Crie sua aliança e comece a acompanhar o progresso dos seus membros hoje.",
-      "button": "Criar sua Aliança"
+      "title": "Pronto para liderar sua servidor?",
+      "subtitle": "Crie sua servidor e comece a acompanhar o progresso dos seus membros hoje.",
+      "button": "Criar sua Servidor"
     },
     "footer": "Activity Tracker — Jogue mais inteligente, compita mais forte."
   }

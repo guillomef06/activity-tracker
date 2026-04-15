@@ -44,7 +44,7 @@ export interface HorseTemperament {
   sort_order: number;
 }
 
-export interface Ornament {
+export interface Adornment {
   readonly id: string;
   name: string;
   image_url: string | null;
@@ -105,7 +105,7 @@ export interface GuideChampion {
   ornament_id: string | null;
   ring_id: string | null;
   champions?: Champion;
-  ornaments?: Ornament;
+  adornments?: Adornment;
   rings?: Ring;
   guide_champion_skills?: GuideChampionSkill[];
   guide_champion_gems?: GuideChampionGem[];
@@ -174,6 +174,6 @@ export interface ChampionSlotConfig {
   skills: [Skill | null, Skill | null];
   gems: [Gem | null, Gem | null, Gem | null];
   traits: [HorseTemperament | null, HorseTemperament | null, HorseTemperament | null];
-  ornament: Ornament | null;
+  adornment: Adornment | null;
   ring: Ring | null;
 }
