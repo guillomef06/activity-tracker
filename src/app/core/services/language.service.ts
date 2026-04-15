@@ -20,7 +20,8 @@ export type SupportedLanguage =
   | 'hi'
   | 'zh'
   | 'ku'
-  | 'ar';
+  | 'ar'
+  | 'id';
 
 /**
  * Language information with metadata
@@ -61,6 +62,7 @@ export class LanguageService {
     { code: 'zh', name: '中文', flag: '🇨🇳' },
     { code: 'ku', name: 'Kurdî', flag: '☀️' },
     { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+    { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
   ];
 
   /**

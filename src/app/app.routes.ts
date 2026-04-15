@@ -57,10 +57,9 @@ export const routes: Routes = [
       },
       // Admin routes
       {
-        path: 'alliance-settings',
+        path: 'server-settings',
         canActivate: [adminGuard],
-        loadComponent: () =>
-          import('./pages/alliance-settings/alliance-settings.page').then(m => m.AllianceSettingsPage),
+        loadComponent: () => import('./pages/server-settings/server-settings.page').then(m => m.ServerSettingsPage),
       },
       // Super Admin routes
       {
@@ -78,9 +77,9 @@ export const routes: Routes = [
               import('./pages/super-admin/dashboard/super-admin-dashboard.page').then(m => m.SuperAdminDashboardPage),
           },
           {
-            path: 'alliances',
+            path: 'servers',
             loadComponent: () =>
-              import('./pages/super-admin/alliances/super-admin-alliances.page').then(m => m.SuperAdminAlliancesPage),
+              import('./pages/super-admin/servers/super-admin-servers.page').then(m => m.SuperAdminServersPage),
           },
           {
             path: 'users',

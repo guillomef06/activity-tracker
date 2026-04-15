@@ -9,7 +9,7 @@ import { GuidesDataPage } from './guides-data.page';
 import { GuideAdminService } from '@app/core/services/guide-admin.service';
 import { SnackbarService } from '@app/core/services';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
-import type { Champion, Skill, HorseTemperament, Ornament, Gem } from '@app/shared/models/guide.model';
+import type { Champion, Skill, HorseTemperament, Adornment, Gem } from '@app/shared/models/guide.model';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ const makeTemperament = (overrides: Partial<HorseTemperament> = {}): HorseTemper
   ...overrides,
 });
 
-const makeOrnament = (overrides: Partial<Ornament> = {}): Ornament => ({
+const makeAdornment = (overrides: Partial<Adornment> = {}): Adornment => ({
   id: 'orn-1',
   name: 'Golden Crown',
   image_url: null,
@@ -67,7 +67,7 @@ describe('GuidesDataPage', () => {
     getChampions: ReturnType<typeof vi.fn>;
     getSkills: ReturnType<typeof vi.fn>;
     getHorseTemperaments: ReturnType<typeof vi.fn>;
-    getOrnaments: ReturnType<typeof vi.fn>;
+    getAdornments: ReturnType<typeof vi.fn>;
     getGems: ReturnType<typeof vi.fn>;
     getRings: ReturnType<typeof vi.fn>;
     getChampionSkills: ReturnType<typeof vi.fn>;
@@ -84,9 +84,9 @@ describe('GuidesDataPage', () => {
     createHorseTemperament: ReturnType<typeof vi.fn>;
     updateHorseTemperament: ReturnType<typeof vi.fn>;
     deleteHorseTemperament: ReturnType<typeof vi.fn>;
-    createOrnament: ReturnType<typeof vi.fn>;
-    updateOrnament: ReturnType<typeof vi.fn>;
-    deleteOrnament: ReturnType<typeof vi.fn>;
+    createAdornment: ReturnType<typeof vi.fn>;
+    updateAdornment: ReturnType<typeof vi.fn>;
+    deleteAdornment: ReturnType<typeof vi.fn>;
     createGem: ReturnType<typeof vi.fn>;
     updateGem: ReturnType<typeof vi.fn>;
     deleteGem: ReturnType<typeof vi.fn>;
@@ -103,7 +103,7 @@ describe('GuidesDataPage', () => {
       getChampions: vi.fn().mockResolvedValue([makeChampion()]),
       getSkills: vi.fn().mockResolvedValue([makeSkill()]),
       getHorseTemperaments: vi.fn().mockResolvedValue([makeTemperament()]),
-      getOrnaments: vi.fn().mockResolvedValue([makeOrnament()]),
+      getAdornments: vi.fn().mockResolvedValue([makeAdornment()]),
       getGems: vi.fn().mockResolvedValue([makeGem()]),
       getRings: vi.fn().mockResolvedValue([]),
       getChampionSkills: vi.fn().mockResolvedValue([]),
@@ -120,9 +120,9 @@ describe('GuidesDataPage', () => {
       createHorseTemperament: vi.fn().mockResolvedValue({ temperament: makeTemperament({ id: 'new' }), error: null }),
       updateHorseTemperament: vi.fn().mockResolvedValue({ error: null }),
       deleteHorseTemperament: vi.fn().mockResolvedValue({ error: null }),
-      createOrnament: vi.fn().mockResolvedValue({ ornament: makeOrnament({ id: 'new' }), error: null }),
-      updateOrnament: vi.fn().mockResolvedValue({ error: null }),
-      deleteOrnament: vi.fn().mockResolvedValue({ error: null }),
+      createAdornment: vi.fn().mockResolvedValue({ adornment: makeAdornment({ id: 'new' }), error: null }),
+      updateAdornment: vi.fn().mockResolvedValue({ error: null }),
+      deleteAdornment: vi.fn().mockResolvedValue({ error: null }),
       createGem: vi.fn().mockResolvedValue({ gem: makeGem({ id: 'new' }), error: null }),
       updateGem: vi.fn().mockResolvedValue({ error: null }),
       deleteGem: vi.fn().mockResolvedValue({ error: null }),
@@ -169,7 +169,7 @@ describe('GuidesDataPage', () => {
     expect(guideAdminMock.getChampions).toHaveBeenCalledOnce();
     expect(guideAdminMock.getSkills).toHaveBeenCalledOnce();
     expect(guideAdminMock.getHorseTemperaments).toHaveBeenCalledOnce();
-    expect(guideAdminMock.getOrnaments).toHaveBeenCalledOnce();
+    expect(guideAdminMock.getAdornments).toHaveBeenCalledOnce();
     expect(guideAdminMock.getGems).toHaveBeenCalledOnce();
     expect(guideAdminMock.getRings).toHaveBeenCalledOnce();
   });

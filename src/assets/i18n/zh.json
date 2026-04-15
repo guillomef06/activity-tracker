@@ -18,19 +18,19 @@
     "password": "密码",
     "confirmPassword": "确认密码",
     "displayName": "显示名称",
-    "allianceName": "联盟名称",
+    "serverName": "服务器名称",
     "invitationToken": "邀请令牌",
     "welcomeBack": "欢迎回来",
     "signInSubtitle": "登录您的账户",
-    "signupTitle": "创建联盟",
-    "signupSubtitle": "以联盟管理员身份注册",
-    "joinTitle": "加入联盟",
-    "joinSubtitle": "使用邀请加入联盟",
+    "signupTitle": "创建服务器",
+    "signupSubtitle": "以服务器管理员身份注册",
+    "joinTitle": "加入服务器",
+    "joinSubtitle": "使用邀请加入服务器",
     "setupTitle": "超级管理员设置",
     "setupSubtitle": "创建第一个超级管理员账户",
-    "setupWarning": "这是一次性设置。超级管理员拥有管理所有联盟和用户的完整权限。",
+    "setupWarning": "这是一次性设置。超级管理员拥有管理所有服务器和用户的完整权限。",
     "signingIn": "登录中...",
-    "creatingAlliance": "创建联盟中...",
+    "creatingServer": "创建服务器中...",
     "joining": "加入中...",
     "createSuperAdmin": "创建超级管理员",
     "creating": "创建中...",
@@ -38,17 +38,17 @@
     "usernameHint": "3-30个字符 — 仅限字母、数字、- 和 _",
     "displayNamePlaceholder": "输入您的全名",
     "displayNameHint": "您的名字将如何显示给他人",
-    "allianceNamePlaceholder": "输入您的联盟名称",
-    "allianceNameHint": "为您的新联盟选择名称",
+    "serverNamePlaceholder": "输入您的服务器名称",
+    "serverNameHint": "为您的新服务器选择名称",
     "passwordPlaceholder": "例如 MyPass123!",
     "passwordHint": "最少6个字符，必须包含至少一个字母和一个数字",
     "confirmPasswordPlaceholder": "重新输入密码",
     "tokenPlaceholder": "输入邀请令牌",
-    "tokenHint": "由您的联盟管理员提供",
+    "tokenHint": "由您的服务器管理员提供",
     "haveAccount": "已有账户？",
     "noAccount": "没有账户？",
     "haveInvitation": "有邀请？",
-    "wantCreateAlliance": "想创建联盟？",
+    "wantCreateServer": "想创建服务器？",
     "errors": {
       "usernameExists": "用户名已存在",
       "usernameInvalidChars": "仅限字母、数字、- 和 _",
@@ -59,7 +59,7 @@
       "joinFailed": "加入失败，请重试。",
       "setupFailed": "设置失败，请重试。",
       "superAdminExists": "超级管理员已存在",
-      "allianceCreationFailed": "创建联盟失败",
+      "serverCreationFailed": "创建服务器失败",
       "invalidToken": "邀请令牌无效或已过期"
     },
     "recovery": {
@@ -83,25 +83,25 @@
   },
   "nav": {
     "superAdminDashboard": "超级管理员",
-    "allianceSettings": "联盟设置",
+    "serverSettings": "服务器设置",
     "home": "首页",
     "guides": "指南"
   },
-  "alliance": {
+  "server": {
     "settings": {
-      "title": "联盟设置",
+      "title": "服务器设置",
       "tabs": {
-        "overview": "联盟",
+        "overview": "服务器",
         "invitations": "邀请",
         "activitySettings": "活动设置",
         "retroactive": "补录活动",
         "importExcel": "导入Excel",
         "discord": "Discord"
       },
-      "allianceInfo": "联盟信息",
-      "allianceName": "联盟名称",
-      "allianceTag": "联盟标签",
-      "allianceTagHint": "可选3字符标识符（例如 RgW）",
+      "serverInfo": "服务器信息",
+      "serverName": "服务器名称",
+      "serverTag": "服务器标签",
+      "serverTagHint": "可选3字符标识符（例如 RgW）",
       "updateName": "更新",
       "memberList": "成员列表",
       "members": "成员",
@@ -120,8 +120,8 @@
       "revokeInvitation": "撤销邀请",
       "revokeConfirm": "确定要撤销此邀请吗？",
       "membersJoined": "通过此邀请加入的成员",
-      "nameUpdated": "联盟更新成功！",
-      "nameUpdateFailed": "更新联盟失败",
+      "nameUpdated": "服务器更新成功！",
+      "nameUpdateFailed": "更新服务器失败",
       "invitationCreated": "邀请已创建，链接已复制到剪贴板！",
       "invitationCreateFailed": "创建邀请失败",
       "invitationRevoked": "邀请已成功撤销",
@@ -167,7 +167,7 @@
       "dangerZone": {
         "title": "危险区域",
         "deleteAllActivities": "删除所有活动",
-        "deleteAllActivitiesDescription": "永久删除联盟成员提交的所有活动。此操作无法撤销。",
+        "deleteAllActivitiesDescription": "永久删除服务器成员提交的所有活动。此操作无法撤销。",
         "deleteAllActivitiesConfirm": "确定要删除所有活动吗？这将永久清除所有成员的完整活动历史记录。",
         "deleteAllActivitiesSuccess": "所有活动已被删除",
         "deleteAllActivitiesFailed": "删除活动失败"
@@ -175,9 +175,9 @@
     },
     "retroactive": {
       "title": "添加补录活动",
-      "description": "作为管理员，您可以为联盟成员补录过去6周的活动。选择成员、选择周次，然后输入活动详情。",
+      "description": "作为管理员，您可以为服务器成员补录过去6周的活动。选择成员、选择周次，然后输入活动详情。",
       "selectMember": "选择成员",
-      "memberHint": "选择要为其添加活动的联盟成员",
+      "memberHint": "选择要为其添加活动的服务器成员",
       "selectWeek": "选择周次",
       "weekHint": "选择活动发生的周次",
       "currentWeek": "本周",
@@ -195,7 +195,7 @@
     },
     "import": {
       "title": "从Excel导入活动",
-      "description": "上传填写好的模板以批量导入联盟成员的补录活动。",
+      "description": "上传填写好的模板以批量导入服务器成员的补录活动。",
       "templateHint": "首先，下载并填写导入模板。",
       "downloadTemplate": "下载模板",
       "activityFilter": "按活动筛选",
@@ -310,34 +310,34 @@
     "dashboard": {
       "title": "超级管理员控制台",
       "subtitle": "全局系统概览与管理",
-      "totalAlliances": "联盟总数",
+      "totalServers": "服务器总数",
       "totalUsers": "用户总数",
       "totalActivities": "活动总数",
       "activeInvitations": "有效邀请",
       "quickActions": "快捷操作",
-      "manageAlliances": "管理联盟",
-      "manageAlliancesDesc": "查看并管理所有联盟",
+      "manageServers": "管理服务器",
+      "manageServersDesc": "查看并管理所有服务器",
       "manageUsers": "管理用户",
       "manageUsersDesc": "查看并管理所有用户",
       "manageGuidesData": "指南参考数据",
       "manageGuidesDataDesc": "管理英雄、技能、战马和宝石"
     },
-    "alliances": {
-      "title": "联盟管理",
-      "subtitle": "管理系统中所有联盟",
-      "noAlliances": "暂未创建任何联盟",
-      "name": "联盟名称",
+    "servers": {
+      "title": "服务器管理",
+      "subtitle": "管理系统中所有服务器",
+      "noServers": "暂未创建任何服务器",
+      "name": "服务器名称",
       "tag": "标签",
       "admin": "管理员",
       "members": "成员",
       "created": "创建时间",
       "actions": "操作",
-      "deleteConfirm": "确定要删除联盟\"{{name}}\"吗？这将同时删除所有关联的用户、活动和邀请。",
-      "loadFailed": "加载联盟失败",
-      "updated": "联盟更新成功",
-      "updateFailed": "更新联盟失败",
-      "deleted": "联盟删除成功",
-      "deleteFailed": "删除联盟失败"
+      "deleteConfirm": "确定要删除服务器\"{{name}}\"吗？这将同时删除所有关联的用户、活动和邀请。",
+      "loadFailed": "加载服务器失败",
+      "updated": "服务器更新成功",
+      "updateFailed": "更新服务器失败",
+      "deleted": "服务器删除成功",
+      "deleteFailed": "删除服务器失败"
     },
     "users": {
       "title": "用户管理",
@@ -346,8 +346,8 @@
       "displayName": "显示名称",
       "username": "用户名",
       "role": "角色",
-      "alliance": "联盟",
-      "noAlliance": "无联盟",
+      "server": "服务器",
+      "noServer": "无服务器",
       "created": "创建时间",
       "actions": "操作",
       "deleteConfirm": "确定要删除用户\"{{name}}\"吗？此操作无法撤销。",
@@ -362,7 +362,7 @@
     "skills": "技能",
     "assignSkills": "分配技能",
     "temperaments": "性情",
-    "ornaments": "装饰品",
+    "adornments": "装饰品",
     "gems": "宝石",
     "rings": "戒指",
     "gemType": {
@@ -632,7 +632,7 @@
     "traits": "战马特质",
     "trait": "特质",
     "add_trait": "添加特质",
-    "ornament": "装饰品",
+    "adornment": "装饰品",
     "ring": "戒指",
     "description": "描述 / 作者备注",
     "editor": {
@@ -671,10 +671,10 @@
   },
   "landing": {
     "hero": {
-      "eyebrow": "联盟活动追踪器",
+      "eyebrow": "服务器活动追踪器",
       "title1": "智慧游戏。",
       "title2": "共同胜利。",
-      "subtitleBefore": "专为每位活跃玩家设计 — 不仅仅是付费玩家。追踪您的联盟活动，获得战略积分，以更少的加速道具和资源达到",
+      "subtitleBefore": "专为每位活跃玩家设计 — 不仅仅是付费玩家。追踪您的服务器活动，获得战略积分，以更少的加速道具和资源达到",
       "subtitleStrong": "最强总督前10名",
       "subtitleAfter": "。",
       "ctaLogin": "登录",
@@ -704,7 +704,7 @@
         "description": "无付费获胜。纯粹的活动参与和智慧策略让您在排行榜上晋升 — 任何人都能竞争。"
       },
       "benefit2": {
-        "title": "节省全联盟资源",
+        "title": "节省全服务器资源",
         "description": "结构化追踪优化参与者和时机，为KvK准备和最强帝国保留加速道具和资源。"
       },
       "benefit3": {
@@ -713,9 +713,9 @@
       }
     },
     "cta": {
-      "title": "准备好领导您的联盟了吗？",
-      "subtitle": "创建您的联盟，今天就开始追踪成员的进度。",
-      "button": "创建您的联盟"
+      "title": "准备好领导您的服务器了吗？",
+      "subtitle": "创建您的服务器，今天就开始追踪成员的进度。",
+      "button": "创建您的服务器"
     },
     "footer": "Activity Tracker — 更智慧地游戏，更强地竞争。"
   }

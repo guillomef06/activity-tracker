@@ -11,7 +11,7 @@ const FILLED_CONFIG = {
   skills: [null, null] as [null, null],
   gems: [null, null, null] as [null, null, null],
   traits: [null, null, null] as [null, null, null],
-  ornament: null,
+  adornment: null,
   ring: null,
 };
 

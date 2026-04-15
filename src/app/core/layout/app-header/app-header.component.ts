@@ -12,7 +12,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
-import { AllianceService } from '@app/core/services/alliance.service';
+import { ServerService } from '@app/core/services/server.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import { PwaService } from '@app/core/services';
 import { ReleaseNotesService } from '@app/core/services/release-notes.service';
@@ -39,7 +39,7 @@ import { UserAccountDialogComponent } from '@app/shared/components/user-account-
 })
 export class AppHeaderComponent {
   protected readonly authService = inject(AuthService);
-  protected readonly allianceService = inject(AllianceService);
+  protected readonly serverService = inject(ServerService);
   protected readonly progressBarService = inject(ProgressBarService);
   protected readonly pwaService = inject(PwaService);
   protected readonly releaseNotesService = inject(ReleaseNotesService);
@@ -47,11 +47,11 @@ export class AppHeaderComponent {
 
   protected imageBaseUrl: string;
 
-  /** Alliance tag or name in brackets — hidden on narrow screens */
+  /** Server tag or name in brackets — hidden on narrow screens */
   protected readonly headerTag = computed(() => {
-    const alliance = this.allianceService.alliance();
-    if (alliance?.tag) return `[${alliance.tag}]`;
-    if (alliance?.name) return `[${alliance.name}]`;
+    const server = this.serverService.server();
+    if (server?.tag) return `[${server.tag}]`;
+    if (server?.name) return `[${server.name}]`;
     return null;
   });
 
@@ -62,11 +62,11 @@ export class AppHeaderComponent {
 
   constructor() {
     this.imageBaseUrl = environment.production ? '/activity-tracker/assets/favicon.png' : '/assets/favicon.png';
-    // Load alliance for any authenticated user who belongs to one
+    // Load server for any authenticated user who belongs to one
     effect(() => {
       const profile = this.authService.userProfile();
       if (profile?.alliance_id) {
-        this.allianceService.loadAlliance();
+        this.serverService.loadServer();
       }
     });
   }

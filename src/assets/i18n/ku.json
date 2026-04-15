@@ -18,7 +18,7 @@
     "password": "Şîfre",
     "confirmPassword": "Şîfreyê Piştrast Bike",
     "displayName": "Navê Nîşandayî",
-    "allianceName": "Navê Hevbendiyê",
+    "serverName": "Navê Hevbendiyê",
     "invitationToken": "Tokena Vexwendinê",
     "welcomeBack": "Xêr hatî",
     "signInSubtitle": "Bikeve hesabê xwe",
@@ -30,7 +30,7 @@
     "setupSubtitle": "Yekem hesabê rêvebirê sereke ava bike",
     "setupWarning": "Ev mîhengek carekê ye. Rêvebirê sereke xwediyê gihîştina tevahî ya rêvebirin hemû hevbendî û bikarhêneran e.",
     "signingIn": "Tê ketin...",
-    "creatingAlliance": "Hevbendî tê avakirin...",
+    "creatingServer": "Hevbendî tê avakirin...",
     "joining": "Tê tevlîbûn...",
     "createSuperAdmin": "Rêvebirê Sereke Ava Bike",
     "creating": "Tê avakirin...",
@@ -38,8 +38,8 @@
     "usernameHint": "3-30 tîp — tenê tîp, jimar, - û _",
     "displayNamePlaceholder": "Navê xwe yê tevahî binivîse",
     "displayNameHint": "Navê te yê ku ji kesên din re dê xuya bibe",
-    "allianceNamePlaceholder": "Navê hevbendiya xwe binivîse",
-    "allianceNameHint": "Navekî ji bo hevbendiya xwe ya nû hilbijêre",
+    "serverNamePlaceholder": "Navê hevbendiya xwe binivîse",
+    "serverNameHint": "Navekî ji bo hevbendiya xwe ya nû hilbijêre",
     "passwordPlaceholder": "Mînak: MyPass123!",
     "passwordHint": "Herî kêm 6 tîp, divê herî kêm yek tîp û yek jimar hebe",
     "confirmPasswordPlaceholder": "Şîfreya xwe dîsa binivîse",
@@ -48,7 +48,7 @@
     "haveAccount": "Jixwe hesabek heye?",
     "noAccount": "Hesab tune?",
     "haveInvitation": "Vexwendin heye?",
-    "wantCreateAlliance": "Dixwazî hevbendiyê ava bikî?",
+    "wantCreateServer": "Dixwazî hevbendiyê ava bikî?",
     "errors": {
       "usernameExists": "Navê bikarhêner jixwe heye",
       "usernameInvalidChars": "Tenê tîp, jimar, - û _",
@@ -59,7 +59,7 @@
       "joinFailed": "Tevlîbûn têkçû. Ji kerema xwe dîsa biceribîne.",
       "setupFailed": "Mîheng têkçû. Ji kerema xwe dîsa biceribîne.",
       "superAdminExists": "Rêvebirê sereke jixwe heye",
-      "allianceCreationFailed": "Avakrina hevbendiyê têkçû",
+      "serverCreationFailed": "Avakrina hevbendiyê têkçû",
       "invalidToken": "Tokena vexwendinê ne derbasdar e an qediyaye"
     },
     "recovery": {
@@ -83,11 +83,11 @@
   },
   "nav": {
     "superAdminDashboard": "Rêvebirê Sereke",
-    "allianceSettings": "Mîhengên Hevbendiyê",
+    "serverSettings": "Mîhengên Hevbendiyê",
     "home": "Mal",
     "guides": "Rênimêj"
   },
-  "alliance": {
+  "server": {
     "settings": {
       "title": "Mîhengên Hevbendiyê",
       "tabs": {
@@ -98,10 +98,10 @@
         "importExcel": "Ji Excelê Bîne",
         "discord": "Discord"
       },
-      "allianceInfo": "Agahdariya Hevbendiyê",
-      "allianceName": "Navê Hevbendiyê",
-      "allianceTag": "Etîketa Hevbendiyê",
-      "allianceTagHint": "Nasnameya bijartî ya 3 tîpan (mînak: RgW)",
+      "serverInfo": "Agahdariya Hevbendiyê",
+      "serverName": "Navê Hevbendiyê",
+      "serverTag": "Etîketa Hevbendiyê",
+      "serverTagHint": "Nasnameya bijartî ya 3 tîpan (mînak: RgW)",
       "updateName": "Nûve Bike",
       "memberList": "Lîsteya Endam",
       "members": "Endam",
@@ -310,22 +310,22 @@
     "dashboard": {
       "title": "Panela Rêvebirê Sereke",
       "subtitle": "Dîmena giştî û rêveberin a pergalê",
-      "totalAlliances": "Hejmara Hevbendiyên Tevahî",
+      "totalServers": "Hejmara Hevbendiyên Tevahî",
       "totalUsers": "Hejmara Bikarhênerên Tevahî",
       "totalActivities": "Hejmara Çalakiyên Tevahî",
       "activeInvitations": "Vexwendinên Çalak",
       "quickActions": "Kiryarên Bilez",
-      "manageAlliances": "Hevbendiyên Birêve Bibe",
-      "manageAlliancesDesc": "Hemû hevbendiyên bibîne û birêve bibe",
+      "manageServers": "Hevbendiyên Birêve Bibe",
+      "manageServersDesc": "Hemû hevbendiyên bibîne û birêve bibe",
       "manageUsers": "Bikarhêneran Birêve Bibe",
       "manageUsersDesc": "Hemû bikarhêneran bibîne û birêve bibe",
       "manageGuidesData": "Daneyên Referansa Rênimêjê",
       "manageGuidesDataDesc": "Şampiyonan, jêhatîbûnan, hespan û kevirên giranbiha birêve bibe"
     },
-    "alliances": {
+    "servers": {
       "title": "Rêveberin Hevbendiyê",
       "subtitle": "Hemû hevbendiyên pergalê birêve bibe",
-      "noAlliances": "Hîna hevbendî nehat çêkirin",
+      "noServers": "Hîna hevbendî nehat çêkirin",
       "name": "Navê Hevbendiyê",
       "tag": "Etîket",
       "admin": "Rêvebir",
@@ -346,8 +346,8 @@
       "displayName": "Navê Nîşandayî",
       "username": "Navê Bikarhêner",
       "role": "Rol",
-      "alliance": "Hevbendî",
-      "noAlliance": "Hevbendî tune",
+      "server": "Hevbendî",
+      "noServer": "Hevbendî tune",
       "created": "Hat çêkirin",
       "actions": "Kiryar",
       "deleteConfirm": "Tu dixwazî bikarhênerê \"{{name}}\" jê bibî? Ev kiryar nayê vegerandin.",
@@ -362,7 +362,7 @@
     "skills": "Jêhatîbûn",
     "assignSkills": "Jêhatîbûnan destnîşan bike",
     "temperaments": "Temperament",
-    "ornaments": "Xemilk",
+    "adornments": "Xemilk",
     "gems": "Kevirên Giranbiha",
     "rings": "Zengil",
     "gemType": {
@@ -634,7 +634,7 @@
     "traits": "Taybetiyên hespo",
     "trait": "Taybetî",
     "add_trait": "Taybetiyê zêde bike",
-    "ornament": "Xemilk",
+    "adornment": "Xemilk",
     "ring": "Zengil",
     "description": "Danasîn / Notên Nivîskar",
     "editor": {

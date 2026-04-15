@@ -21,7 +21,7 @@ import { GuideAdminService } from '@app/core/services/guide-admin.service';
 import { SnackbarService } from '@app/core/services';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
-import type { Champion, Skill, HorseTemperament, Ornament, Gem, GemType, Ring } from '@app/shared/models/guide.model';
+import type { Champion, Skill, HorseTemperament, Adornment, Gem, GemType, Ring } from '@app/shared/models/guide.model';
 
 const GEM_TYPES: GemType[] = ['strategy', 'hero', 'tactics'];
 
@@ -64,7 +64,7 @@ export class GuidesDataPage implements OnInit {
   protected readonly champions = signal<Champion[]>([]);
   protected readonly skills = signal<Skill[]>([]);
   protected readonly temperaments = signal<HorseTemperament[]>([]);
-  protected readonly ornaments = signal<Ornament[]>([]);
+  protected readonly adornments = signal<Adornment[]>([]);
   protected readonly gems = signal<Gem[]>([]);
   protected readonly rings = signal<Ring[]>([]);
 
@@ -77,7 +77,7 @@ export class GuidesDataPage implements OnInit {
   protected readonly editingChampionId = signal<string | null>(null);
   protected readonly editingSkillId = signal<string | null>(null);
   protected readonly editingTemperamentId = signal<string | null>(null);
-  protected readonly editingOrnamentId = signal<string | null>(null);
+  protected readonly editingAdornmentId = signal<string | null>(null);
   protected readonly editingGemId = signal<string | null>(null);
   protected readonly editingRingId = signal<string | null>(null);
 
@@ -85,7 +85,7 @@ export class GuidesDataPage implements OnInit {
   protected readonly showAddChampion = signal(false);
   protected readonly showAddSkill = signal(false);
   protected readonly showAddTemperament = signal(false);
-  protected readonly showAddOrnament = signal(false);
+  protected readonly showAddAdornment = signal(false);
   protected readonly showAddGem = signal(false);
   protected readonly showAddRing = signal(false);
 
@@ -114,7 +114,7 @@ export class GuidesDataPage implements OnInit {
   protected readonly championColumns = ['image', 'name', 'active', 'order', 'actions', 'skills'];
   protected readonly skillColumns = ['icon', 'name', 'description', 'active', 'order', 'actions'];
   protected readonly temperamentColumns = ['name', 'description', 'order', 'actions'];
-  protected readonly ornamentColumns = ['image', 'name', 'active', 'order', 'actions'];
+  protected readonly adornmentColumns = ['image', 'name', 'active', 'order', 'actions'];
   protected readonly gemColumns = ['icon', 'name', 'type', 'active', 'actions'];
   protected readonly ringColumns = ['icon', 'name', 'description', 'active', 'order', 'actions'];
 
@@ -141,7 +141,7 @@ export class GuidesDataPage implements OnInit {
     sort_order: [0, [Validators.required, Validators.min(0)]],
   });
 
-  protected readonly ornamentForm: FormGroup = this.fb.group({
+  protected readonly adornmentForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
     sort_order: [0, [Validators.required, Validators.min(0)]],
   });
@@ -169,7 +169,7 @@ export class GuidesDataPage implements OnInit {
     sort_order: [0, [Validators.required, Validators.min(0)]],
   });
 
-  protected readonly editOrnamentForm: FormGroup = this.fb.group({
+  protected readonly editAdornmentForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
     sort_order: [0, [Validators.required, Validators.min(0)]],
   });
@@ -199,18 +199,18 @@ export class GuidesDataPage implements OnInit {
 
   private async loadAll(): Promise<void> {
     await this.progressBarService.withProgress(async () => {
-      const [champions, skills, temperaments, ornaments, gems, rings] = await Promise.all([
+      const [champions, skills, temperaments, adornments, gems, rings] = await Promise.all([
         this.guideAdminService.getChampions(),
         this.guideAdminService.getSkills(),
         this.guideAdminService.getHorseTemperaments(),
-        this.guideAdminService.getOrnaments(),
+        this.guideAdminService.getAdornments(),
         this.guideAdminService.getGems(),
         this.guideAdminService.getRings(),
       ]);
       this.champions.set(champions);
       this.skills.set(skills);
       this.temperaments.set(temperaments);
-      this.ornaments.set(ornaments);
+      this.adornments.set(adornments);
       this.gems.set(gems);
       this.rings.set(rings);
     });
@@ -531,69 +531,69 @@ export class GuidesDataPage implements OnInit {
     }
   }
 
-  // ─── Ornament CRUD ─────────────────────────────────────────────────────────
+  // ─── Adornment CRUD ─────────────────────────────────────────────────────────
 
-  protected startEditOrnament(ornament: Ornament): void {
-    this.editingOrnamentId.set(ornament.id);
-    this.editOrnamentForm.patchValue({ name: ornament.name, sort_order: ornament.sort_order });
+  protected startEditAdornment(adornment: Adornment): void {
+    this.editingAdornmentId.set(adornment.id);
+    this.editAdornmentForm.patchValue({ name: adornment.name, sort_order: adornment.sort_order });
   }
 
-  protected cancelEditOrnament(): void {
-    this.editingOrnamentId.set(null);
-    this.editOrnamentForm.reset();
+  protected cancelEditAdornment(): void {
+    this.editingAdornmentId.set(null);
+    this.editAdornmentForm.reset();
   }
 
-  protected async saveOrnament(ornament: Ornament): Promise<void> {
-    if (this.editOrnamentForm.invalid) return;
-    const { name, sort_order } = this.editOrnamentForm.value as { name: string; sort_order: number };
-    const { error } = await this.guideAdminService.updateOrnament(ornament.id, { name, sort_order });
+  protected async saveAdornment(adornment: Adornment): Promise<void> {
+    if (this.editAdornmentForm.invalid) return;
+    const { name, sort_order } = this.editAdornmentForm.value as { name: string; sort_order: number };
+    const { error } = await this.guideAdminService.updateAdornment(adornment.id, { name, sort_order });
     if (error) {
       this.snackbarService.error(error);
     } else {
       this.snackbarService.success(this.translate.instant('common.saved'));
-      this.editingOrnamentId.set(null);
-      this.ornaments.update(list => list.map(o => (o.id === ornament.id ? { ...o, name, sort_order } : o)));
+      this.editingAdornmentId.set(null);
+      this.adornments.update(list => list.map(o => (o.id === adornment.id ? { ...o, name, sort_order } : o)));
     }
   }
 
-  protected async toggleOrnamentActive(ornament: Ornament): Promise<void> {
-    const newValue = !ornament.is_active;
-    const { error } = await this.guideAdminService.updateOrnament(ornament.id, { is_active: newValue });
+  protected async toggleAdornmentActive(adornment: Adornment): Promise<void> {
+    const newValue = !adornment.is_active;
+    const { error } = await this.guideAdminService.updateAdornment(adornment.id, { is_active: newValue });
     if (error) {
       this.snackbarService.error(error);
     } else {
-      this.ornaments.update(list => list.map(o => (o.id === ornament.id ? { ...o, is_active: newValue } : o)));
+      this.adornments.update(list => list.map(o => (o.id === adornment.id ? { ...o, is_active: newValue } : o)));
     }
   }
 
-  protected async deleteOrnament(ornament: Ornament): Promise<void> {
-    const confirmed = await this.openConfirmDelete(ornament.name);
+  protected async deleteAdornment(adornment: Adornment): Promise<void> {
+    const confirmed = await this.openConfirmDelete(adornment.name);
     if (!confirmed) return;
-    const { error } = await this.guideAdminService.deleteOrnament(ornament.id);
+    const { error } = await this.guideAdminService.deleteAdornment(adornment.id);
     if (error) {
       this.snackbarService.error(error);
     } else {
       this.snackbarService.success(this.translate.instant('common.deleted'));
-      this.ornaments.update(list => list.filter(o => o.id !== ornament.id));
+      this.adornments.update(list => list.filter(o => o.id !== adornment.id));
     }
   }
 
-  protected async addOrnament(): Promise<void> {
-    if (this.ornamentForm.invalid) return;
-    const { name, sort_order } = this.ornamentForm.value as { name: string; sort_order: number };
-    const { ornament, error } = await this.guideAdminService.createOrnament({
+  protected async addAdornment(): Promise<void> {
+    if (this.adornmentForm.invalid) return;
+    const { name, sort_order } = this.adornmentForm.value as { name: string; sort_order: number };
+    const { adornment, error } = await this.guideAdminService.createAdornment({
       name,
       sort_order,
       is_active: true,
       image_url: null,
     });
-    if (error || !ornament) {
-      this.snackbarService.error(error ?? 'Error creating ornament');
+    if (error || !adornment) {
+      this.snackbarService.error(error ?? 'Error creating adornment');
     } else {
       this.snackbarService.success(this.translate.instant('common.created'));
-      this.ornaments.update(list => [...list, ornament]);
-      this.ornamentForm.reset({ sort_order: 0 });
-      this.showAddOrnament.set(false);
+      this.adornments.update(list => [...list, adornment]);
+      this.adornmentForm.reset({ sort_order: 0 });
+      this.showAddAdornment.set(false);
     }
   }
 
@@ -677,8 +677,8 @@ export class GuidesDataPage implements OnInit {
     return this.editingTemperamentId() === id;
   }
 
-  protected isEditingOrnament(id: string): boolean {
-    return this.editingOrnamentId() === id;
+  protected isEditingAdornment(id: string): boolean {
+    return this.editingAdornmentId() === id;
   }
 
   protected isEditingGem(id: string): boolean {

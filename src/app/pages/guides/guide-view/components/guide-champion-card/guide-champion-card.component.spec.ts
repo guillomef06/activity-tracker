@@ -11,7 +11,7 @@ const MOCK_CHAMPION: GuideChampion = {
   ornament_id: null,
   ring_id: null,
   champions: { id: 'champ-1', name: 'Attila', image_url: null, sort_order: 1, is_active: true },
-  ornaments: undefined,
+  adornments: undefined,
   rings: undefined,
   guide_champion_skills: [],
   guide_champion_gems: [],

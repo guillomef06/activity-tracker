@@ -6,7 +6,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { ActivityService } from '@core/services/activity.service';
-import { AllianceService } from '@core/services/alliance.service';
+import { ServerService } from '@core/services/server.service';
 import { AuthService } from '@core/services/auth.service';
 import { SupabaseService } from '@core/services/supabase.service';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
@@ -19,19 +19,19 @@ describe('HomePage', () => {
     getUserId: vi.fn().mockReturnValue('test-user'),
     isAuthenticated: vi.fn().mockReturnValue(true),
     userProfile: signal({ id: 'test-user', display_name: 'Test User', username: 'testuser' }),
-    getAllianceId: vi.fn().mockReturnValue('alliance-1'),
+    getServerId: vi.fn().mockReturnValue('server-1'),
   };
 
   const supabaseServiceSpy = { from: vi.fn() };
 
-  const allianceServiceSpy = {
+  const serverServiceSpy = {
     calculatePoints: vi.fn().mockReturnValue({ points: 15, source: 'default', usedFallback: false }),
     loadRules: vi.fn().mockResolvedValue({ error: null }),
     loadSettings: vi.fn().mockResolvedValue({ error: null }),
     isParticipationMode: vi.fn().mockReturnValue(false),
     getParticipationPoints: vi.fn().mockReturnValue(5),
     isActivityEnabled: vi.fn().mockReturnValue(true),
-    alliance: signal(null),
+    server: signal(null),
     rules: signal([]),
     settings: signal([]),
     scoringWeeks: signal(6),
@@ -47,7 +47,7 @@ describe('HomePage', () => {
         ActivityService,
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SupabaseService, useValue: supabaseServiceSpy },
-        { provide: AllianceService, useValue: allianceServiceSpy },
+        { provide: ServerService, useValue: serverServiceSpy },
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();

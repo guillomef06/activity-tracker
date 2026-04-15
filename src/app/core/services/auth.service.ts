@@ -120,7 +120,7 @@ export class AuthService {
   }
 
   /**
-   * Admin signup - Create account and new alliance
+   * Admin signup - Create account and new server
    */
   async signUpAdmin(data: AdminSignUpRequest): Promise<{ error: AuthError | Error | null }> {
     try {
@@ -140,24 +140,24 @@ export class AuthService {
       if (authError) return { error: authError };
       if (!authData.user) return { error: new Error('User creation failed') };
 
-      const { data: allianceData, error: allianceError } = await this.supabase
+      const { data: serverData, error: serverError } = await this.supabase
         .from('alliances')
         .insert({
-          name: data.allianceName,
+          name: data.serverName,
           owner_id: authData.user.id,
         })
         .select()
         .single();
 
-      if (allianceError) {
-        console.error('Failed to create alliance after user creation:', allianceError);
-        return { error: new Error('Failed to create alliance. Please contact support.') };
+      if (serverError) {
+        console.error('Failed to create server after user creation:', serverError);
+        return { error: new Error('Failed to create server. Please contact support.') };
       }
 
       const now = new Date().toISOString();
       const newProfile: UserProfile = {
         id: authData.user.id,
-        alliance_id: allianceData.id,
+        alliance_id: serverData.id,
         invitation_token_id: null,
         display_name: data.displayName,
         username: data.username,
@@ -186,7 +186,7 @@ export class AuthService {
   }
 
   /**
-   * Super Admin signup - Create super admin account (no alliance)
+   * Super Admin signup - Create super admin account (no server)
    * WARNING: This should only be used for initial setup!
    */
   async signUpSuperAdmin(
@@ -240,13 +240,13 @@ export class AuthService {
   }
 
   /**
-   * Member signup - Join existing alliance via invitation token
+   * Member signup - Join existing server via invitation token
    */
   async signUpMember(data: MemberSignUpRequest): Promise<{ error: AuthError | Error | null }> {
     try {
       const { data: tokenData, error: tokenError } = await this.supabase
         .from('invitation_tokens')
-        .select('*, alliances(*)')
+        .select('*, servers(*)')
         .eq('token', data.invitationToken)
         .single();
 
@@ -452,9 +452,9 @@ export class AuthService {
   }
 
   /**
-   * Get current user's alliance ID
+   * Get current user's server ID
    */
-  getAllianceId(): string | null {
+  getServerId(): string | null {
     return this.userProfileSignal()?.alliance_id || null;
   }
 

@@ -2,7 +2,7 @@ import { Injectable, signal, inject } from '@angular/core';
 import { Activity, ActivityRequest, ActivityWithUser, BatchImportEntry, UserScore, WeeklyScore } from '@shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
-import { AllianceService } from './alliance.service';
+import { ServerService } from './server.service';
 import { APP_CONSTANTS } from '@shared/constants/constants';
 import { getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
 
@@ -12,7 +12,7 @@ import { getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
 export class ActivityService {
   private supabase = inject(SupabaseService);
   private authService = inject(AuthService);
-  private allianceService = inject(AllianceService);
+  private serverService = inject(ServerService);
 
   private activitiesSignal = signal<Activity[]>([]);
   private isInitialized = false;
@@ -21,7 +21,7 @@ export class ActivityService {
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
-    await Promise.all([this.allianceService.loadAlliance(), this.allianceService.loadRules()]);
+    await Promise.all([this.serverService.loadServer(), this.serverService.loadRules()]);
     await this.loadActivities();
     this.isInitialized = true;
   }
@@ -41,13 +41,13 @@ export class ActivityService {
 
   private async loadActivities(): Promise<void> {
     try {
-      const allianceId = this.authService.getAllianceId();
-      if (!allianceId) {
+      const serverId = this.authService.getServerId();
+      if (!serverId) {
         this.activitiesSignal.set([]);
         return;
       }
 
-      const scoringWeeks = this.allianceService.scoringWeeks();
+      const scoringWeeks = this.serverService.scoringWeeks();
       const cutoffDate = getDateForWeeksAgo(scoringWeeks - 1);
 
       const { data, error } = await this.supabase
@@ -77,7 +77,7 @@ export class ActivityService {
   }
 
   /**
-   * Admin-only method to add activity for another alliance member
+   * Admin-only method to add activity for another server member
    * @param userId - The ID of the member for whom the activity is being added
    * @param request - The activity details
    */
@@ -103,8 +103,7 @@ export class ActivityService {
     }
 
     // Use pre-calculated points (participation mode) or calculate from position
-    const points =
-      request.points ?? this.allianceService.calculatePoints(request.activityType, request.position).points;
+    const points = request.points ?? this.serverService.calculatePoints(request.activityType, request.position).points;
 
     try {
       const { data, error } = await this.supabase
@@ -151,8 +150,7 @@ export class ActivityService {
     request: ActivityRequest
   ): Promise<{ error: Error | null }> {
     // Use pre-calculated points (participation mode) or calculate from position
-    const points =
-      request.points ?? this.allianceService.calculatePoints(request.activityType, request.position).points;
+    const points = request.points ?? this.serverService.calculatePoints(request.activityType, request.position).points;
 
     try {
       const { data, error } = await this.supabase
@@ -241,8 +239,8 @@ export class ActivityService {
 
   getUserScores(): UserScore[] {
     const activities = this.activitiesSignal();
-    const tiebreaker = this.allianceService.alliance()?.tiebreaker_activity_type ?? null;
-    const scoringWeeks = this.allianceService.scoringWeeks();
+    const tiebreaker = this.serverService.server()?.tiebreaker_activity_type ?? null;
+    const scoringWeeks = this.serverService.scoringWeeks();
     const oldestWeekStart = getDateForWeeksAgo(scoringWeeks - 1);
 
     const recentActivities = activities.filter(activity => new Date(activity.date) >= oldestWeekStart);
@@ -297,7 +295,7 @@ export class ActivityService {
       const diff = b.sixWeekTotal - a.sixWeekTotal;
       if (diff !== 0) return diff;
 
-      const tiebreaker = this.allianceService.alliance()?.tiebreaker_activity_type;
+      const tiebreaker = this.serverService.server()?.tiebreaker_activity_type;
       if (!tiebreaker) return 0;
 
       const tiebreakerScore = (u: UserScore) =>

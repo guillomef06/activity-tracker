@@ -3,7 +3,7 @@
  * Request/Response interfaces for invitation token operations
  */
 
-import { Alliance } from './alliance.model';
+import { Server } from './server.model';
 
 /**
  * Invitation Token model
@@ -48,15 +48,15 @@ export interface ValidateInvitationRequest {
  */
 export interface ValidateInvitationResponse {
   valid: boolean;
-  alliance: Alliance | null;
+  server: Server | null;
   error: string | null;
 }
 
 /**
- * Invitation token with alliance details
+ * Invitation token with server details
  */
-export interface InvitationWithAlliance extends InvitationToken {
-  alliance: Alliance;
+export interface InvitationWithServer extends InvitationToken {
+  server: Server;
 }
 
 /**

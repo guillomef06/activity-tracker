@@ -12,8 +12,8 @@ export type {
 // User models
 export type { User, UserProfile, CreateUserProfileRequest, UpdateUserProfileRequest } from './user.model';
 
-// Alliance models
-export type { Alliance, CreateAllianceRequest, UpdateAllianceRequest, AllianceWithStats } from './alliance.model';
+// Server models
+export type { Server, CreateServerRequest, UpdateServerRequest, ServerWithStats } from './server.model';
 
 // Auth models
 export type {
@@ -31,7 +31,7 @@ export type {
   CreateInvitationResponse,
   ValidateInvitationRequest,
   ValidateInvitationResponse,
-  InvitationWithAlliance,
+  InvitationWithServer,
   InvitationMember,
   InvitationWithStats,
 } from './invitation.model';
@@ -44,8 +44,8 @@ export type {
   PointCalculationResult,
 } from './activity-point-rule.model';
 
-// Alliance Activity Settings models
-export type { AllianceActivitySettings, UpsertActivitySettingsRequest } from './alliance-activity-settings.model';
+// Server Activity Settings models
+export type { ServerActivitySettings, UpsertActivitySettingsRequest } from './server-activity-settings.model';
 
 // Discord Webhook models
 export type { DiscordWebhook, CreateDiscordWebhookRequest } from './discord-webhook.model';
@@ -60,7 +60,7 @@ export type {
   ChampionWithSkills,
   Skill,
   HorseTemperament,
-  Ornament,
+  Adornment,
   Ring,
   Gem,
   GemType,

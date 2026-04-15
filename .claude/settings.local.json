@@ -95,7 +95,23 @@
       "mcp__plugin_playwright_playwright__browser_wait_for",
       "Bash(git -C D:/workplace/activity-tracker/activity-tracker log --oneline dev..feature/guides --name-only -- supabase/)",
       "Bash(git:*)",
-      "Bash(npx prettier *)"
+      "Bash(npx prettier *)",
+      "Bash(sed -i 's/alliance-settings\\\\.page\\\\.html/server-settings.page.html/g *)",
+      "Bash(sed -i 's/alliance-overview-tab\\\\.component\\\\.html/server-overview-tab.component.html/g *)",
+      "Bash(sed -i 's/super-admin-alliances\\\\.page\\\\.html/super-admin-servers.page.html/g *)",
+      "Bash(sed -i 's/\"creatingServeur\":/\"creatingServer\":/g *)",
+      "Bash(sed -i 's/une Serveur/un serveur/g *)",
+      "Bash(sed -i 's/alianza/servidor/g; s/Alianza/Servidor/g' src/assets/i18n/es.json)",
+      "Bash(sed -i \"s/alleanza/server/g; s/Alleanza/Server/g; s/dell'server/del server/g; s/dell'Server/del Server/g\" src/assets/i18n/it.json)",
+      "Bash(sed -i 's/Allianz/Server/g; s/allianz/server/g' src/assets/i18n/de.json)",
+      "Bash(sed -i 's/ittifak/sunucu/g; s/İttifak/Sunucu/g; s/ittifaka/sunucuya/g; s/ittifakınız/sunucunuz/g; s/ittifak ve /sunucu ve /g' src/assets/i18n/tr.json)",
+      "Bash(sed -i 's/aliança/servidor/g; s/Aliança/Servidor/g' src/assets/i18n/pt.json)",
+      "Bash(sed -i 's/from\\('\\\\''adornments'\\\\''\\)/from\\('\\\\''ornaments'\\\\''\\)/g' src/app/core/services/guide-admin.service.ts)",
+      "Bash(sed -i 's/adornments\\(\\\\*\\)/ornaments\\(*\\)/g' src/app/core/services/guide.service.ts)",
+      "Bash(sed -i 's/adornment_id: string | null;/ornament_id: string | null;/g *)",
+      "Bash(sed -i 's/adornments\\\\?: Adornment;/ornaments?: Adornment;/g' src/app/shared/models/guide.model.ts)",
+      "Bash(sed -i 's/adornment_id: slot\\\\.adornment?.id/ornament_id: slot.adornment?.id/g' src/app/core/services/guide.service.ts)",
+      "Bash(sed -i 's/adornment_id: null/ornament_id: null/g' src/app/pages/guides/guide-view/components/guide-champion-card/guide-champion-card.component.spec.ts)"
     ]
   }
 }

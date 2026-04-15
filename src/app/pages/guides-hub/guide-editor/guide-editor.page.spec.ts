@@ -53,7 +53,7 @@ describe('GuideEditorPage', () => {
     getSkills: vi.fn().mockResolvedValue([]),
     getGems: vi.fn().mockResolvedValue([]),
     getHorseTemperaments: vi.fn().mockResolvedValue([]),
-    getOrnaments: vi.fn().mockResolvedValue([]),
+    getAdornments: vi.fn().mockResolvedValue([]),
     getRings: vi.fn().mockResolvedValue([]),
     getChampionSkills: vi.fn().mockResolvedValue([]),
   };

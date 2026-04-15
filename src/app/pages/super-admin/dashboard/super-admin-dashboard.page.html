@@ -14,14 +14,14 @@
 
   <!-- Statistics Cards -->
   <div class="stats-grid">
-    <mat-card class="stat-card alliances-card">
+    <mat-card class="stat-card servers-card">
       <mat-card-content>
         <div class="stat-icon">
           <mat-icon>groups</mat-icon>
         </div>
         <div class="stat-info">
-          <div class="stat-value">{{ stats().totalAlliances }}</div>
-          <div class="stat-label">{{ 'superAdmin.dashboard.totalAlliances' | translate }}</div>
+          <div class="stat-value">{{ stats().totalServers }}</div>
+          <div class="stat-label">{{ 'superAdmin.dashboard.totalServers' | translate }}</div>
         </div>
       </mat-card-content>
     </mat-card>
@@ -67,11 +67,11 @@
   <div class="actions-section">
     <h2>{{ 'superAdmin.dashboard.quickActions' | translate }}</h2>
     <div class="actions-grid">
-      <mat-card class="action-card" routerLink="/app/super-admin/alliances">
+      <mat-card class="action-card" routerLink="/app/super-admin/servers">
         <mat-card-content>
           <mat-icon>groups</mat-icon>
-          <h3>{{ 'superAdmin.dashboard.manageAlliances' | translate }}</h3>
-          <p>{{ 'superAdmin.dashboard.manageAlliancesDesc' | translate }}</p>
+          <h3>{{ 'superAdmin.dashboard.manageServers' | translate }}</h3>
+          <p>{{ 'superAdmin.dashboard.manageServersDesc' | translate }}</p>
         </mat-card-content>
       </mat-card>
 
