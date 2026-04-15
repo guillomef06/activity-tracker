@@ -9,10 +9,11 @@ import { PackValueCalculatorComponent } from './pack-value-calculator/pack-value
 type ToolId = 'gem-calculator' | 'pack-value-calculator';
 
 interface Tool {
-  id: ToolId;
+  id: ToolId | string;
   icon: string;
   titleKey: string;
   descKey: string;
+  externalUrl?: string;
 }
 
 @Component({
@@ -45,7 +46,22 @@ export class ToolsHubComponent {
       titleKey: 'packValue.title',
       descKey: 'packValue.description',
     },
+    {
+      id: 'horse-traits',
+      icon: 'open_in_new',
+      titleKey: 'tools.horseTraitsTitle',
+      descKey: 'tools.horseTraitsDesc',
+      externalUrl: 'https://sombrero16.github.io/horse-traits/',
+    },
   ];
 
   protected readonly currentTool = computed(() => this.tools.find(t => t.id === this.selectedTool()) ?? null);
+
+  protected openTool(tool: Tool): void {
+    if (tool.externalUrl) {
+      window.open(tool.externalUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      this.selectedTool.set(tool.id as ToolId);
+    }
+  }
 }

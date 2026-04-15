@@ -1,0 +1,722 @@
+{
+  "app": {
+    "subtitle": "追踪活动并查看6周滚动积分"
+  },
+  "home": {
+    "tabs": {
+      "submit": "提交活动",
+      "leaderboard": "排行榜",
+      "mightiestGovernor": "最强总督",
+      "tools": "工具"
+    }
+  },
+  "auth": {
+    "login": "登录",
+    "signup": "注册",
+    "logout": "退出",
+    "username": "用户名",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "displayName": "显示名称",
+    "allianceName": "联盟名称",
+    "invitationToken": "邀请令牌",
+    "welcomeBack": "欢迎回来",
+    "signInSubtitle": "登录您的账户",
+    "signupTitle": "创建联盟",
+    "signupSubtitle": "以联盟管理员身份注册",
+    "joinTitle": "加入联盟",
+    "joinSubtitle": "使用邀请加入联盟",
+    "setupTitle": "超级管理员设置",
+    "setupSubtitle": "创建第一个超级管理员账户",
+    "setupWarning": "这是一次性设置。超级管理员拥有管理所有联盟和用户的完整权限。",
+    "signingIn": "登录中...",
+    "creatingAlliance": "创建联盟中...",
+    "joining": "加入中...",
+    "createSuperAdmin": "创建超级管理员",
+    "creating": "创建中...",
+    "usernamePlaceholder": "选择一个唯一用户名",
+    "usernameHint": "3-30个字符 — 仅限字母、数字、- 和 _",
+    "displayNamePlaceholder": "输入您的全名",
+    "displayNameHint": "您的名字将如何显示给他人",
+    "allianceNamePlaceholder": "输入您的联盟名称",
+    "allianceNameHint": "为您的新联盟选择名称",
+    "passwordPlaceholder": "例如 MyPass123!",
+    "passwordHint": "最少6个字符，必须包含至少一个字母和一个数字",
+    "confirmPasswordPlaceholder": "重新输入密码",
+    "tokenPlaceholder": "输入邀请令牌",
+    "tokenHint": "由您的联盟管理员提供",
+    "haveAccount": "已有账户？",
+    "noAccount": "没有账户？",
+    "haveInvitation": "有邀请？",
+    "wantCreateAlliance": "想创建联盟？",
+    "errors": {
+      "usernameExists": "用户名已存在",
+      "usernameInvalidChars": "仅限字母、数字、- 和 _",
+      "invalidCredentials": "用户名或密码无效",
+      "userNotFound": "未找到用户",
+      "loginFailed": "登录失败，请重试。",
+      "signupFailed": "注册失败，请重试。",
+      "joinFailed": "加入失败，请重试。",
+      "setupFailed": "设置失败，请重试。",
+      "superAdminExists": "超级管理员已存在",
+      "allianceCreationFailed": "创建联盟失败",
+      "invalidToken": "邀请令牌无效或已过期"
+    },
+    "recovery": {
+      "forgotPassword": "忘记密码？"
+    },
+    "signupForm": {
+      "recoveryQuestion": "密保问题",
+      "recoveryAnswer": "密保答案",
+      "recoveryAnswerHint": "答案不区分大小写"
+    }
+  },
+  "errors": {
+    "required": "此字段为必填项",
+    "minLength": "未达到最小长度",
+    "maxLength": "超过最大长度",
+    "min": "值低于允许的最小值",
+    "max": "值超过允许的最大值",
+    "email": "无效的电子邮件地址",
+    "pattern": "格式无效",
+    "passwordMismatch": "密码不匹配"
+  },
+  "nav": {
+    "superAdminDashboard": "超级管理员",
+    "allianceSettings": "联盟设置",
+    "home": "首页",
+    "guides": "指南"
+  },
+  "alliance": {
+    "settings": {
+      "title": "联盟设置",
+      "tabs": {
+        "overview": "联盟",
+        "invitations": "邀请",
+        "activitySettings": "活动设置",
+        "retroactive": "补录活动",
+        "importExcel": "导入Excel",
+        "discord": "Discord"
+      },
+      "allianceInfo": "联盟信息",
+      "allianceName": "联盟名称",
+      "allianceTag": "联盟标签",
+      "allianceTagHint": "可选3字符标识符（例如 RgW）",
+      "updateName": "更新",
+      "memberList": "成员列表",
+      "members": "成员",
+      "noMembers": "暂无成员",
+      "displayName": "姓名",
+      "role": "角色",
+      "joinedDate": "加入日期",
+      "invitationManagement": "邀请管理",
+      "invitationDuration": "有效期（天）",
+      "durationHint": "邀请过期前的天数",
+      "createInvitation": "创建邀请",
+      "noInvitations": "暂无创建的邀请",
+      "expiresAt": "到期时间",
+      "createdAt": "创建时间",
+      "copyLink": "复制邀请链接",
+      "revokeInvitation": "撤销邀请",
+      "revokeConfirm": "确定要撤销此邀请吗？",
+      "membersJoined": "通过此邀请加入的成员",
+      "nameUpdated": "联盟更新成功！",
+      "nameUpdateFailed": "更新联盟失败",
+      "invitationCreated": "邀请已创建，链接已复制到剪贴板！",
+      "invitationCreateFailed": "创建邀请失败",
+      "invitationRevoked": "邀请已成功撤销",
+      "invitationRevokeFailed": "撤销邀请失败",
+      "invitationLinkCopied": "邀请链接已复制到剪贴板！",
+      "pointRules": {
+        "addRule": "添加新规则",
+        "currentRules": "当前规则",
+        "activityType": "活动类型",
+        "positionMin": "最低排名",
+        "positionMax": "最高排名",
+        "positionRange": "排名范围",
+        "points": "积分",
+        "create": "创建规则",
+        "noRules": "暂未配置积分规则",
+        "noRulesHint": "创建基于排名/位置计算积分的规则。没有规则时将使用默认积分。",
+        "deleteConfirm": "确定要删除此规则吗？",
+        "activityConfiguration": "活动配置",
+        "activityConfigurationHint": "启用或禁用每个活动，配置参与模式和平局决胜设置",
+        "participationMode": "参与模式",
+        "participationPoints": "参与积分",
+        "positionRangeError": "最低排名不能大于最高排名",
+        "created": "积分规则创建成功",
+        "createFailed": "创建积分规则失败",
+        "deleted": "积分规则删除成功",
+        "deleteFailed": "删除积分规则失败",
+        "participationModeFailed": "更新参与模式失败",
+        "participationPointsFailed": "更新参与积分失败",
+        "activityEnabled": "活动已启用",
+        "activityEnabledFailed": "更新活动状态失败",
+        "tiebreaker": "平局决胜",
+        "tiebreakerFailed": "更新平局决胜失败"
+      },
+      "leaderboard": {
+        "title": "排行榜设置",
+        "hint": "配置排名中包含的周数",
+        "weeksMultiplier": "赛季倍率",
+        "multiplierOption": "{{weeks}}周（×{{multiplier}}）",
+        "weeksHint": "排行榜中包含{{weeks}}周",
+        "multiplierUpdated": "赛季倍率已更新",
+        "multiplierFailed": "更新赛季倍率失败"
+      },
+      "dangerZone": {
+        "title": "危险区域",
+        "deleteAllActivities": "删除所有活动",
+        "deleteAllActivitiesDescription": "永久删除联盟成员提交的所有活动。此操作无法撤销。",
+        "deleteAllActivitiesConfirm": "确定要删除所有活动吗？这将永久清除所有成员的完整活动历史记录。",
+        "deleteAllActivitiesSuccess": "所有活动已被删除",
+        "deleteAllActivitiesFailed": "删除活动失败"
+      }
+    },
+    "retroactive": {
+      "title": "添加补录活动",
+      "description": "作为管理员，您可以为联盟成员补录过去6周的活动。选择成员、选择周次，然后输入活动详情。",
+      "selectMember": "选择成员",
+      "memberHint": "选择要为其添加活动的联盟成员",
+      "selectWeek": "选择周次",
+      "weekHint": "选择活动发生的周次",
+      "currentWeek": "本周",
+      "weeksAgo": "{{count}}周前",
+      "selectActivity": "活动类型",
+      "activityHint": "仅显示所选周次可用的活动",
+      "noActivities": "本周没有可用活动",
+      "position": "排名",
+      "positionHint": "输入成员的位置或排名",
+      "pointsPreview": "将获得的积分",
+      "submit": "添加活动",
+      "submitting": "添加活动中...",
+      "success": "活动添加成功！",
+      "error": "添加活动失败，请重试。"
+    },
+    "import": {
+      "title": "从Excel导入活动",
+      "description": "上传填写好的模板以批量导入联盟成员的补录活动。",
+      "templateHint": "首先，下载并填写导入模板。",
+      "downloadTemplate": "下载模板",
+      "activityFilter": "按活动筛选",
+      "activityFilterAll": "所有活动",
+      "uploadFile": "选择文件",
+      "fileHint": "接受 .xlsx、.xls、.csv",
+      "back": "返回",
+      "preview": {
+        "title": "预览",
+        "rowsFound": "找到{{count}}行",
+        "playerColumn": "玩家",
+        "activityColumn": "活动",
+        "positionColumn": "排名",
+        "weekColumn": "周次",
+        "pointsColumn": "积分",
+        "statusColumn": "状态",
+        "updateColumn": "更新？",
+        "selectPlayer": "选择玩家",
+        "updateAll": "更新所有现有条目"
+      },
+      "status": {
+        "ready": "准备插入",
+        "willUpdate": "将更新现有条目",
+        "unmatched": "未找到玩家 — 请手动选择",
+        "invalid": {
+          "invalid_activity": "未知或已禁用的活动类型",
+          "disabled_activity": "此活动类型已禁用",
+          "invalid_date": "日期无效或缺失",
+          "invalid_position": "排名无效（必须 ≥ 1）"
+        }
+      },
+      "confirm": {
+        "button": "导入",
+        "importing": "导入中..."
+      },
+      "result": {
+        "title": "导入完成",
+        "inserted": "已插入",
+        "updated": "已更新",
+        "skipped": "已跳过",
+        "error": "导入失败，请重试。"
+      },
+      "reset": "导入其他文件"
+    }
+  },
+  "activityInput": {
+    "title": "提交活动",
+    "subtitle": "记录您的活动并获得积分",
+    "activityType": "活动类型",
+    "position": "位置/排名",
+    "positionPlaceholder": "例如 1、5、10...",
+    "positionHint": "输入您的位置或排名",
+    "submit": "提交活动",
+    "submitting": "提交中...",
+    "typeHint": "仅显示所选周次可用的活动",
+    "success": "活动提交成功！",
+    "error": "提交活动失败",
+    "participated": "我本周参加了",
+    "fillAllFields": "请填写所有必填字段"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "本周没有可用活动",
+    "totalPoints": "总积分",
+    "pointsShort": "分",
+    "currentWeek": "本周",
+    "lastWeek": "上周",
+    "weeksAgo": "周前"
+  },
+  "activitiesDetails": {
+    "title": "活动详情"
+  },
+  "common": {
+    "points": "积分",
+    "close": "关闭",
+    "actions": "操作",
+    "delete": "删除",
+    "confirm": "确认",
+    "cancel": "取消",
+    "save": "保存",
+    "saving": "保存中...",
+    "update": "更新",
+    "back": "返回",
+    "add": "添加",
+    "edit": "编辑",
+    "name": "名称",
+    "description": "描述",
+    "image": "图片",
+    "icon": "图标",
+    "order": "顺序",
+    "active": "激活",
+    "all": "全部",
+    "none": "无",
+    "saved": "已保存",
+    "created": "已创建",
+    "deleted": "已删除",
+    "deleteConfirm": "确定要删除\"{{name}}\"吗？",
+    "uploadImage": "上传图片",
+    "next": "下一步",
+    "clear": "清除"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "超级管理员控制台",
+      "subtitle": "全局系统概览与管理",
+      "totalAlliances": "联盟总数",
+      "totalUsers": "用户总数",
+      "totalActivities": "活动总数",
+      "activeInvitations": "有效邀请",
+      "quickActions": "快捷操作",
+      "manageAlliances": "管理联盟",
+      "manageAlliancesDesc": "查看并管理所有联盟",
+      "manageUsers": "管理用户",
+      "manageUsersDesc": "查看并管理所有用户",
+      "manageGuidesData": "指南参考数据",
+      "manageGuidesDataDesc": "管理英雄、技能、战马和宝石"
+    },
+    "alliances": {
+      "title": "联盟管理",
+      "subtitle": "管理系统中所有联盟",
+      "noAlliances": "暂未创建任何联盟",
+      "name": "联盟名称",
+      "tag": "标签",
+      "admin": "管理员",
+      "members": "成员",
+      "created": "创建时间",
+      "actions": "操作",
+      "deleteConfirm": "确定要删除联盟\"{{name}}\"吗？这将同时删除所有关联的用户、活动和邀请。",
+      "loadFailed": "加载联盟失败",
+      "updated": "联盟更新成功",
+      "updateFailed": "更新联盟失败",
+      "deleted": "联盟删除成功",
+      "deleteFailed": "删除联盟失败"
+    },
+    "users": {
+      "title": "用户管理",
+      "subtitle": "管理系统中所有用户",
+      "noUsers": "未找到用户",
+      "displayName": "显示名称",
+      "username": "用户名",
+      "role": "角色",
+      "alliance": "联盟",
+      "noAlliance": "无联盟",
+      "created": "创建时间",
+      "actions": "操作",
+      "deleteConfirm": "确定要删除用户\"{{name}}\"吗？此操作无法撤销。",
+      "loadFailed": "加载用户失败",
+      "updated": "用户更新成功",
+      "updateFailed": "更新用户失败",
+      "deleted": "用户删除成功"
+    },
+    "guidesData": "指南参考数据",
+    "guidesDataSubtitle": "管理英雄、技能、战马、装饰品和宝石",
+    "champions": "英雄",
+    "skills": "技能",
+    "assignSkills": "分配技能",
+    "temperaments": "性情",
+    "ornaments": "装饰品",
+    "gems": "宝石",
+    "rings": "戒指",
+    "gemType": {
+      "label": "类型",
+      "strategy": "战略",
+      "hero": "英雄",
+      "tactics": "战术"
+    }
+  },
+  "super_admin": "超级管理员",
+  "admin": "管理员",
+  "member": "成员",
+  "pwa": {
+    "offline": "您当前处于离线状态",
+    "online": "您当前处于在线状态",
+    "updateAvailable": "有新版本可用",
+    "reload": "重新加载",
+    "install": "安装应用以获得更好的体验",
+    "installButton": "安装",
+    "iosInstruction": "点击分享按钮，然后选择「添加到主屏幕」",
+    "installDismiss": "关闭安装提示"
+  },
+  "releaseNotes": {
+    "title": "新功能",
+    "markAsSeen": "标记为已读"
+  },
+  "tools": {
+    "gemCalcDesc": "计算为指挥官装备宝石后的分数增益。"
+  },
+  "packValue": {
+    "title": "礼包价值计算器",
+    "description": "评估游戏内礼包的价值",
+    "addItem": "添加物品",
+    "packPrice": "礼包价格（Apex金币）",
+    "calculate": "计算",
+    "reset": "重置",
+    "noItems": "请至少添加一个物品以进行计算",
+    "units": {
+      "hours": "小时",
+      "qty": "数量"
+    },
+    "result": {
+      "title": "结果",
+      "tier": {
+        "terrible": "非常差",
+        "average": "一般",
+        "good": "不错",
+        "excellent": "优秀"
+      },
+      "breakdown": "详细分解"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "最强总督",
+    "subtitle": "按排名的注册费用",
+    "description": "参加最强总督活动，玩家需要消耗积分。目标排名越高，费用越高。",
+    "rank": "排名",
+    "weeklyTarget": "每周目标",
+    "cost": "费用",
+    "notice": "DKP系统正在开发中。显示的费用仅供参考，可能会更改。"
+  },
+  "gemCalculator": {
+    "title": "宝石计算器",
+    "back": "返回",
+    "troopType": "兵种",
+    "troopSwordsmen": "剑兵",
+    "troopArchers": "弓手",
+    "troopPikemen": "枪兵",
+    "troopCavalry": "骑兵",
+    "troopTier": "兵种等级",
+    "troopSize": "兵力规模",
+    "troopSizeHint": "士兵数量（最多500,000）",
+    "healthBonus": "生命加成（%）",
+    "mightAttack": "战力攻击（%）",
+    "mightDefense": "战力防御（%）",
+    "gemType": "宝石类型",
+    "gemHealth": "生命宝石",
+    "gemCapacity": "容量宝石",
+    "gemRarity": "宝石稀有度",
+    "verbose": "详细模式（计算详情）",
+    "analyze": "分析",
+    "score": "增益",
+    "rawBonus": "原始加成",
+    "verboseTitle": "计算详情",
+    "verboseScoreBefore": "之前的分数",
+    "verboseScoreAfter": "之后的分数",
+    "verboseGain": "增益",
+    "verboseLegionSize": "军团规模",
+    "verbosePerUnit": "每单位分数（之前）",
+    "verbosePerUnitAfter": "每单位分数（之后）",
+    "verboseGemValue": "宝石加成",
+    "verboseNewHealthBonus": "新生命加成",
+    "noResult": "填写表单并点击分析"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "您第一个宠物的名字是什么？",
+      "q2": "您出生在哪个城市？",
+      "q3": "您童年最好的朋友叫什么名字？",
+      "q4": "您小时候的外号是什么？",
+      "q5": "您母亲婚前的姓氏是什么？",
+      "q6": "您小学的名称是什么？",
+      "q7": "您在哪个城市认识了您的伴侣？",
+      "q8": "您最喜欢的食物是什么？",
+      "q9": "您第一辆车的品牌是什么？",
+      "q10": "您第一次出国旅行的目的地是哪里？"
+    },
+    "page": {
+      "title": "账户恢复",
+      "step1": {
+        "usernamePlaceholder": "输入您的用户名",
+        "submit": "查找我的账户"
+      },
+      "step2": {
+        "answerPlaceholder": "您的答案",
+        "newPassword": "新密码",
+        "confirmPassword": "确认密码",
+        "submit": "重置密码"
+      },
+      "step3": {
+        "success": "密码重置成功！"
+      },
+      "backToLogin": "返回登录"
+    },
+    "errors": {
+      "userNotFound": "未找到此用户名对应的账户。",
+      "wrongAnswer": "答案错误。",
+      "wrongAnswerRemaining": "还剩{{count}}次尝试。",
+      "locked": "账户已锁定至{{time}}。",
+      "passwordTooShort": "密码至少需要6个字符。"
+    }
+  },
+  "accountSettings": {
+    "title": "我的账户",
+    "tabAccount": "我的账户",
+    "tabPreferences": "我的偏好",
+    "displayName": {
+      "title": "显示名称",
+      "save": "保存",
+      "success": "显示名称已更新",
+      "error": "更新显示名称失败"
+    },
+    "password": {
+      "title": "修改密码",
+      "newPassword": "新密码",
+      "confirmPassword": "确认密码",
+      "save": "修改密码",
+      "success": "密码更新成功",
+      "error": "更新密码失败"
+    },
+    "recovery": {
+      "title": "密保问题",
+      "question": "密保问题",
+      "answer": "新答案",
+      "answerHint": "答案不区分大小写",
+      "save": "更新",
+      "success": "密保问题已更新",
+      "error": "更新密保问题失败"
+    },
+    "language": {
+      "title": "应用语言"
+    },
+    "colorScheme": {
+      "title": "外观",
+      "light": "浅色",
+      "dark": "深色",
+      "auto": "自动（系统）",
+      "glass": "玻璃浅色",
+      "glassDark": "玻璃深色",
+      "highContrast": "高对比度"
+    }
+  },
+  "discord": {
+    "channelsTitle": "Discord 频道",
+    "channelsSubtitle": "配置用于发送消息的 Discord Webhook 频道",
+    "channelName": "频道名称",
+    "channelNamePlaceholder": "例如 general-reminder",
+    "webhookUrl": "Webhook URL",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "从服务器设置 > 集成中获取 Discord Webhook URL",
+    "defaultMessage": "默认消息（可选）",
+    "defaultMessagePlaceholder": "⏰ 提醒：请输入您的 GE 排名",
+    "defaultMessageHint": "选择此频道时预加载 — 发送前可编辑",
+    "addChannel": "添加频道",
+    "deleteChannel": "删除频道",
+    "deleteConfirm": "确定要删除频道\"{{name}}\"吗？",
+    "noChannels": "暂未配置任何 Discord 频道",
+    "noChannelsForMessage": "请至少添加一个频道以发送消息",
+    "channelAdded": "Discord 频道添加成功",
+    "channelAddFailed": "添加 Discord 频道失败",
+    "channelUpdated": "Discord 频道更新成功",
+    "channelUpdateFailed": "更新 Discord 频道失败",
+    "channelDeleted": "Discord 频道删除成功",
+    "channelDeleteFailed": "删除 Discord 频道失败",
+    "editChannel": "编辑频道",
+    "editChannelTitle": "正在编辑频道：",
+    "loadFailed": "加载 Discord 频道失败",
+    "sendMessageTitle": "发送消息",
+    "sendMessageSubtitle": "选择频道，根据需要调整消息，然后发送",
+    "selectChannel": "选择频道",
+    "messageContent": "消息",
+    "messageContentPlaceholder": "⏰ 提醒：请输入您的 GE 排名",
+    "sendMessage": "发送到 Discord",
+    "messageSent": "消息已成功发送到 Discord",
+    "messageSendFailed": "发送 Discord 消息失败",
+    "errors": {
+      "invalidWebhookUrl": "必须是有效的 Discord Webhook URL（https://discord.com/api/webhooks/...）"
+    }
+  },
+  "guides": {
+    "title": "指南",
+    "community": "社区",
+    "my_guides": "我的指南",
+    "create": "创建指南",
+    "limit_reached": "已达到10篇指南的上限",
+    "no_guides": "暂无指南",
+    "count": "{{ count }}/10 篇指南",
+    "categories": {
+      "formation": "阵型",
+      "evenement": "活动",
+      "general": "通用"
+    },
+    "status": {
+      "published": "已发布",
+      "draft": "草稿"
+    },
+    "by": "作者：",
+    "view": "查看",
+    "edit": "编辑",
+    "publish": "发布",
+    "unpublish": "取消发布",
+    "delete": "删除",
+    "published_success": "指南已发布",
+    "unpublished_success": "指南已取消发布",
+    "champion": "英雄",
+    "champion_slot": "英雄槽位",
+    "add_champion": "添加英雄",
+    "champion_count": "已配置{{ count }}名英雄",
+    "formation_hint": "最多配置3名英雄。拖动以重新排序。",
+    "skill": "技能",
+    "skills": "技能",
+    "gems": "宝石",
+    "hero_section": "英雄",
+    "horse_section": "战马",
+    "traits": "战马特质",
+    "trait": "特质",
+    "add_trait": "添加特质",
+    "ornament": "装饰品",
+    "ring": "戒指",
+    "description": "描述 / 作者备注",
+    "editor": {
+      "title_new": "创建指南",
+      "title_edit": "编辑指南",
+      "step_basic": "信息",
+      "step_content": "内容",
+      "step_review": "摘要",
+      "title_label": "指南标题",
+      "category_label": "分类",
+      "description_label": "描述",
+      "publish_now": "立即发布",
+      "save_draft": "保存为草稿",
+      "save": "保存"
+    },
+    "confirm_delete": "删除此指南？",
+    "confirm_delete_msg": "此操作无法撤销。",
+    "errors": {
+      "limitReached": "您已达到最多10篇指南的上限。",
+      "slugDuplicate": "此标题与现有指南过于相似，请调整标题。",
+      "notFound": "未找到指南。",
+      "unauthorized": "您无权修改此指南。",
+      "unknown": "发生意外错误，请重试。",
+      "invalidFileType": "文件类型无效。允许：PNG、JPEG、WebP。"
+    },
+    "public_list_title": "社区指南",
+    "public_list_empty": "暂无已发布的指南",
+    "copy_link": "复制链接",
+    "link_copied": "链接已复制！",
+    "back_to_list": "返回指南列表",
+    "guide_not_found": "未找到指南",
+    "upvote": "点赞",
+    "upvoted": "已点赞",
+    "champion_slot": "英雄{{n}}",
+    "author_notes": "作者备注"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "联盟活动追踪器",
+      "title1": "智慧游戏。",
+      "title2": "共同胜利。",
+      "subtitleBefore": "专为每位活跃玩家设计 — 不仅仅是付费玩家。追踪您的联盟活动，获得战略积分，以更少的加速道具和资源达到",
+      "subtitleStrong": "最强总督前10名",
+      "subtitleAfter": "。",
+      "ctaLogin": "登录",
+      "ctaJoin": "凭邀请加入"
+    },
+    "steps": {
+      "label": "使用方式",
+      "title": "登顶的三个步骤",
+      "step1": {
+        "title": "记录您的活动",
+        "description": "提交KvK战斗、军团战、黄金远征等。每个活动，每周 — 您的贡献均被记录。"
+      },
+      "step2": {
+        "title": "获得战略积分",
+        "description": "积分根据您的排名和表现计算。可配置的规则奖励参与并竞争的玩家。"
+      },
+      "step3": {
+        "title": "攀登排名",
+        "description": "6周滚动排行榜保持竞争新鲜感，奖励持续稳定而非一时爆发。"
+      }
+    },
+    "benefits": {
+      "label": "为什么重要",
+      "title": "整个服务器都能获益",
+      "benefit1": {
+        "title": "专为活跃玩家打造",
+        "description": "无付费获胜。纯粹的活动参与和智慧策略让您在排行榜上晋升 — 任何人都能竞争。"
+      },
+      "benefit2": {
+        "title": "节省全联盟资源",
+        "description": "结构化追踪优化参与者和时机，为KvK准备和最强帝国保留加速道具和资源。"
+      },
+      "benefit3": {
+        "title": "达到最强总督前10名",
+        "description": "以更少资源获得最强英雄。几乎成功与成为冠军之间的差距在于有组织的努力。"
+      }
+    },
+    "cta": {
+      "title": "准备好领导您的联盟了吗？",
+      "subtitle": "创建您的联盟，今天就开始追踪成员的进度。",
+      "button": "创建您的联盟"
+    },
+    "footer": "Activity Tracker — 更智慧地游戏，更强地竞争。"
+  }
+}

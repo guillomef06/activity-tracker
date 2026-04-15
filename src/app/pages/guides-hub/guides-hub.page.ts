@@ -132,6 +132,10 @@ export class GuidesHubPage implements OnInit {
     this.guidesCount.set(this.myGuides().length);
   }
 
+  protected goHome(): void {
+    void this.router.navigate(['/app']);
+  }
+
   protected createGuide(): void {
     void this.router.navigate(['/app/guides/new']);
   }

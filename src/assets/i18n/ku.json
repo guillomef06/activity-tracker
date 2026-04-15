@@ -1,0 +1,724 @@
+{
+  "app": {
+    "subtitle": "Çalakiyan bişopîne û xalên 6 hefteyê bibîne"
+  },
+  "home": {
+    "tabs": {
+      "submit": "Çalakiyê Bişîne",
+      "leaderboard": "Tabloya Pêşveçûnê",
+      "mightiestGovernor": "Hukumdarê Herî Bihêz",
+      "tools": "Amûr"
+    }
+  },
+  "auth": {
+    "login": "Têkeve",
+    "signup": "Tomar Bibe",
+    "logout": "Derkeve",
+    "username": "Navê Bikarhêner",
+    "password": "Şîfre",
+    "confirmPassword": "Şîfreyê Piştrast Bike",
+    "displayName": "Navê Nîşandayî",
+    "allianceName": "Navê Hevbendiyê",
+    "invitationToken": "Tokena Vexwendinê",
+    "welcomeBack": "Xêr hatî",
+    "signInSubtitle": "Bikeve hesabê xwe",
+    "signupTitle": "Hevbendiyê Ava Bike",
+    "signupSubtitle": "Wekî rêvebirê hevbendiyê tomar bibe",
+    "joinTitle": "Tevlî Hevbendiyê Bibe",
+    "joinSubtitle": "Bi vexwendina xwe tevlî hevbendiyê bibe",
+    "setupTitle": "Mîhengên Rêvebirê Sereke",
+    "setupSubtitle": "Yekem hesabê rêvebirê sereke ava bike",
+    "setupWarning": "Ev mîhengek carekê ye. Rêvebirê sereke xwediyê gihîştina tevahî ya rêvebirin hemû hevbendî û bikarhêneran e.",
+    "signingIn": "Tê ketin...",
+    "creatingAlliance": "Hevbendî tê avakirin...",
+    "joining": "Tê tevlîbûn...",
+    "createSuperAdmin": "Rêvebirê Sereke Ava Bike",
+    "creating": "Tê avakirin...",
+    "usernamePlaceholder": "Navekî yekta hilbijêre",
+    "usernameHint": "3-30 tîp — tenê tîp, jimar, - û _",
+    "displayNamePlaceholder": "Navê xwe yê tevahî binivîse",
+    "displayNameHint": "Navê te yê ku ji kesên din re dê xuya bibe",
+    "allianceNamePlaceholder": "Navê hevbendiya xwe binivîse",
+    "allianceNameHint": "Navekî ji bo hevbendiya xwe ya nû hilbijêre",
+    "passwordPlaceholder": "Mînak: MyPass123!",
+    "passwordHint": "Herî kêm 6 tîp, divê herî kêm yek tîp û yek jimar hebe",
+    "confirmPasswordPlaceholder": "Şîfreya xwe dîsa binivîse",
+    "tokenPlaceholder": "Tokena vexwendinê binivîse",
+    "tokenHint": "Ji aliyê rêvebirê hevbendiya te hatiye dayîn",
+    "haveAccount": "Jixwe hesabek heye?",
+    "noAccount": "Hesab tune?",
+    "haveInvitation": "Vexwendin heye?",
+    "wantCreateAlliance": "Dixwazî hevbendiyê ava bikî?",
+    "errors": {
+      "usernameExists": "Navê bikarhêner jixwe heye",
+      "usernameInvalidChars": "Tenê tîp, jimar, - û _",
+      "invalidCredentials": "Navê bikarhêner an şîfre ne rast e",
+      "userNotFound": "Bikarhêner nehat dîtin",
+      "loginFailed": "Ketina têkçû. Ji kerema xwe dîsa biceribîne.",
+      "signupFailed": "Tomarkirin têkçû. Ji kerema xwe dîsa biceribîne.",
+      "joinFailed": "Tevlîbûn têkçû. Ji kerema xwe dîsa biceribîne.",
+      "setupFailed": "Mîheng têkçû. Ji kerema xwe dîsa biceribîne.",
+      "superAdminExists": "Rêvebirê sereke jixwe heye",
+      "allianceCreationFailed": "Avakrina hevbendiyê têkçû",
+      "invalidToken": "Tokena vexwendinê ne derbasdar e an qediyaye"
+    },
+    "recovery": {
+      "forgotPassword": "Şîfre ji bîr kir?"
+    },
+    "signupForm": {
+      "recoveryQuestion": "Pirsa veşartî",
+      "recoveryAnswer": "Bersiva veşartî",
+      "recoveryAnswerHint": "Bersiv ji mezin-biçûkbûna tîpan serbixwe ye"
+    }
+  },
+  "errors": {
+    "required": "Ev qad hewce ye",
+    "minLength": "Dirêjahiya kêmtirîn nehat pêk anîn",
+    "maxLength": "Dirêjahiya herî zêde derbas bû",
+    "min": "Nirx ji herî kêm destûrdayî kêmtir e",
+    "max": "Nirx ji herî zêde destûrdayî zêdetir e",
+    "email": "Navnîşana e-nameyê ne derbasdar e",
+    "pattern": "Format ne derbasdar e",
+    "passwordMismatch": "Şîfre li hev nakin"
+  },
+  "nav": {
+    "superAdminDashboard": "Rêvebirê Sereke",
+    "allianceSettings": "Mîhengên Hevbendiyê",
+    "home": "Mal",
+    "guides": "Rênimêj"
+  },
+  "alliance": {
+    "settings": {
+      "title": "Mîhengên Hevbendiyê",
+      "tabs": {
+        "overview": "Hevbendî",
+        "invitations": "Vexwendin",
+        "activitySettings": "Mîhengên Çalakiyê",
+        "retroactive": "Çalakiyên Paşdemsal",
+        "importExcel": "Ji Excelê Bîne",
+        "discord": "Discord"
+      },
+      "allianceInfo": "Agahdariya Hevbendiyê",
+      "allianceName": "Navê Hevbendiyê",
+      "allianceTag": "Etîketa Hevbendiyê",
+      "allianceTagHint": "Nasnameya bijartî ya 3 tîpan (mînak: RgW)",
+      "updateName": "Nûve Bike",
+      "memberList": "Lîsteya Endam",
+      "members": "Endam",
+      "noMembers": "Hîna endam tune",
+      "displayName": "Nav",
+      "role": "Rol",
+      "joinedDate": "Tevlîbû",
+      "invitationManagement": "Rêvebirin Vexwendinê",
+      "invitationDuration": "Dema Derbasdariyê (roj)",
+      "durationHint": "Rojên heya qedandina vexwendinê",
+      "createInvitation": "Vexwendin Ava Bike",
+      "noInvitations": "Hîna vexwendin nehat çêkirin",
+      "expiresAt": "Dema Qedandinê",
+      "createdAt": "Dema Çêkirinê",
+      "copyLink": "Girêdana vexwendinê kopî bike",
+      "revokeInvitation": "Vexwendinê betal bike",
+      "revokeConfirm": "Tu dixwazî vexwendinê betal bikî?",
+      "membersJoined": "Endamên ku bi vexwendinê tevlî bûn",
+      "nameUpdated": "Hevbendî bi serketî hat nûvekirin!",
+      "nameUpdateFailed": "Nûvekirina hevbendiyê têkçû",
+      "invitationCreated": "Vexwendin hat çêkirin û girêdan li klîpboardê hat kopîkirin!",
+      "invitationCreateFailed": "Çêkirina vexwendinê têkçû",
+      "invitationRevoked": "Vexwendin bi serketî hat betalkirin",
+      "invitationRevokeFailed": "Betalkrina vexwendinê têkçû",
+      "invitationLinkCopied": "Girêdana vexwendinê li klîpboardê hat kopîkirin!",
+      "pointRules": {
+        "addRule": "Rêgeza Nû Zêde Bike",
+        "currentRules": "Rêgezên Niha",
+        "activityType": "Cureyê Çalakiyê",
+        "positionMin": "Cihê Herî Kêm",
+        "positionMax": "Cihê Herî Zêde",
+        "positionRange": "Rêza Cihê",
+        "points": "Xal",
+        "create": "Rêgezê Ava Bike",
+        "noRules": "Hîna rêgezên xalê nehatine mîhengkirin",
+        "noRulesHint": "Rêgez biafirîne ji bo hesabkirina xalan li gorî cih/rêzê. Bê rêgez, xalên xwerû dê bêne bikaranîn.",
+        "deleteConfirm": "Tu dixwazî vê rêgezê jê bibî?",
+        "activityConfiguration": "Mîhenga Çalakiyê",
+        "activityConfigurationHint": "Her çalakiyê çalak an neçalak bike, mîhenga moda beşdarbûnê û hevberiya xalê mîheng bike",
+        "participationMode": "Moda Beşdarbûnê",
+        "participationPoints": "Xalên beşdarbûnê",
+        "positionRangeError": "Cihê herî kêm nikare ji cihê herî zêde mezintir be",
+        "created": "Rêgeza xalê bi serketî hat çêkirin",
+        "createFailed": "Çêkirina rêgeza xalê têkçû",
+        "deleted": "Rêgeza xalê bi serketî hat jêbirin",
+        "deleteFailed": "Jêbirina rêgeza xalê têkçû",
+        "participationModeFailed": "Nûvekirina moda beşdarbûnê têkçû",
+        "participationPointsFailed": "Nûvekirina xalên beşdarbûnê têkçû",
+        "activityEnabled": "Çalakî hat çalakkirin",
+        "activityEnabledFailed": "Nûvekirina rewşa çalakiyê têkçû",
+        "tiebreaker": "Hevbirêker",
+        "tiebreakerFailed": "Nûvekirina hevbirêkerê têkçû"
+      },
+      "leaderboard": {
+        "title": "Mîhengên Tabloya Pêşveçûnê",
+        "hint": "Hejmara hefteyên ku di rêzkirinê de tên de mîheng bike",
+        "weeksMultiplier": "Pirjimêra demsalê",
+        "multiplierOption": "{{weeks}} hefte (×{{multiplier}})",
+        "weeksHint": "{{weeks}} hefte di tabloya pêşveçûnê de hene",
+        "multiplierUpdated": "Pirjimêra demsalê hat nûvekirin",
+        "multiplierFailed": "Nûvekirina pirjimêra demsalê têkçû"
+      },
+      "dangerZone": {
+        "title": "Herêma Xeternak",
+        "deleteAllActivities": "Hemû çalakiyan jê bibe",
+        "deleteAllActivitiesDescription": "Hemû çalakiyên ku ji aliyê endamên hevbendiyê ve hatine şandin bi rengekî daîmî jê bibe. Ev çalakî nayê vegerandin.",
+        "deleteAllActivitiesConfirm": "Tu dixwazî hemû çalakiyan jê bibî? Ev ê hemû dîroka çalakiyên hemû endaman bi rengekî daîmî jê bibe.",
+        "deleteAllActivitiesSuccess": "Hemû çalakî hatin jêbirin",
+        "deleteAllActivitiesFailed": "Jêbirina çalakiyan têkçû"
+      }
+    },
+    "retroactive": {
+      "title": "Çalakiya Paşdemsal Zêde Bike",
+      "description": "Wekî rêvebir, tu dikari çalakiyên 6 hefteyên borî ji bo endamên hevbendiyê zêde bikî. Endamek hilbijêre, hefteyekê hilbijêre û agahdariya çalakiyê binivîse.",
+      "selectMember": "Endam Hilbijêre",
+      "memberHint": "Endamê hevbendiyê hilbijêre ku tu dixwazî çalakiyê jê re zêde bikî",
+      "selectWeek": "Hefte Hilbijêre",
+      "weekHint": "Hefteyê hilbijêre ku çalakî pêk hat",
+      "currentWeek": "Hefteya Niha",
+      "weeksAgo": "{{count}} hefte berê",
+      "selectActivity": "Cureyê Çalakiyê",
+      "activityHint": "Tenê çalakiyên ku ji bo hefteyê hilbijartî hene tên nîşandan",
+      "noActivities": "Ji bo vê hefteyê çalakî tune",
+      "position": "Cih",
+      "positionHint": "Cih an rêza endamê binivîse",
+      "pointsPreview": "Xalên ku dê bên dayîn",
+      "submit": "Çalakiyê Zêde Bike",
+      "submitting": "Çalakî tê zêdekirin...",
+      "success": "Çalakî bi serketî hat zêdekirin!",
+      "error": "Zêdekirina çalakiyê têkçû. Ji kerema xwe dîsa biceribîne."
+    },
+    "import": {
+      "title": "Çalakiyan ji Excelê Bîne",
+      "description": "Şablonekî dagirtî bar bike da ku çalakiyên paşdemsal ên endamên hevbendiyê bi komî bîne.",
+      "templateHint": "Pêşî, şablona importê dakêşe û dagire.",
+      "downloadTemplate": "Şablonê Dakêşe",
+      "activityFilter": "Li gorî çalakiyê fîlter bike",
+      "activityFilterAll": "Hemû çalakî",
+      "uploadFile": "Dosyeyê hilbijêre",
+      "fileHint": ".xlsx, .xls, .csv qebûl dibe",
+      "back": "Vegere",
+      "preview": {
+        "title": "Pêşdîtin",
+        "rowsFound": "{{count}} rêz hatin dîtin",
+        "playerColumn": "Lîstikvan",
+        "activityColumn": "Çalakî",
+        "positionColumn": "Cih",
+        "weekColumn": "Hefte",
+        "pointsColumn": "Xal",
+        "statusColumn": "Rewş",
+        "updateColumn": "Nûve bibe?",
+        "selectPlayer": "Lîstikvan hilbijêre",
+        "updateAll": "Hemû yên heyî nûve bike"
+      },
+      "status": {
+        "ready": "Ji bo danîna amade ye",
+        "willUpdate": "Navnîşa heyî dê were nûvekirin",
+        "unmatched": "Lîstikvan nehat dîtin — bi destan hilbijêre",
+        "invalid": {
+          "invalid_activity": "Cureyê çalakiyê nenas an neçalak e",
+          "disabled_activity": "Ev cureyê çalakiyê neçalak e",
+          "invalid_date": "Tarîx ne derbasdar e an tune ye",
+          "invalid_position": "Cih ne derbasdar e (divê ≥ 1 be)"
+        }
+      },
+      "confirm": {
+        "button": "Bîne",
+        "importing": "Tê anîn..."
+      },
+      "result": {
+        "title": "Anîn qediya",
+        "inserted": "hat danîn",
+        "updated": "hat nûvekirin",
+        "skipped": "hat derbaskirin",
+        "error": "Anîn têkçû. Ji kerema xwe dîsa biceribîne."
+      },
+      "reset": "Dosyeyeke din bîne"
+    }
+  },
+  "activityInput": {
+    "title": "Çalakiyê Bişîne",
+    "subtitle": "Çalakiya xwe tomar bike û xal qezenc bike",
+    "activityType": "Cureyê Çalakiyê",
+    "position": "Cih/Rêz",
+    "positionPlaceholder": "Mînak: 1, 5, 10...",
+    "positionHint": "Cih an rêza xwe binivîse",
+    "submit": "Çalakiyê Bişîne",
+    "submitting": "Tê şandin...",
+    "typeHint": "Tenê çalakiyên ku ji bo hefteyê hilbijartî hene tên nîşandan",
+    "success": "Çalakî bi serketî hat şandin!",
+    "error": "Şandina çalakiyê têkçû",
+    "participated": "Min vê hefteyê beşdar bû",
+    "fillAllFields": "Ji kerema xwe hemû qadên hewce dagire"
+  },
+  "activities": {
+    "types": {
+      "kvk-prep": "KvK Prep",
+      "kvk-cross-border": "KvK Cross Border",
+      "legion": "Legion",
+      "desolate-desert": "Desolate Desert",
+      "golden-expedition": "Golden Expedition",
+      "stellar-glory": "Stellar Glory"
+    }
+  },
+  "dashboard": {
+    "noActivitiesThisWeek": "Vê hefteyê çalakî tune",
+    "totalPoints": "Xalên tevahî",
+    "pointsShort": "xal",
+    "currentWeek": "Hefteya Niha",
+    "lastWeek": "Hefteya Borî",
+    "weeksAgo": "hefte berê"
+  },
+  "activitiesDetails": {
+    "title": "Hûrguliyên Çalakiyê"
+  },
+  "common": {
+    "points": "xal",
+    "close": "Bigire",
+    "actions": "Kiryar",
+    "delete": "Jê bibe",
+    "confirm": "Piştrast bike",
+    "cancel": "Betal bike",
+    "save": "Tomar bike",
+    "saving": "Tê tomarkirin...",
+    "update": "Nûve bike",
+    "back": "Vegere",
+    "add": "Zêde bike",
+    "edit": "Biguherîne",
+    "name": "Nav",
+    "description": "Danasîn",
+    "image": "Wêne",
+    "icon": "Îkon",
+    "order": "Rêz",
+    "active": "Çalak",
+    "all": "Hemû",
+    "none": "Tune",
+    "saved": "Hat tomarkirin",
+    "created": "Hat çêkirin",
+    "deleted": "Hat jêbirin",
+    "deleteConfirm": "Tu dixwazî \"{{name}}\" jê bibî?",
+    "uploadImage": "Wêne bar bike",
+    "next": "Pêşve",
+    "clear": "Paqij bike"
+  },
+  "superAdmin": {
+    "dashboard": {
+      "title": "Panela Rêvebirê Sereke",
+      "subtitle": "Dîmena giştî û rêveberin a pergalê",
+      "totalAlliances": "Hejmara Hevbendiyên Tevahî",
+      "totalUsers": "Hejmara Bikarhênerên Tevahî",
+      "totalActivities": "Hejmara Çalakiyên Tevahî",
+      "activeInvitations": "Vexwendinên Çalak",
+      "quickActions": "Kiryarên Bilez",
+      "manageAlliances": "Hevbendiyên Birêve Bibe",
+      "manageAlliancesDesc": "Hemû hevbendiyên bibîne û birêve bibe",
+      "manageUsers": "Bikarhêneran Birêve Bibe",
+      "manageUsersDesc": "Hemû bikarhêneran bibîne û birêve bibe",
+      "manageGuidesData": "Daneyên Referansa Rênimêjê",
+      "manageGuidesDataDesc": "Şampiyonan, jêhatîbûnan, hespan û kevirên giranbiha birêve bibe"
+    },
+    "alliances": {
+      "title": "Rêveberin Hevbendiyê",
+      "subtitle": "Hemû hevbendiyên pergalê birêve bibe",
+      "noAlliances": "Hîna hevbendî nehat çêkirin",
+      "name": "Navê Hevbendiyê",
+      "tag": "Etîket",
+      "admin": "Rêvebir",
+      "members": "Endam",
+      "created": "Hat çêkirin",
+      "actions": "Kiryar",
+      "deleteConfirm": "Tu dixwazî hevbendiya \"{{name}}\" jê bibî? Ev ê hemû bikarhêner, çalakî û vexwendinên têkildar jî jê bibe.",
+      "loadFailed": "Barkirina hevbendiyên têkçû",
+      "updated": "Hevbendî bi serketî hat nûvekirin",
+      "updateFailed": "Nûvekirina hevbendiyê têkçû",
+      "deleted": "Hevbendî bi serketî hat jêbirin",
+      "deleteFailed": "Jêbirina hevbendiyê têkçû"
+    },
+    "users": {
+      "title": "Rêveberin Bikarhêneran",
+      "subtitle": "Hemû bikarhênerên pergalê birêve bibe",
+      "noUsers": "Bikarhêner nehat dîtin",
+      "displayName": "Navê Nîşandayî",
+      "username": "Navê Bikarhêner",
+      "role": "Rol",
+      "alliance": "Hevbendî",
+      "noAlliance": "Hevbendî tune",
+      "created": "Hat çêkirin",
+      "actions": "Kiryar",
+      "deleteConfirm": "Tu dixwazî bikarhênerê \"{{name}}\" jê bibî? Ev kiryar nayê vegerandin.",
+      "loadFailed": "Barkirina bikarhêneran têkçû",
+      "updated": "Bikarhêner bi serketî hat nûvekirin",
+      "updateFailed": "Nûvekirina bikarhêner têkçû",
+      "deleted": "Bikarhêner bi serketî hat jêbirin"
+    },
+    "guidesData": "Daneyên Referansa Rênimêjê",
+    "guidesDataSubtitle": "Şampiyonan, jêhatîbûnan, hespan, xemilkên û kevirên giranbiha birêve bibe",
+    "champions": "Şampiyonan",
+    "skills": "Jêhatîbûn",
+    "assignSkills": "Jêhatîbûnan destnîşan bike",
+    "temperaments": "Temperament",
+    "ornaments": "Xemilk",
+    "gems": "Kevirên Giranbiha",
+    "rings": "Zengil",
+    "gemType": {
+      "label": "Cure",
+      "strategy": "Strateji",
+      "hero": "Leheng",
+      "tactics": "Taktîk"
+    }
+  },
+  "super_admin": "Rêvebirê Sereke",
+  "admin": "Rêvebir",
+  "member": "Endam",
+  "pwa": {
+    "offline": "Tu offline yî",
+    "online": "Tu online yî",
+    "updateAvailable": "Guhertoyeke nû heye",
+    "reload": "Ji nû ve bar bike",
+    "install": "Ji bo ezmûneke çêtir sepanê saz bike",
+    "installButton": "Saz bike",
+    "iosInstruction": "Bişkoja parvekirinê bikirtîne paşê 'Li Ekrana Sereke Zêde Bike'",
+    "installDismiss": "Panela sazkirinê bigire"
+  },
+  "releaseNotes": {
+    "title": "Çi Nû Ye",
+    "markAsSeen": "Wekî xwendî nîşan bide"
+  },
+  "tools": {
+    "gemCalcDesc": "Qezenca xalê ji bo kirina kevira giranbiha li ser fermandarê xwe hesab bike.",
+    "horseTraitsTitle": "Horse Traits",
+    "horseTraitsDesc": "Têkeliyên herî baş ên xûya hespan ji bo fermandarên xwe bibîne."
+  },
+  "packValue": {
+    "title": "Hesabkera Nirxa Pakêtê",
+    "description": "Nirxa pakêteke di-lîstikê de binirxîne",
+    "addItem": "Tişt zêde bike",
+    "packPrice": "Nirxê pakêtê (Apex Coins)",
+    "calculate": "Hesab bike",
+    "reset": "Sifir bike",
+    "noItems": "Ji bo hesabkirinê herî kêm tiştekî zêde bike",
+    "units": {
+      "hours": "Saet",
+      "qty": "Hejmar"
+    },
+    "result": {
+      "title": "Encam",
+      "tier": {
+        "terrible": "Pir xerab",
+        "average": "Navînî",
+        "good": "Baş",
+        "excellent": "Hêja"
+      },
+      "breakdown": "Hûrgulî"
+    },
+    "items": {
+      "speedUp": "Speed Up",
+      "legendaryLightningCrystal": "Legendary Lightning Crystal",
+      "legendaryMagmaCrystal": "Legendary Magma Crystal",
+      "fineGold": "Fine Gold",
+      "silverSand": "Silver Sand",
+      "copperSand": "Copper Sand",
+      "universalLegendaryHeroMedal": "Universal Legendary Hero Medal",
+      "forgingKit": "Forging Kit (per 100)",
+      "planishingHammer": "Planishing Hammer",
+      "legendarySkillScroll": "Legendary Skill Scroll",
+      "techniquePoint": "Technique Point",
+      "epicGem": "Epic Gem",
+      "legendaryGem": "Legendary Gem",
+      "rawIron": "Raw Iron",
+      "insightPoint": "Insight Point",
+      "mountWhistle": "Mount Whistle",
+      "meteoriteSteel": "Meteorite Steel",
+      "refinedIron": "Refined Iron",
+      "goldenKey": "Golden Key",
+      "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mightiestGovernor": {
+    "title": "Hukumdarê Herî Bihêz",
+    "subtitle": "Lêçûnên qeydnameyê li gorî rêzê",
+    "description": "Ji bo beşdarbûna di bûyera Hukumdarê Herî Bihêz de, lîstikvan divê xalên nîşaneyê xerc bikin. Rêza armancê çiqas bilind be, lêçûn ewqas zêde be.",
+    "rank": "Rêz",
+    "weeklyTarget": "Armanca Hefteyî",
+    "cost": "Lêçûn",
+    "notice": "Pergala DKP di pêşveçûnê de ye. Lêçûnên nîşandayî nîşandêr in û dibe ku biguhere."
+  },
+  "gemCalculator": {
+    "title": "Hesabkera Kevirên Giranbiha",
+    "back": "Vegere",
+    "troopType": "Cureyê Leşker",
+    "troopSwordsmen": "Şûrbaz",
+    "troopArchers": "Kevanî",
+    "troopPikemen": "Nêzebaz",
+    "troopCavalry": "Siwar",
+    "troopTier": "Asta Leşkerî",
+    "troopSize": "Mezinahiya Leşkerî",
+    "troopSizeHint": "Hejmara leşkeran (herî zêde 500,000)",
+    "healthBonus": "Bonusa Tenduristiyê (%)",
+    "mightAttack": "Hêza Êrişê (%)",
+    "mightDefense": "Hêza Parastinê (%)",
+    "gemType": "Cureyê Kevirê Giranbiha",
+    "gemHealth": "Kevira Tenduristiyê",
+    "gemCapacity": "Kevira Kapasîteyê",
+    "gemRarity": "Kêmbûna Kevirê Giranbiha",
+    "verbose": "Moda hûrgulî (hûrguliya hesabkirinê)",
+    "analyze": "Analîz bike",
+    "score": "Qezenc",
+    "rawBonus": "Bonusa Xav",
+    "verboseTitle": "Hûrguliya Hesabkirinê",
+    "verboseScoreBefore": "Xala berê",
+    "verboseScoreAfter": "Xala paşê",
+    "verboseGain": "Qezenc",
+    "verboseLegionSize": "Mezinahiya leşkerê",
+    "verbosePerUnit": "Xala per yekîne (berê)",
+    "verbosePerUnitAfter": "Xala per yekîne (paşê)",
+    "verboseGemValue": "Bonusa kevirê giranbiha",
+    "verboseNewHealthBonus": "Bonusa tenduristiya nû",
+    "noResult": "Formê dagire û Analîz bikirtîne"
+  },
+  "recovery": {
+    "questions": {
+      "q1": "Navê heywana xwe ya yekem çi bû?",
+      "q2": "Tu li kîjan bajêr ji dayik bûyî?",
+      "q3": "Navê hevala/hevalê te yê çêtirîn ê zaroktiyê çi bû?",
+      "q4": "Navê te yê zaroktiyê çi bû?",
+      "q5": "Paşnavê dayika te yê berî zewacê çi ye?",
+      "q6": "Navê dibistana te ya seretayî çi ye?",
+      "q7": "Tu li kîjan bajêr hevjîna/hevjînê xwe nas kir?",
+      "q8": "Xwarina te ya herî bijare çi ye?",
+      "q9": "Marka otomobîla te ya yekem çi bû?",
+      "q10": "Mebesta gera te ya yekem a biyanî kîderê bû?"
+    },
+    "page": {
+      "title": "Vegerandina Hesabê",
+      "step1": {
+        "usernamePlaceholder": "Navê bikarhênerê xwe binivîse",
+        "submit": "Hesabê min bibîne"
+      },
+      "step2": {
+        "answerPlaceholder": "Bersiva te",
+        "newPassword": "Şîfreya nû",
+        "confirmPassword": "Şîfreyê piştrast bike",
+        "submit": "Şîfreyê sifir bike"
+      },
+      "step3": {
+        "success": "Şîfre bi serketî hat sifirkirin!"
+      },
+      "backToLogin": "Vegere têketinê"
+    },
+    "errors": {
+      "userNotFound": "Ji bo vî navê bikarhênerî hesab nehat dîtin.",
+      "wrongAnswer": "Bersiv ne rast e.",
+      "wrongAnswerRemaining": "{{count}} hewl maye.",
+      "locked": "Hesab heya {{time}} hatiye kilîtkirin.",
+      "passwordTooShort": "Şîfre divê herî kêm 6 tîp be."
+    }
+  },
+  "accountSettings": {
+    "title": "Hesabê Min",
+    "tabAccount": "Hesabê Min",
+    "tabPreferences": "Tercîhên Min",
+    "displayName": {
+      "title": "Navê Nîşandayî",
+      "save": "Tomar bike",
+      "success": "Navê nîşandayî hat nûvekirin",
+      "error": "Nûvekirina navê nîşandayî têkçû"
+    },
+    "password": {
+      "title": "Şîfreyê Biguherîne",
+      "newPassword": "Şîfreya Nû",
+      "confirmPassword": "Şîfreyê Piştrast Bike",
+      "save": "Şîfreyê Biguherîne",
+      "success": "Şîfre bi serketî hat nûvekirin",
+      "error": "Nûvekirina şîfreyê têkçû"
+    },
+    "recovery": {
+      "title": "Pirsa Vegerandinê",
+      "question": "Pirsa Veşartî",
+      "answer": "Bersiva Nû",
+      "answerHint": "Bersiv ji mezin-biçûkbûna tîpan serbixwe ye",
+      "save": "Nûve bike",
+      "success": "Pirsa vegerandinê hat nûvekirin",
+      "error": "Nûvekirina pirsa vegerandinê têkçû"
+    },
+    "language": {
+      "title": "Zimanê Sepanê"
+    },
+    "colorScheme": {
+      "title": "Xuyabûn",
+      "light": "Ronî",
+      "dark": "Tarî",
+      "auto": "Otomatîk (pergal)",
+      "glass": "Şûşe Ronî",
+      "glassDark": "Şûşe Tarî",
+      "highContrast": "Kontrastê Bilind"
+    }
+  },
+  "discord": {
+    "channelsTitle": "Kanalên Discord",
+    "channelsSubtitle": "Kanalên webhook ên Discord mîheng bike da ku peyaman bişîne",
+    "channelName": "Navê Kanalê",
+    "channelNamePlaceholder": "mînak: general-reminder",
+    "webhookUrl": "URL ya Webhook",
+    "webhookUrlPlaceholder": "https://discord.com/api/webhooks/...",
+    "webhookUrlHint": "URL ya webhook ê Discord ji Mîhengên Serverê > Entegrasyon",
+    "defaultMessage": "Peyama Xwerû (bijartî)",
+    "defaultMessagePlaceholder": "⏰ Bîranîn: Rêzkirina GE ya xwe binivîse",
+    "defaultMessageHint": "Dema vê kanalê hilbijêrî pêş-tê bar kirin — berî şandinê tê guherandin",
+    "addChannel": "Kanal zêde bike",
+    "deleteChannel": "Kanalê jê bibe",
+    "deleteConfirm": "Tu dixwazî kanalê \"{{name}}\" jê bibî?",
+    "noChannels": "Hîna kanalên Discord nehatine mîhengkirin",
+    "noChannelsForMessage": "Ji bo şandina peyamê herî kêm kanalekî zêde bike",
+    "channelAdded": "Kanala Discord bi serketî hat zêdekirin",
+    "channelAddFailed": "Zêdekirina kanala Discord têkçû",
+    "channelUpdated": "Kanala Discord bi serketî hat nûvekirin",
+    "channelUpdateFailed": "Nûvekirina kanala Discord têkçû",
+    "channelDeleted": "Kanala Discord bi serketî hat jêbirin",
+    "channelDeleteFailed": "Jêbirina kanala Discord têkçû",
+    "editChannel": "Kanalê biguherîne",
+    "editChannelTitle": "Kanalê guhertin:",
+    "loadFailed": "Barkirina kanalên Discord têkçû",
+    "sendMessageTitle": "Peyamê Bişîne",
+    "sendMessageSubtitle": "Kanalekî hilbijêre, peyamê mîheng bike, paşê bişîne",
+    "selectChannel": "Kanal Hilbijêre",
+    "messageContent": "Peyam",
+    "messageContentPlaceholder": "⏰ Bîranîn: Rêzkirina GE ya xwe binivîse",
+    "sendMessage": "Bişîne Discord",
+    "messageSent": "Peyam bi serketî hat şandina Discord",
+    "messageSendFailed": "Şandina peyama Discord têkçû",
+    "errors": {
+      "invalidWebhookUrl": "Divê URL ya webhook ê Discord ya derbasdar be (https://discord.com/api/webhooks/...)"
+    }
+  },
+  "guides": {
+    "title": "Rênimêj",
+    "community": "Civak",
+    "my_guides": "Rênimêjên Min",
+    "create": "Rênimêjekî ava bike",
+    "limit_reached": "Sînorê 10 rênimêjan hate",
+    "no_guides": "Hîna rênimêj tune",
+    "count": "{{ count }}/10 rênimêj",
+    "categories": {
+      "formation": "Avakarî",
+      "evenement": "Bûyer",
+      "general": "Giştî"
+    },
+    "status": {
+      "published": "Hatiye weşandin",
+      "draft": "Pêşnûse"
+    },
+    "by": "Ji aliyê",
+    "view": "Bibîne",
+    "edit": "Biguherîne",
+    "publish": "Weşan bike",
+    "unpublish": "Weşandinê betal bike",
+    "delete": "Jê bibe",
+    "published_success": "Rênimêj hat weşandin",
+    "unpublished_success": "Weşandina rênimêjê hat betalkirin",
+    "champion": "Şampiyonan",
+    "champion_slot": "Cihê Şampiyonî",
+    "add_champion": "Şampiyonan zêde bike",
+    "champion_count": "{{ count }} şampiyonan hatine mîhengkirin",
+    "formation_hint": "Heya 3 şampiyonî mîheng bike. Kaş bike da ku ji nû ve rêz bikî.",
+    "skill": "Jêhatîbûn",
+    "skills": "Jêhatîbûn",
+    "gems": "Kevirên Giranbiha",
+    "hero_section": "Leheng",
+    "horse_section": "Hesp",
+    "traits": "Taybetiyên hespo",
+    "trait": "Taybetî",
+    "add_trait": "Taybetiyê zêde bike",
+    "ornament": "Xemilk",
+    "ring": "Zengil",
+    "description": "Danasîn / Notên Nivîskar",
+    "editor": {
+      "title_new": "Rênimêjekî ava bike",
+      "title_edit": "Rênimêjê biguherîne",
+      "step_basic": "Agahdarî",
+      "step_content": "Naverok",
+      "step_review": "Kurtasî",
+      "title_label": "Sernavê rênimêjê",
+      "category_label": "Kategorî",
+      "description_label": "Danasîn",
+      "publish_now": "Niha weşan bike",
+      "save_draft": "Wekî pêşnûse tomar bike",
+      "save": "Tomar bike"
+    },
+    "confirm_delete": "Ev rênimêj jê bibe?",
+    "confirm_delete_msg": "Ev kiryar nayê vegerandin.",
+    "errors": {
+      "limitReached": "Tu gihîştî herî zêde 10 rênimêjan.",
+      "slugDuplicate": "Ev sernavê pir dişibihe rênimêjeke heyî. Ji kerema xwe sernavê biguherîne.",
+      "notFound": "Rênimêj nehat dîtin.",
+      "unauthorized": "Tu destûrdar nîyî ku vê rênimêjê biguherînî.",
+      "unknown": "Çewtiyek nediyar pêk hat. Ji kerema xwe dîsa biceribîne.",
+      "invalidFileType": "Cureyê pelê ne derbasdar e. Destûrdayî: PNG, JPEG, WebP."
+    },
+    "public_list_title": "Rênimêjên Civakê",
+    "public_list_empty": "Hîna rênimêj nehatiye weşandin",
+    "copy_link": "Girêdanê kopî bike",
+    "link_copied": "Girêdan hat kopîkirin!",
+    "back_to_list": "Vegere lîsteya rênimêjan",
+    "guide_not_found": "Rênimêj nehat dîtin",
+    "upvote": "Piştgirî bike",
+    "upvoted": "Piştgirî hat kirin",
+    "champion_slot": "Şampiyonan {{n}}",
+    "author_notes": "Notên Nivîskar"
+  },
+  "landing": {
+    "hero": {
+      "eyebrow": "Şopînerê Çalakiya Hevbendiyê",
+      "title1": "Biaqil bilîze.",
+      "title2": "Bi hev re bi ser bike.",
+      "subtitleBefore": "Ji bo her lîstikvana çalak hatiye çêkirin — ne tenê ji bo xerckaran. Çalakiyên hevbendiya xwe bişopîne, xalên stratejîk qezenc bike, û bi",
+      "subtitleStrong": "Top 10 Hukumdarê Herî Bihêz",
+      "subtitleAfter": "bi pir kêmtir lezkirinên bilez û çavkaniyan bigihî.",
+      "ctaLogin": "Têkeve",
+      "ctaJoin": "Bi Vexwendinê Beşdar Bibe"
+    },
+    "steps": {
+      "label": "ÇAWA KAR DIKE",
+      "title": "Sê gav ber bi jorê",
+      "step1": {
+        "title": "Çalakiyên Xwe Tomar Bike",
+        "description": "Şerên KvK, şerên leşkerê, Rêwîtiyên Zêrîn û bêtir bişîne. Her bûyer, her hefte — beşdariya te tê tomarkirin."
+      },
+      "step2": {
+        "title": "Xalên Stratejîk Qezenc Bike",
+        "description": "Xal ji cih û performansa te tên hesabkirin. Rêgezên mîhengpêkirî lîstikvanên ku beşdar dibin û pêşbaziyê dikin xelat dikin."
+      },
+      "step3": {
+        "title": "Di Rêzkirinê de Bilind Bibe",
+        "description": "Tabloya pêşveçûna 6 hefteyî pêşbaziyê taze digire û domdariyê li şûna teqînên takekesî xelat dike."
+      }
+    },
+    "benefits": {
+      "label": "ÇIMA GIRÎNG E",
+      "title": "Serverê te yê tevahî bi ser dikeve",
+      "benefit1": {
+        "title": "Ji bo Lîstikvanên Çalak Hatiye Çêkirin",
+        "description": "Pay-to-win tune. Çalakiya pure û beşdariya biaqil te di tabloya pêşveçûnê de bilind dike — her kes dikare pêşbaziyê bike."
+      },
+      "benefit2": {
+        "title": "Çavkaniyan ji Hevbendiyê re Xilas Bike",
+        "description": "Şopandina avahiyandî mîheng dike ku kê û kengê beşdar dibe, lezkirinên bilez û çavkaniyan ji bo amadekirina KvK û Imparatoriya Herî Bihêz diparêze."
+      },
+      "benefit3": {
+        "title": "Top 10 Hukumdarê Herî Bihêz bigihî",
+        "description": "Bi kêmtir çavkaniyan lehengan ên herî bihêz bistîne. Ferqa di nêzê bûnê û şampiyoniyê de bi hewldana rêkûpêk tê pîvandin."
+      }
+    },
+    "cta": {
+      "title": "Amade yî hevbendiya xwe birêve bibî?",
+      "subtitle": "Hevbendiya xwe ava bike û îro dest bi şopandina pêşveçûna endamên xwe bike.",
+      "button": "Hevbendiya Xwe Ava Bike"
+    },
+    "footer": "Activity Tracker — Biaqiltir bilîze, bihêztir pêşbaziyê bike."
+  }
+}

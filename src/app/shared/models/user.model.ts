@@ -3,6 +3,8 @@
  * Request/Response interfaces for user-related operations
  */
 
+import type { SupportedLanguage } from '@app/core/services/language.service';
+
 /**
  * Legacy User model (for localStorage mode)
  */
@@ -19,7 +21,7 @@ export interface User {
 export type ColorScheme = 'light' | 'dark' | 'auto' | 'glass' | 'glass-dark' | 'high-contrast';
 
 export interface UserPreferences {
-  language?: 'en' | 'fr' | 'es' | 'it';
+  language?: SupportedLanguage;
   colorScheme?: ColorScheme;
   notifications?: {
     email?: boolean;

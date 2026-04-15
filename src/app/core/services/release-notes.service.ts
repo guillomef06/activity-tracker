@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
 import { StorageService } from './storage.service';
+import type { SupportedLanguage } from './language.service';
 
 export interface ReleaseEntry {
   type: 'feature' | 'fix' | 'improvement';
-  text: { en: string; fr: string; es: string; it: string };
+  text: Partial<Record<SupportedLanguage, string>> & { en: string };
 }
 
 export interface ReleaseNote {

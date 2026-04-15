@@ -1,6 +1,9 @@
 <div class="guides-hub-container">
   <mat-card class="page-header">
     <mat-card-header>
+      <button mat-icon-button (click)="goHome()" [attr.aria-label]="'nav.home' | translate" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
       <mat-icon class="header-icon">menu_book</mat-icon>
       <div class="header-content">
         <mat-card-title>{{ 'guides.title' | translate }}</mat-card-title>
