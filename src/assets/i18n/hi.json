@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "KvK तैयारी",
+      "kvk-cross-border": "KvK क्रॉस बॉर्डर",
+      "desolate-desert": "उजाड़ रेगिस्तान",
+      "golden-expedition": "सुनहरा अभियान",
+      "stellar-glory": "तारकीय महिमा",
+      "legion": "भोर की लड़ाई / अजूबे"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "गाइड प्रकाशित हुआ",
     "unpublished_success": "गाइड अप्रकाशित हुआ",
     "champion": "चैंपियन",
-    "champion_slot": "चैंपियन स्लॉट",
+    "champion_slot": "चैंपियन {{n}}",
     "add_champion": "चैंपियन जोड़ें",
     "champion_count": "{{ count }} चैंपियन कॉन्फ़िगर",
     "formation_hint": "अधिकतम 3 चैंपियन कॉन्फ़िगर करें। क्रम बदलने के लिए ड्रैग करें।",
@@ -668,7 +668,6 @@
     "guide_not_found": "गाइड नहीं मिला",
     "upvote": "अपवोट",
     "upvoted": "अपवोट किया",
-    "champion_slot": "चैंपियन {{n}}",
     "author_notes": "लेखक के नोट्स"
   },
   "landing": {

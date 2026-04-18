@@ -259,11 +259,11 @@
   "activities": {
     "types": {
       "kvk-prep": "Preparazione KvK",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legione",
+      "kvk-cross-border": "KvK Oltre i Confini",
       "desolate-desert": "Deserto Desolato",
       "golden-expedition": "Spedizione Dorata",
-      "stellar-glory": "Gloria Stellare"
+      "stellar-glory": "Gloria Stellare",
+      "legion": "Battaglia dell'Alba / Meraviglie"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Guida pubblicata",
     "unpublished_success": "Guida non pubblicata",
     "champion": "Campione",
-    "champion_slot": "Slot Campione",
+    "champion_slot": "Campione {{n}}",
     "add_champion": "Aggiungi campione",
     "champion_count": "{{ count }} campione/i configurato/i",
     "formation_hint": "Configura fino a 3 campioni. Trascina per riordinare.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Guida non trovata",
     "upvote": "Vota",
     "upvoted": "Votato",
-    "champion_slot": "Campione {{n}}",
     "author_notes": "Note dell'autore"
   },
   "landing": {

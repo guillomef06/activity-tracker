@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "تحضير KvK",
+      "kvk-cross-border": "KvK عبر الحدود",
+      "desolate-desert": "الصحراء القاحلة",
+      "golden-expedition": "البعثة الذهبية",
+      "stellar-glory": "المجد النجمي",
+      "legion": "معركة الفجر / العجائب"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "تم نشر الدليل",
     "unpublished_success": "تم إلغاء نشر الدليل",
     "champion": "البطل",
-    "champion_slot": "خانة البطل",
+    "champion_slot": "البطل {{n}}",
     "add_champion": "إضافة بطل",
     "champion_count": "{{ count }} بطل تم تكوينه",
     "formation_hint": "تكوين ما يصل إلى 3 أبطال. اسحب لإعادة الترتيب.",
@@ -668,7 +668,6 @@
     "guide_not_found": "الدليل غير موجود",
     "upvote": "تأييد",
     "upvoted": "تم التأييد",
-    "champion_slot": "البطل {{n}}",
     "author_notes": "ملاحظات المؤلف"
   },
   "landing": {

@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "서버전 준비기간",
+      "kvk-cross-border": "KvK 크로스 서버 통합 순위",
+      "desolate-desert": "잃어버린 사막",
+      "golden-expedition": "황금원정",
+      "stellar-glory": "별무리의 광휘",
+      "legion": "여명의 전투 / 경이"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "가이드가 게시되었습니다",
     "unpublished_success": "가이드 게시가 취소되었습니다",
     "champion": "챔피언",
-    "champion_slot": "챔피언 슬롯",
+    "champion_slot": "챔피언 {{n}}",
     "add_champion": "챔피언 추가",
     "champion_count": "{{ count }}명의 챔피언 설정됨",
     "formation_hint": "최대 3명의 챔피언을 설정하세요. 드래그하여 순서를 변경하세요.",
@@ -668,7 +668,6 @@
     "guide_not_found": "가이드를 찾을 수 없습니다",
     "upvote": "추천",
     "upvoted": "추천됨",
-    "champion_slot": "챔피언 {{n}}",
     "author_notes": "작성자 노트"
   },
   "landing": {

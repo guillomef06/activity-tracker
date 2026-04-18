@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "Προετοιμασία KvK",
+      "kvk-cross-border": "KvK Διασυνοριακό",
+      "desolate-desert": "Έρημη Έρημος",
+      "golden-expedition": "Χρυσή Αποστολή",
+      "stellar-glory": "Αστρική Δόξα",
+      "legion": "Μάχη της Αυγής / Θαύματα"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Ο οδηγός δημοσιεύτηκε",
     "unpublished_success": "Η δημοσίευση του οδηγού αναιρέθηκε",
     "champion": "Πρωταθλητής",
-    "champion_slot": "Θέση Πρωταθλητή",
+    "champion_slot": "Πρωταθλητής {{n}}",
     "add_champion": "Προσθήκη πρωταθλητή",
     "champion_count": "{{ count }} πρωταθλητής(ές) ρυθμισμένος(οι)",
     "formation_hint": "Ρυθμίστε έως 3 πρωταθλητές. Σύρετε για αναδιάταξη.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Ο οδηγός δεν βρέθηκε",
     "upvote": "Upvote",
     "upvoted": "Ψηφίστηκε",
-    "champion_slot": "Πρωταθλητής {{n}}",
     "author_notes": "Σημειώσεις συγγραφέα"
   },
   "landing": {
