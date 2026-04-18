@@ -246,7 +246,7 @@ export class AuthService {
     try {
       const { data: tokenData, error: tokenError } = await this.supabase
         .from('invitation_tokens')
-        .select('*, servers(*)')
+        .select('*')
         .eq('token', data.invitationToken)
         .single();
 

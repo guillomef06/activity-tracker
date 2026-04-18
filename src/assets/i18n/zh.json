@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "KvK准备",
+      "kvk-cross-border": "KvK跨境",
+      "desolate-desert": "荒芜沙漠",
+      "golden-expedition": "黄金远征",
+      "stellar-glory": "星耀荣光",
+      "legion": "黎明之战 / 奇观"
     }
   },
   "dashboard": {
@@ -620,7 +620,7 @@
     "published_success": "指南已发布",
     "unpublished_success": "指南已取消发布",
     "champion": "英雄",
-    "champion_slot": "英雄槽位",
+    "champion_slot": "英雄{{n}}",
     "add_champion": "添加英雄",
     "champion_count": "已配置{{ count }}名英雄",
     "formation_hint": "最多配置3名英雄。拖动以重新排序。",
@@ -666,7 +666,6 @@
     "guide_not_found": "未找到指南",
     "upvote": "点赞",
     "upvoted": "已点赞",
-    "champion_slot": "英雄{{n}}",
     "author_notes": "作者备注"
   },
   "landing": {
