@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "Persiapan KvK",
+      "kvk-cross-border": "KvK Lintas Server",
+      "desolate-desert": "Gurun Tandus",
+      "golden-expedition": "Ekspedisi Emas",
+      "stellar-glory": "Kejayaan Bintang",
+      "legion": "Pertempuran Fajar / Keajaiban"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Panduan diterbitkan",
     "unpublished_success": "Panduan dibatalkan penerbitannya",
     "champion": "Champion",
-    "champion_slot": "Slot Champion",
+    "champion_slot": "Champion {{n}}",
     "add_champion": "Tambah champion",
     "champion_count": "{{ count }} champion dikonfigurasi",
     "formation_hint": "Konfigurasikan hingga 3 champion. Seret untuk mengurutkan ulang.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Panduan tidak ditemukan",
     "upvote": "Upvote",
     "upvoted": "Upvoted",
-    "champion_slot": "Champion {{n}}",
     "author_notes": "Catatan penulis"
   },
   "landing": {

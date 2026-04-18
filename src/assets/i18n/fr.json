@@ -259,11 +259,11 @@
   "activities": {
     "types": {
       "kvk-prep": "Préparation KvK",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Légion",
+      "kvk-cross-border": "KvK Croisement de Frontières",
       "desolate-desert": "Désert Désolé",
       "golden-expedition": "Expédition Dorée",
-      "stellar-glory": "Gloire Stellaire"
+      "stellar-glory": "Gloire Stellaire",
+      "legion": "Bataille de l'Aube / Merveilles"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Guide publié",
     "unpublished_success": "Guide dépublié",
     "champion": "Champion",
-    "champion_slot": "Slot Champion",
+    "champion_slot": "Champion {{n}}",
     "add_champion": "Ajouter un champion",
     "champion_count": "{{ count }} champion(s) configuré(s)",
     "formation_hint": "Configurez jusqu'à 3 champions. Faites glisser pour réordonner.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Guide introuvable",
     "upvote": "Voter",
     "upvoted": "Voté",
-    "champion_slot": "Champion {{n}}",
     "author_notes": "Notes de l'auteur"
   },
   "landing": {

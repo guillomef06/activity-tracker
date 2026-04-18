@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "KvK-Vorbereitung",
+      "kvk-cross-border": "KvK Grenzübergreifend",
+      "desolate-desert": "Öde Wüste",
+      "golden-expedition": "Goldene Expedition",
+      "stellar-glory": "Stellarer Ruhm",
+      "legion": "Kampf der Morgendämmerung / Wunder"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Guide veröffentlicht",
     "unpublished_success": "Guide nicht mehr veröffentlicht",
     "champion": "Champion",
-    "champion_slot": "Champion-Slot",
+    "champion_slot": "Champion {{n}}",
     "add_champion": "Champion hinzufügen",
     "champion_count": "{{ count }} Champion(s) konfiguriert",
     "formation_hint": "Bis zu 3 Champions konfigurieren. Zum Neuanordnen ziehen.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Guide nicht gefunden",
     "upvote": "Upvote",
     "upvoted": "Geupvoted",
-    "champion_slot": "Champion {{n}}",
     "author_notes": "Autorennotizen"
   },
   "landing": {

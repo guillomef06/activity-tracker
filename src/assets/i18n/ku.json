@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "Amadehiya KvK",
+      "kvk-cross-border": "KvK Derbazbûna Sînoran",
+      "desolate-desert": "Çolê Wêran",
+      "golden-expedition": "Rêwîtiya Zêrîn",
+      "stellar-glory": "Şanaza Stêrkan",
+      "legion": "Şerê Spêdê / Ecêbkarî"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Rênimêj hat weşandin",
     "unpublished_success": "Weşandina rênimêjê hat betalkirin",
     "champion": "Şampiyonan",
-    "champion_slot": "Cihê Şampiyonî",
+    "champion_slot": "Şampiyonan {{n}}",
     "add_champion": "Şampiyonan zêde bike",
     "champion_count": "{{ count }} şampiyonan hatine mîhengkirin",
     "formation_hint": "Heya 3 şampiyonî mîheng bike. Kaş bike da ku ji nû ve rêz bikî.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Rênimêj nehat dîtin",
     "upvote": "Piştgirî bike",
     "upvoted": "Piştgirî hat kirin",
-    "champion_slot": "Şampiyonan {{n}}",
     "author_notes": "Notên Nivîskar"
   },
   "landing": {

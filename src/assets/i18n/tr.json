@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "KvK Hazırlığı",
+      "kvk-cross-border": "KvK Sınır Ötesi",
+      "desolate-desert": "Issız Çöl",
+      "golden-expedition": "Altın Sefer",
+      "stellar-glory": "Yıldızsal Zafer",
+      "legion": "Şafak Savaşı / Harikalar"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Rehber yayınlandı",
     "unpublished_success": "Rehber yayından kaldırıldı",
     "champion": "Şampiyon",
-    "champion_slot": "Şampiyon Yuvası",
+    "champion_slot": "Şampiyon {{n}}",
     "add_champion": "Şampiyon ekle",
     "champion_count": "{{ count }} şampiyon yapılandırıldı",
     "formation_hint": "3'e kadar şampiyon yapılandırın. Yeniden sıralamak için sürükleyin.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Rehber bulunamadı",
     "upvote": "Upvote",
     "upvoted": "Upvoted",
-    "champion_slot": "Şampiyon {{n}}",
     "author_notes": "Yazar notları"
   },
   "landing": {

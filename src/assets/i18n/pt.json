@@ -258,12 +258,12 @@
   },
   "activities": {
     "types": {
-      "kvk-prep": "KvK Prep",
-      "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
-      "desolate-desert": "Desolate Desert",
-      "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "kvk-prep": "Preparação KvK",
+      "kvk-cross-border": "KvK Cruzamento de Fronteiras",
+      "desolate-desert": "Deserto Desolado",
+      "golden-expedition": "Expedição Dourada",
+      "stellar-glory": "Glória Estelar",
+      "legion": "Batalha do Amanhecer / Maravilhas"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Guia publicado",
     "unpublished_success": "Guia despublicado",
     "champion": "Campeão",
-    "champion_slot": "Slot de Campeão",
+    "champion_slot": "Campeão {{n}}",
     "add_champion": "Adicionar campeão",
     "champion_count": "{{ count }} campeão(ões) configurado(s)",
     "formation_hint": "Configure até 3 campeões. Arraste para reordenar.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Guia não encontrado",
     "upvote": "Upvote",
     "upvoted": "Upvotado",
-    "champion_slot": "Campeão {{n}}",
     "author_notes": "Notas do autor"
   },
   "landing": {

@@ -260,10 +260,10 @@
     "types": {
       "kvk-prep": "KvK Prep",
       "kvk-cross-border": "KvK Cross Border",
-      "legion": "Legion",
       "desolate-desert": "Desolate Desert",
       "golden-expedition": "Golden Expedition",
-      "stellar-glory": "Stellar Glory"
+      "stellar-glory": "Stellar Glory",
+      "legion": "Battle of Dawn / Wonders"
     }
   },
   "dashboard": {
@@ -622,7 +622,7 @@
     "published_success": "Guide published",
     "unpublished_success": "Guide unpublished",
     "champion": "Champion",
-    "champion_slot": "Champion Slot",
+    "champion_slot": "Champion {{n}}",
     "add_champion": "Add champion",
     "champion_count": "{{ count }} champion(s) configured",
     "formation_hint": "Configure up to 3 champions. Drag to reorder.",
@@ -668,7 +668,6 @@
     "guide_not_found": "Guide not found",
     "upvote": "Upvote",
     "upvoted": "Upvoted",
-    "champion_slot": "Champion {{n}}",
     "author_notes": "Author's notes"
   },
   "landing": {
