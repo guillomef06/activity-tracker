@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "क्या आप वाकई सभी गतिविधियां हटाना चाहते हैं? यह सभी सदस्यों का संपूर्ण गतिविधि इतिहास स्थायी रूप से मिटा देगा।",
         "deleteAllActivitiesSuccess": "सभी गतिविधियां हटा दी गई हैं",
         "deleteAllActivitiesFailed": "गतिविधियां हटाने में विफल"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "अपने कमांडर पर रत्न लगाने से स्कोर लाभ की गणना करें।",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "अपने कमांडरों के लिए सर्वोत्तम घोड़े के स्वभाव संयोजन खोजें।"
+    "horseTraitsDesc": "अपने कमांडरों के लिए सर्वोत्तम घोड़े के स्वभाव संयोजन खोजें।",
+    "mountBreedingTitle": "माउंट ब्रीडिंग गाइड",
+    "mountBreedingDesc": "माउंट ब्रीडिंग की पूरी गाइड: लक्षण, स्वभाव, वंशानुक्रम और रणनीतियाँ।"
   },
   "packValue": {
     "title": "पैक वैल्यू कैलकुलेटर",
@@ -719,5 +731,10 @@
       "button": "अपना सर्वर बनाएं"
     },
     "footer": "Activity Tracker — स्मार्ट खेलें, मजबूत प्रतिस्पर्धा करें।"
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

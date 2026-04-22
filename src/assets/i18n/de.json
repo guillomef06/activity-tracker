@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "Möchtest du wirklich ALLE Aktivitäten löschen? Dies löscht dauerhaft den gesamten Aktivitätsverlauf aller Mitglieder.",
         "deleteAllActivitiesSuccess": "Alle Aktivitäten wurden gelöscht",
         "deleteAllActivitiesFailed": "Aktivitäten konnten nicht gelöscht werden"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "Berechne den Punktgewinn durch das Ausrüsten eines Edelsteins bei deinem Kommandanten.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "Finde die besten Temperamentskombinationen für deine Kommandanten."
+    "horseTraitsDesc": "Finde die besten Temperamentskombinationen für deine Kommandanten.",
+    "mountBreedingTitle": "Reittier-Zuchtguide",
+    "mountBreedingDesc": "Vollständiger Guide zu Reittierzucht: Merkmale, Temperamente, Vererbung und Strategien."
   },
   "packValue": {
     "title": "Pack-Wert-Rechner",
@@ -719,5 +731,10 @@
       "button": "Deine Server erstellen"
     },
     "footer": "Activity Tracker — Cleverer spielen, stärker kämpfen."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

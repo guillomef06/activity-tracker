@@ -13,6 +13,7 @@ export interface Server {
   owner_id: string | null;
   tiebreaker_activity_type: string | null;
   scoring_weeks_multiplier: number;
+  discord_invite_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -33,6 +34,7 @@ export interface UpdateServerRequest {
   tag?: string | null;
   tiebreaker_activity_type?: string | null;
   scoring_weeks_multiplier?: number;
+  discord_invite_url?: string | null;
 }
 
 /**

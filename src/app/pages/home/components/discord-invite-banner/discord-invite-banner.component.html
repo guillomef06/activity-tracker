@@ -1,0 +1,20 @@
+@if (!isDismissed() && inviteUrl()) {
+  <div class="discord-banner" [@bannerSlide]>
+    <mat-icon class="banner-icon">forum</mat-icon>
+    <div class="banner-content">
+      <span class="banner-text">{{ 'discordBanner.title' | translate }}</span>
+    </div>
+    <a mat-flat-button color="primary" [href]="inviteUrl()" target="_blank" rel="noopener noreferrer">
+      <mat-icon>open_in_new</mat-icon>
+      {{ 'discordBanner.cta' | translate }}
+    </a>
+    <button
+      mat-icon-button
+      class="dismiss-btn"
+      (click)="dismiss()"
+      [attr.aria-label]="'discordBanner.dismiss' | translate"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+}

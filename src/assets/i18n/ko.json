@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "모든 활동을 삭제하시겠습니까? 이 작업은 모든 멤버의 전체 활동 기록을 영구적으로 삭제합니다.",
         "deleteAllActivitiesSuccess": "모든 활동이 삭제되었습니다",
         "deleteAllActivitiesFailed": "활동 삭제 실패"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "지휘관에게 보석을 장착했을 때의 점수 향상을 계산합니다.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "지휘관에게 최적의 말 기질 조합을 찾아보세요."
+    "horseTraitsDesc": "지휘관에게 최적의 말 기질 조합을 찾아보세요.",
+    "mountBreedingTitle": "탈것 번식 가이드",
+    "mountBreedingDesc": "탈것 번식 완전 가이드: 특성, 기질, 유전 및 전략."
   },
   "packValue": {
     "title": "팩 가치 계산기",
@@ -719,5 +731,10 @@
       "button": "서버 만들기"
     },
     "footer": "Activity Tracker — 더 스마트하게 플레이하고, 더 강하게 경쟁하세요."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

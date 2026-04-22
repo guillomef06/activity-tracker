@@ -60,7 +60,7 @@ export class LanguageService {
     { code: 'ko', name: '한국어', flag: '🇰🇷' },
     { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
     { code: 'zh', name: '中文', flag: '🇨🇳' },
-    { code: 'ku', name: 'Kurdî', flag: '☀️' },
+    { code: 'ku', name: 'کوردیی ناوەندی', flag: '☀️' },
     { code: 'ar', name: 'العربية', flag: '🇸🇦' },
     { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
   ];

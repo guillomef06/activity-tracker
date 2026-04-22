@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "هل أنت متأكد أنك تريد حذف جميع الأنشطة؟ سيؤدي ذلك إلى محو سجل الأنشطة الكامل لجميع الأعضاء بشكل دائم.",
         "deleteAllActivitiesSuccess": "تم حذف جميع الأنشطة",
         "deleteAllActivitiesFailed": "فشل حذف الأنشطة"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "احسب مكسب النقاط من تجهيز قائدك بجوهرة.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "ابحث عن أفضل مجموعات مزاج الحصان لقادتك."
+    "horseTraitsDesc": "ابحث عن أفضل مجموعات مزاج الحصان لقادتك.",
+    "mountBreedingTitle": "دليل تربية المركبات",
+    "mountBreedingDesc": "دليل شامل لتربية المركبات: السمات والمزاج والوراثة والاستراتيجيات."
   },
   "packValue": {
     "title": "حاسبة قيمة الحزمة",
@@ -719,5 +731,10 @@
       "button": "أنشئ خادمك"
     },
     "footer": "Activity Tracker — العب بذكاء أكبر، نافس بقوة أكبر."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }
