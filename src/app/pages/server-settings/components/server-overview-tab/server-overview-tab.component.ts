@@ -80,6 +80,7 @@ export class ServerOverviewTabComponent {
   // State
   protected readonly isServerSubmitting = signal(false);
   protected readonly isInvitationSubmitting = signal(false);
+  protected readonly isDiscordInviteSubmitting = signal(false);
 
   // Forms
   protected readonly serverForm: FormGroup = this.fb.group({
@@ -91,10 +92,24 @@ export class ServerOverviewTabComponent {
     durationDays: [7, [Validators.required, Validators.min(1), Validators.max(365)]],
   });
 
+  protected readonly discordInviteForm: FormGroup = this.fb.group({
+    discord_invite_url: [
+      '',
+      [Validators.maxLength(200), Validators.pattern(/^https:\/\/(discord\.gg|discord\.com\/invite)\/[A-Za-z0-9_-]+$/)],
+    ],
+  });
+
   // Error signals for validation
   protected readonly nameError = createFieldErrorSignal(this.serverForm, 'name', this.destroyRef);
   protected readonly tagError = createFieldErrorSignal(this.serverForm, 'tag', this.destroyRef);
   protected readonly durationDaysError = createFieldErrorSignal(this.invitationForm, 'durationDays', this.destroyRef);
+  protected readonly discordInviteUrlError = createFieldErrorSignal(
+    this.discordInviteForm,
+    'discord_invite_url',
+    this.destroyRef,
+    undefined,
+    { pattern: 'server.settings.discordInvite.invalidUrl' }
+  );
 
   // Table columns for members table
   protected readonly memberColumns: string[] = ['displayName', 'role', 'createdAt'];
@@ -120,11 +135,15 @@ export class ServerOverviewTabComponent {
   );
 
   constructor() {
-    // Sync form with server input signal
+    // Sync server form with server input signal
     effect(() => {
       const currentServer = this.server();
       if (currentServer) {
         this.serverForm.patchValue({ name: currentServer.name, tag: currentServer.tag ?? '' }, { emitEvent: false });
+        this.discordInviteForm.patchValue(
+          { discord_invite_url: currentServer.discord_invite_url ?? '' },
+          { emitEvent: false }
+        );
       }
     });
   }
@@ -232,5 +251,31 @@ export class ServerOverviewTabComponent {
     const inviteUrl = `${this.getBaseUrl()}/join?token=${token}`;
     this.clipboard.copy(inviteUrl);
     this.snackbarService.success(this.translate.instant('server.settings.invitationLinkCopied'));
+  }
+
+  protected async saveDiscordInvite(): Promise<void> {
+    if (this.discordInviteForm.invalid) {
+      return;
+    }
+
+    this.isDiscordInviteSubmitting.set(true);
+    try {
+      const raw: string = this.discordInviteForm.value.discord_invite_url;
+      const { error } = await this.serverService.updateServer({
+        discord_invite_url: raw || null,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      this.snackbarService.success(this.translate.instant('server.settings.discordInvite.saved'));
+      this.serverUpdated.emit();
+    } catch (error) {
+      console.error('Error saving Discord invite URL:', error);
+      this.snackbarService.error(this.translate.instant('server.settings.discordInvite.saveFailed'));
+    } finally {
+      this.isDiscordInviteSubmitting.set(false);
+    }
   }
 }

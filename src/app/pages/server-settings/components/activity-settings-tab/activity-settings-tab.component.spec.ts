@@ -155,6 +155,7 @@ describe('ActivitySettingsTabComponent', () => {
       owner_id: null,
       tiebreaker_activity_type: 'legion',
       scoring_weeks_multiplier: 1,
+      discord_invite_url: null,
       created_at: '',
       updated_at: '',
     });
@@ -193,6 +194,7 @@ describe('ActivitySettingsTabComponent', () => {
       owner_id: null,
       tiebreaker_activity_type: 'kvk prep',
       scoring_weeks_multiplier: 1,
+      discord_invite_url: null,
       created_at: '',
       updated_at: '',
     });

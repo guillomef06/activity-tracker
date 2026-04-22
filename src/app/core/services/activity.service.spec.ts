@@ -89,6 +89,7 @@ describe('ActivityService', () => {
         owner_id: null,
         tiebreaker_activity_type: 'stellar glory',
         scoring_weeks_multiplier: 1,
+        discord_invite_url: null,
         created_at: '',
         updated_at: '',
       });
@@ -192,6 +193,7 @@ describe('ActivityService', () => {
         owner_id: null,
         tiebreaker_activity_type: 'stellar glory',
         scoring_weeks_multiplier: 1,
+        discord_invite_url: null,
         created_at: '',
         updated_at: '',
       });

@@ -164,6 +164,16 @@
         "multiplierUpdated": "Multiplicateur de saison mis à jour",
         "multiplierFailed": "Échec de la mise à jour du multiplicateur de saison"
       },
+      "discordInvite": {
+        "title": "Lien d'invitation Discord",
+        "subtitle": "Partagez le lien d'invitation Discord de votre communauté avec les membres",
+        "label": "URL d'invitation",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Les membres verront un bandeau les invitant à rejoindre",
+        "invalidUrl": "Doit être une URL d'invitation Discord valide",
+        "saved": "Lien d'invitation Discord sauvegardé",
+        "saveFailed": "Échec de la sauvegarde du lien Discord"
+      },
       "dangerZone": {
         "title": "Zone de danger",
         "deleteAllActivities": "Supprimer toutes les activités",
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "Calculez le gain de score obtenu en équipant une gemme sur votre commandant.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "Trouvez les meilleures combinaisons de tempéraments pour vos commandants."
+    "horseTraitsDesc": "Trouvez les meilleures combinaisons de tempéraments pour vos commandants.",
+    "mountBreedingTitle": "Guide d'élevage de montures",
+    "mountBreedingDesc": "Guide complet : traits, tempéraments, hérédité et stratégies d'élevage de montures."
   },
   "packValue": {
     "title": "Calculateur de valeur de pack",
@@ -719,5 +731,10 @@
       "button": "Créer votre Serveur"
     },
     "footer": "Activity Tracker — Jouez malin, assurez la victoire."
+  },
+  "discordBanner": {
+    "title": "Vous avez rejoint le serveur Discord ?",
+    "cta": "M'y emmener",
+    "dismiss": "Ignorer"
   }
 }
