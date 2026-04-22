@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "Είστε σίγουροι ότι θέλετε να διαγράψετε ΟΛΕΣ τις δραστηριότητες; Αυτό θα διαγράψει μόνιμα το ιστορικό δραστηριοτήτων όλων των μελών.",
         "deleteAllActivitiesSuccess": "Όλες οι δραστηριότητες διαγράφηκαν",
         "deleteAllActivitiesFailed": "Αποτυχία διαγραφής δραστηριοτήτων"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "Υπολογίστε το κέρδος πόντων από την τοποθέτηση πολύτιμου λίθου στον διοικητή σας.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "Βρείτε τους καλύτερους συνδυασμούς ιδιοσυγκρασίας αλόγου για τους διοικητές σας."
+    "horseTraitsDesc": "Βρείτε τους καλύτερους συνδυασμούς ιδιοσυγκρασίας αλόγου για τους διοικητές σας.",
+    "mountBreedingTitle": "Οδηγός αναπαραγωγής οχημάτων",
+    "mountBreedingDesc": "Πλήρης οδηγός αναπαραγωγής οχημάτων: χαρακτηριστικά, ιδιοσυγκρασίες, κληρονομικότητα και στρατηγικές."
   },
   "packValue": {
     "title": "Υπολογιστής Αξίας Πακέτου",
@@ -719,5 +731,10 @@
       "button": "Δημιουργήστε τη Διακομιστή σας"
     },
     "footer": "Activity Tracker — Παίξε πιο έξυπνα, ανταγωνίσου πιο δυνατά."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

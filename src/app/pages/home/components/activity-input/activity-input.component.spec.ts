@@ -23,6 +23,7 @@ describe('ActivityInputComponent', () => {
     calculatePoints: vi.fn().mockReturnValue({ points: 10 }),
     loadSettings: vi.fn().mockResolvedValue(undefined),
     isActivityEnabled: vi.fn().mockReturnValue(true),
+    server: signal(null as { discord_invite_url: string | null } | null),
   };
 
   const mockAuthService = {
@@ -87,5 +88,19 @@ describe('ActivityInputComponent', () => {
     // Change week to force the computed signal to re-evaluate with updated mock
     component['activityForm'].patchValue({ week: 1 });
     expect(component['availableActivities']().length).toBeGreaterThan(0);
+  });
+
+  it('should return null for discordInviteUrl when server is null', () => {
+    mockServerService.server.set(null);
+    fixture.detectChanges();
+
+    expect(component['discordInviteUrl']()).toBeNull();
+  });
+
+  it('should return discord_invite_url from server signal when set', () => {
+    mockServerService.server.set({ discord_invite_url: 'https://discord.gg/test' });
+    fixture.detectChanges();
+
+    expect(component['discordInviteUrl']()).toBe('https://discord.gg/test');
   });
 });

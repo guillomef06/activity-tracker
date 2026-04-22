@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "Tem certeza que deseja excluir TODAS as atividades? Isso apagará permanentemente o histórico completo de atividades de todos os membros.",
         "deleteAllActivitiesSuccess": "Todas as atividades foram excluídas",
         "deleteAllActivitiesFailed": "Falha ao excluir atividades"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "Calcule o ganho de pontos ao equipar uma gema no seu comandante.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "Encontre as melhores combinações de temperamento para os seus comandantes."
+    "horseTraitsDesc": "Encontre as melhores combinações de temperamento para os seus comandantes.",
+    "mountBreedingTitle": "Guia de criação de montarias",
+    "mountBreedingDesc": "Guia completo de criação de montarias: traços, temperamentos, herança e estratégias."
   },
   "packValue": {
     "title": "Calculadora de Valor de Pack",
@@ -719,5 +731,10 @@
       "button": "Criar sua Servidor"
     },
     "footer": "Activity Tracker — Jogue mais inteligente, compita mais forte."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

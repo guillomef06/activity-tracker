@@ -53,6 +53,13 @@ export class ToolsHubComponent {
       descKey: 'tools.horseTraitsDesc',
       externalUrl: 'https://sombrero16.github.io/horse-traits/',
     },
+    {
+      id: 'mount-breeding',
+      icon: 'menu_book',
+      titleKey: 'tools.mountBreedingTitle',
+      descKey: 'tools.mountBreedingDesc',
+      externalUrl: 'https://aoem.vercel.app/guide',
+    },
   ];
 
   protected readonly currentTool = computed(() => this.tools.find(t => t.id === this.selectedTool()) ?? null);
