@@ -79,7 +79,7 @@ export class SuperAdminServersPage implements OnInit {
     await this.progressBarService.withProgress(async () => {
       try {
         const { data, error } = await this.supabase.client
-          .from('alliances')
+          .from('servers')
           .select('*, user_profiles(display_name, role)')
           .order('created_at', { ascending: false });
 
@@ -125,7 +125,7 @@ export class SuperAdminServersPage implements OnInit {
         const { id, name, tag } = this.editForm.value;
 
         const { error } = await this.supabase.client
-          .from('alliances')
+          .from('servers')
           .update({ name, tag: tag || null })
           .eq('id', id);
 
@@ -162,7 +162,7 @@ export class SuperAdminServersPage implements OnInit {
     await this.progressBarService.withProgress(async () => {
       try {
         // Delete server (cascade will handle related records)
-        const { error } = await this.supabase.client.from('alliances').delete().eq('id', server.id);
+        const { error } = await this.supabase.client.from('servers').delete().eq('id', server.id);
 
         if (error) throw error;
 

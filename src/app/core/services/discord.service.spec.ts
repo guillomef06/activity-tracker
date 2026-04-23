@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 
 const mockWebhook = {
   id: 'w1',
-  alliance_id: 'a1',
+  server_id: 'a1',
   channel_name: 'general',
   webhook_url: 'https://discord.com/api/webhooks/123/abc',
   default_message: '⏰ GE Reminder',

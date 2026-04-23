@@ -31,7 +31,7 @@ export class DiscordService {
     const { data, error } = await this.supabase
       .from('discord_webhooks')
       .select('*')
-      .eq('alliance_id', serverId)
+      .eq('server_id', serverId)
       .order('created_at', { ascending: true });
 
     if (error) {
@@ -56,7 +56,7 @@ export class DiscordService {
     }
 
     const { error } = await this.supabase.from('discord_webhooks').insert({
-      alliance_id: serverId,
+      server_id: serverId,
       channel_name: request.channel_name,
       webhook_url: request.webhook_url,
       default_message: request.default_message ?? null,

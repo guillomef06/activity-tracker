@@ -97,7 +97,7 @@ export class AuthService {
         const { data, error } = await this.supabase
           .from('user_profiles')
           .select(
-            'id, alliance_id, invitation_token_id, display_name, username, role, preferences, created_at, updated_at, recovery_question_id'
+            'id, server_id, invitation_token_id, display_name, username, role, preferences, created_at, updated_at, recovery_question_id'
           )
           .eq('id', userId)
           .single();
@@ -141,7 +141,7 @@ export class AuthService {
       if (!authData.user) return { error: new Error('User creation failed') };
 
       const { data: serverData, error: serverError } = await this.supabase
-        .from('alliances')
+        .from('servers')
         .insert({
           name: data.serverName,
           owner_id: authData.user.id,
@@ -157,7 +157,7 @@ export class AuthService {
       const now = new Date().toISOString();
       const newProfile: UserProfile = {
         id: authData.user.id,
-        alliance_id: serverData.id,
+        server_id: serverData.id,
         invitation_token_id: null,
         display_name: data.displayName,
         username: data.username,
@@ -215,7 +215,7 @@ export class AuthService {
       const now = new Date().toISOString();
       const newProfile: UserProfile = {
         id: authData.user.id,
-        alliance_id: null,
+        server_id: null,
         invitation_token_id: null,
         display_name: displayName,
         username,
@@ -277,7 +277,7 @@ export class AuthService {
       const now = new Date().toISOString();
       const newProfile: UserProfile = {
         id: authData.user.id,
-        alliance_id: tokenData.alliance_id,
+        server_id: tokenData.server_id,
         invitation_token_id: tokenData.id,
         display_name: data.displayName,
         username: data.username,
@@ -455,7 +455,7 @@ export class AuthService {
    * Get current user's server ID
    */
   getServerId(): string | null {
-    return this.userProfileSignal()?.alliance_id || null;
+    return this.userProfileSignal()?.server_id || null;
   }
 
   /**
