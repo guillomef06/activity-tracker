@@ -10,7 +10,7 @@ import { Server } from './server.model';
  */
 export interface InvitationToken {
   id: string;
-  alliance_id: string;
+  server_id: string;
   token: string;
   expires_at: string;
   used_at: string | null;
@@ -23,7 +23,7 @@ export interface InvitationToken {
  * Request to create an invitation token
  */
 export interface CreateInvitationRequest {
-  alliance_id: string;
+  server_id: string;
   expires_in_days?: number; // Default: 7 days
 }
 

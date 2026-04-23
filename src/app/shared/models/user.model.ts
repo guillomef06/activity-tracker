@@ -35,7 +35,7 @@ export interface UserPreferences {
  */
 export interface UserProfile {
   id: string;
-  alliance_id: string | null; // null for super_admin
+  server_id: string | null; // null for super_admin
   invitation_token_id: string | null; // The invitation token used to join (null for super_admin and admin)
   display_name: string;
   username: string;
@@ -51,7 +51,7 @@ export interface UserProfile {
  */
 export interface CreateUserProfileRequest {
   id: string; // Supabase Auth user ID
-  alliance_id: string;
+  server_id: string;
   display_name: string;
   username: string;
   role: 'super_admin' | 'admin' | 'member';

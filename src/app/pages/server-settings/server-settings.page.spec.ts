@@ -42,7 +42,7 @@ describe('ServerSettingsPage', () => {
     };
 
     const authServiceSpy = {
-      userProfile: signal({ alliance_id: 'test-server-id' }),
+      userProfile: signal({ server_id: 'test-server-id' }),
     };
 
     await TestBed.configureTestingModule({

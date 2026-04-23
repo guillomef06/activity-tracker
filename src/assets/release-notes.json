@@ -288,8 +288,8 @@
       {
         "type": "feature",
         "text": {
-          "en": "Enable or disable individual activities per alliance",
-          "fr": "Activer ou désactiver individuellement chaque activité par alliance",
+          "en": "Enable or disable individual activities per server",
+          "fr": "Activer ou désactiver individuellement chaque activité par serveur",
           "es": "Activar o desactivar actividades individualmente por alianza",
           "it": "Abilitare o disabilitare singole attività per alleanza",
           "de": "Einzelne Aktivitäten pro Allianz aktivieren oder deaktivieren",
@@ -349,7 +349,7 @@
         "type": "feature",
         "text": {
           "en": "Alliance management (members, invitations, point rules)",
-          "fr": "Gestion de l'alliance (membres, invitations, règles de points)",
+          "fr": "Gestion du serveur (membres, invitations, règles de points)",
           "es": "Gestión de alianza (miembros, invitaciones, reglas de puntos)",
           "it": "Gestione alleanza (membri, inviti, regole punti)",
           "de": "Allianz-Verwaltung (Mitglieder, Einladungen, Punkteregeln)",

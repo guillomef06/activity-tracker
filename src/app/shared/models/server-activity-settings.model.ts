@@ -1,6 +1,6 @@
 export interface ServerActivitySettings {
   id: string;
-  alliance_id: string;
+  server_id: string;
   activity_type: string;
   enabled: boolean;
   participation_mode: boolean;

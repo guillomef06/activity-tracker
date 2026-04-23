@@ -1,6 +1,6 @@
 @use '../../../../styles/design-tokens' as tokens;
 
-.super-admin-alliances {
+.super-admin-servers-page {
   padding: 1rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -82,7 +82,7 @@
   overflow-x: auto;
 }
 
-.alliances-table {
+.servers-table {
   width: 100%;
 
   td,
@@ -90,7 +90,7 @@
     padding: 1rem;
   }
 
-  .alliance-name {
+  .server-name {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -143,7 +143,7 @@
     }
   }
 
-  .alliance-tag {
+  .server-tag {
     font-weight: 600;
     font-family: monospace;
     color: var(--mat-sys-primary);
@@ -162,7 +162,7 @@
 
 // Mobile responsiveness
 @media (max-width: tokens.$bp-md) {
-  .super-admin-alliances {
+  .super-admin-servers-page {
     padding: 1rem;
   }
 

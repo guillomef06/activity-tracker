@@ -20,7 +20,7 @@ import { getActivityTypePoints, APP_CONSTANTS } from '@shared/constants/constant
 type ServerWithRelations = Server & {
   user_profiles: UserProfile[];
   activity_point_rules: ActivityPointRule[];
-  alliance_activity_settings: ServerActivitySettings[];
+  server_activity_settings: ServerActivitySettings[];
 };
 
 /**
@@ -68,15 +68,14 @@ export class ServerService {
 
     try {
       const { data, error } = await this.supabase
-        .from('alliances')
-        .select('*, user_profiles(*), activity_point_rules(*), alliance_activity_settings(*)')
+        .from('servers')
+        .select('*, user_profiles(*), activity_point_rules(*), server_activity_settings(*)')
         .eq('id', serverId)
         .single();
 
       if (error) throw error;
 
-      const { user_profiles, activity_point_rules, alliance_activity_settings, ...server } =
-        data as ServerWithRelations;
+      const { user_profiles, activity_point_rules, server_activity_settings, ...server } = data as ServerWithRelations;
 
       this.serverSignal.set(server as Server);
 
@@ -89,7 +88,7 @@ export class ServerService {
         (a, b) => a.activity_type.localeCompare(b.activity_type) || a.position_min - b.position_min
       );
       this.rulesSignal.set(pointRules);
-      this.settingsSignal.set(alliance_activity_settings ?? []);
+      this.settingsSignal.set(server_activity_settings ?? []);
     } catch (error) {
       console.error('Error loading server settings:', error);
       this.serverSignal.set(null);
@@ -110,7 +109,7 @@ export class ServerService {
     }
 
     try {
-      const { data, error } = await this.supabase.from('alliances').select('*').eq('id', serverId).single();
+      const { data, error } = await this.supabase.from('servers').select('*').eq('id', serverId).single();
 
       if (error) throw error;
       this.serverSignal.set(data);
@@ -134,7 +133,7 @@ export class ServerService {
       const { data, error } = await this.supabase
         .from('user_profiles')
         .select('*')
-        .eq('alliance_id', serverId)
+        .eq('server_id', serverId)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
@@ -152,14 +151,14 @@ export class ServerService {
    */
   async loadRules(): Promise<{ error: Error | null }> {
     const profile = this.authService.userProfile();
-    if (!profile?.alliance_id) {
+    if (!profile?.server_id) {
       return { error: new Error('No server ID') };
     }
 
     const { data, error } = await this.supabase
       .from('activity_point_rules')
       .select('*')
-      .eq('alliance_id', profile.alliance_id)
+      .eq('server_id', profile.server_id)
       .order('activity_type', { ascending: true })
       .order('position_min', { ascending: true });
 
@@ -183,7 +182,7 @@ export class ServerService {
    */
   async createRule(rule: CreatePointRuleRequest): Promise<{ error: Error | null }> {
     const profile = this.authService.userProfile();
-    if (!profile?.alliance_id) {
+    if (!profile?.server_id) {
       return { error: new Error('No server ID') };
     }
 
@@ -198,7 +197,7 @@ export class ServerService {
     }
 
     const { error } = await this.supabase.from('activity_point_rules').insert({
-      alliance_id: profile.alliance_id,
+      server_id: profile.server_id,
       ...rule,
     });
 
@@ -300,14 +299,14 @@ export class ServerService {
    */
   async loadSettings(): Promise<{ error: Error | null }> {
     const profile = this.authService.userProfile();
-    if (!profile?.alliance_id) {
+    if (!profile?.server_id) {
       return { error: new Error('No server ID') };
     }
 
     const { data, error } = await this.supabase
-      .from('alliance_activity_settings')
+      .from('server_activity_settings')
       .select('*')
-      .eq('alliance_id', profile.alliance_id);
+      .eq('server_id', profile.server_id);
 
     if (error) {
       return { error: new Error(error.message) };
@@ -359,19 +358,19 @@ export class ServerService {
    */
   async upsertSetting(request: UpsertActivitySettingsRequest): Promise<{ error: Error | null }> {
     const profile = this.authService.userProfile();
-    if (!profile?.alliance_id) {
+    if (!profile?.server_id) {
       return { error: new Error('No server ID') };
     }
 
-    const { error } = await this.supabase.from('alliance_activity_settings').upsert(
+    const { error } = await this.supabase.from('server_activity_settings').upsert(
       {
-        alliance_id: profile.alliance_id,
+        server_id: profile.server_id,
         activity_type: request.activity_type,
         enabled: request.enabled,
         participation_mode: request.participation_mode,
         participation_points: request.participation_points,
       },
-      { onConflict: 'alliance_id,activity_type' }
+      { onConflict: 'server_id,activity_type' }
     );
 
     if (error) {
@@ -409,7 +408,7 @@ export class ServerService {
       const { data, error } = await this.supabase
         .from('invitation_tokens')
         .insert({
-          alliance_id: serverId,
+          server_id: serverId,
           token: token,
           expires_at: expiresAt.toISOString(),
           created_by: userId,
@@ -460,7 +459,7 @@ export class ServerService {
 
       return {
         valid: true,
-        server: { id: data.alliance_id, name: data.alliance_name } as Server,
+        server: { id: data.server_id, name: data.server_name } as Server,
         error: null,
       };
     } catch (error) {
@@ -484,7 +483,7 @@ export class ServerService {
       const { data, error } = await this.supabase
         .from('invitation_stats')
         .select('*')
-        .eq('alliance_id', serverId)
+        .eq('server_id', serverId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -550,7 +549,7 @@ export class ServerService {
     }
 
     try {
-      const { error } = await this.supabase.from('alliances').update(updates).eq('id', serverId);
+      const { error } = await this.supabase.from('servers').update(updates).eq('id', serverId);
 
       if (error) throw error;
 

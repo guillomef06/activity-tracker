@@ -65,7 +65,7 @@ export class AppHeaderComponent {
     // Load server for any authenticated user who belongs to one
     effect(() => {
       const profile = this.authService.userProfile();
-      if (profile?.alliance_id) {
+      if (profile?.server_id) {
         this.serverService.loadServer();
       }
     });
