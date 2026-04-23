@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "TÜM aktiviteleri silmek istediğinizden emin misiniz? Bu, tüm üyeler için tüm aktivite geçmişini kalıcı olarak silecektir.",
         "deleteAllActivitiesSuccess": "Tüm aktiviteler silindi",
         "deleteAllActivitiesFailed": "Aktiviteler silinemedi"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "Komutanınıza bir mücevher takmanın puan kazancını hesaplayın.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "Komutanlarınız için en iyi at mizacı kombinasyonlarını bulun."
+    "horseTraitsDesc": "Komutanlarınız için en iyi at mizacı kombinasyonlarını bulun.",
+    "mountBreedingTitle": "Binek Yetiştiriciliği Rehberi",
+    "mountBreedingDesc": "Binek yetiştiriciliği için kapsamlı rehber: özellikler, mizaç, kalıtım ve stratejiler."
   },
   "packValue": {
     "title": "Paket Değer Hesaplayıcı",
@@ -719,5 +731,10 @@
       "button": "Sunucuınızı Oluşturun"
     },
     "footer": "Activity Tracker — Daha akıllı oyna, daha güçlü rekabet et."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

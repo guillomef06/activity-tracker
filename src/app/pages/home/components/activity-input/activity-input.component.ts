@@ -17,6 +17,7 @@ import { APP_CONSTANTS } from '@shared/constants/constants';
 import { PointCalculationResult } from '@shared/models';
 import { createFieldErrorSignal } from '@shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@shared/components/loading-button/loading-button.component';
+import { DiscordInviteBannerComponent } from '@app/pages/home/components/discord-invite-banner/discord-invite-banner.component';
 import { getWeekNumberForWeeksAgo, getWeekStart, getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
 
 interface WeekOption {
@@ -38,6 +39,7 @@ interface WeekOption {
     MatSlideToggleModule,
     TranslateModule,
     LoadingButtonComponent,
+    DiscordInviteBannerComponent,
   ],
   templateUrl: './activity-input.component.html',
   styleUrl: './activity-input.component.scss',
@@ -106,6 +108,7 @@ export class ActivityInputComponent {
 
   protected readonly activityTypeError = createFieldErrorSignal(this.activityForm, 'activityType', this.destroyRef);
   protected readonly positionError = createFieldErrorSignal(this.activityForm, 'position', this.destroyRef);
+  protected readonly discordInviteUrl = computed(() => this.serverService.server()?.discord_invite_url ?? null);
 
   protected readonly weekOptions = computed<WeekOption[]>(() => {
     const currentWeekLabel = this.translate.instant('server.retroactive.currentWeek');

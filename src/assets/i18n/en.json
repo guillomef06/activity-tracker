@@ -164,6 +164,16 @@
         "multiplierUpdated": "Season multiplier updated",
         "multiplierFailed": "Failed to update season multiplier"
       },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
+      },
       "dangerZone": {
         "title": "Danger Zone",
         "deleteAllActivities": "Delete all activities",
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "Calculate the score gain from equipping a gem on your commander.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "Find the best horse temperament combinations for your commanders."
+    "horseTraitsDesc": "Find the best horse temperament combinations for your commanders.",
+    "mountBreedingTitle": "Mount Breeding Guide",
+    "mountBreedingDesc": "Complete guide to mount breeding: traits, temperaments, inheritance and strategies."
   },
   "packValue": {
     "title": "Pack Value Calculator",
@@ -719,5 +731,10 @@
       "button": "Create your Server"
     },
     "footer": "Activity Tracker — Play smarter, compete stronger."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

@@ -171,6 +171,16 @@
         "deleteAllActivitiesConfirm": "Apakah Anda yakin ingin menghapus SEMUA aktivitas? Ini akan menghapus secara permanen seluruh riwayat aktivitas semua anggota.",
         "deleteAllActivitiesSuccess": "Semua aktivitas telah dihapus",
         "deleteAllActivitiesFailed": "Gagal menghapus aktivitas"
+      },
+      "discordInvite": {
+        "title": "Discord Invite Link",
+        "subtitle": "Share your community Discord invite with members",
+        "label": "Invite URL",
+        "placeholder": "https://discord.gg/yourserver",
+        "hint": "Members will see a banner inviting them to join",
+        "invalidUrl": "Must be a valid Discord invite URL",
+        "saved": "Discord invite link saved",
+        "saveFailed": "Failed to save Discord invite link"
       }
     },
     "retroactive": {
@@ -392,7 +402,9 @@
   "tools": {
     "gemCalcDesc": "Hitung keuntungan skor dari memasang permata pada komandan Anda.",
     "horseTraitsTitle": "Horse Traits",
-    "horseTraitsDesc": "Temukan kombinasi temperamen kuda terbaik untuk komandan Anda."
+    "horseTraitsDesc": "Temukan kombinasi temperamen kuda terbaik untuk komandan Anda.",
+    "mountBreedingTitle": "Panduan Pembiakan Tunggangan",
+    "mountBreedingDesc": "Panduan lengkap pembiakan tunggangan: sifat, temperamen, pewarisan, dan strategi."
   },
   "packValue": {
     "title": "Kalkulator Nilai Paket",
@@ -719,5 +731,10 @@
       "button": "Buat Server Anda"
     },
     "footer": "Activity Tracker — Bermain lebih cerdas, bersaing lebih kuat."
+  },
+  "discordBanner": {
+    "title": "Have you joined your Discord server yet?",
+    "cta": "Take me there",
+    "dismiss": "Dismiss"
   }
 }

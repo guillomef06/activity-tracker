@@ -17,6 +17,7 @@ describe('ServerOverviewTabComponent', () => {
     id: '1',
     name: 'Test Server',
     tag: 'TST',
+    discord_invite_url: null,
     created_at: new Date().toISOString(),
   };
 
@@ -181,5 +182,53 @@ describe('ServerOverviewTabComponent', () => {
 
   it('should show empty state when no members', () => {
     expect(component['enrichedMembers']().length).toBe(0);
+  });
+
+  // Discord invite form
+  it('should have discordInviteForm with discord_invite_url field', () => {
+    expect(component['discordInviteForm']).toBeDefined();
+    expect(component['discordInviteForm'].get('discord_invite_url')).toBeDefined();
+  });
+
+  it('should patch discordInviteForm when server input has a discord_invite_url', () => {
+    fixture.componentRef.setInput('server', {
+      ...mockServer,
+      discord_invite_url: 'https://discord.gg/abc123',
+    });
+    fixture.detectChanges();
+
+    expect(component['discordInviteForm'].get('discord_invite_url')?.value).toBe('https://discord.gg/abc123');
+  });
+
+  it('should patch discordInviteForm to empty string when discord_invite_url is null', () => {
+    fixture.componentRef.setInput('server', { ...mockServer, discord_invite_url: null });
+    fixture.detectChanges();
+
+    expect(component['discordInviteForm'].get('discord_invite_url')?.value).toBe('');
+  });
+
+  it('should call updateServer with discord_invite_url when saveDiscordInvite is called with a valid URL', async () => {
+    component['discordInviteForm'].patchValue({ discord_invite_url: 'https://discord.gg/abc' });
+
+    await component['saveDiscordInvite']();
+
+    expect(serverService.updateServer).toHaveBeenCalledWith({ discord_invite_url: 'https://discord.gg/abc' });
+  });
+
+  it('should call updateServer with null when saveDiscordInvite is called with empty value', async () => {
+    component['discordInviteForm'].patchValue({ discord_invite_url: '' });
+
+    await component['saveDiscordInvite']();
+
+    expect(serverService.updateServer).toHaveBeenCalledWith({ discord_invite_url: null });
+  });
+
+  it('should not call updateServer when discordInviteForm has an invalid URL', async () => {
+    serverService.updateServer.mockClear();
+    component['discordInviteForm'].patchValue({ discord_invite_url: 'https://notdiscord.com/invite/abc' });
+
+    await component['saveDiscordInvite']();
+
+    expect(serverService.updateServer).not.toHaveBeenCalled();
   });
 });

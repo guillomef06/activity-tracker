@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 15 avril 2026
+**Dernière mise à jour:** 20 avril 2026
 
 ## 📋 Résumé
 
@@ -46,6 +46,11 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - Paramètres d'activités (activation, mode participation, tiebreaker, multiplicateur de semaines)
 - Discord webhooks : envoi de messages vers channels Discord
 - Alliance tag (3 caractères, affiché dans le header)
+- **Lien d'invitation Discord** : admins configurent un lien `discord.gg` ou `discord.com/invite` depuis l'onglet Serveur ; les membres voient un banner dismissible sous le formulaire d'activité
+
+### Banner Discord (membres)
+- `DiscordInviteBannerComponent` : banner dismissible (localStorage) affiché si un lien Discord est configuré
+- Intégré dans `ActivityInputComponent` via computed signal `discordInviteUrl`
 
 ### UI / Design
 - Système de thèmes : Light / Dark / Auto / Glass Light / Glass Dark / High Contrast
