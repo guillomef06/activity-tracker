@@ -4,7 +4,7 @@
 
 export interface DiscordWebhook {
   id: string;
-  alliance_id: string;
+  server_id: string;
   channel_name: string;
   webhook_url: string;
   default_message: string | null;

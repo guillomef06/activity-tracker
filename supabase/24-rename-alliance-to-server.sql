@@ -388,5 +388,39 @@ CREATE POLICY "Admins can manage server discord webhooks"
   );
 
 -- ============================================
+-- 18. UPDATE validate_invitation_token FUNCTION
+-- (defined directly in Supabase, not in prior migrations)
+-- ============================================
+
+DROP FUNCTION IF EXISTS validate_invitation_token(TEXT);
+
+CREATE OR REPLACE FUNCTION validate_invitation_token(p_token TEXT)
+RETURNS json AS $$
+DECLARE
+  v_record RECORD;
+BEGIN
+  SELECT it.expires_at, it.server_id, s.name AS server_name
+  INTO v_record
+  FROM invitation_tokens it
+  JOIN servers s ON s.id = it.server_id
+  WHERE it.token = p_token;
+
+  IF NOT FOUND THEN
+    RETURN json_build_object('valid', false, 'error', 'Invalid invitation token');
+  END IF;
+
+  IF v_record.expires_at < now() THEN
+    RETURN json_build_object('valid', false, 'error', 'Invitation token has expired');
+  END IF;
+
+  RETURN json_build_object(
+    'valid', true,
+    'server_id', v_record.server_id,
+    'server_name', v_record.server_name
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- ============================================
 -- DONE
 -- ============================================

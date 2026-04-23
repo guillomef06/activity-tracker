@@ -12,7 +12,7 @@ const mockProfile: UserProfile = {
   display_name: 'Test User',
   username: 'testuser',
   role: 'member',
-  alliance_id: 'server-1',
+  server_id: 'server-1',
   invitation_token_id: null,
   recovery_question_id: 1,
   created_at: '',

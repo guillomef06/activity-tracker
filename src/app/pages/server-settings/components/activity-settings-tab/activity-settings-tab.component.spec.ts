@@ -119,7 +119,7 @@ describe('ActivitySettingsTabComponent', () => {
     ).set(
       APP_CONSTANTS_TYPES.map(t => ({
         id: t.value,
-        alliance_id: 'a1',
+        server_id: 'a1',
         activity_type: t.value,
         enabled: false,
         participation_mode: false,

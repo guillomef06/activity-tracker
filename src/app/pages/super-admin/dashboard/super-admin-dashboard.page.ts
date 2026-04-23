@@ -41,7 +41,7 @@ export class SuperAdminDashboardPage implements OnInit {
     await this.progressBarService.withProgress(async () => {
       try {
         const [servers, users, activities, invitations] = await Promise.all([
-          this.supabase.client.from('alliances').select('count', { count: 'exact', head: true }),
+          this.supabase.client.from('servers').select('count', { count: 'exact', head: true }),
           this.supabase.client.from('user_profiles').select('count', { count: 'exact', head: true }),
           this.supabase.client.from('activities').select('count', { count: 'exact', head: true }),
           this.supabase.client

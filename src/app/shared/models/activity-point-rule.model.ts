@@ -5,7 +5,7 @@
 
 export interface ActivityPointRule {
   id: string;
-  alliance_id: string;
+  server_id: string;
   activity_type: string;
   position_min: number;
   position_max: number;
