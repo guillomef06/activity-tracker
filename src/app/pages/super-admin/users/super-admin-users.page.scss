@@ -112,7 +112,7 @@
     color: var(--mat-sys-primary);
   }
 
-  .alliance-info {
+  .server-info {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -125,7 +125,7 @@
     }
   }
 
-  .no-alliance {
+  .no-server {
     opacity: 0.5;
     font-style: italic;
   }
