@@ -1,6 +1,6 @@
 # Activity Tracker
 
-Mobile-first Angular application for tracking alliance activity scores with a rolling 6-week system. Multi-alliance, multi-role, deployed on GitHub Pages with Supabase backend.
+Mobile-first Angular application for tracking server activity scores with a rolling 6-week system. Multi-server, multi-role, deployed on GitHub Pages with Supabase backend.
 
 ## Stack
 
@@ -14,8 +14,8 @@ Mobile-first Angular application for tracking alliance activity scores with a ro
 
 | Role | Access |
 |------|--------|
-| `super_admin` | All alliances, all data |
-| `admin` | Own alliance — settings, members, invitations, retroactive entries |
+| `super_admin` | All servers, all data |
+| `admin` | Own server — settings, members, invitations, retroactive entries |
 | `member` | Activity input, own scores |
 
 ## Key Features

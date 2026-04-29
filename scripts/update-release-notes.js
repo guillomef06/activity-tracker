@@ -23,7 +23,7 @@ const today = new Date().toISOString().split('T')[0];
 notes.unshift({
   version: pkg.version,
   date: today,
-  entries: [{ type: 'feature', text: { en: '', fr: '', es: '', it: '' } }],
+  entries: [{ type: 'feature', text: { en: '', fr: '', es: '', it: '', de: '', tr: '', pt: '', el: '', ko: '', hi: '', zh: '', ku: '', ar: '', id: '' } }],
 });
 
 fs.writeFileSync(notesPath, JSON.stringify(notes, null, 2) + '\n');

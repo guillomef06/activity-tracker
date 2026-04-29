@@ -1,0 +1,181 @@
+<div class="mg-admin-container">
+  @if (isLoading()) {
+    <div class="loading-center">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else {
+    <!-- Config section -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>settings</mat-icon>
+        <mat-card-title>{{ 'mg.admin.config.title' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="configForm" class="config-form">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'mg.admin.config.capacity' | translate }}</mat-label>
+            <mat-select formControlName="capacity">
+              <mat-option [value]="10">10</mat-option>
+              <mat-option [value]="50">50</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'mg.admin.config.mode' | translate }}</mat-label>
+            <mat-select formControlName="assignment_mode">
+              <mat-option value="automatic">{{ 'mg.admin.config.modeAutomatic' | translate }}</mat-option>
+              <mat-option value="manual">{{ 'mg.admin.config.modeManual' | translate }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="isSavingConfig() || configForm.invalid"
+          (click)="saveConfig()"
+        >
+          {{ 'mg.admin.config.save' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- No event -->
+    @if (!mgEvent()) {
+      <mat-card class="section-card">
+        <mat-card-content>
+          <p class="empty-state">{{ 'mg.admin.noEvent' | translate }}</p>
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <!-- Event info -->
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>event</mat-icon>
+          <mat-card-title>{{ 'mg.admin.eventTitle' | translate }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ mgEvent()!.start_date | date: 'dd/MM/yyyy' }} – {{ mgEvent()!.end_date | date: 'dd/MM/yyyy' }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-chip class="status-chip status-{{ mgEvent()!.status }}">
+            {{ 'mg.event.' + mgEvent()!.status | translate }}
+          </mat-chip>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Registrations -->
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>how_to_reg</mat-icon>
+          <mat-card-title
+            >{{ 'mg.admin.registrations.title' | translate }} ({{ registrations().length }})</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          @if (registrations().length === 0) {
+            <p class="empty-state">{{ 'mg.admin.registrations.empty' | translate }}</p>
+          } @else {
+            <div class="registration-list">
+              @for (reg of registrations(); track trackByReg($index, reg)) {
+                <div class="list-row">
+                  <mat-icon class="list-icon">person</mat-icon>
+                  <span>{{ reg.user_profiles.display_name }}</span>
+                  <span class="username">{{ reg.user_profiles.username }}</span>
+                </div>
+              }
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Selection -->
+      @if (!isLocked()) {
+        <mat-card class="section-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>groups</mat-icon>
+            <mat-card-title>{{ 'mg.admin.selection.title' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (isAutoMode()) {
+              <!-- Auto mode: generate preview then confirm -->
+              @if (!showPreview()) {
+                <button mat-stroked-button (click)="generatePreview()">
+                  <mat-icon>auto_awesome</mat-icon>
+                  {{ 'mg.admin.selection.generate' | translate }}
+                </button>
+              } @else {
+                <p class="preview-label">{{ 'mg.admin.selection.previewLabel' | translate }}</p>
+                <div class="preview-list">
+                  @for (p of previewPayloads(); track trackByPayload($index, p)) {
+                    <div class="list-row" [class.ffa-row]="p.selection_type === 'ffa'">
+                      <span class="rank">{{ p.rank }}</span>
+                      <span>
+                        @if (p.selection_type === 'ffa') {
+                          {{ 'mg.registration.ffaSlot' | translate }}
+                        } @else {
+                          {{ getDisplayName(p.user_id) }}
+                        }
+                      </span>
+                      <mat-chip [class]="p.selection_type">{{ p.selection_type }}</mat-chip>
+                    </div>
+                  }
+                </div>
+                <div class="preview-actions">
+                  <button mat-flat-button color="primary" [disabled]="isGenerating()" (click)="confirmAutoSelection()">
+                    {{ 'mg.admin.selection.confirm' | translate }}
+                  </button>
+                  <button mat-stroked-button (click)="cancelPreview()">
+                    {{ 'mg.admin.selection.cancel' | translate }}
+                  </button>
+                </div>
+              }
+            }
+
+            <!-- Current saved selection -->
+            @if (currentSelection().length > 0) {
+              <mat-divider class="section-divider" />
+              <p class="section-label">{{ 'mg.admin.selection.current' | translate }}</p>
+              <div class="selection-list">
+                @for (slot of selectedPlayers(); track trackBySel($index, slot)) {
+                  <div class="list-row">
+                    <span class="rank">{{ slot.rank }}</span>
+                    <span>{{ slot.user_profiles?.display_name }}</span>
+                  </div>
+                }
+                @if (ffaCount() > 0) {
+                  <p class="ffa-info">{{ 'mg.registration.ffaSlots' | translate: { count: ffaCount() } }}</p>
+                }
+              </div>
+            }
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            @if (canPublish()) {
+              <button
+                mat-flat-button
+                color="accent"
+                [disabled]="isPublishing() || currentSelection().length === 0"
+                (click)="publishSelection()"
+              >
+                <mat-icon>publish</mat-icon>
+                {{ 'mg.admin.selection.publish' | translate }}
+              </button>
+            }
+          </mat-card-actions>
+        </mat-card>
+      } @else {
+        <!-- Locked state -->
+        <mat-card class="section-card">
+          <mat-card-content>
+            <div class="locked-state">
+              <mat-icon>lock</mat-icon>
+              <p>{{ 'mg.admin.selectionLocked' | translate }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    }
+  }
+</div>

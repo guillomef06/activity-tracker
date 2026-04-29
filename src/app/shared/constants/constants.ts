@@ -46,13 +46,19 @@ export const APP_CONSTANTS = {
       value: 'golden expedition',
       labelKey: 'activities.types.golden-expedition',
       points: 5,
-      availableWeeks: [1, 3],
+      availableWeeks: [1],
     },
     {
-      value: 'stellar glory',
-      labelKey: 'activities.types.stellar-glory',
+      value: 'primordial conflict',
+      labelKey: 'activities.types.primordial-conflict',
       points: 5,
-      availableWeeks: [6],
+      availableWeeks: [3],
+    },
+    {
+      value: 'stellar dynasty',
+      labelKey: 'activities.types.stellar-dynasty',
+      points: 5,
+      availableWeeks: [1, 2, 3, 4, 5, 6],
     },
   ] as ActivityType[],
 } as const;

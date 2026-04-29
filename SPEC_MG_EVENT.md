@@ -33,9 +33,9 @@ For each MG event, the following fixed timeline applies relative to its start da
 
 ---
 
-## Alliance Configuration
+## Server Configuration
 
-Each alliance can configure:
+Each server can configure:
 
 | Setting | Values | Description |
 |---------|--------|-------------|
@@ -46,9 +46,9 @@ Each alliance can configure:
 
 ## Registration Rules
 
-- **Who can register:** any member of the alliance
+- **Who can register:** any member of the server
 - **Window:** from registration open date to registration close date
-- **Withdrawal:** a player can unregister at any point during the open window
+- **Withdrawal:** a player can unregister at any point during the open window — the row is hard deleted, re-registration is allowed
 - **No status shown to players during window** — just "registered" or "not registered"
 
 ---
@@ -57,10 +57,10 @@ Each alliance can configure:
 
 ### Automatic mode
 - After registration closes, the system takes the **top N registered players** ranked by the current leaderboard (rolling 6-week score)
-- N = alliance `capacity`
+- N = server `capacity`
 
 ### Manual mode
-- After registration closes, alliance admins manually pick up to N players from the registered list
+- After registration closes, server admins manually pick up to N players from the registered list
 - Selection is saved but not visible to players until published
 
 ### FFA (Free-For-All) slots
@@ -74,7 +74,7 @@ Each alliance can configure:
 
 - Admins **publish** the selection (manual action, available from D−3 at the earliest)
 - In automatic mode, the system can auto-generate the selection — admin still confirms before publishing
-- Once published, all alliance members can see:
+- Once published, all server members can see:
   - The list of selected players (ranked)
   - The number of FFA slots remaining (if any)
 
@@ -103,7 +103,7 @@ upcoming → registration_open → registration_closed → selection_published �
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | uuid | PK |
-| `alliance_id` | uuid | FK → alliances |
+| `server_id` | uuid | FK → servers |
 | `start_date` | date | Monday of MG week |
 | `end_date` | date | Sunday of MG week |
 | `registration_open_at` | date | D−7 |
@@ -112,10 +112,10 @@ upcoming → registration_open → registration_closed → selection_published �
 | `selection_published_at` | timestamp \| null | When admin published |
 | `created_at` | timestamp | |
 
-### `alliance_mg_config`
+### `server_mg_config`
 | Column | Type | Description |
 |--------|------|-------------|
-| `alliance_id` | uuid | PK, FK → alliances |
+| `server_id` | uuid | PK, FK → servers |
 | `capacity` | smallint | 10 or 50 |
 | `assignment_mode` | enum | `automatic` \| `manual` |
 
@@ -126,9 +126,8 @@ upcoming → registration_open → registration_closed → selection_published �
 | `mg_event_id` | uuid | FK → mg_events |
 | `user_id` | uuid | FK → user_profiles |
 | `registered_at` | timestamp | |
-| `unregistered_at` | timestamp \| null | Set on withdrawal |
 
-> A registration is considered **active** when `unregistered_at IS NULL`.
+> `UNIQUE(mg_event_id, user_id)`. Unregistering = hard DELETE. Re-registration = new INSERT.
 
 ### `mg_selections`
 | Column | Type | Description |
@@ -144,19 +143,35 @@ upcoming → registration_open → registration_closed → selection_published �
 
 ## Features to Build
 
-### Admin panel (alliance-settings or dedicated MG admin tab)
+### Admin panel (server-settings or dedicated MG admin tab)
 
-1. **MG config** — set `capacity` (10/50) and `assignment_mode` per alliance
+1. **MG config** — set `capacity` (10/50) and `assignment_mode` per server
 2. **View registrations** — list of active registrations for the next MG, with leaderboard rank shown
-3. **Generate selection** (auto mode) — compute top N from leaderboard; preview before confirming
-4. **Manual selection** (manual mode) — pick players from registered list via UI
+3. **Generate selection** (auto mode) — compute top N from leaderboard; preview before confirming. Admins can also add non-registered players to unfilled slots.
+4. **Manual selection** (manual mode) — pick players from registered or unregistered members; order determined by admin
 5. **Publish selection** — confirm and make selection visible to all members
 
 ### Player-facing
 
-1. **Register / Unregister** — visible during `registration_open` window with countdown to deadline
-2. **View selection** — visible after `selection_published`; shows selected players + FFA slots count
-3. **My status** — am I registered? am I selected?
+Location: **existing "Mightiest Governor" tab** on the home page (`home.page.html`, 3rd tab).
+
+The tab already contains a static reference table (`MightiestGovernorComponent`) showing rank / weekly target / cost. The dynamic event section is added **below** the static table in the same tab.
+
+Dynamic section behavior by event status:
+
+| Status | What the player sees |
+|--------|----------------------|
+| `upcoming` | Nothing (no event card shown) |
+| `registration_open` | Register / Unregister button + registration deadline date (no countdown) |
+| `registration_closed` | Static message: "La liste sera bientôt publiée" — no action |
+| `selection_published` | Selected players list (ranked) + FFA slots count + own status |
+| `ongoing` | Selected players list + own status (locked) |
+| `finished` | Read-only result — selected players list |
+
+1. **Register / Unregister** — visible during `registration_open`; displays the registration deadline date (no countdown timer)
+2. **Waiting state** — between `registration_closed` and `selection_published`: static message, no action
+3. **View selection** — visible from `selection_published`; shows selected players ranked + FFA slots count
+4. **My status** — am I registered? am I selected? (shown as a badge/chip on the event card)
 
 ### System / Background — pg_cron jobs
 
@@ -164,8 +179,8 @@ upcoming → registration_open → registration_closed → selection_published �
 
 | Job name | Expression | Action |
 |---|---|---|
-| `mg-create-events` | `0 0 * * 1` | Every Monday 00:00 UTC — creates MG events for alliances where this Monday = D−7 (rest week). Inserts with `status = registration_open`. Condition: `(current_monday - reference_start_date) / 7 % 2 = 1` |
-| `mg-close-registrations` | `59 23 * * 4` | Every Thursday 23:59 UTC — transitions `registration_open` → `registration_closed` for events where `registration_close_at <= NOW()` |
+| `mg-create-events` | `0 0 * * 1` | Every Monday 00:00 UTC — creates MG events for servers where this Monday = D−7 (rest week). Inserts with `status = registration_open`. Condition: `(current_monday - reference_start_date) / 7 % 2 = 1` |
+| `mg-close-registrations` | `59 23 * * 4` | Every Thursday 23:59 UTC — transitions `registration_open` → `registration_closed` for events where `registration_close_at <= NOW()`. **Does not generate selections** — admins trigger that manually. |
 | `mg-start-events` | `0 0 * * 1` | Every Monday 00:00 UTC — transitions `selection_published` → `ongoing` for events where `start_date = CURRENT_DATE` |
 | `mg-end-events` | `59 23 * * 0` | Every Sunday 23:59 UTC — transitions `ongoing` → `finished` for events where `end_date = CURRENT_DATE` |
 
@@ -177,8 +192,18 @@ upcoming → registration_open → registration_closed → selection_published �
 
 | # | Decision |
 |---|----------|
-| 1 | Registration cannot be re-opened after closing. However, admins can **manually add players** to unfilled slots at any point before the event starts. |
-| 2 | The selection **can be edited after publication** — if a selected player drops out, an admin can replace them (manual override). |
-| 3 | The MG schedule is **per-alliance** — each alliance manages its own MG calendar independently. |
+| 1 | Registration cannot be re-opened after closing. However, admins can **manually add any server member** (registered or not) to unfilled slots at any point before `ongoing`. |
+| 2 | The selection **can be edited after publication** up to `ongoing`. Once the event is `ongoing`, the selection is **locked** — no further changes. |
+| 3 | The MG schedule is **per-server** — each server manages its own MG calendar independently. |
 | 4 | **No notifications** — real-time (Supabase) and push notification systems are not yet implemented; out of scope for this feature. |
 | 5 | **History is natural** — published selections serve as the historical record of who participated in each MG. No separate history model needed. |
+| 6 | **Any admin** of the server can manage selections (generate, publish, edit) — not restricted to the server owner. |
+| 7 | **`rank` in `mg_selections`** = position within the selection list (1-based, 1..N). In auto mode, determined by leaderboard score. In manual mode, determined by admin ordering. Not the leaderboard rank. |
+| 8 | **FFA slots** are informative only — displayed as a count after publication, no in-app reservation mechanism. |
+| 9 | **0 registered players** = 100% FFA. Admins can publish a selection with 0 `selected` rows and N `ffa` rows. Publication is not blocked. |
+| 10 | **All dates/times are UTC.** The cron Thursday 23:59 UTC may correspond to Friday local time for some timezones — this is expected and documented behavior. |
+| 11 | **Cron only changes status** — the `mg-close-registrations` cron does not generate selections. Selection generation is always admin-triggered (auto preview + confirm, or manual pick). |
+| 12 | **Registrations are hard deleted on withdrawal** — no soft delete, no `unregistered_at`. `UNIQUE(mg_event_id, user_id)` enforced at DB level. Re-registration is allowed (new INSERT). |
+| 13 | **Re-generating auto selection** (before publication) = UPSERT on `mg_selections` — existing rows are updated in place, no DELETE. |
+| 14 | **No countdown timer** — the player-facing UI shows the registration deadline as a date, not a live countdown. Simpler and sufficient. |
+| 15 | **Waiting message** — between `registration_closed` and `selection_published`, the player view shows a static informational message; no interactive elements. |

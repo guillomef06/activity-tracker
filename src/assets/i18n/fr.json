@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "Suivez les activités et consultez les scores sur 6 semaines"
+    "subtitle": "Suivez les activités et consultez vos scores glissants"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "Échec de la configuration. Veuillez réessayer.",
       "superAdminExists": "Le super administrateur existe déjà",
       "serverCreationFailed": "Échec de la création du serveur",
-      "invalidToken": "Jeton d'invitation invalide ou expiré"
+      "invalidToken": "Jeton d'invitation invalide ou expiré",
+      "passwordPattern": "Le mot de passe doit contenir au moins une lettre et un chiffre"
     },
     "recovery": {
       "forgotPassword": "Mot de passe oublié ?"
@@ -96,7 +97,8 @@
         "activitySettings": "Paramètres des Activités",
         "retroactive": "Activités Rétroactives",
         "importExcel": "Import Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "Évènement MG"
       },
       "serverInfo": "Informations du serveur",
       "serverName": "Nom du serveur",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "Ajouter une activité rétroactive",
-      "description": "En tant qu'admin, vous pouvez ajouter des activités pour les membres du serveur pour les 6 dernières semaines. Sélectionnez un membre, choisissez une semaine et entrez les détails de l'activité.",
+      "description": "En tant qu'admin, vous pouvez ajouter des activités pour les membres du serveur pour les dernières semaines. Sélectionnez un membre, choisissez une semaine et entrez les détails de l'activité.",
       "selectMember": "Sélectionner un membre",
       "memberHint": "Choisissez le membre du serveur pour lequel vous souhaitez ajouter une activité",
       "selectWeek": "Sélectionner la Semaine",
@@ -273,6 +275,8 @@
       "desolate-desert": "Désert Désolé",
       "golden-expedition": "Expédition Dorée",
       "stellar-glory": "Gloire Stellaire",
+      "stellar-dynasty": "Dynastie Stellaire",
+      "primordial-conflict": "Conflit Primordial",
       "legion": "Bataille de l'Aube / Merveilles"
     }
   },
@@ -449,6 +453,71 @@
       "refinedIron": "Fer raffiné",
       "goldenKey": "Clé dorée",
       "torchOfEnlightenment": "Torche de l'Éveil"
+    }
+  },
+  "mg": {
+    "event": {
+      "title": "Évènement Mightiest Governor",
+      "upcoming": "À venir",
+      "registration_open": "Inscriptions ouvertes",
+      "registration_closed": "Inscriptions fermées",
+      "selection_published": "Sélection publiée",
+      "ongoing": "Évènement en cours",
+      "finished": "Terminé",
+      "deadlineLabel": "Date limite d'inscription :",
+      "waitingMessage": "La liste des sélectionnés sera bientôt publiée."
+    },
+    "registration": {
+      "register": "S'inscrire",
+      "unregister": "Se désinscrire",
+      "registeredBadge": "Inscrit",
+      "selectedBadge": "Sélectionné",
+      "ffaSlots": "{{ count }} place(s) FFA disponible(s)",
+      "ffaSlot": "Place FFA",
+      "selectionTitle": "Joueurs sélectionnés",
+      "noSelection": "Aucune sélection publiée.",
+      "fullFfaTitle": "Full FFA",
+      "fullFfaDescription": "Aucune sélection n'a été publiée — cet événement est ouvert à tous les joueurs.",
+      "unknownPlayer": "Joueur inconnu",
+      "registerSuccess": "Inscription confirmée.",
+      "registerError": "Échec de l'inscription. Veuillez réessayer.",
+      "unregisterSuccess": "Vous avez été désinscrit.",
+      "unregisterError": "Échec de la désinscription. Veuillez réessayer."
+    },
+    "admin": {
+      "title": "Administration MG Event",
+      "loadError": "Impossible de charger les données MG.",
+      "noEvent": "Aucun évènement MG à venir pour ce serveur.",
+      "eventTitle": "Évènement en cours",
+      "selectionLocked": "La sélection est verrouillée — l'évènement est en cours.",
+      "config": {
+        "title": "Configuration du serveur",
+        "capacity": "Capacité",
+        "mode": "Mode de sélection",
+        "modeAutomatic": "Automatique",
+        "modeManual": "Manuel",
+        "save": "Enregistrer",
+        "saved": "Configuration enregistrée."
+      },
+      "configSaved": "Configuration enregistrée.",
+      "configSaveError": "Échec de l'enregistrement de la configuration.",
+      "registrations": {
+        "title": "Inscriptions",
+        "empty": "Aucune inscription pour le moment."
+      },
+      "selection": {
+        "title": "Sélection",
+        "generate": "Générer la sélection automatique",
+        "previewLabel": "Aperçu — confirmez pour enregistrer :",
+        "confirm": "Confirmer",
+        "cancel": "Annuler",
+        "publish": "Publier la sélection",
+        "current": "Sélection actuelle"
+      },
+      "selectionSaved": "Sélection enregistrée.",
+      "selectionSaveError": "Échec de l'enregistrement de la sélection.",
+      "selectionPublished": "Sélection publiée avec succès.",
+      "publishError": "Échec de la publication de la sélection."
     }
   },
   "mightiestGovernor": {
@@ -706,7 +775,7 @@
       },
       "step3": {
         "title": "Grimpez dans les Classements",
-        "description": "Un classement glissant sur 6 semaines entretient la compétition et récompense la régularité plutôt que les coups d'éclat isolés."
+        "description": "Un classement glissant entretient la compétition et récompense la régularité plutôt que les coups d'éclat isolés."
       }
     },
     "benefits": {

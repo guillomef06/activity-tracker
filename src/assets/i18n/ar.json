@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "تتبع الأنشطة وعرض نقاط الأسابيع الستة المتداولة"
+    "subtitle": "تتبع الأنشطة وعرض نقاط الأسابيع المتداولة"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "فشل الإعداد. يرجى المحاولة مرة أخرى.",
       "superAdminExists": "المسؤول الرئيسي موجود بالفعل",
       "serverCreationFailed": "فشل إنشاء الخادم",
-      "invalidToken": "رمز الدعوة غير صالح أو منتهي الصلاحية"
+      "invalidToken": "رمز الدعوة غير صالح أو منتهي الصلاحية",
+      "passwordPattern": "يجب أن تحتوي كلمة المرور على حرف واحد ورقم واحد على الأقل"
     },
     "recovery": {
       "forgotPassword": "نسيت كلمة المرور؟"
@@ -96,7 +97,8 @@
         "activitySettings": "إعدادات الأنشطة",
         "retroactive": "الأنشطة بأثر رجعي",
         "importExcel": "استيراد Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "حدث MG"
       },
       "serverInfo": "معلومات الخادم",
       "serverName": "اسم الخادم",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "إضافة نشاط بأثر رجعي",
-      "description": "بوصفك مسؤولاً، يمكنك إضافة أنشطة لأعضاء الخادم للأسابيع الستة الماضية. اختر عضواً، واختر أسبوعاً، وأدخل تفاصيل نشاطه.",
+      "description": "بوصفك مسؤولاً، يمكنك إضافة أنشطة لأعضاء الخادم للأسابيع الماضية. اختر عضواً، واختر أسبوعاً، وأدخل تفاصيل نشاطه.",
       "selectMember": "اختر عضواً",
       "memberHint": "اختر عضو الخادم الذي تريد إضافة نشاط له",
       "selectWeek": "اختر الأسبوع",
@@ -273,6 +275,8 @@
       "desolate-desert": "الصحراء القاحلة",
       "golden-expedition": "البعثة الذهبية",
       "stellar-glory": "المجد النجمي",
+      "stellar-dynasty": "الأسرة النجمية",
+      "primordial-conflict": "الصراع الأزلي",
       "legion": "معركة الفجر / العجائب"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "ارتقِ في التصنيفات",
-        "description": "لوحة المتصدرين المتداولة لمدة 6 أسابيع تُبقي المنافسة منتعشة وتكافئ الاتساق على الانفجارات الفردية."
+        "description": "لوحة المتصدرين المتداولة تُبقي المنافسة منتعشة وتكافئ الاتساق على الانفجارات الفردية."
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "mg": {
+    "event": {
+      "title": "حدث أقوى محافظ",
+      "upcoming": "قريباً",
+      "registration_open": "التسجيل مفتوح",
+      "registration_closed": "التسجيل مغلق",
+      "selection_published": "القائمة منشورة",
+      "ongoing": "الحدث جارٍ",
+      "finished": "منتهي",
+      "deadlineLabel": "آخر موعد للتسجيل:",
+      "waitingMessage": "ستُنشر قائمة المختارين قريباً."
+    },
+    "registration": {
+      "register": "تسجيل",
+      "unregister": "إلغاء التسجيل",
+      "registeredBadge": "مسجّل",
+      "selectedBadge": "مختار",
+      "ffaSlots": "{{ count }} مقعد/مقاعد FFA متاحة",
+      "ffaSlot": "مقعد FFA",
+      "selectionTitle": "اللاعبون المختارون",
+      "noSelection": "لم تُنشر أي قائمة بعد.",
+      "unknownPlayer": "لاعب مجهول",
+      "registerSuccess": "تم تأكيد التسجيل.",
+      "registerError": "فشل التسجيل. يرجى المحاولة مجدداً.",
+      "unregisterSuccess": "تم إلغاء تسجيلك.",
+      "unregisterError": "فشل إلغاء التسجيل. يرجى المحاولة مجدداً.",
+      "fullFfaTitle": "FFA كامل",
+      "fullFfaDescription": "لم يتم نشر أي تحديد — هذا الحدث مفتوح لجميع اللاعبين."
+    },
+    "admin": {
+      "title": "إدارة حدث MG",
+      "loadError": "تعذّر تحميل بيانات MG.",
+      "noEvent": "لا يوجد حدث MG قادم لهذا الخادم.",
+      "eventTitle": "الحدث الحالي",
+      "selectionLocked": "القائمة مقفلة — الحدث جارٍ.",
+      "configSaved": "تم حفظ الإعدادات.",
+      "configSaveError": "فشل حفظ الإعدادات.",
+      "selectionSaved": "تم حفظ الاختيار.",
+      "selectionSaveError": "فشل حفظ الاختيار.",
+      "selectionPublished": "تم نشر القائمة بنجاح.",
+      "publishError": "فشل النشر.",
+      "config": {
+        "title": "إعدادات الخادم",
+        "capacity": "الطاقة الاستيعابية",
+        "mode": "وضع الاختيار",
+        "modeAutomatic": "تلقائي",
+        "modeManual": "يدوي",
+        "save": "حفظ",
+        "saved": "تم حفظ الإعدادات."
+      },
+      "registrations": {
+        "title": "التسجيلات",
+        "empty": "لا توجد تسجيلات حتى الآن."
+      },
+      "selection": {
+        "title": "الاختيار",
+        "generate": "إنشاء اختيار تلقائي",
+        "previewLabel": "معاينة — تأكيد للحفظ:",
+        "confirm": "تأكيد",
+        "cancel": "إلغاء",
+        "publish": "نشر القائمة",
+        "current": "القائمة الحالية"
+      }
+    }
   }
 }

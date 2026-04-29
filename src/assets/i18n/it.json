@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "Traccia le attività e visualizza i punteggi delle ultime 6 settimane"
+    "subtitle": "Traccia le attività e visualizza i punteggi a classifica rotante"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "Configurazione non riuscita. Riprova.",
       "superAdminExists": "Il super amministratore esiste già",
       "serverCreationFailed": "Creazione del server non riuscita",
-      "invalidToken": "Token di invito non valido o scaduto"
+      "invalidToken": "Token di invito non valido o scaduto",
+      "passwordPattern": "La password deve contenere almeno una lettera e un numero"
     },
     "recovery": {
       "forgotPassword": "Password dimenticata?"
@@ -96,7 +97,8 @@
         "activitySettings": "Impostazioni Attività",
         "retroactive": "Attività Retroattive",
         "importExcel": "Importa Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "Evento MG"
       },
       "serverInfo": "Informazioni Server",
       "serverName": "Nome Server",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "Aggiungi attività retroattiva",
-      "description": "Come amministratore, puoi aggiungere attività per i membri del server delle ultime 6 settimane. Seleziona un membro, scegli una settimana e inserisci i dettagli dell'attività.",
+      "description": "Come amministratore, puoi aggiungere attività per i membri del server delle ultime settimane. Seleziona un membro, scegli una settimana e inserisci i dettagli dell'attività.",
       "selectMember": "Seleziona membro",
       "memberHint": "Scegli il membro del server per cui vuoi aggiungere un'attività",
       "selectWeek": "Seleziona Settimana",
@@ -273,6 +275,8 @@
       "desolate-desert": "Deserto Desolato",
       "golden-expedition": "Spedizione Dorata",
       "stellar-glory": "Gloria Stellare",
+      "stellar-dynasty": "Dinastia Stellare",
+      "primordial-conflict": "Conflitto Primordiale",
       "legion": "Battaglia dell'Alba / Meraviglie"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "Scala le Classifiche",
-        "description": "Una classifica rotante di 6 settimane mantiene viva la competizione e premia la regolarità rispetto ai picchi isolati."
+        "description": "Una classifica rotante mantiene viva la competizione e premia la regolarità rispetto ai picchi isolati."
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "Ti sei unito al server Discord?",
     "cta": "Portami lì",
     "dismiss": "Ignora"
+  },
+  "mg": {
+    "event": {
+      "title": "Evento Mightiest Governor",
+      "upcoming": "In arrivo",
+      "registration_open": "Iscrizioni aperte",
+      "registration_closed": "Iscrizioni chiuse",
+      "selection_published": "Selezione pubblicata",
+      "ongoing": "Evento in corso",
+      "finished": "Terminato",
+      "deadlineLabel": "Scadenza iscrizioni:",
+      "waitingMessage": "La lista dei selezionati sarà pubblicata a breve."
+    },
+    "registration": {
+      "register": "Iscriviti",
+      "unregister": "Cancella iscrizione",
+      "registeredBadge": "Iscritto",
+      "selectedBadge": "Selezionato",
+      "ffaSlots": "{{ count }} posto/i FFA disponibile/i",
+      "ffaSlot": "Posto FFA",
+      "selectionTitle": "Giocatori selezionati",
+      "noSelection": "Nessuna selezione pubblicata.",
+      "unknownPlayer": "Giocatore sconosciuto",
+      "registerSuccess": "Iscrizione confermata.",
+      "registerError": "Iscrizione fallita. Riprova.",
+      "unregisterSuccess": "Iscrizione annullata.",
+      "unregisterError": "Annullamento iscrizione fallito. Riprova.",
+      "fullFfaTitle": "FFA Totale",
+      "fullFfaDescription": "Nessuna selezione è stata pubblicata — questo evento è aperto a tutti i giocatori."
+    },
+    "admin": {
+      "title": "Amministrazione Evento MG",
+      "loadError": "Impossibile caricare i dati MG.",
+      "noEvent": "Nessun evento MG imminente per questo server.",
+      "eventTitle": "Evento corrente",
+      "selectionLocked": "La selezione è bloccata — l'evento è in corso.",
+      "configSaved": "Configurazione salvata.",
+      "configSaveError": "Impossibile salvare la configurazione.",
+      "selectionSaved": "Selezione salvata.",
+      "selectionSaveError": "Impossibile salvare la selezione.",
+      "selectionPublished": "Selezione pubblicata con successo.",
+      "publishError": "Pubblicazione fallita.",
+      "config": {
+        "title": "Configurazione server",
+        "capacity": "Capacità",
+        "mode": "Modalità selezione",
+        "modeAutomatic": "Automatica",
+        "modeManual": "Manuale",
+        "save": "Salva",
+        "saved": "Configurazione salvata."
+      },
+      "registrations": {
+        "title": "Iscrizioni",
+        "empty": "Nessuna iscrizione al momento."
+      },
+      "selection": {
+        "title": "Selezione",
+        "generate": "Genera selezione automatica",
+        "previewLabel": "Anteprima — conferma per salvare:",
+        "confirm": "Conferma",
+        "cancel": "Annulla",
+        "publish": "Pubblica selezione",
+        "current": "Selezione corrente"
+      }
+    }
   }
 }

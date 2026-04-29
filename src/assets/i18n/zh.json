@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "追踪活动并查看6周滚动积分"
+    "subtitle": "追踪活动并查看滚动积分"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "设置失败，请重试。",
       "superAdminExists": "超级管理员已存在",
       "serverCreationFailed": "创建服务器失败",
-      "invalidToken": "邀请令牌无效或已过期"
+      "invalidToken": "邀请令牌无效或已过期",
+      "passwordPattern": "密码必须包含至少一个字母和一个数字"
     },
     "recovery": {
       "forgotPassword": "忘记密码？"
@@ -96,7 +97,8 @@
         "activitySettings": "活动设置",
         "retroactive": "补录活动",
         "importExcel": "导入Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "MG 赛事"
       },
       "serverInfo": "服务器信息",
       "serverName": "服务器名称",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "添加补录活动",
-      "description": "作为管理员，您可以为服务器成员补录过去6周的活动。选择成员、选择周次，然后输入活动详情。",
+      "description": "作为管理员，您可以为服务器成员补录近几周的活动。选择成员、选择周次，然后输入活动详情。",
       "selectMember": "选择成员",
       "memberHint": "选择要为其添加活动的服务器成员",
       "selectWeek": "选择周次",
@@ -273,6 +275,8 @@
       "desolate-desert": "荒芜沙漠",
       "golden-expedition": "黄金远征",
       "stellar-glory": "星耀荣光",
+      "stellar-dynasty": "星耀王朝",
+      "primordial-conflict": "太古纷争",
       "legion": "黎明之战 / 奇观"
     }
   },
@@ -704,7 +708,7 @@
       },
       "step3": {
         "title": "攀登排名",
-        "description": "6周滚动排行榜保持竞争新鲜感，奖励持续稳定而非一时爆发。"
+        "description": "滚动排行榜保持竞争新鲜感，奖励持续稳定而非一时爆发。"
       }
     },
     "benefits": {
@@ -734,5 +738,70 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "mg": {
+    "event": {
+      "title": "最强总督赛事",
+      "upcoming": "即将开始",
+      "registration_open": "报名开放",
+      "registration_closed": "报名截止",
+      "selection_published": "名单已公布",
+      "ongoing": "赛事进行中",
+      "finished": "已结束",
+      "deadlineLabel": "报名截止日期：",
+      "waitingMessage": "入选名单即将公布，请耐心等待。"
+    },
+    "registration": {
+      "register": "报名",
+      "unregister": "取消报名",
+      "registeredBadge": "已报名",
+      "selectedBadge": "已入选",
+      "ffaSlots": "还有 {{ count }} 个 FFA 名额",
+      "ffaSlot": "FFA 名额",
+      "selectionTitle": "入选玩家",
+      "noSelection": "暂无已公布的名单。",
+      "unknownPlayer": "未知玩家",
+      "registerSuccess": "报名成功。",
+      "registerError": "报名失败，请重试。",
+      "unregisterSuccess": "已取消报名。",
+      "unregisterError": "取消报名失败，请重试。",
+      "fullFfaTitle": "完全FFA",
+      "fullFfaDescription": "未发布任何选拔名单 — 本活动对所有玩家开放。"
+    },
+    "admin": {
+      "title": "MG 赛事管理",
+      "loadError": "无法加载 MG 数据。",
+      "noEvent": "该服务器暂无即将举行的 MG 赛事。",
+      "eventTitle": "当前赛事",
+      "selectionLocked": "名单已锁定——赛事正在进行中。",
+      "configSaved": "配置已保存。",
+      "configSaveError": "配置保存失败。",
+      "selectionSaved": "名单已保存。",
+      "selectionSaveError": "名单保存失败。",
+      "selectionPublished": "名单已成功公布。",
+      "publishError": "公布失败。",
+      "config": {
+        "title": "服务器配置",
+        "capacity": "容量",
+        "mode": "选拔方式",
+        "modeAutomatic": "自动",
+        "modeManual": "手动",
+        "save": "保存",
+        "saved": "配置已保存。"
+      },
+      "registrations": {
+        "title": "报名情况",
+        "empty": "暂无报名。"
+      },
+      "selection": {
+        "title": "入选名单",
+        "generate": "生成自动名单",
+        "previewLabel": "预览——确认以保存：",
+        "confirm": "确认",
+        "cancel": "取消",
+        "publish": "公布名单",
+        "current": "当前名单"
+      }
+    }
   }
 }

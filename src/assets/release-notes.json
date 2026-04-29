@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.3.0",
+    "date": "2026-04-29",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Mightiest Governor — new dedicated section on the home page: view the rank table with weekly targets and point costs per slot, register for the ongoing event during the registration window, and consult the published player selection",
+          "fr": "Gouverneur Suprême — nouvelle section dédiée sur la page d'accueil : consultez le tableau des rangs avec les objectifs hebdomadaires et les coûts en points par slot, inscrivez-vous à l'événement en cours pendant la période d'inscription, et consultez la sélection des joueurs publiée",
+          "es": "Gobernador Supremo — nueva sección dedicada en la página de inicio: consulta la tabla de rangos con objetivos semanales y costos en puntos por slot, regístrate para el evento en curso durante el período de inscripción y consulta la selección de jugadores publicada",
+          "it": "Governatore Supremo — nuova sezione dedicata nella home page: visualizza la tabella dei ranghi con obiettivi settimanali e costi in punti per slot, registrati per l'evento in corso durante il periodo di iscrizione e consulta la selezione dei giocatori pubblicata",
+          "de": "Mächtigster Gouverneur — neuer Bereich auf der Startseite: Rangtabelle mit Wochenzielen und Punktkosten pro Slot anzeigen, während des Anmeldezeitraums für das laufende Event anmelden und die veröffentlichte Spielerauswahl einsehen",
+          "tr": "En Güçlü Vali — ana sayfada yeni özel bölüm: haftalık hedefler ve slot başına puan maliyetlerini içeren sıralama tablosunu görüntüleyin, kayıt süresi boyunca devam eden etkinliğe kaydolun ve yayımlanan oyuncu seçimini inceleyin",
+          "pt": "Governador Supremo — nova seção dedicada na página inicial: consulte a tabela de classificações com metas semanais e custos em pontos por slot, inscreva-se no evento em curso durante o período de inscrição e consulte a seleção de jogadores publicada",
+          "el": "Ισχυρότερος Κυβερνήτης — νέα αποκλειστική ενότητα στην αρχική σελίδα: δείτε τον πίνακα κατάταξης με εβδομαδιαίους στόχους και κόστος πόντων ανά θέση, εγγραφείτε στο τρέχον γεγονός κατά την περίοδο εγγραφής και δείτε τη δημοσιευμένη επιλογή παικτών",
+          "ko": "가장 강력한 총독 — 홈 페이지의 새로운 전용 섹션: 주간 목표 및 슬롯당 포인트 비용이 포함된 순위 표를 확인하고, 등록 기간 중 진행 중인 이벤트에 참가 신청하고, 공개된 플레이어 선발 목록을 확인하세요",
+          "hi": "सर्वशक्तिमान गवर्नर — होम पेज पर नया समर्पित अनुभाग: साप्ताहिक लक्ष्य और प्रति स्लॉट पॉइंट लागत के साथ रैंक तालिका देखें, पंजीकरण अवधि के दौरान चल रहे इवेंट के लिए रजिस्टर करें और प्रकाशित खिलाड़ी चयन देखें",
+          "zh": "最强总督 — 主页新增专属版块：查看包含每个名额周目标和积分消耗的排名表，在报名期间注册参加当前赛事，并查看已发布的玩家选拔名单",
+          "ku": "Walîyê Hêzdarê Herî Mezin — beşa nû ya taybetî li ser rûpela sereke: maseya pileyan bi armancên hefteyî û lêçûnên xalan ji bo her cihî bibîne, di dema qeydkirinê de ji bo bûyera berdewam qeyd bibe û hilbijartina lîstikvanên weşandî bibîne",
+          "ar": "الحاكم الأقوى — قسم مخصص جديد على الصفحة الرئيسية: عرض جدول الرتب مع الأهداف الأسبوعية وتكاليف النقاط لكل مقعد، التسجيل في الحدث الجاري خلال فترة التسجيل، وعرض قائمة اللاعبين المنشورة"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.2.0",
     "date": "2026-04-14",
     "entries": [
@@ -348,19 +372,19 @@
       {
         "type": "feature",
         "text": {
-          "en": "Alliance management (members, invitations, point rules)",
+          "en": "Server management (members, invitations, point rules)",
           "fr": "Gestion du serveur (membres, invitations, règles de points)",
-          "es": "Gestión de alianza (miembros, invitaciones, reglas de puntos)",
-          "it": "Gestione alleanza (membri, inviti, regole punti)",
-          "de": "Allianz-Verwaltung (Mitglieder, Einladungen, Punkteregeln)",
-          "tr": "İttifak yönetimi (üyeler, davetler, puan kuralları)",
-          "pt": "Gerenciamento de aliança (membros, convites, regras de pontos)",
-          "el": "Διαχείριση συμμαχίας (μέλη, προσκλήσεις, κανόνες βαθμών)",
-          "ko": "동맹 관리 (멤버, 초대, 점수 규칙)",
-          "hi": "गठबंधन प्रबंधन (सदस्य, निमंत्रण, अंक नियम)",
-          "zh": "联盟管理（成员、邀请、积分规则）",
-          "ku": "Rêvebiriya hevbendiyê (endam, vexwendin, rêgezên xalê)",
-          "ar": "إدارة التحالف (الأعضاء والدعوات وقواعد النقاط)"
+          "es": "Gestión del servidor (miembros, invitaciones, reglas de puntos)",
+          "it": "Gestione server (membri, inviti, regole punti)",
+          "de": "Server-Verwaltung (Mitglieder, Einladungen, Punkteregeln)",
+          "tr": "Sunucu yönetimi (üyeler, davetler, puan kuralları)",
+          "pt": "Gerenciamento do servidor (membros, convites, regras de pontos)",
+          "el": "Διαχείριση διακομιστή (μέλη, προσκλήσεις, κανόνες βαθμών)",
+          "ko": "서버 관리 (멤버, 초대, 점수 규칙)",
+          "hi": "सर्वर प्रबंधन (सदस्य, निमंत्रण, अंक नियम)",
+          "zh": "服务器管理（成员、邀请、积分规则）",
+          "ku": "Rêvebiriya serverê (endam, vexwendin, rêgezên xalê)",
+          "ar": "إدارة الخادم (الأعضاء والدعوات وقواعد النقاط)"
         }
       },
       {

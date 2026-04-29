@@ -161,6 +161,7 @@
           [text]="'auth.joinTitle' | translate"
           [loadingText]="'auth.joining' | translate"
           [submitting]="isLoading()"
+          [disabled]="joinForm.invalid || joinForm.pending"
           buttonClass="submit-button"
         />
 

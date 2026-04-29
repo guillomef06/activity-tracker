@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "गतिविधियों को ट्रैक करें और 6-सप्ताह के रोलिंग स्कोर देखें"
+    "subtitle": "गतिविधियों को ट्रैक करें और रोलिंग स्कोर देखें"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "सेटअप विफल। कृपया पुनः प्रयास करें।",
       "superAdminExists": "सुपर एडमिन पहले से मौजूद है",
       "serverCreationFailed": "सर्वर बनाने में विफल",
-      "invalidToken": "अमान्य या समाप्त निमंत्रण टोकन"
+      "invalidToken": "अमान्य या समाप्त निमंत्रण टोकन",
+      "passwordPattern": "पासवर्ड में कम से कम एक अक्षर और एक अंक होना चाहिए"
     },
     "recovery": {
       "forgotPassword": "पासवर्ड भूल गए?"
@@ -96,7 +97,8 @@
         "activitySettings": "गतिविधि सेटिंग्स",
         "retroactive": "पूर्वव्यापी गतिविधियां",
         "importExcel": "एक्सेल इम्पोर्ट",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "MG इवेंट"
       },
       "serverInfo": "सर्वर जानकारी",
       "serverName": "सर्वर का नाम",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "पूर्वव्यापी गतिविधि जोड़ें",
-      "description": "एक एडमिन के रूप में, आप पिछले 6 हफ्तों के लिए सर्वर सदस्यों की गतिविधियां जोड़ सकते हैं। एक सदस्य चुनें, एक हफ्ता चुनें, और उनकी गतिविधि विवरण दर्ज करें।",
+      "description": "एक एडमिन के रूप में, आप पिछले हफ्तों के लिए सर्वर सदस्यों की गतिविधियां जोड़ सकते हैं। एक सदस्य चुनें, एक हफ्ता चुनें, और उनकी गतिविधि विवरण दर्ज करें।",
       "selectMember": "सदस्य चुनें",
       "memberHint": "वह सर्वर सदस्य चुनें जिसके लिए आप गतिविधि जोड़ना चाहते हैं",
       "selectWeek": "हफ्ता चुनें",
@@ -273,6 +275,8 @@
       "desolate-desert": "उजाड़ रेगिस्तान",
       "golden-expedition": "सुनहरा अभियान",
       "stellar-glory": "तारकीय महिमा",
+      "stellar-dynasty": "तारकीय राजवंश",
+      "primordial-conflict": "आदिकालीन संघर्ष",
       "legion": "भोर की लड़ाई / अजूबे"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "रैंकिंग में ऊपर उठें",
-        "description": "6-हफ्ते का रोलिंग लीडरबोर्ड प्रतिस्पर्धा को ताज़ा रखता है और व्यक्तिगत उछाल के बजाय निरंतरता को पुरस्कृत करता है।"
+        "description": "रोलिंग लीडरबोर्ड प्रतिस्पर्धा को ताज़ा रखता है और व्यक्तिगत उछाल के बजाय निरंतरता को पुरस्कृत करता है।"
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "mg": {
+    "event": {
+      "title": "Mightiest Governor इवेंट",
+      "upcoming": "आगामी",
+      "registration_open": "पंजीकरण खुला है",
+      "registration_closed": "पंजीकरण बंद",
+      "selection_published": "चयन प्रकाशित",
+      "ongoing": "इवेंट जारी है",
+      "finished": "समाप्त",
+      "deadlineLabel": "पंजीकरण की अंतिम तिथि:",
+      "waitingMessage": "चुने गए खिलाड़ियों की सूची जल्द ही प्रकाशित होगी।"
+    },
+    "registration": {
+      "register": "पंजीकरण करें",
+      "unregister": "पंजीकरण रद्द करें",
+      "registeredBadge": "पंजीकृत",
+      "selectedBadge": "चयनित",
+      "ffaSlots": "{{ count }} FFA स्लॉट उपलब्ध",
+      "ffaSlot": "FFA स्लॉट",
+      "selectionTitle": "चयनित खिलाड़ी",
+      "noSelection": "अभी तक कोई चयन प्रकाशित नहीं।",
+      "unknownPlayer": "अज्ञात खिलाड़ी",
+      "registerSuccess": "पंजीकरण की पुष्टि हो गई।",
+      "registerError": "पंजीकरण विफल। कृपया पुनः प्रयास करें।",
+      "unregisterSuccess": "आपका पंजीकरण रद्द हो गया।",
+      "unregisterError": "पंजीकरण रद्द करने में विफल। कृपया पुनः प्रयास करें।",
+      "fullFfaTitle": "पूर्ण FFA",
+      "fullFfaDescription": "कोई चयन प्रकाशित नहीं किया गया — यह इवेंट सभी खिलाड़ियों के लिए खुला है।"
+    },
+    "admin": {
+      "title": "MG इवेंट प्रबंधन",
+      "loadError": "MG डेटा लोड नहीं हो सका।",
+      "noEvent": "इस सर्वर के लिए कोई आगामी MG इवेंट नहीं है।",
+      "eventTitle": "वर्तमान इवेंट",
+      "selectionLocked": "चयन लॉक है — इवेंट जारी है।",
+      "configSaved": "कॉन्फ़िगरेशन सहेजा गया।",
+      "configSaveError": "कॉन्फ़िगरेशन सहेजने में विफल।",
+      "selectionSaved": "चयन सहेजा गया।",
+      "selectionSaveError": "चयन सहेजने में विफल।",
+      "selectionPublished": "चयन सफलतापूर्वक प्रकाशित हुआ।",
+      "publishError": "प्रकाशन विफल।",
+      "config": {
+        "title": "सर्वर कॉन्फ़िगरेशन",
+        "capacity": "क्षमता",
+        "mode": "चयन मोड",
+        "modeAutomatic": "स्वचालित",
+        "modeManual": "मैनुअल",
+        "save": "सहेजें",
+        "saved": "कॉन्फ़िगरेशन सहेजा गया।"
+      },
+      "registrations": {
+        "title": "पंजीकरण",
+        "empty": "अभी तक कोई पंजीकरण नहीं।"
+      },
+      "selection": {
+        "title": "चयन",
+        "generate": "स्वचालित चयन बनाएं",
+        "previewLabel": "पूर्वावलोकन — सहेजने के लिए पुष्टि करें:",
+        "confirm": "पुष्टि करें",
+        "cancel": "रद्द करें",
+        "publish": "चयन प्रकाशित करें",
+        "current": "वर्तमान चयन"
+      }
+    }
   }
 }

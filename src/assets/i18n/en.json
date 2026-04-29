@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "Track activities and view rolling 6-week scores"
+    "subtitle": "Track activities and view your rolling scores"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "Setup failed. Please try again.",
       "superAdminExists": "Super admin already exists",
       "serverCreationFailed": "Failed to create server",
-      "invalidToken": "Invalid or expired invitation token"
+      "invalidToken": "Invalid or expired invitation token",
+      "passwordPattern": "Password must contain at least one letter and one number"
     },
     "recovery": {
       "forgotPassword": "Forgot password?"
@@ -96,7 +97,8 @@
         "activitySettings": "Activity Settings",
         "retroactive": "Retroactive Activities",
         "importExcel": "Import Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "MG Event"
       },
       "serverInfo": "Server Information",
       "serverName": "Server Name",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "Add Retroactive Activity",
-      "description": "As an admin, you can add activities for server members for the past 6 weeks. Select a member, choose a week, and enter their activity details.",
+      "description": "As an admin, you can add activities for server members for past weeks. Select a member, choose a week, and enter their activity details.",
       "selectMember": "Select Member",
       "memberHint": "Choose the server member for whom you want to add an activity",
       "selectWeek": "Select Week",
@@ -273,6 +275,8 @@
       "desolate-desert": "Desolate Desert",
       "golden-expedition": "Golden Expedition",
       "stellar-glory": "Stellar Glory",
+      "stellar-dynasty": "Stellar Dynasty",
+      "primordial-conflict": "Primordial Conflict",
       "legion": "Battle of Dawn / Wonders"
     }
   },
@@ -449,6 +453,71 @@
       "refinedIron": "Refined Iron",
       "goldenKey": "Golden Key",
       "torchOfEnlightenment": "Torch of Enlightenment"
+    }
+  },
+  "mg": {
+    "event": {
+      "title": "Mightiest Governor Event",
+      "upcoming": "Upcoming",
+      "registration_open": "Registration open",
+      "registration_closed": "Registration closed",
+      "selection_published": "Selection published",
+      "ongoing": "Event in progress",
+      "finished": "Finished",
+      "deadlineLabel": "Registration deadline:",
+      "waitingMessage": "The selection list will be published soon."
+    },
+    "registration": {
+      "register": "Register",
+      "unregister": "Unregister",
+      "registeredBadge": "Registered",
+      "selectedBadge": "Selected",
+      "ffaSlots": "{{ count }} FFA slot(s) available",
+      "ffaSlot": "FFA slot",
+      "selectionTitle": "Selected players",
+      "noSelection": "No selection published yet.",
+      "fullFfaTitle": "Full FFA",
+      "fullFfaDescription": "No selection was published — this event is open to all players.",
+      "unknownPlayer": "Unknown player",
+      "registerSuccess": "Registration confirmed.",
+      "registerError": "Registration failed. Please try again.",
+      "unregisterSuccess": "You have been unregistered.",
+      "unregisterError": "Unregistration failed. Please try again."
+    },
+    "admin": {
+      "title": "MG Event Administration",
+      "loadError": "Failed to load MG data.",
+      "noEvent": "No upcoming MG event for this server.",
+      "eventTitle": "Current event",
+      "selectionLocked": "The selection is locked — the event is in progress.",
+      "config": {
+        "title": "Server Configuration",
+        "capacity": "Capacity",
+        "mode": "Assignment mode",
+        "modeAutomatic": "Automatic",
+        "modeManual": "Manual",
+        "save": "Save",
+        "saved": "Configuration saved."
+      },
+      "configSaved": "Configuration saved.",
+      "configSaveError": "Failed to save configuration.",
+      "registrations": {
+        "title": "Registrations",
+        "empty": "No registrations yet."
+      },
+      "selection": {
+        "title": "Selection",
+        "generate": "Generate auto selection",
+        "previewLabel": "Preview — confirm to save:",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "publish": "Publish selection",
+        "current": "Current selection"
+      },
+      "selectionSaved": "Selection saved.",
+      "selectionSaveError": "Failed to save selection.",
+      "selectionPublished": "Selection published successfully.",
+      "publishError": "Failed to publish selection."
     }
   },
   "mightiestGovernor": {
@@ -706,7 +775,7 @@
       },
       "step3": {
         "title": "Rise in the Rankings",
-        "description": "A 6-week rolling leaderboard keeps competition fresh and rewards consistency over individual bursts."
+        "description": "A rolling leaderboard keeps competition fresh and rewards consistency over individual bursts."
       }
     },
     "benefits": {

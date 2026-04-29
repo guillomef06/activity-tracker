@@ -18,7 +18,13 @@ import { PointCalculationResult } from '@shared/models';
 import { createFieldErrorSignal } from '@shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@shared/components/loading-button/loading-button.component';
 import { DiscordInviteBannerComponent } from '@app/pages/home/components/discord-invite-banner/discord-invite-banner.component';
-import { getWeekNumberForWeeksAgo, getWeekStart, getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
+import {
+  getWeekNumberForWeeksAgo,
+  getWeekStart,
+  getDateForWeeksAgo,
+  getWeekEnd,
+  CYCLE_REFERENCE_DATE,
+} from '@shared/utils/date.util';
 
 interface WeekOption {
   value: number;
@@ -116,9 +122,9 @@ export class ActivityInputComponent {
     const options: WeekOption[] = [];
 
     for (let i = 0; i <= 5; i++) {
-      const date = getDateForWeeksAgo(i);
-      const weekStart = getWeekStart(date);
-      const weekEnd = getWeekEnd(date);
+      const weekStart = getWeekStart(getDateForWeeksAgo(i));
+      if (weekStart < CYCLE_REFERENCE_DATE) break;
+      const weekEnd = getWeekEnd(weekStart);
       const dateRange = `${weekStart.toLocaleDateString('en-US', { timeZone: 'UTC' })} - ${weekEnd.toLocaleDateString('en-US', { timeZone: 'UTC' })}`;
 
       options.push({
