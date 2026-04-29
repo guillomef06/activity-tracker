@@ -45,4 +45,16 @@
     <mat-icon class="notice-icon">info</mat-icon>
     {{ 'mightiestGovernor.notice' | translate }}
   </p>
+
+  @if (showEventCard()) {
+    <app-mg-event-card
+      [mgEvent]="mgEvent()!"
+      [registration]="registration()"
+      [selection]="selection()"
+      [currentUserId]="currentUserId()"
+      [isRegistering]="isRegistering()"
+      (register)="onRegister()"
+      (unregister)="onUnregister()"
+    />
+  }
 </section>

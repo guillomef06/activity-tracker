@@ -52,23 +52,26 @@ export function getWeekEnd(date: Date): Date {
 }
 
 /**
- * Reference date for the 6-week cycle (must be a Monday)
- * Current setting: Monday January 26, 2026 = Start of Week 1
- * Cycle: W1 Jan 26–Feb 1 | W2 Feb 2–8 | W3 Feb 9–15 | W4 Feb 16–22 | W5 Feb 23–Mar 1 | W6 Mar 2–8
+ * Reference date for the 6-week Stellar Dynasty cycle (must be a Monday)
+ * Current setting: Monday April 27, 2026 = Start of Week 1
+ * Cycle: W1 Apr 27–May 3 | W2 May 4–10 | W3 May 11–17 | W4 May 18–24 | W5 May 25–31 | W6 Jun 1–7
  * Stored as UTC to avoid timezone-dependent parsing.
+ * Also used as the minimum allowed activity input date.
  */
-const CYCLE_REFERENCE_DATE = new Date('2026-01-26T00:00:00Z');
+export const CYCLE_REFERENCE_DATE = new Date('2026-04-27T00:00:00Z');
 
 /**
  * Get the current week number in the repeating 6-week cycle
  * The cycle repeats indefinitely: 1 → 2 → 3 → 4 → 5 → 6 → 1 → 2 → ...
  *
  * Used to filter which activities are available for submission:
- * - Golden Expedition: weeks 1, 3
+ * - Golden Expedition: week 1
  * - KvK Prep: weeks 2, 4
  * - KvK Cross Border: weeks 2, 4
  * - Legion: weeks 1-6 (all weeks)
  * - Desolate Desert: week 5
+ * - Primordial Conflict: week 3
+ * - Stellar Dynasty: week 6
  *
  * @returns number between 1 and 6 representing the current week in the cycle
  */

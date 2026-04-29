@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "چالاکییەکان بشوێنەوە و خاڵەکانی ٦ هەفتەیەک ببینە"
+    "subtitle": "چالاکییەکان بشوێنەوە و خاڵە گەڕانەکان ببینە"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "ڕێکخستن سەرنەکەوت. تکایە دووبارە هەوڵ بدەرەوە.",
       "superAdminExists": "بەڕێوەبەری سەرەکی پێشتر هەبووە",
       "serverCreationFailed": "دروستکردنی هاوپەیمانی سەرنەکەوت",
-      "invalidToken": "نیشانەی بانخستن دروست نییە یان کاتی تەواوبووە"
+      "invalidToken": "نیشانەی بانخستن دروست نییە یان کاتی تەواوبووە",
+      "passwordPattern": "Şîfre divê herî kêm yek tîp û yek hejmar hebe"
     },
     "recovery": {
       "forgotPassword": "تێپەڕوەشەت لەبیرچووە؟"
@@ -96,7 +97,8 @@
         "activitySettings": "ڕێکخستنی چالاکی",
         "retroactive": "چالاکییەکانی پێشوو",
         "importExcel": "هێنان لە Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "Bûyera MG"
       },
       "serverInfo": "زانیاری هاوپەیمانی",
       "serverName": "ناوی هاوپەیمانی",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "چالاکیی پێشوو زیاد بکە",
-      "description": "وەک بەڕێوەبەر، دەتوانیت چالاکییەکانی ٦ هەفتەی ڕابردووی بۆ ئەندامانی هاوپەیمانی زیاد بکەیت. ئەندامێک هەڵبژێرە، هەفتەیەک هەڵبژێرە و زانیاری چالاکی بنووسە.",
+      "description": "وەک بەڕێوەبەر، دەتوانیت چالاکییەکانی هەفتەکانی ڕابردوو بۆ ئەندامانی سیستەم زیاد بکەیت. ئەندامێک هەڵبژێرە، هەفتەیەک هەڵبژێرە و زانیاری چالاکی بنووسە.",
       "selectMember": "ئەندام هەڵبژێرە",
       "memberHint": "ئەندامی هاوپەیمانی هەڵبژێرە کە دەتەوێت چالاکی بۆیان زیاد بکەیت",
       "selectWeek": "هەفتە هەڵبژێرە",
@@ -273,6 +275,8 @@
       "desolate-desert": "چۆڵەوانەی وێران",
       "golden-expedition": "گەشتی زێڕین",
       "stellar-glory": "شکۆی ئەستێرە",
+      "stellar-dynasty": "خانەدانی ئەستێرە",
+      "primordial-conflict": "ناکۆکی سەرەتایی",
       "legion": "شەڕی بەیانی / سەرسوڕمانەوە"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "لە ڕیزبەندیدا بەرز بکەوە",
-        "description": "خشتەی پێشەوازیی ٦ هەفتەیی کێبڕکێ تازە دەگرێتەوە و بەردەوامی لە جیاتی تەقینەوەکانی تاکەکانی خەڵات دەدات."
+        "description": "خشتەی پێشەوازیی گەڕانە کێبڕکێ تازە دەگرێتەوە و بەردەوامی لە جیاتی تەقینەوەکانی تاکەکانی خەڵات دەدات."
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "بەشداری سێرڤەری Discord ت کردووە؟",
     "cta": "ببەرمە تاوێ",
     "dismiss": "داخە"
+  },
+  "mg": {
+    "event": {
+      "title": "Bûyera Mightiest Governor",
+      "upcoming": "Pêş de",
+      "registration_open": "Tescîl vekirî ye",
+      "registration_closed": "Tescîl girtî ye",
+      "selection_published": "Hilbijartî hatiye weşandin",
+      "ongoing": "Bûyer berdewam e",
+      "finished": "Qediyaye",
+      "deadlineLabel": "Dema dawî ya tescîlê:",
+      "waitingMessage": "Lîsteya hilbijartîyan dê bê direng bê weşandin."
+    },
+    "registration": {
+      "register": "Tescîl Bike",
+      "unregister": "Tescîlê Betal Bike",
+      "registeredBadge": "Tescîlkirî",
+      "selectedBadge": "Hilbijartî",
+      "ffaSlots": "{{ count }} cihê FFA heye",
+      "ffaSlot": "Cihê FFA",
+      "selectionTitle": "Lîstikvanên hilbijartî",
+      "noSelection": "Hîna hilbijartî nehatiye weşandin.",
+      "unknownPlayer": "Lîstikvanê nenas",
+      "registerSuccess": "Tescîl hat pejirandin.",
+      "registerError": "Tescîl têk çû. Ji kerema xwe dîsa biceribîne.",
+      "unregisterSuccess": "Tescîla te hat betalkirinê.",
+      "unregisterError": "Betalkirina tescîlê têk çû. Ji kerema xwe dîsa biceribîne.",
+      "fullFfaTitle": "FFA Tevahî",
+      "fullFfaDescription": "Hiç hilbijartin nehat weşandin — ev bûyer ji hemû lîstikvan re vekirî ye."
+    },
+    "admin": {
+      "title": "Rêveberiya Bûyera MG",
+      "loadError": "Daneyên MG nayêne barkirin.",
+      "noEvent": "Ji bo vê serverê tu bûyera MG ya pêş de nîne.",
+      "eventTitle": "Bûyera niha",
+      "selectionLocked": "Hilbijartî hat kilîtkirin — bûyer berdewam e.",
+      "configSaved": "Mîheng hat tomarkirin.",
+      "configSaveError": "Tomarkirina mîhengê têk çû.",
+      "selectionSaved": "Hilbijartî hat tomarkirin.",
+      "selectionSaveError": "Tomarkirina hilbijartinê têk çû.",
+      "selectionPublished": "Hilbijartî bi serfirazî hat weşandin.",
+      "publishError": "Weşandin têk çû.",
+      "config": {
+        "title": "Mîhenga Serverê",
+        "capacity": "Kapasîte",
+        "mode": "Moda hilbijartinê",
+        "modeAutomatic": "Otomatîk",
+        "modeManual": "Destî",
+        "save": "Tomar bike",
+        "saved": "Mîheng hat tomarkirin."
+      },
+      "registrations": {
+        "title": "Tescîl",
+        "empty": "Hîna tescîl tunene."
+      },
+      "selection": {
+        "title": "Hilbijartî",
+        "generate": "Hilbijartina otomatîk çêbike",
+        "previewLabel": "Pêşdîtin — ji bo tomarkirinê bipejirîne:",
+        "confirm": "Bipejirîne",
+        "cancel": "Betal bike",
+        "publish": "Hilbijartî weşan bike",
+        "current": "Hilbijartina niha"
+      }
+    }
   }
 }

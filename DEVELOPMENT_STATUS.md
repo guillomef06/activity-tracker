@@ -1,32 +1,32 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 20 avril 2026
+**Dernière mise à jour:** 24 avril 2026
 
 ## 📋 Résumé
 
-Application Angular 21 de gestion d'activités avec backend Supabase et système multi-alliance. Mobile-first, déployée sur GitHub Pages.
+Application Angular 21 de gestion d'activités avec backend Supabase et système multi-serveur. Mobile-first, déployée sur GitHub Pages.
 
 ---
 
 ## ✅ Fonctionnalités Complétées
 
 ### Infrastructure
-- Backend Supabase : `alliances`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`
+- Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
 - Authentification par username uniquement (email généré en interne `username@app.tracker`)
 - RLS configuré avec helper functions `SECURITY DEFINER`
 - PWA (manifest, service worker, banner d'installation A2HS)
 - GitHub Pages SPA routing (404.html → sessionStorage → index.html)
 
 ### Authentification & Comptes
-- Signup admin (crée une alliance) / member (via token d'invitation)
+- Signup admin (crée un serveur) / member (via token d'invitation)
 - Login par username + password
 - Dialog "Mon Compte" : modifier display name, mot de passe, question de récupération + préférences langue
 - Account recovery : question secrète → reset mot de passe (rate limiting custom, sans email)
-- Rôles : `super_admin` (accès global), `admin` (gestion alliance), `member`
+- Rôles : `super_admin` (accès global), `admin` (gestion serveur), `member`
 
 ### Invitations
 - Tokens multi-usage avec date d'expiration configurable
-- Validation côté anon via RPC `validate_invitation_token` (bypasse RLS sur `alliances`)
+- Validation côté anon via RPC `validate_invitation_token` (bypasse RLS sur `servers`)
 - Vue stats temps réel (`invitation_stats`)
 
 ### Activités & Scores
@@ -35,17 +35,17 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - Cycle de 6 semaines pour la disponibilité des activités (date ref : 25 jan 2026 = semaine 1)
 - Scores sur N semaines glissantes (multiplicateur configurable : 1×6, 2×12, 3×18 semaines)
 - Activité tiebreaker (départage à égalité de score, exclue du calcul des points)
-- Désactivation d'activités par alliance
+- Désactivation d'activités par serveur
 - Entrée rétroactive admin (pour n'importe quel membre, n'importe quelle semaine)
 - Import Excel batch (wizard upload → preview → done, matching joueur, upsert)
 - Suppression globale des activités (admin, avec confirmation)
 
-### Alliance Settings
+### Server Settings
 - Gestion membres (invitations, suppression)
 - Règles de points configurables par activité + plage de positions
 - Paramètres d'activités (activation, mode participation, tiebreaker, multiplicateur de semaines)
 - Discord webhooks : envoi de messages vers channels Discord
-- Alliance tag (3 caractères, affiché dans le header)
+- Server tag (3 caractères, affiché dans le header)
 - **Lien d'invitation Discord** : admins configurent un lien `discord.gg` ou `discord.com/invite` depuis l'onglet Serveur ; les membres voient un banner dismissible sous le formulaire d'activité
 
 ### Banner Discord (membres)
@@ -63,10 +63,20 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - **Pack Value Calculator** : évalue la valeur d'un pack en jeu en Apex Coins
 
 ### Super Admin
-- Dashboard, gestion alliances, gestion users
+- Dashboard, gestion serveurs, gestion users
 - Suppression complète d'un user via RPC `delete_user_complete`
-- Gestion alliances : N+1 supprimé (1 requête avec join `user_profiles` au lieu de 1 + N×2)
+- Gestion serveurs : N+1 supprimé (1 requête avec join `user_profiles` au lieu de 1 + N×2)
 - Gestion users : pagination cursor-based 20 par 20 + infinite scroll (`IntersectionObserver`)
+
+### MG Event (Mightiest Governor)
+
+- Tables Supabase : `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
+- Migration 26 appliquée en production
+- 4 pg_cron jobs : create-events, close-registrations, start-events, end-events
+- RLS complet (members SELECT, admins ALL, mg_selections SELECT gated sur `selection_published_at`)
+- `MgEventService` : register/unregister, load selection, save/publish, génération auto (calcul client-side)
+- **Player-facing** : onglet MG existant (`MightiestGovernorComponent` upgradé en smart) — card dynamique selon statut de l'event
+- **Admin** : nouvel onglet "MG Event" dans server-settings — config capacité/mode, liste inscriptions, génération sélection auto (preview + confirm), publication
 
 ### Guides
 
@@ -86,7 +96,7 @@ Pages publiques (`/guides`, `/guides/:slug`) routées via `PublicLayoutComponent
 
 ## 🐛 Corrections Notables
 
-- **Join token invalide** : RLS `alliances` bloquait les anon → RPC `validate_invitation_token` SECURITY DEFINER
+- **Join token invalide** : RLS `servers` bloquait les anon → RPC `validate_invitation_token` SECURITY DEFINER
 - **UTC dates** : normalisation timezone dans `date.util.ts` (impact import Excel + activity input)
 - **Password rules** : validation regex renforcée (join/signup)
 - **Recovery answer** : fix vérification lors du reset

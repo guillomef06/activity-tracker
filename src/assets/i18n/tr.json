@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "Aktiviteleri takip edin ve 6 haftalık puanları görüntüleyin"
+    "subtitle": "Aktiviteleri takip edin ve kümülatif puanları görüntüleyin"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "Kurulum başarısız. Lütfen tekrar deneyin.",
       "superAdminExists": "Süper admin zaten mevcut",
       "serverCreationFailed": "Sunucu oluşturulamadı",
-      "invalidToken": "Geçersiz veya süresi dolmuş davet kodu"
+      "invalidToken": "Geçersiz veya süresi dolmuş davet kodu",
+      "passwordPattern": "Şifre en az bir harf ve bir rakam içermelidir"
     },
     "recovery": {
       "forgotPassword": "Şifremi unuttum?"
@@ -96,7 +97,8 @@
         "activitySettings": "Aktivite Ayarları",
         "retroactive": "Geçmiş Aktiviteler",
         "importExcel": "Excel İçe Aktar",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "MG Etkinliği"
       },
       "serverInfo": "Sunucu Bilgileri",
       "serverName": "Sunucu Adı",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "Geçmiş Aktivite Ekle",
-      "description": "Yönetici olarak, sunucu üyeleri için son 6 haftanın aktivitelerini ekleyebilirsiniz. Bir üye, hafta seçin ve aktivite bilgilerini girin.",
+      "description": "Yönetici olarak, sunucu üyeleri için son haftaların aktivitelerini ekleyebilirsiniz. Bir üye, hafta seçin ve aktivite bilgilerini girin.",
       "selectMember": "Üye Seç",
       "memberHint": "Aktivite eklemek istediğiniz sunucu üyesini seçin",
       "selectWeek": "Hafta Seç",
@@ -273,6 +275,8 @@
       "desolate-desert": "Issız Çöl",
       "golden-expedition": "Altın Sefer",
       "stellar-glory": "Yıldızsal Zafer",
+      "stellar-dynasty": "Yıldızsal Hanedan",
+      "primordial-conflict": "İlksel Çatışma",
       "legion": "Şafak Savaşı / Harikalar"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "Sıralamada Yüksel",
-        "description": "6 haftalık kayan sıralama rekabeti taze tutar ve süreklilik yerine bireysel atılımları ödüllendirir."
+        "description": "Kayan sıralama rekabeti taze tutar ve süreklilik yerine bireysel atılımları ödüllendirir."
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "mg": {
+    "event": {
+      "title": "En Güçlü Vali Etkinliği",
+      "upcoming": "Yakında",
+      "registration_open": "Kayıtlar açık",
+      "registration_closed": "Kayıtlar kapalı",
+      "selection_published": "Seçim yayınlandı",
+      "ongoing": "Etkinlik devam ediyor",
+      "finished": "Tamamlandı",
+      "deadlineLabel": "Kayıt son tarihi:",
+      "waitingMessage": "Seçim listesi yakında yayınlanacaktır."
+    },
+    "registration": {
+      "register": "Kayıt Ol",
+      "unregister": "Kaydı İptal Et",
+      "registeredBadge": "Kayıtlı",
+      "selectedBadge": "Seçildi",
+      "ffaSlots": "{{ count }} FFA yeri mevcut",
+      "ffaSlot": "FFA yeri",
+      "selectionTitle": "Seçilen oyuncular",
+      "noSelection": "Henüz seçim yayınlanmadı.",
+      "unknownPlayer": "Bilinmeyen oyuncu",
+      "registerSuccess": "Kayıt onaylandı.",
+      "registerError": "Kayıt başarısız. Lütfen tekrar deneyin.",
+      "unregisterSuccess": "Kaydınız iptal edildi.",
+      "unregisterError": "Kayıt iptali başarısız. Lütfen tekrar deneyin.",
+      "fullFfaTitle": "Tam FFA",
+      "fullFfaDescription": "Hiçbir seçim yayınlanmadı — bu etkinlik tüm oyunculara açıktır."
+    },
+    "admin": {
+      "title": "MG Etkinliği Yönetimi",
+      "loadError": "MG verileri yüklenemedi.",
+      "noEvent": "Bu sunucu için yaklaşan MG etkinliği yok.",
+      "eventTitle": "Mevcut etkinlik",
+      "selectionLocked": "Seçim kilitlendi — etkinlik devam ediyor.",
+      "configSaved": "Yapılandırma kaydedildi.",
+      "configSaveError": "Yapılandırma kaydedilemedi.",
+      "selectionSaved": "Seçim kaydedildi.",
+      "selectionSaveError": "Seçim kaydedilemedi.",
+      "selectionPublished": "Seçim başarıyla yayınlandı.",
+      "publishError": "Yayınlama başarısız.",
+      "config": {
+        "title": "Sunucu Yapılandırması",
+        "capacity": "Kapasite",
+        "mode": "Seçim modu",
+        "modeAutomatic": "Otomatik",
+        "modeManual": "Manuel",
+        "save": "Kaydet",
+        "saved": "Yapılandırma kaydedildi."
+      },
+      "registrations": {
+        "title": "Kayıtlar",
+        "empty": "Henüz kayıt yok."
+      },
+      "selection": {
+        "title": "Seçim",
+        "generate": "Otomatik seçim oluştur",
+        "previewLabel": "Önizleme — kaydetmek için onaylayın:",
+        "confirm": "Onayla",
+        "cancel": "İptal",
+        "publish": "Seçimi yayınla",
+        "current": "Mevcut seçim"
+      }
+    }
   }
 }

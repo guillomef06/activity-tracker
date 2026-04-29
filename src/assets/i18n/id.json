@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "Lacak aktivitas dan lihat skor 6 minggu bergulir"
+    "subtitle": "Lacak aktivitas dan lihat skor bergulir Anda"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "Pengaturan gagal. Silakan coba lagi.",
       "superAdminExists": "Super admin sudah ada",
       "serverCreationFailed": "Gagal membuat server",
-      "invalidToken": "Token undangan tidak valid atau kadaluarsa"
+      "invalidToken": "Token undangan tidak valid atau kadaluarsa",
+      "passwordPattern": "Kata sandi harus mengandung setidaknya satu huruf dan satu angka"
     },
     "recovery": {
       "forgotPassword": "Lupa kata sandi?"
@@ -96,7 +97,8 @@
         "activitySettings": "Pengaturan Aktivitas",
         "retroactive": "Aktivitas Retroaktif",
         "importExcel": "Impor Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "Acara MG"
       },
       "serverInfo": "Informasi Server",
       "serverName": "Nama Server",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "Tambah Aktivitas Retroaktif",
-      "description": "Sebagai admin, Anda dapat menambahkan aktivitas untuk anggota server selama 6 minggu terakhir. Pilih anggota, pilih minggu, dan masukkan detail aktivitas mereka.",
+      "description": "Sebagai admin, Anda dapat menambahkan aktivitas untuk anggota server dalam beberapa minggu terakhir. Pilih anggota, pilih minggu, dan masukkan detail aktivitas mereka.",
       "selectMember": "Pilih Anggota",
       "memberHint": "Pilih anggota server yang ingin Anda tambahkan aktivitasnya",
       "selectWeek": "Pilih Minggu",
@@ -273,6 +275,8 @@
       "desolate-desert": "Gurun Tandus",
       "golden-expedition": "Ekspedisi Emas",
       "stellar-glory": "Kejayaan Bintang",
+      "stellar-dynasty": "Dinasti Bintang",
+      "primordial-conflict": "Konflik Purba",
       "legion": "Pertempuran Fajar / Keajaiban"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "Naiki Peringkat",
-        "description": "Papan peringkat bergulir 6 minggu menjaga persaingan tetap segar dan memberi penghargaan atas konsistensi."
+        "description": "Papan peringkat bergulir menjaga persaingan tetap segar dan memberi penghargaan atas konsistensi."
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "mg": {
+    "event": {
+      "title": "Acara Mightiest Governor",
+      "upcoming": "Akan datang",
+      "registration_open": "Pendaftaran dibuka",
+      "registration_closed": "Pendaftaran ditutup",
+      "selection_published": "Seleksi dipublikasikan",
+      "ongoing": "Acara berlangsung",
+      "finished": "Selesai",
+      "deadlineLabel": "Batas waktu pendaftaran:",
+      "waitingMessage": "Daftar peserta terpilih akan segera dipublikasikan."
+    },
+    "registration": {
+      "register": "Daftar",
+      "unregister": "Batalkan pendaftaran",
+      "registeredBadge": "Terdaftar",
+      "selectedBadge": "Terpilih",
+      "ffaSlots": "{{ count }} slot FFA tersedia",
+      "ffaSlot": "Slot FFA",
+      "selectionTitle": "Pemain terpilih",
+      "noSelection": "Belum ada seleksi yang dipublikasikan.",
+      "unknownPlayer": "Pemain tidak dikenal",
+      "registerSuccess": "Pendaftaran dikonfirmasi.",
+      "registerError": "Pendaftaran gagal. Silakan coba lagi.",
+      "unregisterSuccess": "Pendaftaran Anda telah dibatalkan.",
+      "unregisterError": "Gagal membatalkan pendaftaran. Silakan coba lagi.",
+      "fullFfaTitle": "FFA Penuh",
+      "fullFfaDescription": "Tidak ada seleksi yang diterbitkan — acara ini terbuka untuk semua pemain."
+    },
+    "admin": {
+      "title": "Administrasi Acara MG",
+      "loadError": "Gagal memuat data MG.",
+      "noEvent": "Tidak ada acara MG yang akan datang untuk server ini.",
+      "eventTitle": "Acara saat ini",
+      "selectionLocked": "Seleksi terkunci — acara sedang berlangsung.",
+      "configSaved": "Konfigurasi disimpan.",
+      "configSaveError": "Gagal menyimpan konfigurasi.",
+      "selectionSaved": "Seleksi disimpan.",
+      "selectionSaveError": "Gagal menyimpan seleksi.",
+      "selectionPublished": "Seleksi berhasil dipublikasikan.",
+      "publishError": "Gagal mempublikasikan seleksi.",
+      "config": {
+        "title": "Konfigurasi server",
+        "capacity": "Kapasitas",
+        "mode": "Mode seleksi",
+        "modeAutomatic": "Otomatis",
+        "modeManual": "Manual",
+        "save": "Simpan",
+        "saved": "Konfigurasi disimpan."
+      },
+      "registrations": {
+        "title": "Pendaftaran",
+        "empty": "Belum ada pendaftaran."
+      },
+      "selection": {
+        "title": "Seleksi",
+        "generate": "Buat seleksi otomatis",
+        "previewLabel": "Pratinjau — konfirmasi untuk menyimpan:",
+        "confirm": "Konfirmasi",
+        "cancel": "Batal",
+        "publish": "Publikasikan seleksi",
+        "current": "Seleksi saat ini"
+      }
+    }
   }
 }

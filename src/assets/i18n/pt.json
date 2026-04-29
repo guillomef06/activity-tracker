@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "Acompanhe atividades e veja pontuações das últimas 6 semanas"
+    "subtitle": "Acompanhe atividades e veja suas pontuações acumuladas"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "Configuração falhou. Por favor, tente novamente.",
       "superAdminExists": "Super admin já existe",
       "serverCreationFailed": "Falha ao criar servidor",
-      "invalidToken": "Token de convite inválido ou expirado"
+      "invalidToken": "Token de convite inválido ou expirado",
+      "passwordPattern": "A senha deve conter pelo menos uma letra e um número"
     },
     "recovery": {
       "forgotPassword": "Esqueceu a senha?"
@@ -96,7 +97,8 @@
         "activitySettings": "Config. de Atividades",
         "retroactive": "Atividades Retroativas",
         "importExcel": "Importar Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "Evento MG"
       },
       "serverInfo": "Informações da Servidor",
       "serverName": "Nome da Servidor",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "Adicionar Atividade Retroativa",
-      "description": "Como admin, você pode adicionar atividades para membros da servidor das últimas 6 semanas. Selecione um membro, escolha uma semana e insira os detalhes.",
+      "description": "Como admin, você pode adicionar atividades para membros da servidor das últimas semanas. Selecione um membro, escolha uma semana e insira os detalhes.",
       "selectMember": "Selecionar Membro",
       "memberHint": "Escolha o membro da servidor para quem deseja adicionar uma atividade",
       "selectWeek": "Selecionar Semana",
@@ -273,6 +275,8 @@
       "desolate-desert": "Deserto Desolado",
       "golden-expedition": "Expedição Dourada",
       "stellar-glory": "Glória Estelar",
+      "stellar-dynasty": "Dinastia Estelar",
+      "primordial-conflict": "Conflito Primordial",
       "legion": "Batalha do Amanhecer / Maravilhas"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "Suba na Classificação",
-        "description": "Um placar rotativo de 6 semanas mantém a competição fresca e recompensa a consistência em vez de explosões individuais."
+        "description": "Um placar rotativo mantém a competição fresca e recompensa a consistência em vez de explosões individuais."
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "mg": {
+    "event": {
+      "title": "Evento Mightiest Governor",
+      "upcoming": "Em breve",
+      "registration_open": "Inscrições abertas",
+      "registration_closed": "Inscrições encerradas",
+      "selection_published": "Seleção publicada",
+      "ongoing": "Evento em andamento",
+      "finished": "Encerrado",
+      "deadlineLabel": "Prazo de inscrição:",
+      "waitingMessage": "A lista de selecionados será publicada em breve."
+    },
+    "registration": {
+      "register": "Inscrever-se",
+      "unregister": "Cancelar inscrição",
+      "registeredBadge": "Inscrito",
+      "selectedBadge": "Selecionado",
+      "ffaSlots": "{{ count }} vaga(s) FFA disponível(is)",
+      "ffaSlot": "Vaga FFA",
+      "selectionTitle": "Jogadores selecionados",
+      "noSelection": "Nenhuma seleção publicada ainda.",
+      "unknownPlayer": "Jogador desconhecido",
+      "registerSuccess": "Inscrição confirmada.",
+      "registerError": "Falha na inscrição. Por favor, tente novamente.",
+      "unregisterSuccess": "Inscrição cancelada com sucesso.",
+      "unregisterError": "Falha ao cancelar inscrição. Por favor, tente novamente.",
+      "fullFfaTitle": "FFA Total",
+      "fullFfaDescription": "Nenhuma seleção foi publicada — este evento está aberto a todos os jogadores."
+    },
+    "admin": {
+      "title": "Administração do Evento MG",
+      "loadError": "Falha ao carregar dados do MG.",
+      "noEvent": "Nenhum evento MG próximo para este servidor.",
+      "eventTitle": "Evento atual",
+      "selectionLocked": "A seleção está bloqueada — o evento está em andamento.",
+      "configSaved": "Configuração salva.",
+      "configSaveError": "Falha ao salvar configuração.",
+      "selectionSaved": "Seleção salva.",
+      "selectionSaveError": "Falha ao salvar seleção.",
+      "selectionPublished": "Seleção publicada com sucesso.",
+      "publishError": "Falha ao publicar seleção.",
+      "config": {
+        "title": "Configuração do servidor",
+        "capacity": "Capacidade",
+        "mode": "Modo de seleção",
+        "modeAutomatic": "Automático",
+        "modeManual": "Manual",
+        "save": "Salvar",
+        "saved": "Configuração salva."
+      },
+      "registrations": {
+        "title": "Inscrições",
+        "empty": "Nenhuma inscrição ainda."
+      },
+      "selection": {
+        "title": "Seleção",
+        "generate": "Gerar seleção automática",
+        "previewLabel": "Pré-visualização — confirme para salvar:",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar",
+        "publish": "Publicar seleção",
+        "current": "Seleção atual"
+      }
+    }
   }
 }

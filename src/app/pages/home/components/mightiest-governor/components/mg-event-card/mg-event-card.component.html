@@ -1,0 +1,102 @@
+<mat-card class="mg-event-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="event-icon">emoji_events</mat-icon>
+    <mat-card-title>{{ 'mg.event.title' | translate }}</mat-card-title>
+    <mat-card-subtitle>
+      {{ mgEvent().start_date | date: 'dd/MM/yyyy' }} – {{ mgEvent().end_date | date: 'dd/MM/yyyy' }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Status badges -->
+    <div class="badges-row">
+      @if (isRegistered() && mgEvent().status === 'registration_open') {
+        <mat-chip class="badge-registered">
+          <mat-icon matChipAvatar>check_circle</mat-icon>
+          {{ 'mg.registration.registeredBadge' | translate }}
+        </mat-chip>
+      }
+      @if (isSelected()) {
+        <mat-chip class="badge-selected">
+          <mat-icon matChipAvatar>star</mat-icon>
+          {{ 'mg.registration.selectedBadge' | translate }}
+        </mat-chip>
+      }
+    </div>
+
+    <!-- registration_open: deadline + register/unregister -->
+    @if (showRegistrationActions()) {
+      <div class="registration-section">
+        <p class="deadline-text">
+          <mat-icon class="deadline-icon">schedule</mat-icon>
+          {{ 'mg.event.deadlineLabel' | translate }}
+          <strong>{{ mgEvent().registration_close_at | date: 'EEEE dd MMMM yyyy' }}</strong>
+        </p>
+
+        @if (!isRegistered()) {
+          <button mat-flat-button color="primary" [disabled]="isRegistering()" (click)="onRegister()">
+            <mat-icon>how_to_reg</mat-icon>
+            {{ 'mg.registration.register' | translate }}
+          </button>
+        } @else {
+          <button mat-stroked-button class="btn-danger" [disabled]="isRegistering()" (click)="onUnregister()">
+            <mat-icon>person_remove</mat-icon>
+            {{ 'mg.registration.unregister' | translate }}
+          </button>
+        }
+      </div>
+    }
+
+    <!-- registration_closed: waiting message -->
+    @if (showWaiting()) {
+      <p class="waiting-text">
+        <mat-icon class="waiting-icon">hourglass_top</mat-icon>
+        {{ 'mg.event.waitingMessage' | translate }}
+      </p>
+    }
+
+    <!-- selection_published / ongoing / finished: full FFA fallback -->
+    @if (isFullFfa()) {
+      <mat-divider class="section-divider" />
+      <div class="full-ffa-banner">
+        <mat-icon class="ffa-icon">groups</mat-icon>
+        <div>
+          <strong>{{ 'mg.registration.fullFfaTitle' | translate }}</strong>
+          <span>{{ 'mg.registration.fullFfaDescription' | translate }}</span>
+        </div>
+      </div>
+    }
+
+    <!-- selection_published / ongoing / finished: player list -->
+    @if (showSelection() && !isFullFfa()) {
+      <mat-divider class="section-divider" />
+
+      <div class="selection-list">
+        <p class="section-label">{{ 'mg.registration.selectionTitle' | translate }}</p>
+
+        @for (slot of selectedPlayers(); track slot.rank) {
+          <div class="player-row" [class.highlighted]="slot.user_id === currentUserId()">
+            <span class="player-rank">{{ slot.rank }}</span>
+            <span class="player-name">{{
+              slot.user_profiles?.display_name ?? ('mg.registration.unknownPlayer' | translate)
+            }}</span>
+            @if (slot.user_id === currentUserId()) {
+              <mat-icon class="you-icon">person</mat-icon>
+            }
+          </div>
+        }
+
+        @if (selectedPlayers().length === 0) {
+          <p class="empty-selection">{{ 'mg.registration.noSelection' | translate }}</p>
+        }
+
+        @if (ffaCount() > 0) {
+          <div class="ffa-row">
+            <mat-icon class="ffa-icon">groups</mat-icon>
+            <span>{{ 'mg.registration.ffaSlots' | translate: { count: ffaCount() } }}</span>
+          </div>
+        }
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

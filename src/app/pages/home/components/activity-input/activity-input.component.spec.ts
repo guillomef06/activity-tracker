@@ -7,6 +7,7 @@ import { SnackbarService } from '@core/services/snackbar.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
+import { vi } from 'vitest';
 
 describe('ActivityInputComponent', () => {
   let component: ActivityInputComponent;
@@ -102,5 +103,48 @@ describe('ActivityInputComponent', () => {
     fixture.detectChanges();
 
     expect(component['discordInviteUrl']()).toBe('https://discord.gg/test');
+  });
+
+  describe('weekOptions date restriction (Stellar Dynasty start Apr 27, 2026)', () => {
+    // Each test creates a fresh component AFTER setting the fake time,
+    // because weekOptions is a computed() evaluated on first access.
+    function createComponentAt(isoDate: string): ActivityInputComponent {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(isoDate));
+      const localFixture = TestBed.createComponent(ActivityInputComponent);
+      localFixture.detectChanges();
+      return localFixture.componentInstance;
+    }
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should only show current week when cycle just started (Apr 29, 2026)', () => {
+      const c = createComponentAt('2026-04-29T12:00:00Z');
+
+      const options = c['weekOptions']();
+
+      expect(options.length).toBe(1);
+      expect(options[0].value).toBe(0);
+    });
+
+    it('should show 2 weeks when in week 2 of cycle (May 6, 2026)', () => {
+      const c = createComponentAt('2026-05-06T12:00:00Z');
+
+      const options = c['weekOptions']();
+
+      expect(options.length).toBe(2);
+      expect(options[0].value).toBe(0);
+      expect(options[1].value).toBe(1);
+    });
+
+    it('should not exceed 6 options even after many cycles', () => {
+      const c = createComponentAt('2026-07-01T12:00:00Z');
+
+      const options = c['weekOptions']();
+
+      expect(options.length).toBeLessThanOrEqual(6);
+    });
   });
 });
