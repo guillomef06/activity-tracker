@@ -78,6 +78,10 @@ html {
   .mdc-chip {
     --mat-chip-container-shape-radius: 8px;
   }
+
+  .mat-mdc-form-field {
+    --mat-form-field-subscript-text-size: 1rem;
+  }
 }
 
 /* Global Styles */
@@ -151,7 +155,7 @@ body {
   }
 }
 
-/* Alliance Settings Tabs - Global Material Override */
+/* Server Settings Tabs - Global Material Override */
 .settings-tabs .mat-mdc-tab-label {
   min-width: 160px;
 }

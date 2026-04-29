@@ -1,6 +1,6 @@
 {
   "app": {
-    "subtitle": "Rastrea actividades y visualiza puntuaciones de las últimas 6 semanas"
+    "subtitle": "Rastrea actividades y visualiza tus puntuaciones acumuladas"
   },
   "home": {
     "tabs": {
@@ -60,7 +60,8 @@
       "setupFailed": "Error en la configuración. Inténtalo de nuevo.",
       "superAdminExists": "El super administrador ya existe",
       "serverCreationFailed": "Error al crear el servidor",
-      "invalidToken": "Token de invitación inválido o expirado"
+      "invalidToken": "Token de invitación inválido o expirado",
+      "passwordPattern": "La contraseña debe contener al menos una letra y un número"
     },
     "recovery": {
       "forgotPassword": "¿Olvidaste tu contraseña?"
@@ -96,7 +97,8 @@
         "activitySettings": "Configuración de Actividades",
         "retroactive": "Actividades Retroactivas",
         "importExcel": "Importar Excel",
-        "discord": "Discord"
+        "discord": "Discord",
+        "mg": "Evento MG"
       },
       "serverInfo": "Información del Servidor",
       "serverName": "Nombre del Servidor",
@@ -185,7 +187,7 @@
     },
     "retroactive": {
       "title": "Agregar actividad retroactiva",
-      "description": "Como administrador, puedes agregar actividades para los miembros del servidor de las últimas 6 semanas. Selecciona un miembro, elige una semana e ingresa los detalles de la actividad.",
+      "description": "Como administrador, puedes agregar actividades para los miembros del servidor de las últimas semanas. Selecciona un miembro, elige una semana e ingresa los detalles de la actividad.",
       "selectMember": "Seleccionar miembro",
       "memberHint": "Elige el miembro del servidor para quien deseas agregar una actividad",
       "selectWeek": "Seleccionar semana",
@@ -273,6 +275,8 @@
       "desolate-desert": "Desierto Desolado",
       "golden-expedition": "Expedición Dorada",
       "stellar-glory": "Gloria Estelar",
+      "stellar-dynasty": "Dinastía Estelar",
+      "primordial-conflict": "Conflicto Primordial",
       "legion": "Batalla del Amanecer / Maravillas"
     }
   },
@@ -706,7 +710,7 @@
       },
       "step3": {
         "title": "Escala los Rankings",
-        "description": "Un ranking rotativo de 6 semanas mantiene viva la competición y premia la regularidad por encima de los golpes de efecto aislados."
+        "description": "Un ranking rotativo mantiene viva la competición y premia la regularidad por encima de los golpes de efecto aislados."
       }
     },
     "benefits": {
@@ -736,5 +740,70 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "mg": {
+    "event": {
+      "title": "Evento Mightiest Governor",
+      "upcoming": "Próximamente",
+      "registration_open": "Inscripciones abiertas",
+      "registration_closed": "Inscripciones cerradas",
+      "selection_published": "Selección publicada",
+      "ongoing": "Evento en curso",
+      "finished": "Finalizado",
+      "deadlineLabel": "Fecha límite de inscripción:",
+      "waitingMessage": "La lista de seleccionados se publicará pronto."
+    },
+    "registration": {
+      "register": "Inscribirse",
+      "unregister": "Cancelar inscripción",
+      "registeredBadge": "Inscrito",
+      "selectedBadge": "Seleccionado",
+      "ffaSlots": "{{ count }} plaza(s) FFA disponible(s)",
+      "ffaSlot": "Plaza FFA",
+      "selectionTitle": "Jugadores seleccionados",
+      "noSelection": "Aún no se ha publicado ninguna selección.",
+      "unknownPlayer": "Jugador desconocido",
+      "registerSuccess": "Inscripción confirmada.",
+      "registerError": "Error al inscribirse. Por favor, inténtalo de nuevo.",
+      "unregisterSuccess": "Has cancelado tu inscripción.",
+      "unregisterError": "Error al cancelar la inscripción. Por favor, inténtalo de nuevo.",
+      "fullFfaTitle": "FFA Total",
+      "fullFfaDescription": "No se publicó ninguna selección — este evento está abierto a todos los jugadores."
+    },
+    "admin": {
+      "title": "Administración del Evento MG",
+      "loadError": "No se pudieron cargar los datos del MG.",
+      "noEvent": "No hay ningún evento MG próximo para este servidor.",
+      "eventTitle": "Evento actual",
+      "selectionLocked": "La selección está bloqueada — el evento está en curso.",
+      "configSaved": "Configuración guardada.",
+      "configSaveError": "Error al guardar la configuración.",
+      "selectionSaved": "Selección guardada.",
+      "selectionSaveError": "Error al guardar la selección.",
+      "selectionPublished": "Selección publicada con éxito.",
+      "publishError": "Error al publicar la selección.",
+      "config": {
+        "title": "Configuración del servidor",
+        "capacity": "Capacidad",
+        "mode": "Modo de selección",
+        "modeAutomatic": "Automático",
+        "modeManual": "Manual",
+        "save": "Guardar",
+        "saved": "Configuración guardada."
+      },
+      "registrations": {
+        "title": "Inscripciones",
+        "empty": "No hay inscripciones todavía."
+      },
+      "selection": {
+        "title": "Selección",
+        "generate": "Generar selección automática",
+        "previewLabel": "Vista previa — confirma para guardar:",
+        "confirm": "Confirmar",
+        "cancel": "Cancelar",
+        "publish": "Publicar selección",
+        "current": "Selección actual"
+      }
+    }
   }
 }

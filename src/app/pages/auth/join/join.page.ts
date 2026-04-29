@@ -103,7 +103,9 @@ export class JoinPage implements OnInit {
     pattern: 'auth.errors.usernameInvalidChars',
   });
   protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef, undefined, {
+    pattern: 'auth.errors.passwordPattern',
+  });
   protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
   protected readonly confirmPasswordValid = createFieldValidSignal(this.joinForm, 'confirmPassword', this.destroyRef);
   protected readonly recoveryQuestionIdError = createFieldErrorSignal(

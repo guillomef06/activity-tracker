@@ -55,7 +55,12 @@
       "mcp__plugin_playwright_playwright__browser_wait_for",
       "mcp__plugin_playwright_playwright__browser_console_messages",
       "WebFetch(domain:aoem.vercel.app)",
-      "Bash(xxd /d/workplace/activity-tracker/activity-tracker/.husky/pre-commit)"
+      "Bash(xxd /d/workplace/activity-tracker/activity-tracker/.husky/pre-commit)",
+      "mcp__plugin_supabase_supabase__search_docs",
+      "Bash(command -v wkhtmltopdf xelatex lualatex weasyprint)",
+      "Bash(pandoc --list-output-formats)",
+      "PowerShell(pandoc *)",
+      "mcp__plugin_playwright_playwright__browser_run_code"
     ]
   },
   "outputStyle": "default",

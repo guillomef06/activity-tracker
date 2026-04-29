@@ -50,6 +50,23 @@ export type { ServerActivitySettings, UpsertActivitySettingsRequest } from './se
 // Discord Webhook models
 export type { DiscordWebhook, CreateDiscordWebhookRequest } from './discord-webhook.model';
 
+// MG Event models
+export type {
+  MgEvent,
+  MgEventStatus,
+  MgAssignmentMode,
+  MgSelectionType,
+  MgSelectedBy,
+  ServerMgConfig,
+  MgRegistration,
+  MgRegistrationWithUser,
+  MgSelection,
+  MgSelectionWithUser,
+  MgSelectionPayload,
+  MgLeaderboardEntry,
+  UpsertServerMgConfigRequest,
+} from './mg-event.model';
+
 // Guide models
 export type {
   Guide,
