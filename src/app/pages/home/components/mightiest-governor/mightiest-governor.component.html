@@ -16,25 +16,17 @@
       <div class="mg-table">
         <div class="mg-table-header">
           <span>{{ 'mightiestGovernor.rank' | translate }}</span>
-          <span class="header-center">{{ 'mightiestGovernor.weeklyTarget' | translate }}</span>
-          <span class="header-right">{{ 'mightiestGovernor.cost' | translate }}</span>
+          <span class="header-center">{{ 'mightiestGovernor.medal' | translate }}</span>
+          <span class="header-center">{{ 'mightiestGovernor.cost' | translate }}</span>
+          <span class="header-right">{{ 'mightiestGovernor.targetScore' | translate }}</span>
         </div>
 
         @for (slot of slots; track trackByRank($index, slot)) {
           <div class="mg-row">
-            <span class="mg-rank">
-              @if (slot.rank === 1) {
-                <mat-icon class="rank-icon rank-gold">emoji_events</mat-icon>
-              } @else if (slot.rank === 2) {
-                <mat-icon class="rank-icon rank-silver">emoji_events</mat-icon>
-              } @else if (slot.rank === 3) {
-                <mat-icon class="rank-icon rank-bronze">emoji_events</mat-icon>
-              } @else {
-                <span class="rank-number">{{ slot.rank }}</span>
-              }
-            </span>
-            <span class="mg-weekly-target">{{ slot.weeklyTarget }}M</span>
+            <span class="mg-rank">{{ slot.rankLabel }}</span>
+            <span class="mg-medal">{{ slot.medal }}</span>
             <span class="mg-cost">{{ slot.cost }} pts</span>
+            <span class="mg-target">{{ slot.targetLabel }}</span>
           </div>
         }
       </div>

@@ -277,7 +277,8 @@
       "stellar-glory": "Glória Estelar",
       "stellar-dynasty": "Dinastia Estelar",
       "primordial-conflict": "Conflito Primordial",
-      "legion": "Batalha do Amanhecer / Maravilhas"
+      "legion": "Batalha do Amanhecer / Maravilhas",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "Custos de registro por rank",
     "description": "Para participar do evento Governador Mais Poderoso, os jogadores devem gastar pontos. Quanto maior o rank alvo, maior o custo.",
     "rank": "Rank",
-    "weeklyTarget": "Meta Semanal",
+    "medal": "Medalha",
     "cost": "Custo",
+    "targetScore": "Pontuação Alvo",
     "notice": "O sistema DKP está em desenvolvimento. Os custos mostrados são indicativos e podem mudar."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "Seleção atual"
       }
     }
+  },
+  "activityConflict": {
+    "title": "Conflito de posição detectado",
+    "subtitle": "Outro jogador reivindicou a mesma posição para a mesma atividade",
+    "conflictLine": "{{activityType}} — posição {{position}} — também reivindicado por {{player}}",
+    "acknowledge": "Entendido"
   }
 }

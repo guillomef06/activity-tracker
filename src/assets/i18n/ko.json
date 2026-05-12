@@ -277,7 +277,8 @@
       "stellar-glory": "별무리의 광휘",
       "stellar-dynasty": "별무리의 왕조",
       "primordial-conflict": "원초의 충돌",
-      "legion": "여명의 전투 / 경이"
+      "legion": "여명의 전투 / 경이",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "순위별 등록 비용",
     "description": "최강 총독 이벤트에 참가하려면 플레이어가 점수 포인트를 사용해야 합니다. 목표 순위가 높을수록 비용이 높아집니다.",
     "rank": "순위",
-    "weeklyTarget": "주간 목표",
+    "medal": "메달",
     "cost": "비용",
+    "targetScore": "목표 점수",
     "notice": "DKP 시스템은 개발 중입니다. 표시된 비용은 참고용이며 변경될 수 있습니다."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "현재 선발 명단"
       }
     }
+  },
+  "activityConflict": {
+    "title": "위치 충돌 감지됨",
+    "subtitle": "다른 플레이어가 같은 활동에 같은 위치를 주장했습니다",
+    "conflictLine": "{{activityType}} — 위치 {{position}} — {{player}}도 주장함",
+    "acknowledge": "알겠습니다"
   }
 }

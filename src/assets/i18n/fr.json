@@ -277,7 +277,8 @@
       "stellar-glory": "Gloire Stellaire",
       "stellar-dynasty": "Dynastie Stellaire",
       "primordial-conflict": "Conflit Primordial",
-      "legion": "Bataille de l'Aube / Merveilles"
+      "legion": "Bataille de l'Aube / Merveilles",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -525,8 +526,9 @@
     "subtitle": "Coûts d'inscription par rang",
     "description": "Pour participer à l'event Mightiest Governor, les joueurs doivent dépenser des points de score. Plus le rang visé est élevé, plus le coût est important.",
     "rank": "Rang",
-    "weeklyTarget": "Objectif semaine",
+    "medal": "Médaille",
     "cost": "Coût",
+    "targetScore": "Score Objectif",
     "notice": "Le système DKP est en cours de développement. Les coûts affichés sont indicatifs et peuvent évoluer."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
     "title": "Vous avez rejoint le serveur Discord ?",
     "cta": "M'y emmener",
     "dismiss": "Ignorer"
+  },
+  "activityConflict": {
+    "title": "Conflit de position détecté",
+    "subtitle": "Un autre joueur a revendiqué la même position pour la même activité",
+    "conflictLine": "{{activityType}} — position {{position}} — également revendiqué par {{player}}",
+    "acknowledge": "J'ai compris"
   }
 }

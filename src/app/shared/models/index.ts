@@ -7,6 +7,7 @@ export type {
   WeeklyScore,
   UserScore,
   BatchImportEntry,
+  PositionConflict,
 } from './activity.model';
 
 // User models

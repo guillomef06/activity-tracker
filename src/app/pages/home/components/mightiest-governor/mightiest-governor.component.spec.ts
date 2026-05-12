@@ -57,12 +57,26 @@ describe('MightiestGovernorComponent', () => {
     expect(component.slots.length).toBe(10);
   });
 
-  it('should have rank 1 cost 150', () => {
+  it('should have rank 1 cost 150 and medal 100', () => {
     expect(component.slots[0].cost).toBe(150);
+    expect(component.slots[0].medal).toBe(100);
+    expect(component.slots[0].rankLabel).toBe('1');
   });
 
-  it('should have rank 10 cost 80', () => {
-    expect(component.slots[9].cost).toBe(80);
+  it('should have last slot cover rank 26-50 with cost 60', () => {
+    expect(component.slots[9].rankLabel).toBe('26-50');
+    expect(component.slots[9].cost).toBe(60);
+    expect(component.slots[9].medal).toBe(5);
+  });
+
+  it('should build targetLabel as single value for individual ranks', () => {
+    expect(component.slots[0].targetLabel).toBe('30M');
+    expect(component.slots[4].targetLabel).toBe('26M');
+  });
+
+  it('should build targetLabel as range for grouped ranks', () => {
+    expect(component.slots[5].targetLabel).toBe('24M-26M');
+    expect(component.slots[9].targetLabel).toBe('10M-15M');
   });
 
   it('costs should be non-increasing', () => {

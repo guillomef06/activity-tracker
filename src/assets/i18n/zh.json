@@ -277,7 +277,8 @@
       "stellar-glory": "星耀荣光",
       "stellar-dynasty": "星耀王朝",
       "primordial-conflict": "太古纷争",
-      "legion": "黎明之战 / 奇观"
+      "legion": "黎明之战 / 奇观",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -458,8 +459,9 @@
     "subtitle": "按排名的注册费用",
     "description": "参加最强总督活动，玩家需要消耗积分。目标排名越高，费用越高。",
     "rank": "排名",
-    "weeklyTarget": "每周目标",
+    "medal": "勋章",
     "cost": "费用",
+    "targetScore": "目标分数",
     "notice": "DKP系统正在开发中。显示的费用仅供参考，可能会更改。"
   },
   "gemCalculator": {
@@ -803,5 +805,11 @@
         "current": "当前名单"
       }
     }
+  },
+  "activityConflict": {
+    "title": "检测到位置冲突",
+    "subtitle": "另一名玩家声称同一活动的相同位置",
+    "conflictLine": "{{activityType}} — 位置 {{position}} — {{player}} 也声称此位置",
+    "acknowledge": "我明白了"
   }
 }

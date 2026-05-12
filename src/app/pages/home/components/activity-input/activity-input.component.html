@@ -1,94 +1,98 @@
 <div class="form-section">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>{{ 'activityInput.title' | translate }}</mat-card-title>
-      <mat-card-subtitle>{{ 'activityInput.subtitle' | translate }}</mat-card-subtitle>
-    </mat-card-header>
+  @if (conflicts().length > 0 && !conflictAcknowledged()) {
+    <app-activity-conflict [conflicts]="conflicts()" (acknowledged)="onConflictAcknowledged()" />
+  } @else {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'activityInput.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'activityInput.subtitle' | translate }}</mat-card-subtitle>
+      </mat-card-header>
 
-    <mat-card-content>
-      @if (authService.userProfile(); as profile) {
-        <p class="user-info">
-          <mat-icon>person</mat-icon>
-          <span>{{ profile.display_name }}</span>
-        </p>
-      }
+      <mat-card-content>
+        @if (authService.userProfile(); as profile) {
+          <p class="user-info">
+            <mat-icon>person</mat-icon>
+            <span>{{ profile.display_name }}</span>
+          </p>
+        }
 
-      <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
-        <!-- Week Selection -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matIconPrefix>calendar_today</mat-icon>
-          <mat-label>{{ 'server.retroactive.selectWeek' | translate }}</mat-label>
-          <mat-select formControlName="week">
-            @for (week of weekOptions(); track week.value) {
-              <mat-option [value]="week.value"> {{ week.label }} - {{ week.dateRange }} </mat-option>
-            }
-          </mat-select>
-          <mat-hint>{{ 'server.retroactive.weekHint' | translate }}</mat-hint>
-        </mat-form-field>
-
-        <!-- Activity Type Selection -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-icon matIconPrefix>category</mat-icon>
-          <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
-          <mat-select formControlName="activityType" [disabled]="availableActivities().length === 0">
-            @for (type of availableActivities(); track type.value) {
-              <mat-option [value]="type.value">
-                {{ type.labelKey | translate }}
-              </mat-option>
-            }
-          </mat-select>
-          <mat-hint>{{ 'activityInput.typeHint' | translate }}</mat-hint>
-          @if (activityTypeError()) {
-            <mat-error>{{ activityTypeError() | translate }}</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- Position Input OR Participation Toggle -->
-        @if (isParticipationMode()) {
-          <div class="participation-section">
-            <mat-slide-toggle formControlName="participated">
-              {{ 'activityInput.participated' | translate }}
-            </mat-slide-toggle>
-          </div>
-        } @else {
+        <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+          <!-- Week Selection -->
           <mat-form-field appearance="outline" class="full-width">
-            <mat-icon matIconPrefix>emoji_events</mat-icon>
-            <mat-label>{{ 'activityInput.position' | translate }}</mat-label>
-            <input
-              matInput
-              type="number"
-              formControlName="position"
-              [placeholder]="'activityInput.positionPlaceholder' | translate"
-              min="1"
-              max="999"
-            />
-            <mat-hint>{{ 'activityInput.positionHint' | translate }}</mat-hint>
-            @if (positionError()) {
-              <mat-error>{{ positionError() | translate }}</mat-error>
+            <mat-icon matIconPrefix>calendar_today</mat-icon>
+            <mat-label>{{ 'server.retroactive.selectWeek' | translate }}</mat-label>
+            <mat-select formControlName="week">
+              @for (week of weekOptions(); track week.value) {
+                <mat-option [value]="week.value"> {{ week.label }} - {{ week.dateRange }} </mat-option>
+              }
+            </mat-select>
+            <mat-hint>{{ 'server.retroactive.weekHint' | translate }}</mat-hint>
+          </mat-form-field>
+
+          <!-- Activity Type Selection -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-icon matIconPrefix>category</mat-icon>
+            <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
+            <mat-select formControlName="activityType" [disabled]="availableActivities().length === 0">
+              @for (type of availableActivities(); track type.value) {
+                <mat-option [value]="type.value">
+                  {{ type.labelKey | translate }}
+                </mat-option>
+              }
+            </mat-select>
+            <mat-hint>{{ 'activityInput.typeHint' | translate }}</mat-hint>
+            @if (activityTypeError()) {
+              <mat-error>{{ activityTypeError() | translate }}</mat-error>
             }
           </mat-form-field>
-        }
 
-        <!-- Points Preview -->
-        @if (points() !== null) {
-          <div class="points-preview">
-            <mat-icon>stars</mat-icon>
-            <div class="points-info">
-              <div class="points-value">{{ points() }} {{ 'common.points' | translate }}</div>
+          <!-- Position Input OR Participation Toggle -->
+          @if (isParticipationMode()) {
+            <div class="participation-section">
+              <mat-slide-toggle formControlName="participated">
+                {{ 'activityInput.participated' | translate }}
+              </mat-slide-toggle>
             </div>
-          </div>
-        }
+          } @else {
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-icon matIconPrefix>emoji_events</mat-icon>
+              <mat-label>{{ 'activityInput.position' | translate }}</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="position"
+                [placeholder]="'activityInput.positionPlaceholder' | translate"
+                min="1"
+                max="999"
+              />
+              <mat-hint>{{ 'activityInput.positionHint' | translate }}</mat-hint>
+              @if (positionError()) {
+                <mat-error>{{ positionError() | translate }}</mat-error>
+              }
+            </mat-form-field>
+          }
 
-        <app-loading-button
-          type="submit"
-          icon="send"
-          [text]="'activityInput.submit' | translate"
-          [loadingText]="'activityInput.submitting' | translate"
-          [submitting]="isSubmitting()"
-          [disabled]="!canSubmit()"
-        />
-      </form>
-    </mat-card-content>
-  </mat-card>
-  <app-discord-invite-banner [inviteUrl]="discordInviteUrl()" />
+          <!-- Points Preview -->
+          @if (points() !== null) {
+            <div class="points-preview">
+              <mat-icon>stars</mat-icon>
+              <div class="points-info">
+                <div class="points-value">{{ points() }} {{ 'common.points' | translate }}</div>
+              </div>
+            </div>
+          }
+
+          <app-loading-button
+            type="submit"
+            icon="send"
+            [text]="'activityInput.submit' | translate"
+            [loadingText]="'activityInput.submitting' | translate"
+            [submitting]="isSubmitting()"
+            [disabled]="!canSubmit()"
+          />
+        </form>
+      </mat-card-content>
+    </mat-card>
+    <app-discord-invite-banner [inviteUrl]="discordInviteUrl()" />
+  }
 </div>
