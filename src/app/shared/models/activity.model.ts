@@ -81,3 +81,15 @@ export interface BatchImportEntry {
   points: number;
   date: Date;
 }
+
+/**
+ * Position conflict: two users claimed the same position for the same activity on the same date.
+ * activityId refers to the current user's activity that is in conflict.
+ */
+export interface PositionConflict {
+  activityId: string;
+  activityType: string;
+  position: number;
+  date: Date;
+  conflictingDisplayName: string;
+}

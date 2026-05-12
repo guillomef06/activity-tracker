@@ -277,7 +277,8 @@
       "stellar-glory": "Stellarer Ruhm",
       "stellar-dynasty": "Stellare Dynastie",
       "primordial-conflict": "Primordaler Konflikt",
-      "legion": "Kampf der Morgendämmerung / Wunder"
+      "legion": "Kampf der Morgendämmerung / Wunder",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "Registrierungskosten nach Rang",
     "description": "Um am Mächtigster-Gouverneur-Event teilzunehmen, müssen Spieler Scorepunkte ausgeben. Je höher der Zielrang, desto höher die Kosten.",
     "rank": "Rang",
-    "weeklyTarget": "Wochenziel",
+    "medal": "Medaille",
     "cost": "Kosten",
+    "targetScore": "Zielpunktzahl",
     "notice": "Das DKP-System befindet sich in der Entwicklung. Die angezeigten Kosten sind indikativ und können sich ändern."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "Aktuelle Auswahl"
       }
     }
+  },
+  "activityConflict": {
+    "title": "Positionskonflikt erkannt",
+    "subtitle": "Ein anderer Spieler hat dieselbe Position für dieselbe Aktivität beansprucht",
+    "conflictLine": "{{activityType}} — Position {{position}} — auch beansprucht von {{player}}",
+    "acknowledge": "Verstanden"
   }
 }

@@ -277,7 +277,8 @@
       "stellar-glory": "Kejayaan Bintang",
       "stellar-dynasty": "Dinasti Bintang",
       "primordial-conflict": "Konflik Purba",
-      "legion": "Pertempuran Fajar / Keajaiban"
+      "legion": "Pertempuran Fajar / Keajaiban",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "Biaya pendaftaran berdasarkan peringkat",
     "description": "Untuk berpartisipasi dalam acara Governor Terkuat, pemain harus menghabiskan poin skor. Semakin tinggi target peringkat, semakin tinggi biayanya.",
     "rank": "Peringkat",
-    "weeklyTarget": "Target Mingguan",
+    "medal": "Medali",
     "cost": "Biaya",
+    "targetScore": "Skor Target",
     "notice": "Sistem DKP sedang dalam pengembangan. Biaya yang ditampilkan bersifat indikatif dan dapat berubah."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "Seleksi saat ini"
       }
     }
+  },
+  "activityConflict": {
+    "title": "Konflik posisi terdeteksi",
+    "subtitle": "Pemain lain mengklaim posisi yang sama untuk aktivitas yang sama",
+    "conflictLine": "{{activityType}} — posisi {{position}} — juga diklaim oleh {{player}}",
+    "acknowledge": "Saya Mengerti"
   }
 }

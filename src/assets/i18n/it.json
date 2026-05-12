@@ -277,7 +277,8 @@
       "stellar-glory": "Gloria Stellare",
       "stellar-dynasty": "Dinastia Stellare",
       "primordial-conflict": "Conflitto Primordiale",
-      "legion": "Battaglia dell'Alba / Meraviglie"
+      "legion": "Battaglia dell'Alba / Meraviglie",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "Costi di iscrizione per rango",
     "description": "Per partecipare all'evento Mightiest Governor, i giocatori devono spendere punti punteggio. Più alto è il rango target, maggiore è il costo.",
     "rank": "Rango",
-    "weeklyTarget": "Obiettivo settimanale",
+    "medal": "Medaglia",
     "cost": "Costo",
+    "targetScore": "Punteggio Obiettivo",
     "notice": "Il sistema DKP è in fase di sviluppo. I costi mostrati sono indicativi e potrebbero cambiare."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "Selezione corrente"
       }
     }
+  },
+  "activityConflict": {
+    "title": "Conflitto di posizione rilevato",
+    "subtitle": "Un altro giocatore ha reclamato la stessa posizione per la stessa attività",
+    "conflictLine": "{{activityType}} — posizione {{position}} — reclamato anche da {{player}}",
+    "acknowledge": "Ho capito"
   }
 }

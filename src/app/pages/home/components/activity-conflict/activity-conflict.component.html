@@ -1,0 +1,35 @@
+<mat-card class="conflict-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar class="conflict-icon">warning</mat-icon>
+    <mat-card-title>{{ 'activityConflict.title' | translate }}</mat-card-title>
+    <mat-card-subtitle>{{ 'activityConflict.subtitle' | translate }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <ul class="conflict-list">
+      @for (conflict of conflicts(); track conflict.activityId) {
+        <li class="conflict-item">
+          <mat-icon class="conflict-item-icon">person</mat-icon>
+          <span class="conflict-item-text">
+            {{
+              'activityConflict.conflictLine'
+                | translate
+                  : {
+                      activityType: conflict.activityType,
+                      position: conflict.position,
+                      player: conflict.conflictingDisplayName,
+                    }
+            }}
+          </span>
+        </li>
+      }
+    </ul>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-raised-button class="acknowledge-button" (click)="onAcknowledge()">
+      <mat-icon>check_circle</mat-icon>
+      {{ 'activityConflict.acknowledge' | translate }}
+    </button>
+  </mat-card-actions>
+</mat-card>

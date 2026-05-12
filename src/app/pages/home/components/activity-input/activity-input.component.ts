@@ -18,6 +18,7 @@ import { PointCalculationResult } from '@shared/models';
 import { createFieldErrorSignal } from '@shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@shared/components/loading-button/loading-button.component';
 import { DiscordInviteBannerComponent } from '@app/pages/home/components/discord-invite-banner/discord-invite-banner.component';
+import { ActivityConflictComponent } from '@app/pages/home/components/activity-conflict/activity-conflict.component';
 import {
   getWeekNumberForWeeksAgo,
   getWeekStart,
@@ -46,6 +47,7 @@ interface WeekOption {
     TranslateModule,
     LoadingButtonComponent,
     DiscordInviteBannerComponent,
+    ActivityConflictComponent,
   ],
   templateUrl: './activity-input.component.html',
   styleUrl: './activity-input.component.scss',
@@ -62,11 +64,38 @@ export class ActivityInputComponent {
 
   protected readonly isSubmitting = signal<boolean>(false);
   protected readonly calculatedPointsResult = signal<PointCalculationResult | null>(null);
+  protected readonly conflictAcknowledged = signal<boolean>(false);
+
+  // Explicitly reads activityService.activities (a Signal) to register the reactive dependency.
+  // When activities updates, Angular invalidates this computed and the template re-evaluates.
+  protected readonly conflicts = computed(() => {
+    void this.activityService.activities(); // register signal dependency
+    return this.activityService.getConflictsForCurrentUser();
+  });
+
+  /**
+   * True when a conflict exists AND the user has acknowledged it but not yet resolved it.
+   * In this state the form is visible but week/activityType/position fields are locked.
+   */
+  protected readonly isInForcedEditMode = computed(() => this.conflicts().length > 0 && this.conflictAcknowledged());
+
+  /**
+   * The week index (0 = current week, 1 = last week, …) for the first conflict's date.
+   * Used to pre-fill the week selector when entering forced-edit mode.
+   */
+  protected readonly conflictWeekIndex = computed<number>(() => {
+    const conflict = this.conflicts()[0];
+    if (!conflict) return 0;
+    const currentWeekStart = getWeekStart(new Date());
+    const conflictWeekStart = getWeekStart(conflict.date);
+    const diffMs = currentWeekStart.getTime() - conflictWeekStart.getTime();
+    return Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
+  });
 
   protected readonly activityForm: FormGroup = this.fb.group({
     week: [0, Validators.required],
     activityType: ['', Validators.required],
-    position: [1, [Validators.required, Validators.min(1)]],
+    position: [null, [Validators.required, Validators.min(1)]],
     participated: [false],
   });
 
@@ -109,7 +138,7 @@ export class ActivityInputComponent {
       return this.participatedValue();
     }
     const position = this.activityForm.get('position')?.value;
-    return position >= 1;
+    return position !== null && position >= 1;
   });
 
   protected readonly activityTypeError = createFieldErrorSignal(this.activityForm, 'activityType', this.destroyRef);
@@ -160,16 +189,20 @@ export class ActivityInputComponent {
       .get('week')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.calculatedPointsResult.set(null);
-        this.activityForm.patchValue({ activityType: '', position: 1, participated: false }, { emitEvent: false });
+        if (!this.isInForcedEditMode()) {
+          this.calculatedPointsResult.set(null);
+          this.activityForm.patchValue({ activityType: '', position: 1, participated: false }, { emitEvent: false });
+        }
       });
 
     this.activityForm
       .get('activityType')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.activityForm.get('participated')?.setValue(false);
-        this.calculatedPointsResult.set(null);
+        if (!this.isInForcedEditMode()) {
+          this.activityForm.get('participated')?.setValue(false);
+          this.calculatedPointsResult.set(null);
+        }
       });
   }
 
@@ -182,7 +215,7 @@ export class ActivityInputComponent {
 
     this.isSubmitting.set(true);
 
-    const formValue = this.activityForm.value;
+    const formValue = this.activityForm.getRawValue();
     const currentWeekStart = getWeekStart(new Date());
     const activityDate = new Date(currentWeekStart);
     activityDate.setUTCDate(currentWeekStart.getUTCDate() - formValue.week * 7);
@@ -206,12 +239,51 @@ export class ActivityInputComponent {
       return;
     }
 
-    this.activityForm.patchValue({ activityType: '', position: 1, participated: false });
+    // If the conflict is now resolved (signal becomes empty), return to normal mode.
+    // The conflicts signal is re-evaluated after activities signal updates inside addActivity.
+    this.activityForm.patchValue({ activityType: '', position: null, participated: false });
     this.activityForm.markAsUntouched();
     this.activityForm.markAsPristine();
     this.calculatedPointsResult.set(null);
+    this.conflictAcknowledged.set(false);
     this.isSubmitting.set(false);
 
+    // Re-enable all form controls in case they were locked during forced-edit mode
+    this.activityForm.get('week')?.enable({ emitEvent: false });
+    this.activityForm.get('activityType')?.enable({ emitEvent: false });
+    this.activityForm.get('position')?.enable({ emitEvent: false });
+
     this.snackbarService.success(this.translate.instant('activityInput.success'));
+  }
+
+  /**
+   * Called when the user clicks "J'ai compris" on the conflict card.
+   * Transitions to forced-edit mode: pre-fills the form with the conflicting
+   * activity data and disables week/activityType/position so the user can only
+   * correct the position.
+   */
+  protected onConflictAcknowledged(): void {
+    const conflict = this.conflicts()[0];
+    if (!conflict) return;
+
+    const weekIndex = this.conflictWeekIndex();
+
+    // Pre-fill form with the conflicting activity data
+    this.activityForm.patchValue(
+      {
+        week: weekIndex,
+        activityType: conflict.activityType,
+        position: conflict.position,
+        participated: false,
+      },
+      { emitEvent: true }
+    );
+
+    // Lock fields that identify the conflicting activity
+    this.activityForm.get('week')?.disable({ emitEvent: false });
+    this.activityForm.get('activityType')?.disable({ emitEvent: false });
+    this.activityForm.get('position')?.enable({ emitEvent: false });
+
+    this.conflictAcknowledged.set(true);
   }
 }

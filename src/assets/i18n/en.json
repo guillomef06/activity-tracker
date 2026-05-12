@@ -277,7 +277,8 @@
       "stellar-glory": "Stellar Glory",
       "stellar-dynasty": "Stellar Dynasty",
       "primordial-conflict": "Primordial Conflict",
-      "legion": "Battle of Dawn / Wonders"
+      "legion": "Battle of Dawn / Wonders",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -525,8 +526,9 @@
     "subtitle": "Registration costs by rank",
     "description": "To participate in the Mightiest Governor event, players must spend score points. The higher the target rank, the higher the cost.",
     "rank": "Rank",
-    "weeklyTarget": "Weekly Target",
+    "medal": "Medal",
     "cost": "Cost",
+    "targetScore": "Target Score",
     "notice": "The DKP system is under development. The costs shown are indicative and may change."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
     "title": "Have you joined your Discord server yet?",
     "cta": "Take me there",
     "dismiss": "Dismiss"
+  },
+  "activityConflict": {
+    "title": "Position Conflict Detected",
+    "subtitle": "Another player has claimed the same position for the same activity",
+    "conflictLine": "{{activityType}} — position {{position}} — also claimed by {{player}}",
+    "acknowledge": "I Understand"
   }
 }
