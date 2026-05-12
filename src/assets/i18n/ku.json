@@ -277,7 +277,8 @@
       "stellar-glory": "شکۆی ئەستێرە",
       "stellar-dynasty": "خانەدانی ئەستێرە",
       "primordial-conflict": "ناکۆکی سەرەتایی",
-      "legion": "شەڕی بەیانی / سەرسوڕمانەوە"
+      "legion": "شەڕی بەیانی / سەرسوڕمانەوە",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "تێچووی تۆمارکردن بەپێی ڕیز",
     "description": "بۆ بەشداریکردن لە بوێری بەهێزترین فەرمانفەرما، یارمەتیدەران پێویستە خاڵی نیشانەیان خەرج بکەن. هەرچەندە ئامانجی ڕیز بەرزتر بێت، تێچوون زیاتر دەبێت.",
     "rank": "ڕیز",
-    "weeklyTarget": "ئامانجی هەفتانە",
+    "medal": "Medal",
     "cost": "تێچوون",
+    "targetScore": "Xalên Armancê",
     "notice": "سیستەمی DKP لە خولەکی پەرەسەندندایە. تێچووەکانی نیشاندراو ئاماژەیین و لەوانەیە بگۆڕن."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "Hilbijartina niha"
       }
     }
+  },
+  "activityConflict": {
+    "title": "Nakokiya cihê hat dîtin",
+    "subtitle": "Lîstikvanek din ji bo heman çalakiyê heman cihê xwest",
+    "conflictLine": "{{activityType}} — cih {{position}} — ji hêla {{player}} ve jî hat xwestin",
+    "acknowledge": "Têgihiştim"
   }
 }

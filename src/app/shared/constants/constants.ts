@@ -60,6 +60,12 @@ export const APP_CONSTANTS = {
       points: 5,
       availableWeeks: [1, 2, 3, 4, 5, 6],
     },
+    {
+      value: 'me overall',
+      labelKey: 'activities.types.me-overall',
+      points: 8,
+      availableWeeks: [2, 4],
+    },
   ] as ActivityType[],
 } as const;
 

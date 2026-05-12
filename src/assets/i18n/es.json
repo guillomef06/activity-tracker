@@ -277,7 +277,8 @@
       "stellar-glory": "Gloria Estelar",
       "stellar-dynasty": "Dinastía Estelar",
       "primordial-conflict": "Conflicto Primordial",
-      "legion": "Batalla del Amanecer / Maravillas"
+      "legion": "Batalla del Amanecer / Maravillas",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "Costes de inscripción por rango",
     "description": "Para participar en el evento Mightiest Governor, los jugadores deben gastar puntos de puntuación. Cuanto más alto sea el rango objetivo, mayor será el coste.",
     "rank": "Rango",
-    "weeklyTarget": "Objetivo semanal",
+    "medal": "Medalla",
     "cost": "Coste",
+    "targetScore": "Puntuación Objetivo",
     "notice": "El sistema DKP está en desarrollo. Los costes mostrados son indicativos y pueden cambiar."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "Selección actual"
       }
     }
+  },
+  "activityConflict": {
+    "title": "Conflicto de posición detectado",
+    "subtitle": "Otro jugador reclamó la misma posición para la misma actividad",
+    "conflictLine": "{{activityType}} — posición {{position}} — también reclamado por {{player}}",
+    "acknowledge": "Entendido"
   }
 }

@@ -10,22 +10,24 @@ import { MgEventCardComponent } from './components/mg-event-card/mg-event-card.c
 import type { MgEvent, MgRegistration, MgSelectionWithUser } from '@shared/models';
 
 interface GovernorSlot {
-  rank: number;
+  rankLabel: string;
+  medal: number;
   cost: number;
-  weeklyTarget: number;
+  targetLabel: string;
 }
 
-const SLOTS_DATA: [number, number][] = [
-  [150, 20],
-  [140, 19],
-  [130, 18],
-  [120, 17],
-  [110, 16],
-  [90, 14],
-  [90, 14],
-  [80, 10],
-  [80, 10],
-  [80, 10],
+// [rankLabel, medal, cost, targetMin, targetMax] — scores in millions
+const SLOTS_DATA: [string, number, number, number, number][] = [
+  ['1', 100, 150, 30, 30],
+  ['2', 80, 140, 29, 29],
+  ['3', 60, 130, 28, 28],
+  ['4', 40, 120, 27, 27],
+  ['5', 30, 100, 26, 26],
+  ['6-7', 20, 90, 24, 26],
+  ['8-10', 15, 80, 22, 24],
+  ['11-15', 12, 75, 20, 22],
+  ['16-25', 10, 70, 15, 20],
+  ['26-50', 5, 60, 10, 15],
 ];
 
 @Component({
@@ -41,10 +43,11 @@ export class MightiestGovernorComponent implements OnInit {
   private readonly snackbarService = inject(SnackbarService);
   private readonly translate = inject(TranslateService);
 
-  readonly slots: GovernorSlot[] = SLOTS_DATA.map(([cost, weeklyTarget], i) => ({
-    rank: i + 1,
+  readonly slots: GovernorSlot[] = SLOTS_DATA.map(([rankLabel, medal, cost, targetMin, targetMax]) => ({
+    rankLabel,
+    medal,
     cost,
-    weeklyTarget,
+    targetLabel: targetMin === targetMax ? `${targetMin}M` : `${targetMin}M-${targetMax}M`,
   }));
 
   protected readonly mgEvent = signal<MgEvent | null>(null);
@@ -59,8 +62,8 @@ export class MightiestGovernorComponent implements OnInit {
     return ev !== null && ev.status !== 'upcoming';
   });
 
-  trackByRank(_: number, slot: GovernorSlot): number {
-    return slot.rank;
+  trackByRank(_: number, slot: GovernorSlot): string {
+    return slot.rankLabel;
   }
 
   async ngOnInit(): Promise<void> {

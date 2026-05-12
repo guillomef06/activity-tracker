@@ -277,7 +277,8 @@
       "stellar-glory": "Yıldızsal Zafer",
       "stellar-dynasty": "Yıldızsal Hanedan",
       "primordial-conflict": "İlksel Çatışma",
-      "legion": "Şafak Savaşı / Harikalar"
+      "legion": "Şafak Savaşı / Harikalar",
+      "me-overall": "ME Overall"
     }
   },
   "dashboard": {
@@ -460,8 +461,9 @@
     "subtitle": "Sıralamaya göre kayıt maliyetleri",
     "description": "En Güçlü Vali etkinliğine katılmak için oyuncuların puan harcaması gerekir. Hedef sıralama ne kadar yüksekse, maliyet o kadar yüksek olur.",
     "rank": "Sıralama",
-    "weeklyTarget": "Haftalık Hedef",
+    "medal": "Madalya",
     "cost": "Maliyet",
+    "targetScore": "Hedef Puan",
     "notice": "DKP sistemi geliştirme aşamasındadır. Gösterilen maliyetler tahminidir ve değişebilir."
   },
   "gemCalculator": {
@@ -805,5 +807,11 @@
         "current": "Mevcut seçim"
       }
     }
+  },
+  "activityConflict": {
+    "title": "Konum çakışması algılandı",
+    "subtitle": "Başka bir oyuncu aynı etkinlik için aynı konumu talep etti",
+    "conflictLine": "{{activityType}} — konum {{position}} — ayrıca {{player}} tarafından talep edildi",
+    "acknowledge": "Anladım"
   }
 }

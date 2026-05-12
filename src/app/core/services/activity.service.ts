@@ -1,5 +1,13 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { Activity, ActivityRequest, ActivityWithUser, BatchImportEntry, UserScore, WeeklyScore } from '@shared/models';
+import {
+  Activity,
+  ActivityRequest,
+  ActivityWithUser,
+  BatchImportEntry,
+  PositionConflict,
+  UserScore,
+  WeeklyScore,
+} from '@shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { ServerService } from './server.service';
@@ -235,6 +243,46 @@ export class ActivityService {
       console.error('Error deleting all activities:', error);
       return { error: error as Error };
     }
+  }
+
+  /**
+   * Returns all position conflicts for the current user derived from the loaded activities signal.
+   * A conflict exists when another user has recorded the same activityType + position on the same date.
+   * Participation-mode activities (position === null) are excluded.
+   * No network call — derived purely from the existing activitiesSignal.
+   */
+  getConflictsForCurrentUser(): PositionConflict[] {
+    const currentUserId = this.authService.getUserId();
+    if (!currentUserId) return [];
+
+    const allActivities = this.activitiesSignal();
+    const myActivities = allActivities.filter(a => a.userId === currentUserId && a.position !== null);
+
+    const conflicts: PositionConflict[] = [];
+
+    for (const mine of myActivities) {
+      const myDate = mine.date.toISOString().slice(0, 10);
+
+      const rival = allActivities.find(
+        other =>
+          other.userId !== currentUserId &&
+          other.activityType === mine.activityType &&
+          other.position === mine.position &&
+          other.date.toISOString().slice(0, 10) === myDate
+      );
+
+      if (rival) {
+        conflicts.push({
+          activityId: mine.id,
+          activityType: mine.activityType,
+          position: mine.position as number,
+          date: mine.date,
+          conflictingDisplayName: rival.displayName,
+        });
+      }
+    }
+
+    return conflicts;
   }
 
   getUserScores(): UserScore[] {

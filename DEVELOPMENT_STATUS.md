@@ -39,6 +39,7 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - Entrée rétroactive admin (pour n'importe quel membre, n'importe quelle semaine)
 - Import Excel batch (wizard upload → preview → done, matching joueur, upsert)
 - Suppression globale des activités (admin, avec confirmation)
+- **Détection et résolution de conflits de position** : `ActivityService.getConflictsForCurrentUser()` — dérive les conflits depuis le signal existant, sans requête Supabase additionnelle. Interface `PositionConflict` dans `activity.model.ts`. Composant `ActivityConflictComponent` (renommé depuis `ActivityConflictCardComponent`, sélecteur `app-activity-conflict`) dans `src/app/pages/home/components/activity-conflict/`. Quand des conflits existent, la card **remplace** le formulaire (pas d'affichage simultané). Bouton "J'ai compris" → mode édition forcée : formulaire prérempli avec les données de l'activité en conflit, champs `week` et `activityType` désactivés, `position` modifiable. Résolution automatique : retour au mode création quand `conflicts()` devient vide après soumission.
 
 ### Server Settings
 - Gestion membres (invitations, suppression)

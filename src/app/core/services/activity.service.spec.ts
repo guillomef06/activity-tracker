@@ -5,7 +5,7 @@ import { ActivityService } from './activity.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { ServerService } from './server.service';
-import type { UserScore, BatchImportEntry } from '@app/shared/models';
+import type { UserScore, BatchImportEntry, PositionConflict } from '@app/shared/models';
 import type { Server } from '@app/shared/models/server.model';
 
 interface ActivityRow {
@@ -404,6 +404,201 @@ describe('ActivityService', () => {
 
       const result = await deleteService.deleteAllActivities();
       expect(result.error).toBeTruthy();
+    });
+  });
+
+  describe('getConflictsForCurrentUser()', () => {
+    const makeActivity = (
+      overrides: Partial<{
+        id: string;
+        userId: string;
+        displayName: string;
+        activityType: string;
+        position: number | null;
+        points: number;
+        date: Date;
+      }> = {}
+    ) => ({
+      id: 'act-1',
+      userId: 'user-current',
+      displayName: 'Current User',
+      activityType: 'kvk-prep',
+      position: 3,
+      points: 20,
+      date: new Date('2026-05-05T00:00:00.000Z'),
+      timestamp: new Date('2026-05-05T00:00:00.000Z').getTime(),
+      ...overrides,
+    });
+
+    let conflictService: ActivityService;
+    let authMockForConflict: {
+      getServerId: ReturnType<typeof vi.fn>;
+      getUserId: ReturnType<typeof vi.fn>;
+      userProfile: ReturnType<typeof signal>;
+    };
+
+    beforeEach(() => {
+      authMockForConflict = {
+        getServerId: vi.fn().mockReturnValue('server-1'),
+        getUserId: vi.fn().mockReturnValue('user-current'),
+        userProfile: signal(null),
+      };
+
+      const supabaseMock = {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnThis(),
+          order: vi.fn().mockReturnThis(),
+          gte: vi.fn().mockReturnThis(),
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => void) => resolve({ data: [], error: null })),
+        }),
+      };
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          ActivityService,
+          { provide: SupabaseService, useValue: supabaseMock },
+          { provide: AuthService, useValue: authMockForConflict },
+          { provide: ServerService, useValue: serverServiceMock },
+        ],
+      });
+
+      conflictService = TestBed.inject(ActivityService);
+    });
+
+    it('should return empty array when no activities are loaded', () => {
+      // Arrange
+      conflictService['activitiesSignal'].set([]);
+
+      // Act
+      const result: PositionConflict[] = conflictService.getConflictsForCurrentUser();
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+
+    it('should return empty array when current user has no conflicting activities', () => {
+      // Arrange — two users with different positions on the same date/type
+      conflictService['activitiesSignal'].set([
+        makeActivity({ id: 'act-1', userId: 'user-current', position: 3 }),
+        makeActivity({ id: 'act-2', userId: 'user-other', displayName: 'Other', position: 5 }),
+      ]);
+
+      // Act
+      const result: PositionConflict[] = conflictService.getConflictsForCurrentUser();
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+
+    it('should return a PositionConflict when another user shares the same activityType + position + date', () => {
+      // Arrange
+      const sharedDate = new Date('2026-05-05T00:00:00.000Z');
+      conflictService['activitiesSignal'].set([
+        makeActivity({ id: 'act-mine', userId: 'user-current', position: 3, date: sharedDate }),
+        makeActivity({ id: 'act-other', userId: 'user-other', displayName: 'Rival', position: 3, date: sharedDate }),
+      ]);
+
+      // Act
+      const result: PositionConflict[] = conflictService.getConflictsForCurrentUser();
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject<PositionConflict>({
+        activityId: 'act-mine',
+        activityType: 'kvk-prep',
+        position: 3,
+        date: sharedDate,
+        conflictingDisplayName: 'Rival',
+      });
+    });
+
+    it('should return empty array when conflicting activities are on different dates', () => {
+      // Arrange
+      conflictService['activitiesSignal'].set([
+        makeActivity({
+          id: 'act-mine',
+          userId: 'user-current',
+          position: 3,
+          date: new Date('2026-05-05T00:00:00.000Z'),
+        }),
+        makeActivity({
+          id: 'act-other',
+          userId: 'user-other',
+          displayName: 'Rival',
+          position: 3,
+          date: new Date('2026-05-12T00:00:00.000Z'),
+        }),
+      ]);
+
+      // Act
+      const result: PositionConflict[] = conflictService.getConflictsForCurrentUser();
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+
+    it('should return empty array for participation-mode activities (position === null)', () => {
+      // Arrange — both users have position null (participation mode)
+      conflictService['activitiesSignal'].set([
+        makeActivity({ id: 'act-mine', userId: 'user-current', position: null }),
+        makeActivity({ id: 'act-other', userId: 'user-other', displayName: 'Rival', position: null }),
+      ]);
+
+      // Act
+      const result: PositionConflict[] = conflictService.getConflictsForCurrentUser();
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+
+    it('should return empty array when current user is not authenticated', () => {
+      // Arrange
+      authMockForConflict.getUserId.mockReturnValue(null);
+      conflictService['activitiesSignal'].set([
+        makeActivity({ id: 'act-mine', userId: 'user-current', position: 3 }),
+        makeActivity({ id: 'act-other', userId: 'user-other', displayName: 'Rival', position: 3 }),
+      ]);
+
+      // Act
+      const result: PositionConflict[] = conflictService.getConflictsForCurrentUser();
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+
+    it('should return multiple conflicts when the current user has multiple conflicting activities', () => {
+      // Arrange
+      const date = new Date('2026-05-05T00:00:00.000Z');
+      conflictService['activitiesSignal'].set([
+        makeActivity({ id: 'act-mine-1', userId: 'user-current', activityType: 'kvk-prep', position: 3, date }),
+        makeActivity({ id: 'act-mine-2', userId: 'user-current', activityType: 'legion', position: 1, date }),
+        makeActivity({
+          id: 'act-rival-1',
+          userId: 'user-other',
+          displayName: 'Rival',
+          activityType: 'kvk-prep',
+          position: 3,
+          date,
+        }),
+        makeActivity({
+          id: 'act-rival-2',
+          userId: 'user-other',
+          displayName: 'Rival',
+          activityType: 'legion',
+          position: 1,
+          date,
+        }),
+      ]);
+
+      // Act
+      const result: PositionConflict[] = conflictService.getConflictsForCurrentUser();
+
+      // Assert
+      expect(result).toHaveLength(2);
+      const activityIds = result.map(c => c.activityId);
+      expect(activityIds).toContain('act-mine-1');
+      expect(activityIds).toContain('act-mine-2');
     });
   });
 });
