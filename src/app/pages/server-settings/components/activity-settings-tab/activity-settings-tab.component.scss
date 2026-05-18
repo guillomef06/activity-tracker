@@ -129,6 +129,16 @@
   justify-content: space-between;
   gap: 1.5rem;
   flex-wrap: wrap;
+  padding-bottom: 1rem;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  & + .danger-action {
+    border-top: 1px solid color-mix(in srgb, var(--mat-sys-error) 20%, transparent);
+    padding-top: 1rem;
+  }
 
   .danger-description {
     flex: 1;
@@ -138,6 +148,27 @@
       margin: 0;
       font-size: 0.875rem;
       color: var(--mat-sys-on-surface-variant);
+    }
+  }
+
+  .danger-action-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    mat-form-field {
+      width: 220px;
+    }
+  }
+}
+
+@media (max-width: tokens.$bp-xs) {
+  .danger-action-controls {
+    width: 100%;
+
+    mat-form-field {
+      width: 100% !important;
     }
   }
 }

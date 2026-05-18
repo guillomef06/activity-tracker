@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "Elimina permanentemente todas las actividades enviadas por los miembros del servidor. Esta acción no se puede deshacer.",
         "deleteAllActivitiesConfirm": "¿Está seguro de que desea eliminar TODAS las actividades? Esto borrará permanentemente el historial completo de todos los miembros.",
         "deleteAllActivitiesSuccess": "Todas las actividades han sido eliminadas",
-        "deleteAllActivitiesFailed": "Error al eliminar las actividades"
+        "deleteAllActivitiesFailed": "Error al eliminar las actividades",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "semanas atrás"
   },
   "activitiesDetails": {
-    "title": "Detalles de Actividades"
+    "title": "Detalles de Actividades",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "puntos",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "No se publicó ninguna selección — este evento está abierto a todos los jugadores."
     },
     "admin": {
-      "title": "Administración del Evento MG",
       "loadError": "No se pudieron cargar los datos del MG.",
       "noEvent": "No hay ningún evento MG próximo para este servidor.",
       "eventTitle": "Evento actual",
@@ -790,8 +799,7 @@
         "mode": "Modo de selección",
         "modeAutomatic": "Automático",
         "modeManual": "Manual",
-        "save": "Guardar",
-        "saved": "Configuración guardada."
+        "save": "Guardar"
       },
       "registrations": {
         "title": "Inscripciones",

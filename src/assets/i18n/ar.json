@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "حذف جميع الأنشطة المقدمة من أعضاء الخادم بشكل دائم. لا يمكن التراجع عن هذا الإجراء.",
         "deleteAllActivitiesConfirm": "هل أنت متأكد أنك تريد حذف جميع الأنشطة؟ سيؤدي ذلك إلى محو سجل الأنشطة الكامل لجميع الأعضاء بشكل دائم.",
         "deleteAllActivitiesSuccess": "تم حذف جميع الأنشطة",
-        "deleteAllActivitiesFailed": "فشل حذف الأنشطة"
+        "deleteAllActivitiesFailed": "فشل حذف الأنشطة",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "أسابيع مضت"
   },
   "activitiesDetails": {
-    "title": "تفاصيل الأنشطة"
+    "title": "تفاصيل الأنشطة",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "نقاط",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "لم يتم نشر أي تحديد — هذا الحدث مفتوح لجميع اللاعبين."
     },
     "admin": {
-      "title": "إدارة حدث MG",
       "loadError": "تعذّر تحميل بيانات MG.",
       "noEvent": "لا يوجد حدث MG قادم لهذا الخادم.",
       "eventTitle": "الحدث الحالي",
@@ -790,8 +799,7 @@
         "mode": "وضع الاختيار",
         "modeAutomatic": "تلقائي",
         "modeManual": "يدوي",
-        "save": "حفظ",
-        "saved": "تم حفظ الإعدادات."
+        "save": "حفظ"
       },
       "registrations": {
         "title": "التسجيلات",

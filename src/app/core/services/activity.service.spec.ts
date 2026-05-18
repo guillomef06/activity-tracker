@@ -407,6 +407,251 @@ describe('ActivityService', () => {
     });
   });
 
+  describe('deleteActivity', () => {
+    let deleteMock: ReturnType<typeof vi.fn>;
+    let deleteService: ActivityService;
+
+    beforeEach(() => {
+      deleteMock = vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: null })),
+        }),
+      });
+
+      const supabaseWithDelete = {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnThis(),
+          order: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          delete: deleteMock,
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => void) => resolve({ data: [], error: null })),
+        }),
+      };
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          ActivityService,
+          { provide: SupabaseService, useValue: supabaseWithDelete },
+          {
+            provide: AuthService,
+            useValue: {
+              getServerId: vi.fn().mockReturnValue(null),
+              getUserId: vi.fn().mockReturnValue(null),
+              userProfile: signal(null),
+            },
+          },
+          { provide: ServerService, useValue: serverServiceMock },
+        ],
+      });
+
+      deleteService = TestBed.inject(ActivityService);
+    });
+
+    it('should call supabase delete with eq filter on id', async () => {
+      // Arrange
+      deleteService['activitiesSignal'].set([
+        {
+          id: 'act-1',
+          userId: 'u1',
+          displayName: 'Alice',
+          activityType: 'legion',
+          position: 1,
+          points: 10,
+          date: new Date(),
+          timestamp: 0,
+        },
+      ]);
+
+      // Act
+      await deleteService.deleteActivity('act-1');
+
+      // Assert
+      expect(deleteMock).toHaveBeenCalledOnce();
+    });
+
+    it('should remove the activity from the signal on success', async () => {
+      // Arrange
+      const now = new Date();
+      deleteService['activitiesSignal'].set([
+        {
+          id: 'act-1',
+          userId: 'u1',
+          displayName: 'Alice',
+          activityType: 'legion',
+          position: 1,
+          points: 10,
+          date: now,
+          timestamp: 0,
+        },
+        {
+          id: 'act-2',
+          userId: 'u1',
+          displayName: 'Alice',
+          activityType: 'kvk prep',
+          position: 5,
+          points: 8,
+          date: now,
+          timestamp: 0,
+        },
+      ]);
+
+      // Act
+      await deleteService.deleteActivity('act-1');
+
+      // Assert
+      expect(deleteService.activities()).toHaveLength(1);
+      expect(deleteService.activities()[0].id).toBe('act-2');
+    });
+
+    it('should return null error on success', async () => {
+      // Arrange
+      deleteService['activitiesSignal'].set([]);
+
+      // Act
+      const result = await deleteService.deleteActivity('act-1');
+
+      // Assert
+      expect(result.error).toBeNull();
+    });
+
+    it('should return error when supabase delete fails', async () => {
+      // Arrange
+      deleteMock.mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          then: vi
+            .fn()
+            .mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: new Error('DB error') })),
+        }),
+      });
+
+      // Act
+      const result = await deleteService.deleteActivity('act-1');
+
+      // Assert
+      expect(result.error).toBeTruthy();
+    });
+  });
+
+  describe('deleteActivitiesByType', () => {
+    let deleteMock: ReturnType<typeof vi.fn>;
+    let deleteService: ActivityService;
+
+    beforeEach(() => {
+      deleteMock = vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: null })),
+        }),
+      });
+
+      const supabaseWithDelete = {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnThis(),
+          order: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          delete: deleteMock,
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => void) => resolve({ data: [], error: null })),
+        }),
+      };
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          ActivityService,
+          { provide: SupabaseService, useValue: supabaseWithDelete },
+          {
+            provide: AuthService,
+            useValue: {
+              getServerId: vi.fn().mockReturnValue(null),
+              getUserId: vi.fn().mockReturnValue(null),
+              userProfile: signal(null),
+            },
+          },
+          { provide: ServerService, useValue: serverServiceMock },
+        ],
+      });
+
+      deleteService = TestBed.inject(ActivityService);
+    });
+
+    it('should call supabase delete with eq filter on activity_type', async () => {
+      // Act
+      await deleteService.deleteActivitiesByType('kvk prep');
+
+      // Assert
+      expect(deleteMock).toHaveBeenCalledOnce();
+    });
+
+    it('should remove all activities of that type from the signal on success', async () => {
+      // Arrange
+      const now = new Date();
+      deleteService['activitiesSignal'].set([
+        {
+          id: 'act-1',
+          userId: 'u1',
+          displayName: 'Alice',
+          activityType: 'kvk prep',
+          position: 1,
+          points: 10,
+          date: now,
+          timestamp: 0,
+        },
+        {
+          id: 'act-2',
+          userId: 'u2',
+          displayName: 'Bob',
+          activityType: 'kvk prep',
+          position: 3,
+          points: 8,
+          date: now,
+          timestamp: 0,
+        },
+        {
+          id: 'act-3',
+          userId: 'u1',
+          displayName: 'Alice',
+          activityType: 'legion',
+          position: 5,
+          points: 6,
+          date: now,
+          timestamp: 0,
+        },
+      ]);
+
+      // Act
+      await deleteService.deleteActivitiesByType('kvk prep');
+
+      // Assert
+      expect(deleteService.activities()).toHaveLength(1);
+      expect(deleteService.activities()[0].id).toBe('act-3');
+    });
+
+    it('should return null error on success', async () => {
+      // Act
+      const result = await deleteService.deleteActivitiesByType('legion');
+
+      // Assert
+      expect(result.error).toBeNull();
+    });
+
+    it('should return error when supabase delete fails', async () => {
+      // Arrange
+      deleteMock.mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          then: vi
+            .fn()
+            .mockImplementation((resolve: (v: unknown) => unknown) => resolve({ error: new Error('DB error') })),
+        }),
+      });
+
+      // Act
+      const result = await deleteService.deleteActivitiesByType('legion');
+
+      // Assert
+      expect(result.error).toBeTruthy();
+    });
+  });
+
   describe('getConflictsForCurrentUser()', () => {
     const makeActivity = (
       overrides: Partial<{

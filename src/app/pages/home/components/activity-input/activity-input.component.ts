@@ -114,6 +114,11 @@ export class ActivityInputComponent {
     { initialValue: false }
   );
 
+  private readonly positionValue = toSignal(
+    this.activityForm.get('position')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
+    { initialValue: null as number | null }
+  );
+
   protected readonly isParticipationMode = computed(() => {
     const type = this.activityTypeValue();
     return type ? this.serverService.isParticipationMode(type) : false;
@@ -137,7 +142,7 @@ export class ActivityInputComponent {
     if (this.isParticipationMode()) {
       return this.participatedValue();
     }
-    const position = this.activityForm.get('position')?.value;
+    const position = this.positionValue();
     return position !== null && position >= 1;
   });
 
@@ -191,7 +196,9 @@ export class ActivityInputComponent {
       .subscribe(() => {
         if (!this.isInForcedEditMode()) {
           this.calculatedPointsResult.set(null);
-          this.activityForm.patchValue({ activityType: '', position: 1, participated: false }, { emitEvent: false });
+          this.activityForm.patchValue({ activityType: '', participated: false }, { emitEvent: false });
+          // Emit separately so positionValue signal is updated
+          this.activityForm.get('position')?.setValue(null);
         }
       });
 

@@ -103,6 +103,34 @@
           (clicked)="deleteAllActivities()"
         />
       </div>
+
+      <div class="danger-action">
+        <div class="danger-description">
+          <p>{{ 'server.settings.dangerZone.deleteByTypeDescription' | translate }}</p>
+        </div>
+        <div class="danger-action-controls">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>{{ 'server.settings.dangerZone.selectActivityType' | translate }}</mat-label>
+            <mat-icon matIconPrefix>category</mat-icon>
+            <mat-select
+              [value]="selectedTypeForDeletion()"
+              (selectionChange)="selectedTypeForDeletion.set($event.value)"
+            >
+              @for (type of activityTypes; track type.value) {
+                <mat-option [value]="type.value">{{ type.labelKey | translate }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <app-loading-button
+            buttonClass="btn-danger"
+            icon="delete"
+            [text]="'server.settings.dangerZone.deleteByType' | translate"
+            [submitting]="isDeletingByType()"
+            [disabled]="!selectedTypeForDeletion()"
+            (clicked)="deleteActivitiesByType()"
+          />
+        </div>
+      </div>
     </div>
 
     <!-- Add Point Rule Form -->

@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "Sunucu üyeleri tarafından gönderilen tüm aktiviteleri kalıcı olarak silin. Bu işlem geri alınamaz.",
         "deleteAllActivitiesConfirm": "TÜM aktiviteleri silmek istediğinizden emin misiniz? Bu, tüm üyeler için tüm aktivite geçmişini kalıcı olarak silecektir.",
         "deleteAllActivitiesSuccess": "Tüm aktiviteler silindi",
-        "deleteAllActivitiesFailed": "Aktiviteler silinemedi"
+        "deleteAllActivitiesFailed": "Aktiviteler silinemedi",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "hafta önce"
   },
   "activitiesDetails": {
-    "title": "Aktivite Detayları"
+    "title": "Aktivite Detayları",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "puan",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "Hiçbir seçim yayınlanmadı — bu etkinlik tüm oyunculara açıktır."
     },
     "admin": {
-      "title": "MG Etkinliği Yönetimi",
       "loadError": "MG verileri yüklenemedi.",
       "noEvent": "Bu sunucu için yaklaşan MG etkinliği yok.",
       "eventTitle": "Mevcut etkinlik",
@@ -790,8 +799,7 @@
         "mode": "Seçim modu",
         "modeAutomatic": "Otomatik",
         "modeManual": "Manuel",
-        "save": "Kaydet",
-        "saved": "Yapılandırma kaydedildi."
+        "save": "Kaydet"
       },
       "registrations": {
         "title": "Kayıtlar",

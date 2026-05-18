@@ -245,6 +245,30 @@ export class ActivityService {
     }
   }
 
+  async deleteActivity(id: string): Promise<{ error: Error | null }> {
+    try {
+      const { error } = await this.supabase.from('activities').delete().eq('id', id);
+      if (error) throw error;
+      this.activitiesSignal.update(activities => activities.filter(a => a.id !== id));
+      return { error: null };
+    } catch (error) {
+      console.error('Error deleting activity:', error);
+      return { error: error as Error };
+    }
+  }
+
+  async deleteActivitiesByType(activityType: string): Promise<{ error: Error | null }> {
+    try {
+      const { error } = await this.supabase.from('activities').delete().eq('activity_type', activityType);
+      if (error) throw error;
+      this.activitiesSignal.update(activities => activities.filter(a => a.activityType !== activityType));
+      return { error: null };
+    } catch (error) {
+      console.error('Error deleting activities by type:', error);
+      return { error: error as Error };
+    }
+  }
+
   /**
    * Returns all position conflicts for the current user derived from the loaded activities signal.
    * A conflict exists when another user has recorded the same activityType + position on the same date.
