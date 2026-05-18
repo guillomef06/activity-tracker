@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "Exclua permanentemente todas as atividades enviadas pelos membros da servidor. Esta ação não pode ser desfeita.",
         "deleteAllActivitiesConfirm": "Tem certeza que deseja excluir TODAS as atividades? Isso apagará permanentemente o histórico completo de atividades de todos os membros.",
         "deleteAllActivitiesSuccess": "Todas as atividades foram excluídas",
-        "deleteAllActivitiesFailed": "Falha ao excluir atividades"
+        "deleteAllActivitiesFailed": "Falha ao excluir atividades",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "semanas atrás"
   },
   "activitiesDetails": {
-    "title": "Detalhes das Atividades"
+    "title": "Detalhes das Atividades",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "pontos",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "Nenhuma seleção foi publicada — este evento está aberto a todos os jogadores."
     },
     "admin": {
-      "title": "Administração do Evento MG",
       "loadError": "Falha ao carregar dados do MG.",
       "noEvent": "Nenhum evento MG próximo para este servidor.",
       "eventTitle": "Evento atual",
@@ -790,8 +799,7 @@
         "mode": "Modo de seleção",
         "modeAutomatic": "Automático",
         "modeManual": "Manual",
-        "save": "Salvar",
-        "saved": "Configuração salva."
+        "save": "Salvar"
       },
       "registrations": {
         "title": "Inscrições",

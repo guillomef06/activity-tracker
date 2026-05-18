@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "Hapus secara permanen semua aktivitas yang dikirimkan oleh anggota server. Tindakan ini tidak dapat dibatalkan.",
         "deleteAllActivitiesConfirm": "Apakah Anda yakin ingin menghapus SEMUA aktivitas? Ini akan menghapus secara permanen seluruh riwayat aktivitas semua anggota.",
         "deleteAllActivitiesSuccess": "Semua aktivitas telah dihapus",
-        "deleteAllActivitiesFailed": "Gagal menghapus aktivitas"
+        "deleteAllActivitiesFailed": "Gagal menghapus aktivitas",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "minggu lalu"
   },
   "activitiesDetails": {
-    "title": "Detail Aktivitas"
+    "title": "Detail Aktivitas",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "poin",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "Tidak ada seleksi yang diterbitkan — acara ini terbuka untuk semua pemain."
     },
     "admin": {
-      "title": "Administrasi Acara MG",
       "loadError": "Gagal memuat data MG.",
       "noEvent": "Tidak ada acara MG yang akan datang untuk server ini.",
       "eventTitle": "Acara saat ini",
@@ -790,8 +799,7 @@
         "mode": "Mode seleksi",
         "modeAutomatic": "Otomatis",
         "modeManual": "Manual",
-        "save": "Simpan",
-        "saved": "Konfigurasi disimpan."
+        "save": "Simpan"
       },
       "registrations": {
         "title": "Pendaftaran",

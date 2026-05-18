@@ -61,6 +61,17 @@
                           <span class="activity-points"
                             >{{ activity.points }} {{ 'dashboard.pointsShort' | translate }}</span
                           >
+                          @if (isSuperAdmin()) {
+                            <button
+                              mat-icon-button
+                              class="btn-danger delete-activity-btn"
+                              [disabled]="deletingActivityId() === activity.id"
+                              [matTooltip]="'activitiesDetails.deleteActivity' | translate"
+                              (click)="deleteActivity(activity.id, $event)"
+                            >
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          }
                         </div>
                       }
                     </div>

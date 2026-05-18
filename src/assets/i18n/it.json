@@ -182,7 +182,13 @@
         "deleteAllActivitiesDescription": "Elimina definitivamente tutte le attività inviate dai membri del server. Questa azione non può essere annullata.",
         "deleteAllActivitiesConfirm": "Sei sicuro di voler eliminare TUTTE le attività? Questo cancellerà definitivamente la cronologia completa per tutti i membri.",
         "deleteAllActivitiesSuccess": "Tutte le attività sono state eliminate",
-        "deleteAllActivitiesFailed": "Impossibile eliminare le attività"
+        "deleteAllActivitiesFailed": "Impossibile eliminare le attività",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       }
     },
     "retroactive": {
@@ -290,7 +296,11 @@
     "weeksAgo": "settimane fa"
   },
   "activitiesDetails": {
-    "title": "Dettagli Attività"
+    "title": "Dettagli Attività",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "punti",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "Nessuna selezione è stata pubblicata — questo evento è aperto a tutti i giocatori."
     },
     "admin": {
-      "title": "Amministrazione Evento MG",
       "loadError": "Impossibile caricare i dati MG.",
       "noEvent": "Nessun evento MG imminente per questo server.",
       "eventTitle": "Evento corrente",
@@ -790,8 +799,7 @@
         "mode": "Modalità selezione",
         "modeAutomatic": "Automatica",
         "modeManual": "Manuale",
-        "save": "Salva",
-        "saved": "Configurazione salvata."
+        "save": "Salva"
       },
       "registrations": {
         "title": "Iscrizioni",

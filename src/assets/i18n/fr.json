@@ -182,7 +182,13 @@
         "deleteAllActivitiesDescription": "Supprime définitivement toutes les activités soumises par les membres du serveur. Cette action est irréversible.",
         "deleteAllActivitiesConfirm": "Êtes-vous sûr de vouloir supprimer TOUTES les activités ? Cela effacera définitivement l'historique complet pour tous les membres.",
         "deleteAllActivitiesSuccess": "Toutes les activités ont été supprimées",
-        "deleteAllActivitiesFailed": "Échec de la suppression des activités"
+        "deleteAllActivitiesFailed": "Échec de la suppression des activités",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       }
     },
     "retroactive": {
@@ -290,7 +296,11 @@
     "weeksAgo": "semaines passées"
   },
   "activitiesDetails": {
-    "title": "Détails des Activités"
+    "title": "Détails des Activités",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "points",
@@ -486,7 +496,6 @@
       "unregisterError": "Échec de la désinscription. Veuillez réessayer."
     },
     "admin": {
-      "title": "Administration MG Event",
       "loadError": "Impossible de charger les données MG.",
       "noEvent": "Aucun évènement MG à venir pour ce serveur.",
       "eventTitle": "Évènement en cours",
@@ -497,8 +506,7 @@
         "mode": "Mode de sélection",
         "modeAutomatic": "Automatique",
         "modeManual": "Manuel",
-        "save": "Enregistrer",
-        "saved": "Configuration enregistrée."
+        "save": "Enregistrer"
       },
       "configSaved": "Configuration enregistrée.",
       "configSaveError": "Échec de l'enregistrement de la configuration.",

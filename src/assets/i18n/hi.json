@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "सर्वर सदस्यों द्वारा सबमिट की गई सभी गतिविधियां स्थायी रूप से हटाएं। यह क्रिया पूर्ववत नहीं की जा सकती।",
         "deleteAllActivitiesConfirm": "क्या आप वाकई सभी गतिविधियां हटाना चाहते हैं? यह सभी सदस्यों का संपूर्ण गतिविधि इतिहास स्थायी रूप से मिटा देगा।",
         "deleteAllActivitiesSuccess": "सभी गतिविधियां हटा दी गई हैं",
-        "deleteAllActivitiesFailed": "गतिविधियां हटाने में विफल"
+        "deleteAllActivitiesFailed": "गतिविधियां हटाने में विफल",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "हफ्ते पहले"
   },
   "activitiesDetails": {
-    "title": "गतिविधि विवरण"
+    "title": "गतिविधि विवरण",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "अंक",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "कोई चयन प्रकाशित नहीं किया गया — यह इवेंट सभी खिलाड़ियों के लिए खुला है।"
     },
     "admin": {
-      "title": "MG इवेंट प्रबंधन",
       "loadError": "MG डेटा लोड नहीं हो सका।",
       "noEvent": "इस सर्वर के लिए कोई आगामी MG इवेंट नहीं है।",
       "eventTitle": "वर्तमान इवेंट",
@@ -790,8 +799,7 @@
         "mode": "चयन मोड",
         "modeAutomatic": "स्वचालित",
         "modeManual": "मैनुअल",
-        "save": "सहेजें",
-        "saved": "कॉन्फ़िगरेशन सहेजा गया।"
+        "save": "सहेजें"
       },
       "registrations": {
         "title": "पंजीकरण",

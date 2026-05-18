@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "Μόνιμη διαγραφή όλων των δραστηριοτήτων των μελών. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
         "deleteAllActivitiesConfirm": "Είστε σίγουροι ότι θέλετε να διαγράψετε ΟΛΕΣ τις δραστηριότητες; Αυτό θα διαγράψει μόνιμα το ιστορικό δραστηριοτήτων όλων των μελών.",
         "deleteAllActivitiesSuccess": "Όλες οι δραστηριότητες διαγράφηκαν",
-        "deleteAllActivitiesFailed": "Αποτυχία διαγραφής δραστηριοτήτων"
+        "deleteAllActivitiesFailed": "Αποτυχία διαγραφής δραστηριοτήτων",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "εβδομάδες πριν"
   },
   "activitiesDetails": {
-    "title": "Λεπτομέρειες Δραστηριοτήτων"
+    "title": "Λεπτομέρειες Δραστηριοτήτων",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "πόντοι",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "Δεν δημοσιεύθηκε καμία επιλογή — αυτή η εκδήλωση είναι ανοιχτή σε όλους τους παίκτες."
     },
     "admin": {
-      "title": "Διαχείριση Εκδήλωσης MG",
       "loadError": "Αποτυχία φόρτωσης δεδομένων MG.",
       "noEvent": "Δεν υπάρχει επερχόμενη εκδήλωση MG για αυτόν τον διακομιστή.",
       "eventTitle": "Τρέχουσα εκδήλωση",
@@ -790,8 +799,7 @@
         "mode": "Λειτουργία επιλογής",
         "modeAutomatic": "Αυτόματη",
         "modeManual": "Χειροκίνητη",
-        "save": "Αποθήκευση",
-        "saved": "Διαμόρφωση αποθηκεύτηκε."
+        "save": "Αποθήκευση"
       },
       "registrations": {
         "title": "Εγγραφές",

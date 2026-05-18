@@ -159,6 +159,19 @@
       flex-shrink: 0;
       white-space: nowrap;
     }
+
+    .delete-activity-btn {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+
+      mat-icon {
+        font-size: 1.1rem;
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+    }
   }
 }
 
