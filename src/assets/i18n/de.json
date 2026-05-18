@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "Alle von Servermitgliedern eingereichten Aktivitäten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
         "deleteAllActivitiesConfirm": "Möchtest du wirklich ALLE Aktivitäten löschen? Dies löscht dauerhaft den gesamten Aktivitätsverlauf aller Mitglieder.",
         "deleteAllActivitiesSuccess": "Alle Aktivitäten wurden gelöscht",
-        "deleteAllActivitiesFailed": "Aktivitäten konnten nicht gelöscht werden"
+        "deleteAllActivitiesFailed": "Aktivitäten konnten nicht gelöscht werden",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "Wochen her"
   },
   "activitiesDetails": {
-    "title": "Aktivitätsdetails"
+    "title": "Aktivitätsdetails",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "Punkte",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "Keine Auswahl wurde veröffentlicht – dieses Event ist für alle Spieler offen."
     },
     "admin": {
-      "title": "MG Event Verwaltung",
       "loadError": "MG-Daten konnten nicht geladen werden.",
       "noEvent": "Kein bevorstehendes MG-Event für diesen Server.",
       "eventTitle": "Aktuelles Event",
@@ -790,8 +799,7 @@
         "mode": "Auswahlmodus",
         "modeAutomatic": "Automatisch",
         "modeManual": "Manuell",
-        "save": "Speichern",
-        "saved": "Konfiguration gespeichert."
+        "save": "Speichern"
       },
       "registrations": {
         "title": "Anmeldungen",

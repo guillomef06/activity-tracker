@@ -86,6 +86,23 @@ describe('ActivityInputComponent', () => {
     expect(mockActivityService.addActivity).toHaveBeenCalled();
   });
 
+  it('should enable submit when position is entered after selecting activity type', () => {
+    // Arrange
+    mockServerService.isParticipationMode.mockReturnValue(false);
+
+    // Act — user selects activity type before entering a position
+    component['activityForm'].get('activityType')?.setValue('primordial conflict');
+
+    // Assert — canSubmit is false while position is still null
+    expect(component['canSubmit']()).toBe(false);
+
+    // Act — user types their rank
+    component['activityForm'].get('position')?.setValue(50);
+
+    // Assert — canSubmit now re-evaluates and returns true
+    expect(component['canSubmit']()).toBe(true);
+  });
+
   it('should exclude disabled activities from availableActivities', () => {
     mockServerService.isActivityEnabled.mockReturnValue(false);
     // Change week to force the computed signal to re-evaluate

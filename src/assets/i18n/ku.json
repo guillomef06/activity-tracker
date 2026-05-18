@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "هەموو چالاکییەکانی ناردراو لەلایەن ئەندامانی هاوپەیمانی بە شێوەیەکی هەمیشەیی بسڕەوە. ئەم کارە گەڕانەوەی نییە.",
         "deleteAllActivitiesConfirm": "دەتەوێت هەموو چالاکییەکان بسڕیتەوە؟ ئەمە هەموو مێژووی چالاکییەکانی هەموو ئەندامان بە شێوەیەکی هەمیشەیی دەسڕێتەوە.",
         "deleteAllActivitiesSuccess": "هەموو چالاکییەکان سڕانەوە",
-        "deleteAllActivitiesFailed": "سڕینەوەی چالاکییەکان سەرنەکەوت"
+        "deleteAllActivitiesFailed": "سڕینەوەی چالاکییەکان سەرنەکەوت",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "لینکی بانخستنی Discord",
@@ -290,7 +296,11 @@
     "weeksAgo": "هەفتەی پێشوو"
   },
   "activitiesDetails": {
-    "title": "وردەکاریی چالاکی"
+    "title": "وردەکاریی چالاکی",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "خاڵ",
@@ -773,7 +783,6 @@
       "fullFfaDescription": "Hiç hilbijartin nehat weşandin — ev bûyer ji hemû lîstikvan re vekirî ye."
     },
     "admin": {
-      "title": "Rêveberiya Bûyera MG",
       "loadError": "Daneyên MG nayêne barkirin.",
       "noEvent": "Ji bo vê serverê tu bûyera MG ya pêş de nîne.",
       "eventTitle": "Bûyera niha",
@@ -790,8 +799,7 @@
         "mode": "Moda hilbijartinê",
         "modeAutomatic": "Otomatîk",
         "modeManual": "Destî",
-        "save": "Tomar bike",
-        "saved": "Mîheng hat tomarkirin."
+        "save": "Tomar bike"
       },
       "registrations": {
         "title": "Tescîl",

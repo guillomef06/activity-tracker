@@ -182,7 +182,13 @@
         "deleteAllActivitiesDescription": "Permanently delete all activities submitted by server members. This action cannot be undone.",
         "deleteAllActivitiesConfirm": "Are you sure you want to delete ALL activities? This will permanently erase the complete activity history for all members.",
         "deleteAllActivitiesSuccess": "All activities have been deleted",
-        "deleteAllActivitiesFailed": "Failed to delete activities"
+        "deleteAllActivitiesFailed": "Failed to delete activities",
+        "deleteByType": "Delete this type",
+        "deleteByTypeDescription": "Permanently delete all activities of a specific type for all server members.",
+        "selectActivityType": "Select activity type",
+        "deleteByTypeConfirm": "Permanently delete all activities of type \"{{type}}\"? This action cannot be undone.",
+        "deleteByTypeSuccess": "All \"{{type}}\" activities have been deleted.",
+        "deleteByTypeFailed": "Failed to delete activities by type"
       }
     },
     "retroactive": {
@@ -290,7 +296,11 @@
     "weeksAgo": "weeks ago"
   },
   "activitiesDetails": {
-    "title": "Activities Details"
+    "title": "Activities Details",
+    "deleteActivity": "Delete activity",
+    "deleteActivityConfirm": "Permanently delete this activity? This action cannot be undone.",
+    "deleteActivitySuccess": "Activity deleted",
+    "deleteActivityFailed": "Failed to delete activity"
   },
   "common": {
     "points": "points",
@@ -486,7 +496,6 @@
       "unregisterError": "Unregistration failed. Please try again."
     },
     "admin": {
-      "title": "MG Event Administration",
       "loadError": "Failed to load MG data.",
       "noEvent": "No upcoming MG event for this server.",
       "eventTitle": "Current event",
@@ -497,8 +506,7 @@
         "mode": "Assignment mode",
         "modeAutomatic": "Automatic",
         "modeManual": "Manual",
-        "save": "Save",
-        "saved": "Configuration saved."
+        "save": "Save"
       },
       "configSaved": "Configuration saved.",
       "configSaveError": "Failed to save configuration.",

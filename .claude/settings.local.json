@@ -60,7 +60,10 @@
       "Bash(command -v wkhtmltopdf xelatex lualatex weasyprint)",
       "Bash(pandoc --list-output-formats)",
       "PowerShell(pandoc *)",
-      "mcp__plugin_playwright_playwright__browser_run_code"
+      "mcp__plugin_playwright_playwright__browser_run_code",
+      "Bash(Get-ChildItem -Path \"D:\\\\workplace\\\\activity-tracker\\\\activity-tracker\" -Recurse -Directory)",
+      "Bash(Select-Object -First 20)",
+      "Bash(Format-Table FullName)"
     ]
   },
   "outputStyle": "default",

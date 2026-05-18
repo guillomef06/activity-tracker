@@ -70,6 +70,8 @@ export class ActivitySettingsTabComponent {
   protected readonly isUpdatingSetting = signal<string | null>(null);
   protected readonly isUpdatingTiebreaker = signal(false);
   protected readonly isDeletingAll = signal(false);
+  protected readonly isDeletingByType = signal(false);
+  protected readonly selectedTypeForDeletion = signal<string>('');
   protected readonly activityTypes = APP_CONSTANTS.ACTIVITY_TYPES;
   protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
 
@@ -319,6 +321,43 @@ export class ActivitySettingsTabComponent {
       this.snackbarService.error(this.translate.instant('server.settings.dangerZone.deleteAllActivitiesFailed'));
     } finally {
       this.isDeletingAll.set(false);
+    }
+  }
+
+  protected async deleteActivitiesByType(): Promise<void> {
+    const type = this.selectedTypeForDeletion();
+    if (!type) return;
+
+    const typeLabel = this.translate.instant(this.getActivityTypeLabel(type));
+
+    const confirmed = await firstValueFrom(
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            title: this.translate.instant('server.settings.dangerZone.title'),
+            message: this.translate.instant('server.settings.dangerZone.deleteByTypeConfirm', { type: typeLabel }),
+            confirmText: this.translate.instant('server.settings.dangerZone.deleteAllActivities'),
+            cancelText: this.translate.instant('common.cancel'),
+          },
+        })
+        .afterClosed()
+    );
+
+    if (!confirmed) return;
+
+    this.isDeletingByType.set(true);
+    try {
+      const { error } = await this.activityService.deleteActivitiesByType(type);
+      if (error) throw error;
+      this.selectedTypeForDeletion.set('');
+      this.snackbarService.success(
+        this.translate.instant('server.settings.dangerZone.deleteByTypeSuccess', { type: typeLabel })
+      );
+    } catch (error) {
+      console.error('Error deleting activities by type:', error);
+      this.snackbarService.error(this.translate.instant('server.settings.dangerZone.deleteByTypeFailed'));
+    } finally {
+      this.isDeletingByType.set(false);
     }
   }
 

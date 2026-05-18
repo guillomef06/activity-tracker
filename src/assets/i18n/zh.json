@@ -172,7 +172,13 @@
         "deleteAllActivitiesDescription": "永久删除服务器成员提交的所有活动。此操作无法撤销。",
         "deleteAllActivitiesConfirm": "确定要删除所有活动吗？这将永久清除所有成员的完整活动历史记录。",
         "deleteAllActivitiesSuccess": "所有活动已被删除",
-        "deleteAllActivitiesFailed": "删除活动失败"
+        "deleteAllActivitiesFailed": "删除活动失败",
+        "deleteByType": "Supprimer ce type",
+        "deleteByTypeDescription": "Supprime toutes les activités d'un type spécifique pour tous les membres du serveur.",
+        "selectActivityType": "Sélectionner un type d'activité",
+        "deleteByTypeConfirm": "Supprimer définitivement toutes les activités de type \"{{type}}\" ? Cette action est irréversible.",
+        "deleteByTypeSuccess": "Toutes les activités \"{{type}}\" ont été supprimées.",
+        "deleteByTypeFailed": "Échec de la suppression des activités par type"
       },
       "discordInvite": {
         "title": "Discord Invite Link",
@@ -290,7 +296,11 @@
     "weeksAgo": "周前"
   },
   "activitiesDetails": {
-    "title": "活动详情"
+    "title": "活动详情",
+    "deleteActivity": "Supprimer l'activité",
+    "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
+    "deleteActivitySuccess": "Activité supprimée",
+    "deleteActivityFailed": "Échec de la suppression de l'activité"
   },
   "common": {
     "points": "积分",
@@ -771,7 +781,6 @@
       "fullFfaDescription": "未发布任何选拔名单 — 本活动对所有玩家开放。"
     },
     "admin": {
-      "title": "MG 赛事管理",
       "loadError": "无法加载 MG 数据。",
       "noEvent": "该服务器暂无即将举行的 MG 赛事。",
       "eventTitle": "当前赛事",
@@ -788,8 +797,7 @@
         "mode": "选拔方式",
         "modeAutomatic": "自动",
         "modeManual": "手动",
-        "save": "保存",
-        "saved": "配置已保存。"
+        "save": "保存"
       },
       "registrations": {
         "title": "报名情况",
