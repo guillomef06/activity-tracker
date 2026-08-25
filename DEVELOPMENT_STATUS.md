@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 24 avril 2026
+**Dernière mise à jour:** 18 août 2026
 
 ## 📋 Résumé
 
@@ -32,12 +32,13 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 ### Activités & Scores
 - Saisie activité avec position → calcul points automatique selon règles configurables
 - Mode participation par activité (toggle à la place du champ position, points fixes)
-- Cycle de 6 semaines pour la disponibilité des activités (date ref : 25 jan 2026 = semaine 1)
-- Scores sur N semaines glissantes (multiplicateur configurable : 1×6, 2×12, 3×18 semaines)
+- Calendrier d'activités piloté par **Seasons** (voir section dédiée ci-dessous) — remplace l'ancien cycle fixe de 6 semaines
+- Scores sur N semaines glissantes (multiplicateur configurable : 1×6, 2×12, 3×18 semaines) — indépendant du calendrier de seasons, non affecté par ce changement
 - Activité tiebreaker (départage à égalité de score, exclue du calcul des points)
 - Désactivation d'activités par serveur
 - Entrée rétroactive admin (pour n'importe quel membre, n'importe quelle semaine)
 - Import Excel batch (wizard upload → preview → done, matching joueur, upsert)
+- Catalogue d'activités (`APP_CONSTANTS.ACTIVITY_TYPES`, `src/app/shared/constants/constants.ts`) : 9 types dont `behemoth conquest` (points de repli : 8, ajouté migration `32-behemoth-conquest.sql`) — source unique consommée partout (input, rétroactif, import Excel, réglages serveur, wizard seasons), traduit dans les 14 locales. Champ `availableWeeks` retiré de `ActivityType` (dead code post-migration Seasons — n'était plus lu nulle part, hormis un test qui vérifiait juste qu'il était non-vide) ; le planning par semaine est désormais entièrement piloté par `season_activities`
 - Suppression globale des activités (admin, avec confirmation)
 - **Détection et résolution de conflits de position** : `ActivityService.getConflictsForCurrentUser()` — dérive les conflits depuis le signal existant, sans requête Supabase additionnelle. Interface `PositionConflict` dans `activity.model.ts`. Composant `ActivityConflictComponent` (renommé depuis `ActivityConflictCardComponent`, sélecteur `app-activity-conflict`) dans `src/app/pages/home/components/activity-conflict/`. Quand des conflits existent, la card **remplace** le formulaire (pas d'affichage simultané). Bouton "J'ai compris" → mode édition forcée : formulaire prérempli avec les données de l'activité en conflit, champs `week` et `activityType` désactivés, `position` modifiable. Résolution automatique : retour au mode création quand `conflicts()` devient vide après soumission.
 
@@ -79,6 +80,17 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 - **Player-facing** : onglet MG existant (`MightiestGovernorComponent` upgradé en smart) — card dynamique selon statut de l'event
 - **Admin** : nouvel onglet "MG Event" dans server-settings — config capacité/mode, liste inscriptions, génération sélection auto (preview + confirm), publication
 
+### Seasons (calendrier d'activités dynamique)
+
+Remplace l'ancien cycle fixe de 6 semaines par des **seasons configurables par un super_admin** (globales, cross-server) : plages de dates contiguës découpées en semaines, chacune déclarant les types d'activité sélectionnables.
+
+- Migration `31-season-schedule.sql` : tables `activity_seasons` / `season_activities`, contraintes DB (lundi obligatoire, pas de chevauchement, contiguïté forcée par trigger, verrouillage dès qu'une activité est loggée dans la plage, `CHECK` sur le catalogue de types)
+- `SeasonService` (`src/app/core/services/season.service.ts`) : résolution des types d'activité disponibles par date, suggestion de date de début (contiguïté), verrouillage, CRUD
+- Aucune season active → saisie bloquée (input du jour + rétroactif admin), bannière dédiée
+- UI Super Admin : `src/app/pages/super-admin/seasons/` — liste (passé/actuel/futur), wizard de création, édition avec verrouillage visuel si activités déjà loggées
+- Import Excel : feuille "Reference" adaptée à la season active du jour
+- `date.util.ts` : logique de cycle fixe supprimée (`CYCLE_REFERENCE_DATE` et dérivés), conservé `getWeekStart`/`getWeekEnd`/`getDateForWeeksAgo`
+
 ### Guides
 
 Guides stratégiques partageables : création (jusqu'à 10 par user), upvote anonyme, accès public sans login. Guides de formation avec 3 slots champions configurables (skills, gems, traits, ornement, anneau). Page super admin pour gérer les référentiels (champions, skills, gems, ornements, anneaux, tempéraments).
@@ -106,6 +118,10 @@ Pages publiques (`/guides`, `/guides/:slug`) routées via `PublicLayoutComponent
 - **Multiplicateur semaines (retroactive)** : le sélecteur de semaine s'adapte dynamiquement au multiplicateur (6/12/18 semaines)
 - **Auth double requête** : suppression `getSession()` dans `initializeAuth()`, source unique via `onAuthStateChange`
 - **GitHub Pages SPA** : 404.html corrigé (save + redirect), index.html restaure l'URL avant bootstrap Angular
+- **Seasons — revue sécurité migration** : 2 failles Medium + 1 Low identifiées sur `31-season-schedule.sql` (contiguïté cassable hors app, orphelins `season_activities`, `activity_type` sans contrainte catalogue) — corrigées avant merge, migration appliquée
+- **Seasons — wizard fond opaque** : `mat-stepper` masquait le glass-effect du `mat-card` englobant — fix CSS scoped (`--mat-stepper-container-color: transparent`)
+- **`mat-datepicker` — premier jour de la semaine** : `MAT_DATE_LOCALE` absent forçait tous les calendriers à démarrer un dimanche — fix global via `DateAdapter.setLocale()` synchronisé sur `LanguageService.currentLanguage()`
+- **Seasons — "must be a Monday" sur un lundi cliqué** : décalage UTC/local dans `mat-datepicker` (minuit local vs validation UTC) — fix par ré-ancrage à minuit UTC dans `onStartDateChange()`
 
 ---
 
@@ -122,6 +138,9 @@ Pages publiques (`/guides`, `/guides/:slug`) routées via `PublicLayoutComponent
 
 - Rate limiting account recovery : repose sur RPCs custom, non couvert par le rate limit Supabase Auth natif
 - Dialog "Mon Compte" → onglet Préférences : thème et notifications (champs DB existants) pas encore exposés
+- **Seasons** : triggers SQL non couverts par des tests automatisés (pas de harnais pgTAP), validés par revue manuelle uniquement
+- **Seasons** : `SeasonService.updateSeasonStructure()` non transactionnel (3 appels séquentiels, pas de compensation si échec partiel) — risque faible, à durcir via RPC atomique si besoin
+- **Seasons** : `CHECK` sur `activity_type` codé en dur — toute évolution du catalogue nécessite une migration de suivi
 
 ---
 

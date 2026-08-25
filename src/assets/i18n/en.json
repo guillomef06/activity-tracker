@@ -256,7 +256,8 @@
         "skipped": "skipped",
         "error": "Import failed. Please try again."
       },
-      "reset": "Import another file"
+      "reset": "Import another file",
+      "noActiveSeasonReference": "No active season configured — historical week numbers not available"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "Activity submitted successfully!",
     "error": "Failed to submit activity",
     "participated": "I participated this week",
-    "fillAllFields": "Please fill in all required fields"
+    "fillAllFields": "Please fill in all required fields",
+    "noActiveSeason": "No season is currently configured for this date. Please contact an administrator."
   },
   "activities": {
     "types": {
@@ -284,7 +286,8 @@
       "stellar-dynasty": "Stellar Dynasty",
       "primordial-conflict": "Primordial Conflict",
       "legion": "Battle of Dawn / Wonders",
-      "me-overall": "ME Overall"
+      "me-overall": "ME Overall",
+      "behemoth-conquest": "Behemoth Conquest"
     }
   },
   "dashboard": {
@@ -345,7 +348,9 @@
       "manageUsers": "Manage Users",
       "manageUsersDesc": "View and manage all users",
       "manageGuidesData": "Guide Reference Data",
-      "manageGuidesDataDesc": "Manage champions, skills, horses and gems"
+      "manageGuidesDataDesc": "Manage champions, skills, horses and gems",
+      "manageSeasons": "Manage Seasons",
+      "manageSeasonsDesc": "Configure activity seasons and weekly schedules"
     },
     "servers": {
       "title": "Servers Management",
@@ -395,6 +400,38 @@
       "strategy": "Strategy",
       "hero": "Hero",
       "tactics": "Tactics"
+    },
+    "seasons": {
+      "title": "Season Schedules",
+      "subtitle": "Configure activity seasons and their weekly schedules",
+      "newSeason": "New Season",
+      "noSeasons": "No seasons created yet",
+      "weekCountLabel": "{{count}} weeks",
+      "week": "Week {{number}}",
+      "weekCount": "Number of weeks",
+      "activityTypes": "Activity types",
+      "legionAlwaysAvailable": "Legion always available",
+      "legionAlwaysAvailableHint": "Legion is implicit every week and cannot be removed",
+      "nameRequired": "Name is required (max 100 characters)",
+      "createFailed": "Failed to create season",
+      "lockedTooltip": "This season has logged activity and its structure is locked",
+      "lockedHint": "This season has logged activity. Only the name can be edited.",
+      "deleteLockedTooltip": "Cannot delete a season with logged activity",
+      "status": {
+        "past": "Past",
+        "current": "Current",
+        "future": "Future"
+      },
+      "wizard": {
+        "stepDetails": "Details",
+        "stepWeeks": "Weekly schedule",
+        "stepReview": "Review",
+        "name": "Season name",
+        "startDate": "Start date",
+        "weekCount": "Week count",
+        "reviewTitle": "Review season",
+        "confirmCreate": "Create season"
+      }
     }
   },
   "super_admin": "Super Admin",

@@ -1,11 +1,5 @@
 import { vi } from 'vitest';
-import {
-  getCurrentWeekNumber,
-  getWeekNumberForWeeksAgo,
-  getDateForWeeksAgo,
-  getWeekStart,
-  getWeekEnd,
-} from './date.util';
+import { getDateForWeeksAgo, getWeekStart, getWeekEnd, getWeekIndexInRange } from './date.util';
 
 describe('Date Utility Functions', () => {
   describe('getWeekStart', () => {
@@ -61,85 +55,6 @@ describe('Date Utility Functions', () => {
     });
   });
 
-  describe('getCurrentWeekNumber (Cycle Calculation)', () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it('should return 1 for the reference week (Apr 27, 2026)', () => {
-      vi.setSystemTime(new Date('2026-04-27T12:00:00Z'));
-
-      const weekNumber = getCurrentWeekNumber();
-      expect(weekNumber).toBe(1);
-    });
-
-    it('should return 3 for May 11, 2026 (2 weeks after reference Apr 27)', () => {
-      vi.setSystemTime(new Date('2026-05-11T12:00:00Z'));
-
-      const weekNumber = getCurrentWeekNumber();
-      expect(weekNumber).toBe(3);
-    });
-
-    it('should return 4 for May 18, 2026 (KvK Cross Border week)', () => {
-      vi.setSystemTime(new Date('2026-05-18T12:00:00Z'));
-
-      const weekNumber = getCurrentWeekNumber();
-      expect(weekNumber).toBe(4);
-    });
-
-    it('should cycle back to 1 after week 6', () => {
-      // 6 weeks after Apr 27 = Week 1 again (Jun 8, 2026 = Monday)
-      vi.setSystemTime(new Date('2026-06-08T12:00:00Z'));
-
-      const weekNumber = getCurrentWeekNumber();
-      expect(weekNumber).toBe(1);
-    });
-
-    it('should return week 6 for the 6th week of cycle', () => {
-      // 5 weeks after Apr 27 = Week 6 (Jun 1, 2026 — Monday)
-      vi.setSystemTime(new Date('2026-06-01T12:00:00Z'));
-
-      const weekNumber = getCurrentWeekNumber();
-      expect(weekNumber).toBe(6);
-    });
-  });
-
-  describe('getWeekNumberForWeeksAgo', () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it('should return current week number for weeksAgo = 0', () => {
-      vi.setSystemTime(new Date('2026-05-11T12:00:00Z')); // Week 3
-
-      const weekNumber = getWeekNumberForWeeksAgo(0);
-      expect(weekNumber).toBe(3);
-    });
-
-    it('should return week 2 for 1 week ago when current is week 3', () => {
-      vi.setSystemTime(new Date('2026-05-11T12:00:00Z')); // Week 3
-
-      const weekNumber = getWeekNumberForWeeksAgo(1);
-      expect(weekNumber).toBe(2);
-    });
-
-    it('should wrap around cycle correctly across boundaries', () => {
-      // Current = Week 1 of next cycle (Jun 8), 1 week ago should be Week 6
-      vi.setSystemTime(new Date('2026-06-08T12:00:00Z'));
-
-      const weekNumber = getWeekNumberForWeeksAgo(1);
-      expect(weekNumber).toBe(6);
-    });
-  });
-
   describe('getDateForWeeksAgo', () => {
     it('should return current Monday (UTC) for weeksAgo = 0', () => {
       const result = getDateForWeeksAgo(0);
@@ -171,7 +86,7 @@ describe('Date Utility Functions', () => {
     });
   });
 
-  describe('Activity Availability Integration Test', () => {
+  describe('getWeekIndexInRange', () => {
     beforeEach(() => {
       vi.useFakeTimers();
     });
@@ -180,36 +95,30 @@ describe('Date Utility Functions', () => {
       vi.useRealTimers();
     });
 
-    it('should correctly identify available activities for week 3 (Primordial Conflict)', () => {
-      // Week 3 = May 11–17, 2026. Use May 13 (Wednesday) UTC.
-      vi.setSystemTime(new Date('2026-05-13T12:00:00Z'));
+    it('should return 1 when date is exactly on rangeStart', () => {
+      const rangeStart = new Date('2026-05-11T00:00:00Z'); // Monday
 
-      const weekNumber = getCurrentWeekNumber();
+      const weekIndex = getWeekIndexInRange(rangeStart, rangeStart);
 
-      const primordialConflictWeeks = [3];
-      const goldenExpeditionWeeks = [1];
-      const kvkPrepWeeks = [2, 4];
-      const legionWeeks = [1, 2, 3, 4, 5, 6];
-
-      expect(primordialConflictWeeks.includes(weekNumber)).toBe(true);
-      expect(goldenExpeditionWeeks.includes(weekNumber)).toBe(false);
-      expect(kvkPrepWeeks.includes(weekNumber)).toBe(false);
-      expect(legionWeeks.includes(weekNumber)).toBe(true);
+      expect(weekIndex).toBe(1);
     });
 
-    it('should correctly identify available activities for week 4 (KvK)', () => {
-      // Week 4 = May 18–24, 2026. Use May 20 (Wednesday) UTC.
-      vi.setSystemTime(new Date('2026-05-20T12:00:00Z'));
+    it('should return N for a date some weeks after rangeStart', () => {
+      const rangeStart = new Date('2026-05-11T00:00:00Z'); // Monday, week 1
+      const date = new Date('2026-06-08T12:00:00Z'); // 4 weeks later, week 5
 
-      const weekNumber = getCurrentWeekNumber();
+      const weekIndex = getWeekIndexInRange(date, rangeStart);
 
-      const goldenExpeditionWeeks = [1];
-      const kvkPrepWeeks = [2, 4];
-      const legionWeeks = [1, 2, 3, 4, 5, 6];
+      expect(weekIndex).toBe(5);
+    });
 
-      expect(goldenExpeditionWeeks.includes(weekNumber)).toBe(false);
-      expect(kvkPrepWeeks.includes(weekNumber)).toBe(true);
-      expect(legionWeeks.includes(weekNumber)).toBe(true);
+    it('should Monday-align both dates so non-Monday inputs still resolve correctly', () => {
+      const rangeStart = new Date('2026-05-13T09:00:00Z'); // Wednesday, aligns to May 11 Monday
+      const date = new Date('2026-05-24T18:30:00Z'); // Sunday, aligns to May 18 Monday (week 2)
+
+      const weekIndex = getWeekIndexInRange(date, rangeStart);
+
+      expect(weekIndex).toBe(2);
     });
   });
 });

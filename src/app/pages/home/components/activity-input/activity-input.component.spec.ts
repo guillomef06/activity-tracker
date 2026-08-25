@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivityInputComponent } from './activity-input.component';
 import { ActivityService } from '@core/services/activity.service';
 import { ServerService } from '@core/services/server.service';
+import { SeasonService } from '@core/services/season.service';
 import { AuthService } from '@core/services/auth.service';
 import { SnackbarService } from '@core/services/snackbar.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -9,6 +10,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { vi } from 'vitest';
 import { PositionConflict } from '@shared/models';
+import { APP_CONSTANTS } from '@shared/constants/constants';
 
 describe('ActivityInputComponent', () => {
   let component: ActivityInputComponent;
@@ -42,15 +44,30 @@ describe('ActivityInputComponent', () => {
     error: vi.fn(),
   };
 
+  // Default: earliest date far in the past and every activity type available,
+  // so existing tests (written against the old "always enabled" cycle logic)
+  // keep behaving the same. Blocked-state behavior is covered separately below.
+  const mockSeasonService = {
+    seasons: signal([]),
+    loadSeasons: vi.fn().mockResolvedValue(undefined),
+    getSeasonForDate: vi.fn().mockReturnValue(null),
+    getAvailableActivityTypesForDate: vi.fn().mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES),
+    getEarliestAllowedDate: vi.fn().mockReturnValue(new Date('2000-01-01T00:00:00Z')),
+    suggestNextSeasonStartDate: vi.fn().mockReturnValue(new Date()),
+  };
+
   beforeEach(async () => {
     mockActivityService.getConflictsForCurrentUser.mockReturnValue([]);
     mockActivityService.addActivity.mockResolvedValue({ error: null });
+    mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
+    mockSeasonService.getEarliestAllowedDate.mockReturnValue(new Date('2000-01-01T00:00:00Z'));
 
     await TestBed.configureTestingModule({
       imports: [ActivityInputComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
         { provide: ActivityService, useValue: mockActivityService },
         { provide: ServerService, useValue: mockServerService },
+        { provide: SeasonService, useValue: mockSeasonService },
         { provide: AuthService, useValue: mockAuthService },
         { provide: SnackbarService, useValue: mockSnackbarService },
         provideZonelessChangeDetection(),
@@ -131,7 +148,7 @@ describe('ActivityInputComponent', () => {
     expect(component['discordInviteUrl']()).toBe('https://discord.gg/test');
   });
 
-  describe('weekOptions date restriction (Stellar Dynasty start Apr 27, 2026)', () => {
+  describe('weekOptions date restriction (season earliest allowed date Apr 27, 2026)', () => {
     // Each test creates a fresh component AFTER setting the fake time,
     // because weekOptions is a computed() evaluated on first access.
     function createComponentAt(isoDate: string): ActivityInputComponent {
@@ -142,8 +159,13 @@ describe('ActivityInputComponent', () => {
       return localFixture.componentInstance;
     }
 
+    beforeEach(() => {
+      mockSeasonService.getEarliestAllowedDate.mockReturnValue(new Date('2026-04-27T00:00:00Z'));
+    });
+
     afterEach(() => {
       vi.useRealTimers();
+      mockSeasonService.getEarliestAllowedDate.mockReturnValue(new Date('2000-01-01T00:00:00Z'));
     });
 
     it('should only show current week when cycle just started (Apr 29, 2026)', () => {
@@ -171,6 +193,71 @@ describe('ActivityInputComponent', () => {
       const options = c['weekOptions']();
 
       expect(options.length).toBeLessThanOrEqual(6);
+    });
+
+    it('should have no week options when there are no seasons at all (earliest date is null)', () => {
+      mockSeasonService.getEarliestAllowedDate.mockReturnValue(null);
+      const c = createComponentAt('2026-05-06T12:00:00Z');
+
+      expect(c['weekOptions']()).toEqual([]);
+    });
+  });
+
+  describe('season-driven blocked state', () => {
+    it('should filter availableActivities to only the types the season assigns to the selected date', () => {
+      const legionOnly = APP_CONSTANTS.ACTIVITY_TYPES.filter(t => t.value === 'legion');
+      mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(legionOnly);
+      mockServerService.isActivityEnabled.mockReturnValue(true);
+      // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
+      component['activityForm'].patchValue({ week: 2 });
+
+      const activities = component['availableActivities']();
+
+      expect(activities).toEqual(legionOnly);
+      expect(component['isBlockedForSelectedWeek']()).toBe(false);
+    });
+
+    it('should block submission and expose isBlockedForSelectedWeek when no season covers the selected date', () => {
+      mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue([]);
+      // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
+      component['activityForm'].patchValue({ week: 2 });
+
+      expect(component['isBlockedForSelectedWeek']()).toBe(true);
+      expect(component['availableActivities']().length).toBe(0);
+      expect(component['canSubmit']()).toBe(false);
+    });
+
+    it('should render the no-active-season banner and disable position input when blocked', () => {
+      mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue([]);
+      // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
+      component['activityForm'].patchValue({ week: 2 });
+      fixture.detectChanges();
+
+      const banner = fixture.nativeElement.querySelector('.no-season-banner');
+      expect(banner).not.toBeNull();
+
+      const positionInput = fixture.nativeElement.querySelector('input[formcontrolname="position"]');
+      expect(positionInput?.disabled).toBe(true);
+    });
+
+    it('should not render the no-active-season banner when a season covers the selected date', () => {
+      mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
+      // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
+      component['activityForm'].patchValue({ week: 2 });
+      fixture.detectChanges();
+
+      const banner = fixture.nativeElement.querySelector('.no-season-banner');
+      expect(banner).toBeNull();
+    });
+
+    it('should distinguish "no season" (blocked) from "season exists but alliance disabled all activities" (not blocked)', () => {
+      mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
+      mockServerService.isActivityEnabled.mockReturnValue(false);
+      // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
+      component['activityForm'].patchValue({ week: 2 });
+
+      expect(component['isBlockedForSelectedWeek']()).toBe(false);
+      expect(component['availableActivities']().length).toBe(0);
     });
   });
 

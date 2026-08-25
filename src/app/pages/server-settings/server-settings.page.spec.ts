@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, Mocked } from 'vitest';
 import { ServerSettingsPage } from './server-settings.page';
 import { ServerService } from '@app/core/services/server.service';
+import { SeasonService } from '@app/core/services/season.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
@@ -45,11 +46,21 @@ describe('ServerSettingsPage', () => {
       userProfile: signal({ server_id: 'test-server-id' }),
     };
 
+    const seasonServiceSpy = {
+      seasons: signal([]),
+      loadSeasons: vi.fn().mockResolvedValue(undefined),
+      getSeasonForDate: vi.fn().mockReturnValue(null),
+      getAvailableActivityTypesForDate: vi.fn().mockReturnValue([]),
+      getEarliestAllowedDate: vi.fn().mockReturnValue(null),
+      suggestNextSeasonStartDate: vi.fn().mockReturnValue(new Date()),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ServerSettingsPage, TranslateModule.forRoot()],
       providers: [
         { provide: ServerService, useValue: serverServiceSpy },
         { provide: AuthService, useValue: authServiceSpy },
+        { provide: SeasonService, useValue: seasonServiceSpy },
         provideRouter([]),
         provideHttpClient(),
         provideAnimations(),

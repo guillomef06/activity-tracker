@@ -1,0 +1,312 @@
+<div class="super-admin-seasons-page">
+  <mat-card class="page-header">
+    <mat-card-header>
+      <mat-icon class="header-icon">calendar_month</mat-icon>
+      <div class="header-content">
+        <mat-card-title>{{ 'superAdmin.seasons.title' | translate }}</mat-card-title>
+        <mat-card-subtitle>{{ 'superAdmin.seasons.subtitle' | translate }}</mat-card-subtitle>
+      </div>
+      <button mat-raised-button color="primary" (click)="openCreateWizard()" [disabled]="progressBar.isLoading()">
+        <mat-icon>add</mat-icon>
+        {{ 'superAdmin.seasons.newSeason' | translate }}
+      </button>
+    </mat-card-header>
+  </mat-card>
+
+  <!-- ══════════════════════════════════════════════════════════
+       Create wizard
+  ══════════════════════════════════════════════════════════ -->
+  @if (showCreateWizard()) {
+    <mat-card class="wizard-card">
+      <mat-card-content>
+        <mat-stepper linear>
+          <!-- Step 1: name / start date / week count -->
+          <mat-step [stepControl]="createForm" [label]="'superAdmin.seasons.wizard.stepDetails' | translate">
+            <form [formGroup]="createForm" class="wizard-step-form">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'superAdmin.seasons.wizard.name' | translate }}</mat-label>
+                <input matInput formControlName="name" [maxlength]="nameMaxLength" />
+                <mat-error>{{ 'superAdmin.seasons.nameRequired' | translate }}</mat-error>
+              </mat-form-field>
+
+              @if (canPickStartDate()) {
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'superAdmin.seasons.wizard.startDate' | translate }}</mat-label>
+                  <input
+                    matInput
+                    readonly
+                    [matDatepicker]="startDatePicker"
+                    [matDatepickerFilter]="mondayFilter"
+                    [value]="suggestedStartDate()"
+                    (dateChange)="onStartDateChange($event)"
+                  />
+                  <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #startDatePicker></mat-datepicker>
+                </mat-form-field>
+              } @else {
+                <mat-form-field appearance="outline">
+                  <mat-label>{{ 'superAdmin.seasons.wizard.startDate' | translate }}</mat-label>
+                  <input matInput [value]="suggestedStartDate() | date: 'mediumDate'" disabled readonly />
+                </mat-form-field>
+              }
+
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'superAdmin.seasons.wizard.weekCount' | translate }}</mat-label>
+                <input matInput type="number" formControlName="weekCount" [min]="minWeekCount" [max]="maxWeekCount" />
+              </mat-form-field>
+
+              <div class="wizard-actions">
+                <button mat-raised-button color="primary" matStepperNext type="button" [disabled]="createForm.invalid">
+                  {{ 'common.next' | translate }}
+                </button>
+                <button mat-button type="button" (click)="closeCreateWizard()">
+                  {{ 'common.cancel' | translate }}
+                </button>
+              </div>
+            </form>
+          </mat-step>
+
+          <!-- Step 2: per-week activity assignment -->
+          <mat-step [label]="'superAdmin.seasons.wizard.stepWeeks' | translate">
+            <div class="week-assignments">
+              @for (weekControl of createWeekActivities.controls; track $index) {
+                <div class="week-row">
+                  <span class="week-label">{{ 'superAdmin.seasons.week' | translate: { number: $index + 1 } }}</span>
+                  <mat-form-field appearance="outline" class="week-select-field">
+                    <mat-label>{{ 'superAdmin.seasons.activityTypes' | translate }}</mat-label>
+                    <mat-select multiple [formControl]="weekControl">
+                      @for (type of nonLegionActivityTypes; track type.value) {
+                        <mat-option [value]="type.value">{{ type.labelKey | translate }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <span class="legion-note" [matTooltip]="'superAdmin.seasons.legionAlwaysAvailableHint' | translate">
+                    <mat-icon class="legion-icon">info</mat-icon>
+                    {{ 'superAdmin.seasons.legionAlwaysAvailable' | translate }}
+                  </span>
+                </div>
+              }
+            </div>
+
+            <div class="wizard-actions">
+              <button mat-button matStepperPrevious type="button">{{ 'common.back' | translate }}</button>
+              <button mat-raised-button color="primary" matStepperNext type="button">
+                {{ 'common.next' | translate }}
+              </button>
+            </div>
+          </mat-step>
+
+          <!-- Step 3: review -->
+          <mat-step [label]="'superAdmin.seasons.wizard.stepReview' | translate">
+            <div class="review-panel">
+              <h3>{{ 'superAdmin.seasons.wizard.reviewTitle' | translate }}</h3>
+              <p>
+                <strong>{{ 'common.name' | translate }}:</strong> {{ createForm.get('name')?.value }}
+              </p>
+              <p>
+                <strong>{{ 'superAdmin.seasons.wizard.startDate' | translate }}:</strong>
+                {{ suggestedStartDate() | date: 'mediumDate' }}
+              </p>
+              <p>
+                <strong>{{ 'superAdmin.seasons.wizard.weekCount' | translate }}:</strong>
+                {{ createForm.get('weekCount')?.value }}
+              </p>
+
+              <div class="week-summary">
+                @for (weekControl of createWeekActivities.controls; track $index) {
+                  <div class="week-row read-only">
+                    <span class="week-label">
+                      {{ 'superAdmin.seasons.week' | translate: { number: $index + 1 } }}
+                    </span>
+                    <div class="week-chips">
+                      @for (activity of weekControl.value; track activity) {
+                        <mat-chip>{{ activity | activityLabel }}</mat-chip>
+                      }
+                      <mat-chip class="legion-chip">{{ legionActivityType | activityLabel }}</mat-chip>
+                    </div>
+                  </div>
+                }
+              </div>
+
+              <div class="wizard-actions">
+                <button mat-button matStepperPrevious type="button">{{ 'common.back' | translate }}</button>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="button"
+                  [disabled]="progressBar.isLoading()"
+                  (click)="submitCreateSeason()"
+                >
+                  <mat-icon>save</mat-icon>
+                  {{ 'superAdmin.seasons.wizard.confirmCreate' | translate }}
+                </button>
+              </div>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- ══════════════════════════════════════════════════════════
+       Seasons list
+  ══════════════════════════════════════════════════════════ -->
+  <div class="seasons-list">
+    @for (season of seasons(); track season.id) {
+      <mat-card class="season-card">
+        <mat-card-content>
+          <div
+            class="season-summary"
+            role="button"
+            tabindex="0"
+            (click)="toggleExpand(season)"
+            (keydown.enter)="toggleExpand(season)"
+          >
+            <div class="season-info">
+              <h3>{{ season.name }}</h3>
+              <p class="season-dates">
+                {{ season.startDate | date: 'mediumDate' }} – {{ season.endDate | date: 'mediumDate' }}
+                &middot;
+                {{ 'superAdmin.seasons.weekCountLabel' | translate: { count: season.weekCount } }}
+              </p>
+            </div>
+            <div class="season-badges">
+              <mat-chip class="status-chip status-{{ seasonStatus(season) }}">
+                {{ 'superAdmin.seasons.status.' + seasonStatus(season) | translate }}
+              </mat-chip>
+              @if (isExpanded(season.id)) {
+                @if (checkingLockId() === season.id) {
+                  <mat-spinner diameter="18"></mat-spinner>
+                } @else if (isLockKnown(season.id) && isLocked(season.id)) {
+                  <mat-icon class="lock-icon" [matTooltip]="'superAdmin.seasons.lockedTooltip' | translate">
+                    lock
+                  </mat-icon>
+                }
+              }
+              <button mat-icon-button type="button" (click)="toggleExpand(season); $event.stopPropagation()">
+                <mat-icon>{{ isExpanded(season.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          @if (isExpanded(season.id)) {
+            <div class="season-details">
+              @if (checkingLockId() === season.id) {
+                <div class="loading-row">
+                  <mat-spinner diameter="24"></mat-spinner>
+                </div>
+              } @else {
+                @if (!isEditingThisSeason(season.id)) {
+                  <div class="week-summary">
+                    @for (week of seasonWeekViews()[season.id]; track week.weekIndex) {
+                      <div class="week-row read-only">
+                        <span class="week-label">
+                          {{ 'superAdmin.seasons.week' | translate: { number: week.weekIndex } }}
+                        </span>
+                        <div class="week-chips">
+                          @for (activity of week.activityTypes; track activity) {
+                            <mat-chip>{{ activity | activityLabel }}</mat-chip>
+                          }
+                          <mat-chip class="legion-chip">{{ legionActivityType | activityLabel }}</mat-chip>
+                        </div>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="detail-actions">
+                    <button mat-button type="button" (click)="startEdit(season)">
+                      <mat-icon>edit</mat-icon>
+                      {{ 'common.edit' | translate }}
+                    </button>
+                    <button
+                      mat-button
+                      type="button"
+                      class="btn-danger"
+                      [disabled]="isLocked(season.id)"
+                      [matTooltip]="isLocked(season.id) ? ('superAdmin.seasons.deleteLockedTooltip' | translate) : ''"
+                      (click)="deleteSeason(season)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                      {{ 'common.delete' | translate }}
+                    </button>
+                  </div>
+                } @else {
+                  <form [formGroup]="editForm" class="edit-season-form">
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{ 'common.name' | translate }}</mat-label>
+                      <input matInput formControlName="name" [maxlength]="nameMaxLength" />
+                      <mat-error>{{ 'superAdmin.seasons.nameRequired' | translate }}</mat-error>
+                    </mat-form-field>
+
+                    @if (isLocked(season.id)) {
+                      <p class="lock-hint">
+                        <mat-icon [matTooltip]="'superAdmin.seasons.lockedTooltip' | translate">lock</mat-icon>
+                        {{ 'superAdmin.seasons.lockedHint' | translate }}
+                      </p>
+                    } @else {
+                      <mat-form-field appearance="outline" class="week-count-field">
+                        <mat-label>{{ 'superAdmin.seasons.weekCount' | translate }}</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="weekCount"
+                          [min]="minWeekCount"
+                          [max]="maxWeekCount"
+                        />
+                      </mat-form-field>
+
+                      <div class="week-assignments">
+                        @for (weekControl of editWeekActivities.controls; track $index) {
+                          <div class="week-row">
+                            <span class="week-label">
+                              {{ 'superAdmin.seasons.week' | translate: { number: $index + 1 } }}
+                            </span>
+                            <mat-form-field appearance="outline" class="week-select-field">
+                              <mat-label>{{ 'superAdmin.seasons.activityTypes' | translate }}</mat-label>
+                              <mat-select multiple [formControl]="weekControl">
+                                @for (type of nonLegionActivityTypes; track type.value) {
+                                  <mat-option [value]="type.value">{{ type.labelKey | translate }}</mat-option>
+                                }
+                              </mat-select>
+                            </mat-form-field>
+                            <span
+                              class="legion-note"
+                              [matTooltip]="'superAdmin.seasons.legionAlwaysAvailableHint' | translate"
+                            >
+                              <mat-icon class="legion-icon">info</mat-icon>
+                              {{ 'superAdmin.seasons.legionAlwaysAvailable' | translate }}
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    }
+
+                    <div class="form-actions">
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        type="button"
+                        [disabled]="editForm.invalid"
+                        (click)="saveEdit(season)"
+                      >
+                        <mat-icon>save</mat-icon>
+                        {{ 'common.save' | translate }}
+                      </button>
+                      <button mat-button type="button" (click)="cancelEdit()">
+                        {{ 'common.cancel' | translate }}
+                      </button>
+                    </div>
+                  </form>
+                }
+              }
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    } @empty {
+      <mat-card class="empty-card">
+        <mat-card-content>{{ 'superAdmin.seasons.noSeasons' | translate }}</mat-card-content>
+      </mat-card>
+    }
+  </div>
+</div>

@@ -4,9 +4,11 @@ import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { ImportExcelTabComponent } from './import-excel-tab.component';
 import { ActivityService, SnackbarService } from '@app/core/services';
 import { ServerService } from '@app/core/services/server.service';
+import { SeasonService } from '@app/core/services/season.service';
+import { APP_CONSTANTS } from '@app/shared/constants/constants';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import type { UserProfile } from '@app/shared/models';
+import type { UserProfile, SeasonWithWeeks } from '@app/shared/models';
 
 // Local interface mirroring the private ImportRow in the component
 interface MockRow {
@@ -102,6 +104,15 @@ describe('ImportExcelTabComponent', () => {
     success: vi.fn(),
   };
 
+  const seasonServiceSpy = {
+    seasons: signal([]),
+    loadSeasons: vi.fn().mockResolvedValue(undefined),
+    getSeasonForDate: vi.fn().mockReturnValue(null),
+    getAvailableActivityTypesForDate: vi.fn().mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES),
+    getEarliestAllowedDate: vi.fn().mockReturnValue(new Date('2000-01-01T00:00:00Z')),
+    suggestNextSeasonStartDate: vi.fn().mockReturnValue(new Date()),
+  };
+
   beforeEach(async () => {
     vi.clearAllMocks();
     activitiesSignal.set([]);
@@ -109,12 +120,15 @@ describe('ImportExcelTabComponent', () => {
     vi.restoreAllMocks();
     // Re-apply default implementations cleared by restoreAllMocks
     activityServiceSpy.batchImportActivities = vi.fn().mockResolvedValue({ error: null });
+    seasonServiceSpy.getSeasonForDate = vi.fn().mockReturnValue(null);
+    seasonServiceSpy.getAvailableActivityTypesForDate = vi.fn().mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
 
     await TestBed.configureTestingModule({
       imports: [ImportExcelTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
         { provide: ActivityService, useValue: activityServiceSpy },
         { provide: ServerService, useValue: serverServiceSpy },
+        { provide: SeasonService, useValue: seasonServiceSpy },
         { provide: SnackbarService, useValue: snackbarServiceSpy },
         provideZonelessChangeDetection(),
       ],
@@ -338,6 +352,47 @@ describe('ImportExcelTabComponent', () => {
       expect(result?.inserted).toBe(1);
       expect(result?.updated).toBe(1);
       expect(result?.skipped).toBe(1);
+    });
+  });
+
+  // ─── buildSeasonReferenceRows (Reference sheet, season-scoped) ───────────────
+
+  describe('buildSeasonReferenceRows', () => {
+    it('should generate a single explanatory row without throwing when there is no active season for today', () => {
+      seasonServiceSpy.getSeasonForDate.mockReturnValue(null);
+
+      const rows = component['buildSeasonReferenceRows']();
+
+      expect(rows.length).toBe(1);
+      expect(rows[0][0]).toBe('server.import.noActiveSeasonReference');
+    });
+
+    it('should scope each non-legion activity type to the season weeks it is assigned to, and give legion every week', () => {
+      // 3-week season: Mon Mar 2 2026 -> Sun Mar 22 2026 (UTC)
+      const mockSeason = {
+        id: 'season-1',
+        startDate: new Date(Date.UTC(2026, 2, 2)),
+        endDate: new Date(Date.UTC(2026, 2, 22)),
+        weekCount: 3,
+      } as unknown as SeasonWithWeeks;
+      seasonServiceSpy.getSeasonForDate.mockReturnValue(mockSeason);
+
+      const legion = APP_CONSTANTS.ACTIVITY_TYPES.find(t => t.value === 'legion')!;
+      const kvkPrep = APP_CONSTANTS.ACTIVITY_TYPES.find(t => t.value === 'kvk prep')!;
+
+      // kvk prep only assigned on week 2 (Mar 9); legion assigned every week
+      seasonServiceSpy.getAvailableActivityTypesForDate.mockImplementation((date: Date) => {
+        const isWeek2 = date.getTime() === Date.UTC(2026, 2, 9);
+        return isWeek2 ? [legion, kvkPrep] : [legion];
+      });
+
+      const rows = component['buildSeasonReferenceRows']();
+
+      const legionRow = rows.find(r => r[0] === 'legion')!;
+      const kvkPrepRow = rows.find(r => r[0] === 'kvk prep')!;
+
+      expect(legionRow[2]).toBe('1, 2, 3');
+      expect(kvkPrepRow[2]).toBe('2');
     });
   });
 

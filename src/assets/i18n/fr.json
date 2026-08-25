@@ -256,7 +256,8 @@
         "skipped": "ignoré(s)",
         "error": "L'import a échoué. Veuillez réessayer."
       },
-      "reset": "Importer un autre fichier"
+      "reset": "Importer un autre fichier",
+      "noActiveSeasonReference": "Aucune saison active configurée — numéros de semaine historiques indisponibles"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "Activité soumise avec succès !",
     "error": "Échec de la soumission de l'activité",
     "participated": "J'ai participé cette semaine",
-    "fillAllFields": "Veuillez remplir tous les champs requis"
+    "fillAllFields": "Veuillez remplir tous les champs requis",
+    "noActiveSeason": "Aucune saison n'est actuellement configurée pour cette date. Veuillez contacter un administrateur."
   },
   "activities": {
     "types": {
@@ -284,7 +286,8 @@
       "stellar-dynasty": "Dynastie Stellaire",
       "primordial-conflict": "Conflit Primordial",
       "legion": "Bataille de l'Aube / Merveilles",
-      "me-overall": "ME Overall"
+      "me-overall": "ME Overall",
+      "behemoth-conquest": "Conquête du Béhémoth"
     }
   },
   "dashboard": {
@@ -345,7 +348,9 @@
       "manageUsers": "Gérer les Utilisateurs",
       "manageUsersDesc": "Voir et gérer tous les utilisateurs",
       "manageGuidesData": "Données de Référence Guides",
-      "manageGuidesDataDesc": "Gérer les champions, skills, chevaux et gemmes"
+      "manageGuidesDataDesc": "Gérer les champions, skills, chevaux et gemmes",
+      "manageSeasons": "Gérer les Saisons",
+      "manageSeasonsDesc": "Configurer les saisons d'activités et leurs plannings hebdomadaires"
     },
     "servers": {
       "title": "Gestion des Serveurs",
@@ -395,6 +400,38 @@
       "strategy": "Stratégie",
       "hero": "Héros",
       "tactics": "Tactiques"
+    },
+    "seasons": {
+      "title": "Planning des Saisons",
+      "subtitle": "Configurer les saisons d'activités et leurs plannings hebdomadaires",
+      "newSeason": "Nouvelle Saison",
+      "noSeasons": "Aucune saison créée pour le moment",
+      "weekCountLabel": "{{count}} semaines",
+      "week": "Semaine {{number}}",
+      "weekCount": "Nombre de semaines",
+      "activityTypes": "Types d'activités",
+      "legionAlwaysAvailable": "Légion toujours disponible",
+      "legionAlwaysAvailableHint": "La Légion est implicite chaque semaine et ne peut pas être retirée",
+      "nameRequired": "Le nom est requis (100 caractères max)",
+      "createFailed": "Échec de la création de la saison",
+      "lockedTooltip": "Cette saison a des activités enregistrées et sa structure est verrouillée",
+      "lockedHint": "Cette saison a des activités enregistrées. Seul le nom peut être modifié.",
+      "deleteLockedTooltip": "Impossible de supprimer une saison avec des activités enregistrées",
+      "status": {
+        "past": "Passée",
+        "current": "En cours",
+        "future": "À venir"
+      },
+      "wizard": {
+        "stepDetails": "Détails",
+        "stepWeeks": "Planning hebdomadaire",
+        "stepReview": "Vérification",
+        "name": "Nom de la saison",
+        "startDate": "Date de début",
+        "weekCount": "Nombre de semaines",
+        "reviewTitle": "Vérifier la saison",
+        "confirmCreate": "Créer la saison"
+      }
     }
   },
   "super_admin": "Super Administrateur",

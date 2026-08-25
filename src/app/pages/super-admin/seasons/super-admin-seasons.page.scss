@@ -1,0 +1,276 @@
+@use '../../../../styles/design-tokens' as tokens;
+
+.super-admin-seasons-page {
+  padding: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 1rem;
+
+  mat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .header-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: var(--mat-sys-secondary);
+    }
+
+    .header-content {
+      flex: 1;
+
+      mat-card-title {
+        font-size: 1.75rem;
+        margin-bottom: 0.25rem;
+      }
+
+      mat-card-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+.wizard-card {
+  margin-bottom: 1rem;
+
+  // mat-stepper paints its own opaque background (--mat-stepper-container-color,
+  // defaulting to --mat-sys-surface) independently of the glass-transparent
+  // mat-card it sits inside, hiding the backdrop-filter blur underneath.
+  mat-stepper {
+    --mat-stepper-container-color: transparent;
+  }
+}
+
+.wizard-step-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 400px;
+  padding-top: 1rem;
+}
+
+.wizard-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.week-assignments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.week-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .week-label {
+    min-width: 72px;
+    font-weight: 500;
+  }
+
+  .week-select-field {
+    flex: 1;
+    min-width: 220px;
+    margin-bottom: 0;
+  }
+
+  .legion-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    opacity: 0.7;
+    font-style: italic;
+
+    .legion-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &.read-only {
+    align-items: flex-start;
+
+    .week-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+    }
+
+    .legion-chip {
+      opacity: 0.7;
+      font-style: italic;
+    }
+  }
+}
+
+.review-panel {
+  padding: 1rem 0;
+
+  h3 {
+    margin: 0 0 0.75rem;
+  }
+
+  p {
+    margin: 0.25rem 0;
+  }
+
+  .week-summary {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.seasons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.season-card {
+  .season-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    flex-wrap: wrap;
+
+    .season-info {
+      h3 {
+        margin: 0 0 0.25rem;
+        font-size: 1.125rem;
+      }
+
+      .season-dates {
+        margin: 0;
+        font-size: 0.875rem;
+        opacity: 0.75;
+      }
+    }
+
+    .season-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .lock-icon {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+.status-chip {
+  font-size: 0.75rem;
+
+  &.status-past {
+    background-color: var(--mat-sys-surface-variant) !important;
+    opacity: 0.8;
+  }
+
+  &.status-current {
+    background-color: var(--mat-sys-primary-container) !important;
+    color: var(--mat-sys-on-primary-container) !important;
+  }
+
+  &.status-future {
+    background-color: var(--mat-sys-tertiary-container) !important;
+    color: var(--mat-sys-on-tertiary-container) !important;
+  }
+}
+
+.season-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+
+  .loading-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .week-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+}
+
+.edit-season-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .week-count-field {
+    max-width: 160px;
+  }
+
+  .lock-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    opacity: 0.8;
+    font-style: italic;
+  }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.empty-card {
+  text-align: center;
+  opacity: 0.7;
+}
+
+// Mobile
+@media (max-width: tokens.$bp-md) {
+  .super-admin-seasons-page {
+    padding: 0.5rem;
+  }
+
+  .week-row {
+    flex-direction: column;
+    align-items: stretch;
+
+    .week-select-field {
+      min-width: 0;
+    }
+  }
+
+  .season-summary {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+}
