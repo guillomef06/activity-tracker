@@ -1,6 +1,6 @@
 # Activity Tracker
 
-Mobile-first Angular application for tracking server activity scores with a rolling 6-week system. Multi-server, multi-role, deployed on GitHub Pages with Supabase backend.
+Mobile-first Angular application for tracking server activity scores with a rolling system. Multi-server, multi-role, deployed on GitHub Pages with Supabase backend.
 
 ## Stack
 
@@ -22,13 +22,13 @@ Mobile-first Angular application for tracking server activity scores with a roll
 
 - Activity submission with configurable point rules per position
 - Participation mode per activity (toggle instead of position field)
-- 6-week rolling scores + tiebreaker activity
+- Rolling scores + tiebreaker activity
 - Admin retroactive entry + Excel batch import
 - Discord webhook integration
 - Account recovery via secret question (no email)
 - 6 themes: Light / Dark / Auto / Glass Light / Glass Dark / High Contrast
 - PWA (installable)
-- i18n: EN, FR, ES, IT
+- i18n: 14 languages
 
 ## Getting Started
 

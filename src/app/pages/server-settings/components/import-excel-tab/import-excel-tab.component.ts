@@ -14,10 +14,13 @@ import * as XLSX from 'xlsx';
 
 import { ActivityService, SnackbarService } from '@app/core/services';
 import { ServerService } from '@app/core/services/server.service';
+import { SeasonService } from '@app/core/services/season.service';
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
 import { getWeekStart } from '@app/shared/utils/date.util';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
-import type { UserProfile } from '@app/shared/models';
+import type { UserProfile, SeasonWithWeeks } from '@app/shared/models';
+
+const LEGION_ACTIVITY_TYPE = 'legion';
 
 interface ImportRow {
   rowIndex: number;
@@ -68,6 +71,7 @@ interface ImportResult {
 export class ImportExcelTabComponent {
   private readonly activityService = inject(ActivityService);
   private readonly serverService = inject(ServerService);
+  private readonly seasonService = inject(SeasonService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly translate = inject(TranslateService);
 
@@ -122,14 +126,62 @@ export class ImportExcelTabComponent {
     ws['!cols'] = [{ wch: 25 }, { wch: 22 }, { wch: 12 }, { wch: 15 }];
     XLSX.utils.book_append_sheet(wb, ws, 'Import');
 
-    // Reference sheet — valid activity type values
-    const refHeaders = ['activity_type', 'default_points', 'available_cycle_weeks'];
-    const refRows = this.activityTypes.map((t: ActivityType) => [t.value, t.points, t.availableWeeks.join(', ')]);
+    // Reference sheet — valid activity type values and their current-season week assignment
+    const refHeaders = ['activity_type', 'default_points', 'available_weeks_current_season'];
+    const refRows = this.buildSeasonReferenceRows();
     const wsRef = XLSX.utils.aoa_to_sheet([refHeaders, ...refRows]);
     wsRef['!cols'] = [{ wch: 25 }, { wch: 16 }, { wch: 22 }];
     XLSX.utils.book_append_sheet(wb, wsRef, 'Reference');
 
     XLSX.writeFile(wb, 'activity-import-template.xlsx');
+  }
+
+  /**
+   * Builds the Reference sheet rows from the season currently active for today's date.
+   * Falls back to a single explanatory row (rather than throwing) when no season covers today —
+   * this sheet is purely informational for admins preparing a bulk-import spreadsheet.
+   */
+  private buildSeasonReferenceRows(): (string | number)[][] {
+    const activeSeason = this.seasonService.getSeasonForDate(new Date());
+    if (!activeSeason) {
+      return [[this.translate.instant('server.import.noActiveSeasonReference'), '', '']];
+    }
+
+    const weekStarts = this.getSeasonWeekStarts(activeSeason);
+    const weekCount = weekStarts.length;
+
+    return this.activityTypes.map((t: ActivityType) => [
+      t.value,
+      t.points,
+      t.value === LEGION_ACTIVITY_TYPE ? this.allWeeksRange(weekCount) : this.weeksForActivityType(t.value, weekStarts),
+    ]);
+  }
+
+  /** Monday of each of the season's declared weeks, in order (week 1 first). */
+  private getSeasonWeekStarts(season: SeasonWithWeeks): Date[] {
+    const seasonStart = getWeekStart(new Date(season.startDate));
+
+    return Array.from({ length: season.weekCount }, (_, index) => {
+      const weekStart = new Date(seasonStart);
+      weekStart.setUTCDate(weekStart.getUTCDate() + index * APP_CONSTANTS.SCORING.DAYS_PER_WEEK);
+      return weekStart;
+    });
+  }
+
+  /** 1-based week indices (within the season) where the given activity type is assigned. */
+  private weeksForActivityType(activityTypeValue: string, weekStarts: Date[]): string {
+    return weekStarts
+      .map((weekStart, index) =>
+        this.seasonService.getAvailableActivityTypesForDate(weekStart).some(t => t.value === activityTypeValue)
+          ? index + 1
+          : null
+      )
+      .filter((weekIndex): weekIndex is number => weekIndex !== null)
+      .join(', ');
+  }
+
+  private allWeeksRange(weekCount: number): string {
+    return Array.from({ length: weekCount }, (_, index) => index + 1).join(', ');
   }
 
   protected onFileSelect(event: Event): void {

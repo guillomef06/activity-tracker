@@ -7,6 +7,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { ActivityService } from '@core/services/activity.service';
 import { ServerService } from '@core/services/server.service';
+import { SeasonService } from '@core/services/season.service';
 import { AuthService } from '@core/services/auth.service';
 import { SupabaseService } from '@core/services/supabase.service';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
@@ -37,6 +38,15 @@ describe('HomePage', () => {
     scoringWeeks: signal(6),
   };
 
+  const seasonServiceSpy = {
+    seasons: signal([]),
+    loadSeasons: vi.fn().mockResolvedValue(undefined),
+    getSeasonForDate: vi.fn().mockReturnValue(null),
+    getAvailableActivityTypesForDate: vi.fn().mockReturnValue([]),
+    getEarliestAllowedDate: vi.fn().mockReturnValue(null),
+    suggestNextSeasonStartDate: vi.fn().mockReturnValue(new Date()),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomePage, TranslateModule.forRoot()],
@@ -48,6 +58,7 @@ describe('HomePage', () => {
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         { provide: ServerService, useValue: serverServiceSpy },
+        { provide: SeasonService, useValue: seasonServiceSpy },
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();

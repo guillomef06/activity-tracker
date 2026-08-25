@@ -90,6 +90,11 @@ export const routes: Routes = [
             path: 'guides-data',
             loadComponent: () => import('./pages/super-admin/guides-data/guides-data.page').then(m => m.GuidesDataPage),
           },
+          {
+            path: 'seasons',
+            loadComponent: () =>
+              import('./pages/super-admin/seasons/super-admin-seasons.page').then(m => m.SuperAdminSeasonsPage),
+          },
         ],
       },
     ],

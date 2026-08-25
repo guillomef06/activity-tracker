@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { SwUpdate } from '@angular/service-worker';
 import { MatDialog } from '@angular/material/dialog';
+import { DateAdapter, provideNativeDateAdapter } from '@angular/material/core';
 import { AppComponent } from './app.component';
 import { provideRouter } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -30,6 +31,7 @@ describe('AppComponent', () => {
         TranslateService,
         { provide: SwUpdate, useValue: swUpdateMock },
         { provide: MatDialog, useValue: dialogMock },
+        provideNativeDateAdapter(),
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();
@@ -55,5 +57,17 @@ describe('AppComponent', () => {
     // Either uses browser language or defaults to 'en'
     const currentLang = translate.currentLang || translate.getDefaultLang();
     expect(currentLang).toBeTruthy();
+  });
+
+  it('should sync the mat-datepicker locale with the active app language', async () => {
+    const dateAdapter = TestBed.inject(DateAdapter);
+    const setLocaleSpy = vi.spyOn(dateAdapter, 'setLocale');
+
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const languageService = fixture.componentInstance['languageService'];
+    expect(setLocaleSpy).toHaveBeenCalledWith(languageService.currentLanguage());
   });
 });

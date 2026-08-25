@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslateModule } from '@ngx-translate/core';
 import { ServerService } from '@app/core/services/server.service';
+import { SeasonService } from '@app/core/services/season.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type { InvitationWithStats, UserProfile, ActivityPointRule } from '@app/shared/models';
 
@@ -38,6 +39,7 @@ import { SwipeTabsDirective } from '@app/shared/directives/swipe-tabs/swipe-tabs
 })
 export class ServerSettingsPage implements OnInit {
   private readonly serverService = inject(ServerService);
+  private readonly seasonService = inject(SeasonService);
   protected readonly progressBarService = inject(ProgressBarService);
 
   protected readonly members = signal<UserProfile[]>([]);
@@ -53,7 +55,11 @@ export class ServerSettingsPage implements OnInit {
     await this.progressBarService.withProgress(async () => {
       try {
         // 2 requests instead of 5: server + members + rules + settings in one, invitations separate (view)
-        await Promise.all([this.serverService.loadAllSettings(), this.loadInvitations()]);
+        await Promise.all([
+          this.serverService.loadAllSettings(),
+          this.loadInvitations(),
+          this.seasonService.loadSeasons(),
+        ]);
         this.members.set(this.serverService.members());
         this.pointRules.set(this.serverService.rules());
       } catch (error) {

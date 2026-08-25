@@ -7,7 +7,6 @@ export interface ActivityType {
   value: string;
   labelKey: string;
   points: number;
-  availableWeeks: number[];
 }
 
 export const APP_CONSTANTS = {
@@ -22,49 +21,46 @@ export const APP_CONSTANTS = {
       value: 'kvk prep',
       labelKey: 'activities.types.kvk-prep',
       points: 15,
-      availableWeeks: [2, 4],
     },
     {
       value: 'kvk cross border',
       labelKey: 'activities.types.kvk-cross-border',
       points: 10,
-      availableWeeks: [2, 4],
     },
     {
       value: 'legion',
       labelKey: 'activities.types.legion',
       points: 8,
-      availableWeeks: [1, 2, 3, 4, 5, 6],
     },
     {
       value: 'desolate desert',
       labelKey: 'activities.types.desolate-desert',
       points: 8,
-      availableWeeks: [5],
     },
     {
       value: 'golden expedition',
       labelKey: 'activities.types.golden-expedition',
       points: 5,
-      availableWeeks: [1],
     },
     {
       value: 'primordial conflict',
       labelKey: 'activities.types.primordial-conflict',
       points: 5,
-      availableWeeks: [3],
     },
     {
       value: 'stellar dynasty',
       labelKey: 'activities.types.stellar-dynasty',
       points: 5,
-      availableWeeks: [1, 2, 3, 4, 5, 6],
     },
     {
       value: 'me overall',
       labelKey: 'activities.types.me-overall',
       points: 8,
-      availableWeeks: [2, 4],
+    },
+    {
+      value: 'behemoth conquest',
+      labelKey: 'activities.types.behemoth-conquest',
+      points: 8,
     },
   ] as ActivityType[],
 } as const;

@@ -8,6 +8,13 @@
     </mat-card-content>
   </mat-card>
 
+  @if (isBlockedForSelectedWeek()) {
+    <mat-card class="no-season-banner" role="alert">
+      <mat-icon>warning</mat-icon>
+      <span>{{ 'activityInput.noActiveSeason' | translate }}</span>
+    </mat-card>
+  }
+
   <mat-card class="form-card">
     <mat-card-content>
       <form [formGroup]="retroactiveForm" (ngSubmit)="onSubmit()">
@@ -44,7 +51,10 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>category</mat-icon>
           <mat-label>{{ 'server.retroactive.selectActivity' | translate }}</mat-label>
-          <mat-select formControlName="activity" [disabled]="availableActivities().length === 0">
+          <mat-select
+            formControlName="activity"
+            [disabled]="availableActivities().length === 0 || isBlockedForSelectedWeek()"
+          >
             @if (availableActivities().length === 0) {
               <mat-option disabled>
                 {{ 'server.retroactive.noActivities' | translate }}
@@ -73,7 +83,13 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matIconPrefix>emoji_events</mat-icon>
             <mat-label>{{ 'server.retroactive.position' | translate }}</mat-label>
-            <input matInput type="number" formControlName="position" min="1" />
+            <input
+              matInput
+              type="number"
+              formControlName="position"
+              [attr.disabled]="isBlockedForSelectedWeek() ? true : null"
+              min="1"
+            />
             <mat-hint>{{ 'server.retroactive.positionHint' | translate }}</mat-hint>
             @if (positionError()) {
               <mat-error>{{ positionError() | translate }}</mat-error>

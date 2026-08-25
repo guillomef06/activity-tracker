@@ -52,57 +52,6 @@ export function getWeekEnd(date: Date): Date {
 }
 
 /**
- * Reference date for the 6-week Stellar Dynasty cycle (must be a Monday)
- * Current setting: Monday April 27, 2026 = Start of Week 1
- * Cycle: W1 Apr 27–May 3 | W2 May 4–10 | W3 May 11–17 | W4 May 18–24 | W5 May 25–31 | W6 Jun 1–7
- * Stored as UTC to avoid timezone-dependent parsing.
- * Also used as the minimum allowed activity input date.
- */
-export const CYCLE_REFERENCE_DATE = new Date('2026-04-27T00:00:00Z');
-
-/**
- * Get the current week number in the repeating 6-week cycle
- * The cycle repeats indefinitely: 1 → 2 → 3 → 4 → 5 → 6 → 1 → 2 → ...
- *
- * Used to filter which activities are available for submission:
- * - Golden Expedition: week 1
- * - KvK Prep: weeks 2, 4
- * - KvK Cross Border: weeks 2, 4
- * - Legion: weeks 1-6 (all weeks)
- * - Desolate Desert: week 5
- * - Primordial Conflict: week 3
- * - Stellar Dynasty: week 6
- *
- * @returns number between 1 and 6 representing the current week in the cycle
- */
-export function getCurrentWeekNumber(): number {
-  const currentWeekStart = getWeekStart(new Date());
-  const referenceWeekStart = getWeekStart(CYCLE_REFERENCE_DATE);
-
-  const diffInMs = currentWeekStart.getTime() - referenceWeekStart.getTime();
-  const weeksElapsed = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
-
-  return (weeksElapsed % 6) + 1;
-}
-
-/**
- * Get the cycle week number for a specific number of weeks in the past
- * @param weeksAgo - 0 = current week, 1 = last week, 2 = 2 weeks ago, etc.
- * @returns number between 1 and 6 representing the cycle week at that time
- */
-export function getWeekNumberForWeeksAgo(weeksAgo: number): number {
-  const currentWeekStart = getWeekStart(new Date());
-  const targetWeekStart = new Date(currentWeekStart);
-  targetWeekStart.setUTCDate(currentWeekStart.getUTCDate() - weeksAgo * 7);
-
-  const referenceWeekStart = getWeekStart(CYCLE_REFERENCE_DATE);
-  const diffInMs = targetWeekStart.getTime() - referenceWeekStart.getTime();
-  const weeksElapsed = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
-
-  return (((weeksElapsed % 6) + 6) % 6) + 1;
-}
-
-/**
  * Get a date representing a specific number of weeks in the past
  * Returns the Monday (start) of that week
  * @param weeksAgo - 0 = current week, 1 = last week, 2 = 2 weeks ago, etc.
@@ -116,22 +65,24 @@ export function getDateForWeeksAgo(weeksAgo: number): Date {
 }
 
 /**
- * Get date range for a specific week number (1-6)
- * @param weekNumber - Week number (1 = 5 weeks ago, 6 = current week)
- * @returns Object with start and end dates for the week
+ * Get the 1-based week index of `date` relative to `rangeStart`.
+ * Both dates are Monday-aligned internally (via getWeekStart) before the
+ * arithmetic, so a non-Monday `date` or `rangeStart` still resolves
+ * correctly.
+ *
+ * Pure arithmetic — no DB/service access. Used by SeasonService to
+ * resolve which week of a season a given date falls in.
+ *
+ * @param date - the date to locate within the range
+ * @param rangeStart - the first day of the range (e.g. a season's start_date)
+ * @returns 1-based week index (1 = the week containing rangeStart)
  */
-export function getWeekDateRange(weekNumber: number): { start: Date; end: Date } {
-  if (weekNumber < 1 || weekNumber > 6) {
-    throw new Error('Week number must be between 1 and 6');
-  }
+export function getWeekIndexInRange(date: Date, rangeStart: Date): number {
+  const alignedDate = getWeekStart(date);
+  const alignedRangeStart = getWeekStart(rangeStart);
 
-  const currentWeekStart = getWeekStart(new Date());
-  const weeksAgo = 6 - weekNumber;
+  const diffInMs = alignedDate.getTime() - alignedRangeStart.getTime();
+  const weeksElapsed = Math.floor(diffInMs / (7 * 24 * 60 * 60 * 1000));
 
-  const weekStart = new Date(currentWeekStart);
-  weekStart.setUTCDate(currentWeekStart.getUTCDate() - weeksAgo * 7);
-
-  const weekEnd = getWeekEnd(weekStart);
-
-  return { start: weekStart, end: weekEnd };
+  return weeksElapsed + 1;
 }

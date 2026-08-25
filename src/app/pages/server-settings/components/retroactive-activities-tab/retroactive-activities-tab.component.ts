@@ -13,8 +13,9 @@ import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ActivityService, SnackbarService } from '@app/core/services';
 import { ServerService } from '@app/core/services/server.service';
+import { SeasonService } from '@app/core/services/season.service';
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
-import { getWeekNumberForWeeksAgo, getDateForWeeksAgo, getWeekStart, getWeekEnd } from '@app/shared/utils/date.util';
+import { getDateForWeeksAgo, getWeekStart, getWeekEnd } from '@app/shared/utils/date.util';
 import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { UserProfile } from '@app/shared/models';
@@ -46,6 +47,7 @@ interface WeekOption {
 export class RetroactiveActivitiesTabComponent {
   private readonly activityService = inject(ActivityService);
   private readonly serverService = inject(ServerService);
+  private readonly seasonService = inject(SeasonService);
   private readonly translate = inject(TranslateService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly fb = inject(FormBuilder);
@@ -107,6 +109,9 @@ export class RetroactiveActivitiesTabComponent {
   readonly scoringWeeks = computed(() => this.serverService.scoringWeeks());
 
   weekOptions = computed<WeekOption[]>(() => {
+    const earliestAllowedDate = this.seasonService.getEarliestAllowedDate();
+    if (!earliestAllowedDate) return [];
+
     const options: WeekOption[] = [];
     const currentWeekLabel = this.translate.instant('server.retroactive.currentWeek');
     const weeksAgoLabel = this.translate.instant('server.retroactive.weeksAgo');
@@ -115,6 +120,7 @@ export class RetroactiveActivitiesTabComponent {
     for (let i = 0; i < totalWeeks; i++) {
       const date = getDateForWeeksAgo(i);
       const weekStart = getWeekStart(date);
+      if (weekStart < earliestAllowedDate) break;
       const weekEnd = getWeekEnd(date);
       const dateRange = `${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()}`;
 
@@ -128,12 +134,33 @@ export class RetroactiveActivitiesTabComponent {
     return options;
   });
 
+  /**
+   * The activity types the current season assigns to the selected week, before
+   * filtering by alliance-level enable/disable. An empty array here is the sole
+   * "no season configured for this date" signal per SeasonService contract.
+   *
+   * Computeds derived from this one also explicitly read weekValue() themselves
+   * (rather than relying solely on this computed's output) so they still
+   * re-evaluate even if SeasonService ever returns a referentially-stable array
+   * across two different weeks.
+   */
+  private readonly seasonActivityTypes = computed<ActivityType[]>(() => {
+    const targetDate = getWeekStart(getDateForWeeksAgo(this.weekValue() ?? 0));
+    return this.seasonService.getAvailableActivityTypesForDate(targetDate);
+  });
+
+  /**
+   * True when no season covers the currently selected week — submission must be
+   * totally blocked (not merely "no activities enabled") in this state.
+   */
+  isBlockedForSelectedWeek = computed(() => {
+    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
+    return this.seasonActivityTypes().length === 0;
+  });
+
   availableActivities = computed(() => {
-    const weekNumber = getWeekNumberForWeeksAgo(this.weekValue() ?? 0);
-    return APP_CONSTANTS.ACTIVITY_TYPES.filter(
-      (type: ActivityType) =>
-        type.availableWeeks.includes(weekNumber) && this.serverService.isActivityEnabled(type.value)
-    );
+    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
+    return this.seasonActivityTypes().filter((type: ActivityType) => this.serverService.isActivityEnabled(type.value));
   });
 
   calculatedPoints = computed(() => {
@@ -152,6 +179,7 @@ export class RetroactiveActivitiesTabComponent {
 
   canSubmit = computed(() => {
     if (this.isSubmitting()) return false;
+    if (this.isBlockedForSelectedWeek()) return false;
     const member = this.retroactiveForm.get('member')?.value;
     const activity = this.activityValue();
     if (!member || !activity) return false;
