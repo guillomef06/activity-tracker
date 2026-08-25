@@ -1,5 +1,30 @@
 [
   {
+    "version": "1.5.0",
+    "date": "2026-08-25",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Dynamic seasons — which activities are available each week is now driven by a season calendar managed by a super admin, replacing the old fixed 6-week cycle. Submissions are temporarily disabled if no season is currently active",
+          "fr": "Saisons dynamiques — les activités disponibles chaque semaine sont désormais pilotées par un calendrier de saisons géré par un super admin, remplaçant l'ancien cycle fixe de 6 semaines. La saisie est temporairement désactivée si aucune saison n'est active",
+          "es": "Temporadas dinámicas — las actividades disponibles cada semana ahora las define un calendario de temporadas gestionado por un super admin, en lugar del antiguo ciclo fijo de 6 semanas. El envío se desactiva temporalmente si no hay ninguna temporada activa",
+          "it": "Stagioni dinamiche — le attività disponibili ogni settimana sono ora gestite da un calendario di stagioni configurato da un super admin, al posto del vecchio ciclo fisso di 6 settimane. L'invio è temporaneamente disabilitato se nessuna stagione è attiva",
+          "de": "Dynamische Saisons — welche Aktivitäten jede Woche verfügbar sind, wird jetzt durch einen von einem Super-Admin verwalteten Saisonkalender bestimmt, anstelle des alten festen 6-Wochen-Zyklus. Die Einreichung ist vorübergehend deaktiviert, wenn keine Saison aktiv ist",
+          "tr": "Dinamik sezonlar — her hafta hangi aktivitelerin mevcut olduğu artık eski sabit 6 haftalık döngü yerine bir süper yönetici tarafından yönetilen sezon takvimiyle belirleniyor. Şu anda aktif bir sezon yoksa gönderimler geçici olarak devre dışı bırakılır",
+          "pt": "Temporadas dinâmicas — quais atividades estão disponíveis a cada semana agora é definido por um calendário de temporadas gerenciado por um super admin, substituindo o antigo ciclo fixo de 6 semanas. O envio é temporariamente desativado se nenhuma temporada estiver ativa",
+          "el": "Δυναμικές σεζόν — ποιες δραστηριότητες είναι διαθέσιμες κάθε εβδομάδα καθορίζεται πλέον από ένα ημερολόγιο σεζόν που διαχειρίζεται ένας super admin, αντικαθιστώντας τον παλιό σταθερό κύκλο 6 εβδομάδων. Οι υποβολές απενεργοποιούνται προσωρινά αν καμία σεζόν δεν είναι ενεργή",
+          "ko": "동적 시즌 — 매주 이용 가능한 활동이 이제 기존의 고정된 6주 주기 대신 슈퍼 관리자가 관리하는 시즌 캘린더에 의해 결정됩니다. 현재 활성화된 시즌이 없으면 제출이 일시적으로 비활성화됩니다",
+          "hi": "डायनामिक सीज़न — हर सप्ताह कौन सी गतिविधियाँ उपलब्ध हैं, यह अब पुराने निश्चित 6-सप्ताह चक्र के बजाय एक सुपर एडमिन द्वारा प्रबंधित सीज़न कैलेंडर द्वारा तय होता है। यदि कोई सीज़न सक्रिय नहीं है तो सबमिशन अस्थायी रूप से अक्षम हो जाता है",
+          "zh": "动态赛季 — 每周可用的活动现在由超级管理员管理的赛季日历决定，取代了原来固定的6周周期。如果当前没有活跃的赛季，提交功能将暂时被禁用",
+          "ku": "Demsalên dînamîk — çalakiyên ku her hefte peyda ne, niha bi salnameyeke demsalan a ku ji aliyê super admin ve tê rêvebirin tê diyarkirin, li şûna çerxa kevin a sabît a 6 hefteyan. Heke tu demsal aniha çalak nebe, şandin bi demkî tê neçalakkirin",
+          "ar": "مواسم ديناميكية — أصبحت الأنشطة المتاحة كل أسبوع تُحدد الآن عبر تقويم مواسم يديره مسؤول أعلى (super admin)، بدلاً من الدورة الثابتة السابقة ذات الـ6 أسابيع. يتم تعطيل التقديم مؤقتاً إذا لم يكن هناك موسم نشط حالياً",
+          "id": "Musim dinamis — aktivitas yang tersedia setiap minggu kini diatur oleh kalender musim yang dikelola super admin, menggantikan siklus tetap 6 minggu sebelumnya. Pengiriman dinonaktifkan sementara jika tidak ada musim yang sedang aktif"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.4.0",
     "date": "2026-05-12",
     "entries": [

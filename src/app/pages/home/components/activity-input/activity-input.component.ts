@@ -13,19 +13,14 @@ import { ActivityService } from '@core/services/activity.service';
 import { AuthService } from '@core/services/auth.service';
 import { ServerService } from '@core/services/server.service';
 import { SnackbarService } from '@core/services/snackbar.service';
-import { APP_CONSTANTS } from '@shared/constants/constants';
+import { SeasonService } from '@core/services/season.service';
+import { ActivityType } from '@shared/constants/constants';
 import { PointCalculationResult } from '@shared/models';
 import { createFieldErrorSignal } from '@shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@shared/components/loading-button/loading-button.component';
 import { DiscordInviteBannerComponent } from '@app/pages/home/components/discord-invite-banner/discord-invite-banner.component';
 import { ActivityConflictComponent } from '@app/pages/home/components/activity-conflict/activity-conflict.component';
-import {
-  getWeekNumberForWeeksAgo,
-  getWeekStart,
-  getDateForWeeksAgo,
-  getWeekEnd,
-  CYCLE_REFERENCE_DATE,
-} from '@shared/utils/date.util';
+import { getWeekStart, getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
 
 interface WeekOption {
   value: number;
@@ -58,6 +53,7 @@ export class ActivityInputComponent {
   protected readonly authService = inject(AuthService);
   private readonly serverService = inject(ServerService);
   private readonly snackbarService = inject(SnackbarService);
+  private readonly seasonService = inject(SeasonService);
   private readonly translate = inject(TranslateService);
   private readonly fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
@@ -137,6 +133,7 @@ export class ActivityInputComponent {
   });
 
   protected readonly canSubmit = computed(() => {
+    if (this.isBlockedForSelectedWeek()) return false;
     const activityType = this.activityTypeValue();
     if (!activityType || this.activityForm.get('week')?.invalid) return false;
     if (this.isParticipationMode()) {
@@ -151,13 +148,16 @@ export class ActivityInputComponent {
   protected readonly discordInviteUrl = computed(() => this.serverService.server()?.discord_invite_url ?? null);
 
   protected readonly weekOptions = computed<WeekOption[]>(() => {
+    const earliestAllowedDate = this.seasonService.getEarliestAllowedDate();
+    if (!earliestAllowedDate) return [];
+
     const currentWeekLabel = this.translate.instant('server.retroactive.currentWeek');
     const weeksAgoLabel = this.translate.instant('server.retroactive.weeksAgo');
     const options: WeekOption[] = [];
 
     for (let i = 0; i <= 5; i++) {
       const weekStart = getWeekStart(getDateForWeeksAgo(i));
-      if (weekStart < CYCLE_REFERENCE_DATE) break;
+      if (weekStart < earliestAllowedDate) break;
       const weekEnd = getWeekEnd(weekStart);
       const dateRange = `${weekStart.toLocaleDateString('en-US', { timeZone: 'UTC' })} - ${weekEnd.toLocaleDateString('en-US', { timeZone: 'UTC' })}`;
 
@@ -171,11 +171,33 @@ export class ActivityInputComponent {
     return options;
   });
 
+  /**
+   * The activity types the current season assigns to the selected week, before
+   * filtering by alliance-level enable/disable. An empty array here is the sole
+   * "no season configured for this date" signal per SeasonService contract.
+   *
+   * Computeds derived from this one also explicitly read weekValue() themselves
+   * (rather than relying solely on this computed's output) so they still
+   * re-evaluate even if SeasonService ever returns a referentially-stable array
+   * across two different weeks.
+   */
+  private readonly seasonActivityTypes = computed<ActivityType[]>(() => {
+    const targetDate = getWeekStart(getDateForWeeksAgo(this.weekValue() ?? 0));
+    return this.seasonService.getAvailableActivityTypesForDate(targetDate);
+  });
+
+  /**
+   * True when no season covers the currently selected week — submission must be
+   * totally blocked (not merely "no activities enabled") in this state.
+   */
+  protected readonly isBlockedForSelectedWeek = computed(() => {
+    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
+    return this.seasonActivityTypes().length === 0;
+  });
+
   protected readonly availableActivities = computed(() => {
-    const selectedWeekNumber = getWeekNumberForWeeksAgo(this.weekValue() ?? 0);
-    return APP_CONSTANTS.ACTIVITY_TYPES.filter(
-      type => type.availableWeeks.includes(selectedWeekNumber) && this.serverService.isActivityEnabled(type.value)
-    );
+    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
+    return this.seasonActivityTypes().filter(type => this.serverService.isActivityEnabled(type.value));
   });
 
   constructor() {

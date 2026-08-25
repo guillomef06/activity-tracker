@@ -94,3 +94,13 @@ export type {
   CreateGuideChampionDto,
   ChampionSlotConfig,
 } from './guide.model';
+
+// Season models
+export type {
+  ActivitySeason,
+  SeasonWeekActivity,
+  SeasonWithWeeks,
+  WeekActivityAssignment,
+  CreateSeasonRequest,
+  UpdateSeasonStructureRequest,
+} from './season.model';

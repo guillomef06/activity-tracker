@@ -16,6 +16,13 @@
           </p>
         }
 
+        @if (isBlockedForSelectedWeek()) {
+          <mat-card class="no-season-banner" role="alert">
+            <mat-icon>warning</mat-icon>
+            <span>{{ 'activityInput.noActiveSeason' | translate }}</span>
+          </mat-card>
+        }
+
         <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
           <!-- Week Selection -->
           <mat-form-field appearance="outline" class="full-width">
@@ -33,7 +40,10 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matIconPrefix>category</mat-icon>
             <mat-label>{{ 'activityInput.activityType' | translate }}</mat-label>
-            <mat-select formControlName="activityType" [disabled]="availableActivities().length === 0">
+            <mat-select
+              formControlName="activityType"
+              [disabled]="availableActivities().length === 0 || isBlockedForSelectedWeek()"
+            >
               @for (type of availableActivities(); track type.value) {
                 <mat-option [value]="type.value">
                   {{ type.labelKey | translate }}
@@ -62,6 +72,7 @@
                 type="number"
                 formControlName="position"
                 [placeholder]="'activityInput.positionPlaceholder' | translate"
+                [attr.disabled]="isBlockedForSelectedWeek() ? true : null"
                 min="1"
                 max="999"
               />

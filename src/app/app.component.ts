@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { DateAdapter } from '@angular/material/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '@app/core/services/language.service';
 import { ThemeService } from '@app/core/services/theme.service';
@@ -20,6 +21,7 @@ export class AppComponent {
   private translate = inject(TranslateService);
   private languageService = inject(LanguageService);
   private themeService = inject(ThemeService);
+  private dateAdapter = inject(DateAdapter);
   private authService = inject(AuthService);
   private readonly pwaService = inject(PwaService);
   private readonly releaseNotesService = inject(ReleaseNotesService);
@@ -37,6 +39,14 @@ export class AppComponent {
 
     // Initialize color scheme with user preference priority
     this.themeService.initializeTheme();
+
+    // Keep mat-datepicker (first day of week, formatting) in sync with the
+    // app's active language — NativeDateAdapter has no way to react to
+    // LanguageService on its own, since MAT_DATE_LOCALE is only read once
+    // at construction time.
+    effect(() => {
+      this.dateAdapter.setLocale(this.languageService.currentLanguage());
+    });
 
     // Reload language + color scheme when user logs in or profile changes
     effect(() => {
