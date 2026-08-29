@@ -10,6 +10,8 @@ import type {
   MgSelectionPayload,
   MgLeaderboardEntry,
   UpsertServerMgConfigRequest,
+  ServerMgSlotConfig,
+  UpsertMgSlotConfigRow,
 } from '@shared/models';
 
 @Injectable({
@@ -59,6 +61,28 @@ export class MgEventService {
       },
       { onConflict: 'server_id' }
     );
+    return { error };
+  }
+
+  async loadSlotConfig(serverId: string): Promise<ServerMgSlotConfig[]> {
+    const { data, error } = await this.supabase
+      .from('server_mg_slot_config')
+      .select('*')
+      .eq('server_id', serverId)
+      .order('slot_order', { ascending: true });
+
+    if (error) {
+      console.error('Error loading MG slot config:', error);
+      return [];
+    }
+    return (data ?? []) as ServerMgSlotConfig[];
+  }
+
+  async saveSlotConfig(serverId: string, rows: UpsertMgSlotConfigRow[]): Promise<{ error: unknown }> {
+    const payload = rows.map(r => ({ server_id: serverId, ...r }));
+    const { error } = await this.supabase
+      .from('server_mg_slot_config')
+      .upsert(payload, { onConflict: 'server_id,slot_order' });
     return { error };
   }
 

@@ -547,6 +547,19 @@
       },
       "configSaved": "Configuration saved.",
       "configSaveError": "Failed to save configuration.",
+      "slotConfig": {
+        "title": "Slot Cost & Target Configuration",
+        "rank": "Rank",
+        "medal": "Medal",
+        "cost": "Cost",
+        "targetMin": "Target Min",
+        "targetMax": "Target Max",
+        "targetRangeError": "Target max must be greater than or equal to target min",
+        "required": "Required",
+        "save": "Save"
+      },
+      "slotConfigSaved": "Slot configuration saved.",
+      "slotConfigSaveError": "Failed to save slot configuration.",
       "registrations": {
         "title": "Registrations",
         "empty": "No registrations yet."

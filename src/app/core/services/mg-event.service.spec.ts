@@ -1,5 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import type { MgRegistration, MgLeaderboardEntry, MgSelectionPayload } from '@shared/models';
+import { describe, it, expect, vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+import type { MgRegistration, MgLeaderboardEntry, MgSelectionPayload, ServerMgSlotConfig } from '@shared/models';
+import { MgEventService } from './mg-event.service';
+import { SupabaseService } from './supabase.service';
+import { AuthService } from './auth.service';
 
 function generateAutoSelectionPayload(
   mgEventId: string,
@@ -90,5 +94,113 @@ describe('generateAutoSelectionPayload', () => {
     const result = generateAutoSelectionPayload('event-1', regs, scores, 2);
     expect(result[0].user_id).toBe('a');
     expect(result[1].user_id).toBe('unknown');
+  });
+});
+
+const makeSlotConfigRow = (overrides: Partial<ServerMgSlotConfig> = {}): ServerMgSlotConfig => ({
+  id: 'slot-1',
+  server_id: 'server-1',
+  slot_order: 1,
+  cost: 150,
+  target_min: 30,
+  target_max: 30,
+  created_at: '2026-05-01T00:00:00Z',
+  updated_at: '2026-05-01T00:00:00Z',
+  ...overrides,
+});
+
+describe('MgEventService', () => {
+  let service: MgEventService;
+  let fromMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    fromMock = vi.fn();
+
+    TestBed.configureTestingModule({
+      providers: [
+        MgEventService,
+        { provide: SupabaseService, useValue: { from: fromMock } },
+        {
+          provide: AuthService,
+          useValue: { getServerId: vi.fn().mockReturnValue(null), getUserId: vi.fn().mockReturnValue(null) },
+        },
+      ],
+    });
+
+    service = TestBed.inject(MgEventService);
+  });
+
+  // ============================================
+  describe('loadSlotConfig', () => {
+    it('should return the slot config rows ordered by slot_order on success', async () => {
+      // Arrange
+      const rows = [
+        makeSlotConfigRow({ id: 'slot-1', slot_order: 1 }),
+        makeSlotConfigRow({ id: 'slot-2', slot_order: 2 }),
+      ];
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['select'] = vi.fn().mockReturnThis();
+      chain['eq'] = vi.fn().mockReturnThis();
+      chain['order'] = vi.fn().mockResolvedValue({ data: rows, error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.loadSlotConfig('server-1');
+
+      // Assert
+      expect(result).toEqual(rows);
+      expect(chain['eq']).toHaveBeenCalledWith('server_id', 'server-1');
+      expect(chain['order']).toHaveBeenCalledWith('slot_order', { ascending: true });
+    });
+
+    it('should return an empty array on Supabase error', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['select'] = vi.fn().mockReturnThis();
+      chain['eq'] = vi.fn().mockReturnThis();
+      chain['order'] = vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.loadSlotConfig('server-1');
+
+      // Assert
+      expect(result).toEqual([]);
+    });
+  });
+
+  // ============================================
+  describe('saveSlotConfig', () => {
+    it('should upsert the rows with server_id attached and return no error on success', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['upsert'] = vi.fn().mockResolvedValue({ error: null });
+      fromMock.mockReturnValue(chain);
+      const rows = [{ slot_order: 1, cost: 150, target_min: 30, target_max: 30 }];
+
+      // Act
+      const result = await service.saveSlotConfig('server-1', rows);
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(chain['upsert']).toHaveBeenCalledWith(
+        [{ server_id: 'server-1', slot_order: 1, cost: 150, target_min: 30, target_max: 30 }],
+        { onConflict: 'server_id,slot_order' }
+      );
+    });
+
+    it('should pass through the Supabase error on failure', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['upsert'] = vi.fn().mockResolvedValue({ error: { message: 'constraint violation' } });
+      fromMock.mockReturnValue(chain);
+      const rows = [{ slot_order: 1, cost: 150, target_min: 30, target_max: 30 }];
+
+      // Act
+      const result = await service.saveSlotConfig('server-1', rows);
+
+      // Assert
+      expect(result.error).toEqual({ message: 'constraint violation' });
+    });
   });
 });

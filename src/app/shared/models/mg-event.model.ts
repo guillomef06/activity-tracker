@@ -110,3 +110,30 @@ export interface MgLeaderboardEntry {
   display_name: string;
   total_points: number;
 }
+
+/**
+ * Per-server override of a single MG rank slot's cost/target thresholds.
+ * Rank labels and medal counts are fixed (see MG_SLOT_DEFAULTS); only
+ * cost/target_min/target_max are configurable per server, one row per
+ * slot_order. A missing slot_order falls back to the hardcoded default.
+ */
+export interface ServerMgSlotConfig {
+  id: string;
+  server_id: string;
+  slot_order: number;
+  cost: number;
+  target_min: number;
+  target_max: number;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Row payload used to upsert a server's MG slot config
+ */
+export interface UpsertMgSlotConfigRow {
+  slot_order: number;
+  cost: number;
+  target_min: number;
+  target_max: number;
+}

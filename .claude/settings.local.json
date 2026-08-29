@@ -63,7 +63,9 @@
       "mcp__plugin_playwright_playwright__browser_run_code",
       "Bash(Get-ChildItem -Path \"D:\\\\workplace\\\\activity-tracker\\\\activity-tracker\" -Recurse -Directory)",
       "Bash(Select-Object -First 20)",
-      "Bash(Format-Table FullName)"
+      "Bash(Format-Table FullName)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs"
     ]
   },
   "outputStyle": "default",

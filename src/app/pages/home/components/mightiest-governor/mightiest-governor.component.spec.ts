@@ -12,6 +12,7 @@ const mockMgEventService = {
   loadCurrentEvent: vi.fn().mockResolvedValue(null),
   loadUserRegistration: vi.fn().mockResolvedValue(null),
   loadSelection: vi.fn().mockResolvedValue([]),
+  loadSlotConfig: vi.fn().mockResolvedValue([]),
   registerPlayer: vi.fn().mockResolvedValue({ error: null }),
   unregisterPlayer: vi.fn().mockResolvedValue({ error: null }),
 };
@@ -54,34 +55,35 @@ describe('MightiestGovernorComponent', () => {
   });
 
   it('should have 10 slots', () => {
-    expect(component.slots.length).toBe(10);
+    expect(component.slots().length).toBe(10);
   });
 
   it('should have rank 1 cost 150 and medal 100', () => {
-    expect(component.slots[0].cost).toBe(150);
-    expect(component.slots[0].medal).toBe(100);
-    expect(component.slots[0].rankLabel).toBe('1');
+    expect(component.slots()[0].cost).toBe(150);
+    expect(component.slots()[0].medal).toBe(100);
+    expect(component.slots()[0].rankLabel).toBe('1');
   });
 
   it('should have last slot cover rank 26-50 with cost 60', () => {
-    expect(component.slots[9].rankLabel).toBe('26-50');
-    expect(component.slots[9].cost).toBe(60);
-    expect(component.slots[9].medal).toBe(5);
+    expect(component.slots()[9].rankLabel).toBe('26-50');
+    expect(component.slots()[9].cost).toBe(60);
+    expect(component.slots()[9].medal).toBe(5);
   });
 
   it('should build targetLabel as single value for individual ranks', () => {
-    expect(component.slots[0].targetLabel).toBe('30M');
-    expect(component.slots[4].targetLabel).toBe('26M');
+    expect(component.slots()[0].targetLabel).toBe('30M');
+    expect(component.slots()[4].targetLabel).toBe('26M');
   });
 
   it('should build targetLabel as range for grouped ranks', () => {
-    expect(component.slots[5].targetLabel).toBe('24M-26M');
-    expect(component.slots[9].targetLabel).toBe('10M-15M');
+    expect(component.slots()[5].targetLabel).toBe('24M-26M');
+    expect(component.slots()[9].targetLabel).toBe('10M-15M');
   });
 
   it('costs should be non-increasing', () => {
-    for (let i = 0; i < component.slots.length - 1; i++) {
-      expect(component.slots[i].cost).toBeGreaterThanOrEqual(component.slots[i + 1].cost);
+    const slots = component.slots();
+    for (let i = 0; i < slots.length - 1; i++) {
+      expect(slots[i].cost).toBeGreaterThanOrEqual(slots[i + 1].cost);
     }
   });
 
@@ -89,8 +91,45 @@ describe('MightiestGovernorComponent', () => {
     expect(mockMgEventService.loadCurrentEvent).toHaveBeenCalledWith('server-1');
   });
 
+  it('should call loadSlotConfig on init', () => {
+    expect(mockMgEventService.loadSlotConfig).toHaveBeenCalledWith('server-1');
+  });
+
   it('should not show event card when no event loaded', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-mg-event-card')).toBeNull();
+  });
+
+  it('should fall back to defaults when server returns no slot config', async () => {
+    mockMgEventService.loadSlotConfig.mockResolvedValueOnce([]);
+
+    fixture = TestBed.createComponent(MightiestGovernorComponent);
+    component = fixture.componentInstance;
+    await component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.slots()[0].cost).toBe(150);
+  });
+
+  it('should reflect a per-server override for a given slot', async () => {
+    mockMgEventService.loadSlotConfig.mockResolvedValueOnce([
+      {
+        id: 'cfg-1',
+        server_id: 'server-1',
+        slot_order: 1,
+        cost: 999,
+        target_min: 30,
+        target_max: 30,
+        created_at: '2026-01-01T00:00:00Z',
+        updated_at: '2026-01-01T00:00:00Z',
+      },
+    ]);
+
+    fixture = TestBed.createComponent(MightiestGovernorComponent);
+    component = fixture.componentInstance;
+    await component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.slots()[0].cost).toBe(999);
   });
 });

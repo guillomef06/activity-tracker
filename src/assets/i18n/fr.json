@@ -547,6 +547,19 @@
       },
       "configSaved": "Configuration enregistrée.",
       "configSaveError": "Échec de l'enregistrement de la configuration.",
+      "slotConfig": {
+        "title": "Configuration des coûts et objectifs par rang",
+        "rank": "Rang",
+        "medal": "Médaille",
+        "cost": "Coût",
+        "targetMin": "Objectif min.",
+        "targetMax": "Objectif max.",
+        "targetRangeError": "L'objectif max. doit être supérieur ou égal à l'objectif min.",
+        "required": "Champ requis",
+        "save": "Enregistrer"
+      },
+      "slotConfigSaved": "Configuration des créneaux enregistrée.",
+      "slotConfigSaveError": "Échec de l'enregistrement de la configuration des créneaux.",
       "registrations": {
         "title": "Inscriptions",
         "empty": "Aucune inscription pour le moment."
