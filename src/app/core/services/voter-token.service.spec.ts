@@ -1,35 +1,33 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { VoterTokenService } from './voter-token.service';
+import { StorageService } from './storage.service';
 
 describe('VoterTokenService', () => {
   let service: VoterTokenService;
-  let localStorageMock: Record<string, string>;
+  let storageServiceMock: { get: ReturnType<typeof vi.fn>; set: ReturnType<typeof vi.fn> };
 
+  // Mocking the injected StorageService (rather than spying on the global
+  // Storage/localStorage) keeps this spec isolated from other spec files:
+  // Angular's Vitest builder runs test files with `isolate: false`, so all
+  // files share one jsdom environment/localStorage, and a global spy here
+  // can be restored mid-test by another file's cleanup hook.
   beforeEach(() => {
-    localStorageMock = {};
-
-    vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key: string) => {
-      return localStorageMock[key] ?? null;
-    });
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation((key: string, value: string) => {
-      localStorageMock[key] = value;
-    });
+    storageServiceMock = {
+      get: vi.fn().mockReturnValue(null),
+      set: vi.fn(),
+    };
 
     TestBed.configureTestingModule({
-      providers: [VoterTokenService],
+      providers: [VoterTokenService, { provide: StorageService, useValue: storageServiceMock }],
     });
 
     service = TestBed.inject(VoterTokenService);
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   describe('getVoterToken', () => {
     it('should generate and persist a UUID when no token exists', () => {
-      // Arrange — localStorage is empty
+      // Arrange — storageServiceMock.get() returns null by default
 
       // Act
       const token = service.getVoterToken();
@@ -37,12 +35,13 @@ describe('VoterTokenService', () => {
       // Assert
       expect(token).toBeTruthy();
       expect(token).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
-      expect(localStorage.setItem).toHaveBeenCalledWith('guide_voter_token', token);
+      expect(storageServiceMock.set).toHaveBeenCalledWith('guide_voter_token', token);
     });
 
     it('should return the same token on subsequent calls', () => {
       // Arrange
       const first = service.getVoterToken();
+      storageServiceMock.get.mockReturnValue(first);
 
       // Act
       const second = service.getVoterToken();
@@ -54,25 +53,25 @@ describe('VoterTokenService', () => {
     it('should return the stored token without generating a new one', () => {
       // Arrange
       const existingToken = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee';
-      localStorageMock['guide_voter_token'] = existingToken;
+      storageServiceMock.get.mockReturnValue(existingToken);
 
       // Act
       const token = service.getVoterToken();
 
       // Assert
       expect(token).toBe(existingToken);
-      expect(localStorage.setItem).not.toHaveBeenCalled();
+      expect(storageServiceMock.set).not.toHaveBeenCalled();
     });
 
-    it('should not call setItem when an existing token is found', () => {
+    it('should not call set when an existing token is found', () => {
       // Arrange
-      localStorageMock['guide_voter_token'] = 'existing-uuid-value';
+      storageServiceMock.get.mockReturnValue('existing-uuid-value');
 
       // Act
       service.getVoterToken();
 
       // Assert
-      expect(localStorage.setItem).not.toHaveBeenCalled();
+      expect(storageServiceMock.set).not.toHaveBeenCalled();
     });
   });
 });

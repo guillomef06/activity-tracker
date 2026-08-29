@@ -256,7 +256,8 @@
         "skipped": "ignorado(s)",
         "error": "Falha na importação. Por favor, tente novamente."
       },
-      "reset": "Importar outro arquivo"
+      "reset": "Importar outro arquivo",
+      "noActiveSeasonReference": "Nenhuma temporada ativa configurada — números de semana históricos indisponíveis"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "Atividade enviada com sucesso!",
     "error": "Falha ao enviar atividade",
     "participated": "Participei esta semana",
-    "fillAllFields": "Por favor, preencha todos os campos obrigatórios"
+    "fillAllFields": "Por favor, preencha todos os campos obrigatórios",
+    "noActiveSeason": "Nenhuma temporada está configurada atualmente para esta data. Por favor, contacte um administrador."
   },
   "activities": {
     "types": {
@@ -294,7 +296,8 @@
     "pointsShort": "pts",
     "currentWeek": "Semana Atual",
     "lastWeek": "Semana Passada",
-    "weeksAgo": "semanas atrás"
+    "weeksAgo": "semanas atrás",
+    "mgDeductionTooltip": "Pontos gastos na seleção do Mightiest Governor"
   },
   "activitiesDetails": {
     "title": "Detalhes das Atividades",
@@ -346,7 +349,9 @@
       "manageUsers": "Gerenciar Usuários",
       "manageUsersDesc": "Visualizar e gerenciar todos os usuários",
       "manageGuidesData": "Dados de Referência dos Guias",
-      "manageGuidesDataDesc": "Gerenciar campeões, habilidades, cavalos e gemas"
+      "manageGuidesDataDesc": "Gerenciar campeões, habilidades, cavalos e gemas",
+      "manageSeasons": "Gerir Temporadas",
+      "manageSeasonsDesc": "Configure as temporadas de atividades e os seus horários semanais"
     },
     "servers": {
       "title": "Gerenciamento de Servidors",
@@ -396,6 +401,38 @@
       "strategy": "Estratégia",
       "hero": "Herói",
       "tactics": "Táticas"
+    },
+    "seasons": {
+      "title": "Calendário de Temporadas",
+      "subtitle": "Configure as temporadas de atividades e os seus horários semanais",
+      "newSeason": "Nova Temporada",
+      "noSeasons": "Ainda não foi criada nenhuma temporada",
+      "weekCountLabel": "{{count}} semanas",
+      "week": "Semana {{number}}",
+      "weekCount": "Número de semanas",
+      "activityTypes": "Tipos de atividade",
+      "legionAlwaysAvailable": "Legião sempre disponível",
+      "legionAlwaysAvailableHint": "A Legião está implícita todas as semanas e não pode ser removida",
+      "nameRequired": "O nome é obrigatório (máximo 100 caracteres)",
+      "createFailed": "Falha ao criar a temporada",
+      "lockedTooltip": "Esta temporada tem atividade registada e a sua estrutura está bloqueada",
+      "lockedHint": "Esta temporada tem atividade registada. Apenas o nome pode ser editado.",
+      "deleteLockedTooltip": "Não é possível eliminar uma temporada com atividade registada",
+      "status": {
+        "past": "Passada",
+        "current": "Atual",
+        "future": "Futura"
+      },
+      "wizard": {
+        "stepDetails": "Detalhes",
+        "stepWeeks": "Horário semanal",
+        "stepReview": "Revisão",
+        "name": "Nome da temporada",
+        "startDate": "Data de início",
+        "weekCount": "Número de semanas",
+        "reviewTitle": "Rever temporada",
+        "confirmCreate": "Criar temporada"
+      }
     }
   },
   "super_admin": "Super Admin",
@@ -475,7 +512,7 @@
     "medal": "Medalha",
     "cost": "Custo",
     "targetScore": "Pontuação Alvo",
-    "notice": "O sistema DKP está em desenvolvimento. Os custos mostrados são indicativos e podem mudar."
+    "notice": "Os custos mostrados podem mudar de um evento para outro. Os pontos são deduzidos do seu total a partir da segunda-feira seguinte ao evento."
   },
   "gemCalculator": {
     "title": "Calculadora de Gemas",
@@ -813,7 +850,9 @@
         "mode": "Modo de seleção",
         "modeAutomatic": "Automático",
         "modeManual": "Manual",
-        "save": "Salvar"
+        "save": "Salvar",
+        "dkpEnabled": "Ativar o sistema DKP",
+        "dkpEnabledHint": "Quando ativado, o custo do slot dos jogadores selecionados é deduzido do seu total na tabela de classificação."
       },
       "registrations": {
         "title": "Inscrições",

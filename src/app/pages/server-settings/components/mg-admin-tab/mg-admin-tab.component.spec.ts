@@ -73,10 +73,14 @@ describe('MgAdminTabComponent', () => {
   });
 
   it('should initialize with default config form values', () => {
-    const form = (component as unknown as { configForm: { value: { capacity: number; assignment_mode: string } } })
-      .configForm;
+    const form = (
+      component as unknown as {
+        configForm: { value: { capacity: number; assignment_mode: string; dkp_enabled: boolean } };
+      }
+    ).configForm;
     expect(form.value.capacity).toBe(10);
     expect(form.value.assignment_mode).toBe('automatic');
+    expect(form.value.dkp_enabled).toBe(false);
   });
 
   it('should call loadCurrentEvent and loadServerConfig on init', () => {
@@ -94,6 +98,56 @@ describe('MgAdminTabComponent', () => {
     const paragraphs = Array.from(compiled.querySelectorAll('p'));
     // At least some content rendered
     expect(paragraphs.length).toBeGreaterThanOrEqual(0);
+  });
+
+  describe('DKP toggle', () => {
+    it('should patch dkp_enabled from the loaded server config', async () => {
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce({
+        server_id: 'server-1',
+        capacity: 10,
+        assignment_mode: 'automatic',
+        dkp_enabled: true,
+        created_at: '2026-01-01T00:00:00Z',
+        updated_at: '2026-01-01T00:00:00Z',
+      });
+
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      await component.ngOnInit();
+      fixture.detectChanges();
+
+      const form = (component as unknown as { configForm: { value: { dkp_enabled: boolean } } }).configForm;
+      expect(form.value.dkp_enabled).toBe(true);
+    });
+
+    it('should pass the resolved slot rows to generateAutoSelectionPayload', async () => {
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_closed',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      await component.ngOnInit();
+      fixture.detectChanges();
+
+      (component as unknown as { generatePreview: () => void }).generatePreview();
+
+      expect(mockMgEventService.generateAutoSelectionPayload).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        expect.arrayContaining([expect.objectContaining({ slotOrder: 1, cost: 150 })])
+      );
+    });
   });
 
   describe('slot configuration', () => {

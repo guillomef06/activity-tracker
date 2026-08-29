@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { StorageService } from './storage.service';
 
 /**
  * Manages anonymous voter identity via a UUID persisted in localStorage.
@@ -9,6 +10,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class VoterTokenService {
+  private readonly storageService = inject(StorageService);
   private readonly STORAGE_KEY = 'guide_voter_token';
 
   /**
@@ -16,13 +18,13 @@ export class VoterTokenService {
    * Creates and persists a new UUID if none exists yet.
    */
   getVoterToken(): string {
-    const existing = localStorage.getItem(this.STORAGE_KEY);
+    const existing = this.storageService.get<string>(this.STORAGE_KEY);
     if (existing) {
       return existing;
     }
 
     const token = crypto.randomUUID();
-    localStorage.setItem(this.STORAGE_KEY, token);
+    this.storageService.set(this.STORAGE_KEY, token);
     return token;
   }
 }

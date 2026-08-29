@@ -27,6 +27,13 @@
               <mat-option value="manual">{{ 'mg.admin.config.modeManual' | translate }}</mat-option>
             </mat-select>
           </mat-form-field>
+
+          <div class="dkp-toggle">
+            <mat-slide-toggle formControlName="dkp_enabled">
+              {{ 'mg.admin.config.dkpEnabled' | translate }}
+            </mat-slide-toggle>
+            <p class="dkp-hint">{{ 'mg.admin.config.dkpEnabledHint' | translate }}</p>
+          </div>
         </form>
       </mat-card-content>
       <mat-card-actions align="end">

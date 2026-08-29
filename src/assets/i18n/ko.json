@@ -256,7 +256,8 @@
         "skipped": "건너뜀",
         "error": "가져오기 실패. 다시 시도해 주세요."
       },
-      "reset": "다른 파일 가져오기"
+      "reset": "다른 파일 가져오기",
+      "noActiveSeasonReference": "활성화된 시즌이 설정되지 않았습니다 — 과거 주차 번호를 사용할 수 없습니다"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "활동이 성공적으로 제출되었습니다!",
     "error": "활동 제출 실패",
     "participated": "이번 주에 참가했습니다",
-    "fillAllFields": "필수 필드를 모두 입력해 주세요"
+    "fillAllFields": "필수 필드를 모두 입력해 주세요",
+    "noActiveSeason": "이 날짜에 대해 현재 설정된 시즌이 없습니다. 관리자에게 문의해 주세요."
   },
   "activities": {
     "types": {
@@ -294,7 +296,8 @@
     "pointsShort": "점",
     "currentWeek": "이번 주",
     "lastWeek": "지난 주",
-    "weeksAgo": "주 전"
+    "weeksAgo": "주 전",
+    "mgDeductionTooltip": "Mightiest Governor 선발에 사용된 포인트"
   },
   "activitiesDetails": {
     "title": "활동 세부 정보",
@@ -346,7 +349,9 @@
       "manageUsers": "사용자 관리",
       "manageUsersDesc": "모든 사용자 보기 및 관리",
       "manageGuidesData": "가이드 참조 데이터",
-      "manageGuidesDataDesc": "챔피언, 기술, 말 및 보석 관리"
+      "manageGuidesDataDesc": "챔피언, 기술, 말 및 보석 관리",
+      "manageSeasons": "시즌 관리",
+      "manageSeasonsDesc": "활동 시즌 및 주간 일정을 설정합니다"
     },
     "servers": {
       "title": "서버 관리",
@@ -396,6 +401,38 @@
       "strategy": "전략",
       "hero": "영웅",
       "tactics": "전술"
+    },
+    "seasons": {
+      "title": "시즌 일정",
+      "subtitle": "활동 시즌과 주간 일정을 설정합니다",
+      "newSeason": "새 시즌",
+      "noSeasons": "아직 생성된 시즌이 없습니다",
+      "weekCountLabel": "{{count}}주",
+      "week": "{{number}}주차",
+      "weekCount": "주 수",
+      "activityTypes": "활동 유형",
+      "legionAlwaysAvailable": "군단은 항상 사용 가능",
+      "legionAlwaysAvailableHint": "군단은 매주 암묵적으로 포함되며 제거할 수 없습니다",
+      "nameRequired": "이름은 필수입니다 (최대 100자)",
+      "createFailed": "시즌 생성 실패",
+      "lockedTooltip": "이 시즌에는 기록된 활동이 있어 구조가 잠겨 있습니다",
+      "lockedHint": "이 시즌에는 기록된 활동이 있습니다. 이름만 수정할 수 있습니다.",
+      "deleteLockedTooltip": "기록된 활동이 있는 시즌은 삭제할 수 없습니다",
+      "status": {
+        "past": "지난",
+        "current": "진행 중",
+        "future": "예정"
+      },
+      "wizard": {
+        "stepDetails": "세부 정보",
+        "stepWeeks": "주간 일정",
+        "stepReview": "검토",
+        "name": "시즌 이름",
+        "startDate": "시작일",
+        "weekCount": "주 수",
+        "reviewTitle": "시즌 검토",
+        "confirmCreate": "시즌 생성"
+      }
     }
   },
   "super_admin": "슈퍼 관리자",
@@ -475,7 +512,7 @@
     "medal": "메달",
     "cost": "비용",
     "targetScore": "목표 점수",
-    "notice": "DKP 시스템은 개발 중입니다. 표시된 비용은 참고용이며 변경될 수 있습니다."
+    "notice": "표시된 비용은 이벤트마다 달라질 수 있습니다. 포인트는 이벤트 종료 후 다음 월요일부터 총점에서 차감됩니다."
   },
   "gemCalculator": {
     "title": "보석 계산기",
@@ -813,7 +850,9 @@
         "mode": "선발 방식",
         "modeAutomatic": "자동",
         "modeManual": "수동",
-        "save": "저장"
+        "save": "저장",
+        "dkpEnabled": "DKP 시스템 활성화",
+        "dkpEnabledHint": "활성화하면 선택된 플레이어의 슬롯 비용이 리더보드 총점에서 차감됩니다."
       },
       "registrations": {
         "title": "등록 현황",

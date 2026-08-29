@@ -256,7 +256,8 @@
         "skipped": "atlandı",
         "error": "İçe aktarma başarısız. Lütfen tekrar deneyin."
       },
-      "reset": "Başka dosya içe aktar"
+      "reset": "Başka dosya içe aktar",
+      "noActiveSeasonReference": "Aktif bir sezon yapılandırılmamış — geçmiş hafta numaraları kullanılamıyor"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "Aktivite başarıyla gönderildi!",
     "error": "Aktivite gönderilemedi",
     "participated": "Bu hafta katıldım",
-    "fillAllFields": "Lütfen tüm zorunlu alanları doldurun"
+    "fillAllFields": "Lütfen tüm zorunlu alanları doldurun",
+    "noActiveSeason": "Bu tarih için şu anda yapılandırılmış bir sezon yok. Lütfen bir yönetici ile iletişime geçin."
   },
   "activities": {
     "types": {
@@ -294,7 +296,8 @@
     "pointsShort": "puan",
     "currentWeek": "Bu Hafta",
     "lastWeek": "Geçen Hafta",
-    "weeksAgo": "hafta önce"
+    "weeksAgo": "hafta önce",
+    "mgDeductionTooltip": "Mightiest Governor seçimi için harcanan puanlar"
   },
   "activitiesDetails": {
     "title": "Aktivite Detayları",
@@ -346,7 +349,9 @@
       "manageUsers": "Kullanıcıları Yönet",
       "manageUsersDesc": "Tüm kullanıcıları görüntüle ve yönet",
       "manageGuidesData": "Rehber Referans Verileri",
-      "manageGuidesDataDesc": "Şampiyonlar, beceriler, atlar ve mücevherleri yönet"
+      "manageGuidesDataDesc": "Şampiyonlar, beceriler, atlar ve mücevherleri yönet",
+      "manageSeasons": "Sezonları Yönet",
+      "manageSeasonsDesc": "Etkinlik sezonlarını ve haftalık programlarını yapılandırın"
     },
     "servers": {
       "title": "Sunucu Yönetimi",
@@ -396,6 +401,38 @@
       "strategy": "Strateji",
       "hero": "Kahraman",
       "tactics": "Taktik"
+    },
+    "seasons": {
+      "title": "Sezon Programları",
+      "subtitle": "Etkinlik sezonlarını ve haftalık programlarını yapılandırın",
+      "newSeason": "Yeni Sezon",
+      "noSeasons": "Henüz sezon oluşturulmadı",
+      "weekCountLabel": "{{count}} hafta",
+      "week": "Hafta {{number}}",
+      "weekCount": "Hafta sayısı",
+      "activityTypes": "Etkinlik türleri",
+      "legionAlwaysAvailable": "Lejyon her zaman mevcut",
+      "legionAlwaysAvailableHint": "Lejyon her hafta zımnen mevcuttur ve kaldırılamaz",
+      "nameRequired": "İsim zorunludur (en fazla 100 karakter)",
+      "createFailed": "Sezon oluşturulamadı",
+      "lockedTooltip": "Bu sezonda kaydedilmiş etkinlik var ve yapısı kilitli",
+      "lockedHint": "Bu sezonda kaydedilmiş etkinlik var. Sadece isim düzenlenebilir.",
+      "deleteLockedTooltip": "Kaydedilmiş etkinliği olan bir sezon silinemez",
+      "status": {
+        "past": "Geçmiş",
+        "current": "Devam ediyor",
+        "future": "Gelecek"
+      },
+      "wizard": {
+        "stepDetails": "Detaylar",
+        "stepWeeks": "Haftalık program",
+        "stepReview": "İnceleme",
+        "name": "Sezon adı",
+        "startDate": "Başlangıç tarihi",
+        "weekCount": "Hafta sayısı",
+        "reviewTitle": "Sezonu incele",
+        "confirmCreate": "Sezon oluştur"
+      }
     }
   },
   "super_admin": "Süper Admin",
@@ -475,7 +512,7 @@
     "medal": "Madalya",
     "cost": "Maliyet",
     "targetScore": "Hedef Puan",
-    "notice": "DKP sistemi geliştirme aşamasındadır. Gösterilen maliyetler tahminidir ve değişebilir."
+    "notice": "Gösterilen maliyetler etkinlikten etkinliğe değişebilir. Puanlar, etkinlikten sonraki pazartesiden itibaren toplamınızdan düşülür."
   },
   "gemCalculator": {
     "title": "Mücevher Hesaplayıcı",
@@ -813,7 +850,9 @@
         "mode": "Seçim modu",
         "modeAutomatic": "Otomatik",
         "modeManual": "Manuel",
-        "save": "Kaydet"
+        "save": "Kaydet",
+        "dkpEnabled": "DKP sistemini etkinleştir",
+        "dkpEnabledHint": "Etkinleştirildiğinde, seçilen oyuncuların slot maliyeti liderlik tablosundaki toplamlarından düşülür."
       },
       "registrations": {
         "title": "Kayıtlar",

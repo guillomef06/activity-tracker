@@ -47,6 +47,7 @@ export interface ActivityResponse {
 export interface ActivityWithUser extends ActivityResponse {
   user_profiles: {
     display_name: string;
+    server_id: string;
   };
 }
 
@@ -69,6 +70,8 @@ export interface UserScore {
   displayName: string;
   weeklyScores: WeeklyScore[];
   sixWeekTotal: number;
+  /** Points deducted for MG event selections (DKP). Undefined/0 = no deduction. */
+  mgDeduction?: number;
 }
 
 /**

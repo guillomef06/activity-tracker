@@ -36,3 +36,19 @@ export function buildMgSlotRows(
     };
   });
 }
+
+/**
+ * Resolves which slot row a given 1-based selection rank falls into.
+ * `rankLabel` is either a plain number ("1") or an inclusive range ("6-7"),
+ * so a single rank can match a row covering several consecutive ranks.
+ * Used at selection-generation time to snapshot the cost charged for a rank
+ * (see MgEventService.generateAutoSelectionPayload/buildManualSelectionPayload).
+ */
+export function resolveSlotForRank(rank: number, rows: readonly MgSlotRow[]): MgSlotRow | undefined {
+  return rows.find(row => {
+    const [min, max] = row.rankLabel.includes('-')
+      ? row.rankLabel.split('-').map(Number)
+      : [Number(row.rankLabel), Number(row.rankLabel)];
+    return rank >= min && rank <= max;
+  });
+}

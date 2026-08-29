@@ -9,6 +9,7 @@ import { ActivityService } from '@core/services/activity.service';
 import { ServerService } from '@core/services/server.service';
 import { SeasonService } from '@core/services/season.service';
 import { AuthService } from '@core/services/auth.service';
+import { MgEventService } from '@core/services/mg-event.service';
 import { SupabaseService } from '@core/services/supabase.service';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 
@@ -27,6 +28,7 @@ describe('HomePage', () => {
 
   const serverServiceSpy = {
     calculatePoints: vi.fn().mockReturnValue({ points: 15, source: 'default', usedFallback: false }),
+    loadServer: vi.fn().mockResolvedValue(undefined),
     loadRules: vi.fn().mockResolvedValue({ error: null }),
     loadSettings: vi.fn().mockResolvedValue({ error: null }),
     isParticipationMode: vi.fn().mockReturnValue(false),
@@ -47,7 +49,20 @@ describe('HomePage', () => {
     suggestNextSeasonStartDate: vi.fn().mockReturnValue(new Date()),
   };
 
+  const mgEventServiceSpy = {
+    loadCurrentEvent: vi.fn().mockResolvedValue(null),
+    loadServerConfig: vi.fn().mockResolvedValue(null),
+    loadSlotConfig: vi.fn().mockResolvedValue([]),
+    loadUserRegistration: vi.fn().mockResolvedValue(null),
+    loadSelection: vi.fn().mockResolvedValue([]),
+    loadCostDeductions: vi.fn().mockResolvedValue(new Map()),
+  };
+
   beforeEach(async () => {
+    vi.clearAllMocks();
+    mgEventServiceSpy.loadServerConfig.mockResolvedValue(null);
+    mgEventServiceSpy.loadCostDeductions.mockResolvedValue(new Map());
+
     await TestBed.configureTestingModule({
       imports: [HomePage, TranslateModule.forRoot()],
       providers: [
@@ -59,6 +74,7 @@ describe('HomePage', () => {
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         { provide: ServerService, useValue: serverServiceSpy },
         { provide: SeasonService, useValue: seasonServiceSpy },
+        { provide: MgEventService, useValue: mgEventServiceSpy },
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();
@@ -66,6 +82,7 @@ describe('HomePage', () => {
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it('should create', () => {
@@ -74,6 +91,29 @@ describe('HomePage', () => {
 
   it('should expose userScores as a computed signal', () => {
     expect(Array.isArray(component.userScores())).toBe(true);
+  });
+
+  it('should not load MG cost deductions when DKP is disabled for the server', () => {
+    expect(mgEventServiceSpy.loadServerConfig).toHaveBeenCalledWith('server-1');
+    expect(mgEventServiceSpy.loadCostDeductions).not.toHaveBeenCalled();
+  });
+
+  it('should load MG cost deductions when DKP is enabled for the server', async () => {
+    mgEventServiceSpy.loadServerConfig.mockResolvedValueOnce({
+      server_id: 'server-1',
+      capacity: 10,
+      assignment_mode: 'automatic',
+      dkp_enabled: true,
+      created_at: '2026-01-01T00:00:00Z',
+      updated_at: '2026-01-01T00:00:00Z',
+    });
+
+    fixture = TestBed.createComponent(HomePage);
+    component = fixture.componentInstance;
+    await component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(mgEventServiceSpy.loadCostDeductions).toHaveBeenCalledWith('server-1', expect.any(Date));
   });
 
   it('should render the 4 tabs', () => {

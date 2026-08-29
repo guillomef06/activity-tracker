@@ -292,6 +292,7 @@
   },
   "dashboard": {
     "noActivitiesThisWeek": "No activities available this week",
+    "mgDeductionTooltip": "Points spent on Mightiest Governor selection",
     "totalPoints": "total points",
     "pointsShort": "pts",
     "currentWeek": "Current Week",
@@ -543,6 +544,8 @@
         "mode": "Assignment mode",
         "modeAutomatic": "Automatic",
         "modeManual": "Manual",
+        "dkpEnabled": "Enable DKP system",
+        "dkpEnabledHint": "When enabled, selected players' slot cost is deducted from their leaderboard total.",
         "save": "Save"
       },
       "configSaved": "Configuration saved.",
@@ -587,7 +590,7 @@
     "medal": "Medal",
     "cost": "Cost",
     "targetScore": "Target Score",
-    "notice": "The DKP system is under development. The costs shown are indicative and may change."
+    "notice": "Costs shown may change from one event to the next. Points are deducted from your total starting the Monday after the event."
   },
   "gemCalculator": {
     "title": "Gem Calculator",

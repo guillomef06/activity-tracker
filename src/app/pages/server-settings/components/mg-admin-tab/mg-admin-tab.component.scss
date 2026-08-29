@@ -28,6 +28,19 @@
   }
 }
 
+.dkp-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+}
+
+.dkp-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .slot-config-list {
   display: flex;
   flex-direction: column;

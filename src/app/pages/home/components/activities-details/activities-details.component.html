@@ -18,6 +18,11 @@
             <mat-icon [matBadge]="i + 1" matBadgeColor="accent">emoji_events</mat-icon>
           </div>
           <span class="user-name">{{ userScore.displayName }}</span>
+          @if ((userScore.mgDeduction ?? 0) > 0) {
+            <span class="mg-deduction" [matTooltip]="'dashboard.mgDeductionTooltip' | translate">
+              -{{ userScore.mgDeduction }}
+            </span>
+          }
           <mat-chip class="score-chip">{{ userScore.sixWeekTotal }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
           <button mat-icon-button class="expand-button">
             <mat-icon>{{ selectedUserId() === userScore.userId ? 'expand_less' : 'expand_more' }}</mat-icon>

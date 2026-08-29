@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -53,6 +54,7 @@ export const targetRangeValidator: ValidatorFn = (group): ValidationErrors | nul
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatDividerModule,
     MatChipsModule,
     MatProgressSpinnerModule,
@@ -88,6 +90,7 @@ export class MgAdminTabComponent implements OnInit {
   protected readonly configForm: FormGroup = this.fb.group({
     capacity: [10, Validators.required],
     assignment_mode: ['automatic', Validators.required],
+    dkp_enabled: [false, Validators.required],
   });
 
   protected readonly slotConfigForm: FormGroup = this.fb.group({
@@ -133,7 +136,11 @@ export class MgAdminTabComponent implements OnInit {
       this.slotConfig.set(slotConfig);
 
       if (config) {
-        this.configForm.patchValue({ capacity: config.capacity, assignment_mode: config.assignment_mode });
+        this.configForm.patchValue({
+          capacity: config.capacity,
+          assignment_mode: config.assignment_mode,
+          dkp_enabled: config.dkp_enabled,
+        });
       }
 
       this.rebuildSlotConfigForm(slotConfig);
@@ -240,7 +247,8 @@ export class MgAdminTabComponent implements OnInit {
         registered_at: r.registered_at,
       })),
       scores,
-      config.capacity
+      config.capacity,
+      buildMgSlotRows(this.slotConfig())
     );
 
     this.previewPayloads.set(payloads);

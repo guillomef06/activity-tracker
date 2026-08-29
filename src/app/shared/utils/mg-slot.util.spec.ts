@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildMgSlotRows } from '@shared/utils/mg-slot.util';
+import { buildMgSlotRows, resolveSlotForRank } from '@shared/utils/mg-slot.util';
 import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
 
 describe('buildMgSlotRows', () => {
@@ -93,5 +93,37 @@ describe('buildMgSlotRows', () => {
         targetMax: expected.targetMax + 2,
       });
     });
+  });
+});
+
+describe('resolveSlotForRank', () => {
+  const rows = buildMgSlotRows([]);
+
+  it('should match a single-number rankLabel for the exact rank', () => {
+    // Act
+    const result = resolveSlotForRank(1, rows);
+
+    // Assert
+    expect(result).toMatchObject({ rankLabel: '1', slotOrder: 1 });
+  });
+
+  it('should match a range rankLabel for any rank within the range', () => {
+    // Act
+    const start = resolveSlotForRank(8, rows);
+    const middle = resolveSlotForRank(9, rows);
+    const end = resolveSlotForRank(10, rows);
+
+    // Assert — "8-10" range (slotOrder 7)
+    expect(start).toMatchObject({ rankLabel: '8-10', slotOrder: 7 });
+    expect(middle).toMatchObject({ rankLabel: '8-10', slotOrder: 7 });
+    expect(end).toMatchObject({ rankLabel: '8-10', slotOrder: 7 });
+  });
+
+  it('should return undefined when the rank is past the last row', () => {
+    // Act
+    const result = resolveSlotForRank(51, rows);
+
+    // Assert
+    expect(result).toBeUndefined();
   });
 });

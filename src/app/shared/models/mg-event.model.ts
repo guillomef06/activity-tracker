@@ -36,6 +36,7 @@ export interface ServerMgConfig {
   server_id: string;
   capacity: 10 | 50;
   assignment_mode: MgAssignmentMode;
+  dkp_enabled: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -70,6 +71,7 @@ export interface MgSelection {
   rank: number;
   selection_type: MgSelectionType;
   selected_by: MgSelectedBy;
+  cost: number;
 }
 
 /**
@@ -88,6 +90,7 @@ export interface MgSelectionWithUser extends MgSelection {
 export interface UpsertServerMgConfigRequest {
   capacity: 10 | 50;
   assignment_mode: MgAssignmentMode;
+  dkp_enabled: boolean;
 }
 
 /**
@@ -99,6 +102,7 @@ export interface MgSelectionPayload {
   rank: number;
   selection_type: MgSelectionType;
   selected_by: MgSelectedBy;
+  cost: number;
 }
 
 /**

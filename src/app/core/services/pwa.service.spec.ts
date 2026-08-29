@@ -11,10 +11,22 @@ describe('PwaService', () => {
   let service: PwaService;
   let versionUpdates$: Subject<VersionReadyEvent>;
   let snackbarActionSpy: ReturnType<typeof vi.fn>;
+  let storageServiceMock: { get: ReturnType<typeof vi.fn>; set: ReturnType<typeof vi.fn> };
 
-  const createService = (swEnabled = false) => {
+  // Mocking the injected StorageService (rather than spying on the global
+  // Storage/localStorage) keeps this spec isolated from other spec files:
+  // Angular's Vitest builder runs test files with `isolate: false`, so all
+  // files share one jsdom environment/localStorage, and a global spy here
+  // can be restored mid-test by another file's cleanup hook.
+  // `dismissedAt` seeds what StorageService.get() returns when PwaService
+  // reads its dismissal state during construction.
+  const createService = (swEnabled = false, dismissedAt: number | null = null) => {
     versionUpdates$ = new Subject<VersionReadyEvent>();
     snackbarActionSpy = vi.fn().mockReturnValue({ onAction: () => new Subject() });
+    storageServiceMock = {
+      get: vi.fn().mockReturnValue(dismissedAt),
+      set: vi.fn(),
+    };
 
     const swUpdateMock = {
       isEnabled: swEnabled,
@@ -29,7 +41,7 @@ describe('PwaService', () => {
       imports: [TranslateModule.forRoot()],
       providers: [
         PwaService,
-        StorageService,
+        { provide: StorageService, useValue: storageServiceMock },
         { provide: SwUpdate, useValue: swUpdateMock },
         { provide: SnackbarService, useValue: snackbarMock },
       ],
@@ -138,21 +150,16 @@ describe('PwaService', () => {
 
     it('should store timestamp in localStorage on dismiss', () => {
       createService();
-      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
 
       service.dismissBanner();
 
-      expect(setItemSpy).toHaveBeenCalledWith('pwa-install-dismissed-at', expect.stringMatching(/^\d+$/));
-      setItemSpy.mockRestore();
+      expect(storageServiceMock.set).toHaveBeenCalledWith('pwa-install-dismissed-at', expect.any(Number));
     });
   });
 
   describe('showInstallBanner()', () => {
     it('should be false when banner was dismissed less than 24h ago', () => {
-      const recentTimestamp = JSON.stringify(Date.now() - 1000); // 1 second ago
-      vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(recentTimestamp);
-
-      createService();
+      createService(false, Date.now() - 1000); // 1 second ago
       const promptEvent = Object.assign(new Event('beforeinstallprompt'), {
         prompt: vi.fn().mockResolvedValue(undefined),
         userChoice: Promise.resolve({ outcome: 'accepted' }),
@@ -160,14 +167,10 @@ describe('PwaService', () => {
       window.dispatchEvent(promptEvent);
 
       expect(service.showInstallBanner()).toBe(false);
-      vi.restoreAllMocks();
     });
 
     it('should be true when banner was dismissed more than 24h ago', () => {
-      const oldTimestamp = JSON.stringify(Date.now() - 25 * 60 * 60 * 1000); // 25 hours ago
-      vi.spyOn(Storage.prototype, 'getItem').mockReturnValue(oldTimestamp);
-
-      createService();
+      createService(false, Date.now() - 25 * 60 * 60 * 1000); // 25 hours ago
       const promptEvent = Object.assign(new Event('beforeinstallprompt'), {
         prompt: vi.fn().mockResolvedValue(undefined),
         userChoice: Promise.resolve({ outcome: 'accepted' }),
@@ -175,7 +178,6 @@ describe('PwaService', () => {
       window.dispatchEvent(promptEvent);
 
       expect(service.showInstallBanner()).toBe(true);
-      vi.restoreAllMocks();
     });
   });
 });
