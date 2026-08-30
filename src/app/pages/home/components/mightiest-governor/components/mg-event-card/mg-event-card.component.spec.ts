@@ -28,6 +28,7 @@ const makeSelection = (userId: string, rank: number): MgSelectionWithUser => ({
   rank,
   selection_type: 'selected',
   selected_by: 'automatic',
+  cost: 0,
   user_profiles: { display_name: 'Player ' + rank, username: 'player' + rank },
 });
 
@@ -77,6 +78,7 @@ describe('MgEventCardComponent logic', () => {
         rank: 2,
         selection_type: 'ffa',
         selected_by: 'automatic',
+        cost: 0,
         user_profiles: null,
       },
       {
@@ -86,6 +88,7 @@ describe('MgEventCardComponent logic', () => {
         rank: 3,
         selection_type: 'ffa',
         selected_by: 'automatic',
+        cost: 0,
         user_profiles: null,
       },
     ];

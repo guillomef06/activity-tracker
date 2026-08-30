@@ -256,7 +256,8 @@
         "skipped": "已跳过",
         "error": "导入失败，请重试。"
       },
-      "reset": "导入其他文件"
+      "reset": "导入其他文件",
+      "noActiveSeasonReference": "未配置活跃赛季 — 历史周数不可用"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "活动提交成功！",
     "error": "提交活动失败",
     "participated": "我本周参加了",
-    "fillAllFields": "请填写所有必填字段"
+    "fillAllFields": "请填写所有必填字段",
+    "noActiveSeason": "此日期当前未配置任何赛季。请联系管理员。"
   },
   "activities": {
     "types": {
@@ -294,7 +296,8 @@
     "pointsShort": "分",
     "currentWeek": "本周",
     "lastWeek": "上周",
-    "weeksAgo": "周前"
+    "weeksAgo": "周前",
+    "mgDeductionTooltip": "为 Mightiest Governor 选拔所花费的积分"
   },
   "activitiesDetails": {
     "title": "活动详情",
@@ -346,7 +349,9 @@
       "manageUsers": "管理用户",
       "manageUsersDesc": "查看并管理所有用户",
       "manageGuidesData": "指南参考数据",
-      "manageGuidesDataDesc": "管理英雄、技能、战马和宝石"
+      "manageGuidesDataDesc": "管理英雄、技能、战马和宝石",
+      "manageSeasons": "管理赛季",
+      "manageSeasonsDesc": "配置活动赛季及其每周日程"
     },
     "servers": {
       "title": "服务器管理",
@@ -396,6 +401,38 @@
       "strategy": "战略",
       "hero": "英雄",
       "tactics": "战术"
+    },
+    "seasons": {
+      "title": "赛季日程",
+      "subtitle": "配置活动赛季及其每周日程",
+      "newSeason": "新建赛季",
+      "noSeasons": "尚未创建任何赛季",
+      "weekCountLabel": "{{count}} 周",
+      "week": "第 {{number}} 周",
+      "weekCount": "周数",
+      "activityTypes": "活动类型",
+      "legionAlwaysAvailable": "军团始终可用",
+      "legionAlwaysAvailableHint": "军团每周都隐式存在，无法移除",
+      "nameRequired": "名称为必填项（最多 100 个字符）",
+      "createFailed": "创建赛季失败",
+      "lockedTooltip": "该赛季已记录活动，其结构已锁定",
+      "lockedHint": "该赛季已记录活动。只能编辑名称。",
+      "deleteLockedTooltip": "无法删除已记录活动的赛季",
+      "status": {
+        "past": "已结束",
+        "current": "进行中",
+        "future": "即将开始"
+      },
+      "wizard": {
+        "stepDetails": "详情",
+        "stepWeeks": "每周日程",
+        "stepReview": "审核",
+        "name": "赛季名称",
+        "startDate": "开始日期",
+        "weekCount": "周数",
+        "reviewTitle": "审核赛季",
+        "confirmCreate": "创建赛季"
+      }
     }
   },
   "super_admin": "超级管理员",
@@ -417,6 +454,8 @@
   },
   "tools": {
     "gemCalcDesc": "计算为指挥官装备宝石后的分数增益。",
+    "horseTraitsTitle": "马匹特性",
+    "horseTraitsDesc": "为您的指挥官找到最佳的马匹性情组合。",
     "mountBreedingTitle": "坐骑培育指南",
     "mountBreedingDesc": "坐骑培育完整指南：特性、性情、遗传与培育策略。"
   },
@@ -473,7 +512,7 @@
     "medal": "勋章",
     "cost": "费用",
     "targetScore": "目标分数",
-    "notice": "DKP系统正在开发中。显示的费用仅供参考，可能会更改。"
+    "notice": "显示的费用可能会因活动而异。积分将从活动结束后的下一个星期一开始从您的总分中扣除。"
   },
   "gemCalculator": {
     "title": "宝石计算器",
@@ -788,6 +827,19 @@
       "selectionLocked": "名单已锁定——赛事正在进行中。",
       "configSaved": "配置已保存。",
       "configSaveError": "配置保存失败。",
+      "slotConfig": {
+        "title": "槽位费用与目标配置",
+        "rank": "排名",
+        "medal": "勋章",
+        "cost": "费用",
+        "targetMin": "最低目标",
+        "targetMax": "最高目标",
+        "targetRangeError": "最高目标必须大于或等于最低目标",
+        "required": "必填",
+        "save": "保存"
+      },
+      "slotConfigSaved": "槽位配置已保存。",
+      "slotConfigSaveError": "槽位配置保存失败。",
       "selectionSaved": "名单已保存。",
       "selectionSaveError": "名单保存失败。",
       "selectionPublished": "名单已成功公布。",
@@ -798,7 +850,9 @@
         "mode": "选拔方式",
         "modeAutomatic": "自动",
         "modeManual": "手动",
-        "save": "保存"
+        "save": "保存",
+        "dkpEnabled": "启用 DKP 系统",
+        "dkpEnabledHint": "启用后，被选中玩家的位置费用将从其排行榜总分中扣除。"
       },
       "registrations": {
         "title": "报名情况",

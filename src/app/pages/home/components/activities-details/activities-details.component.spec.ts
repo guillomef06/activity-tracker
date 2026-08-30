@@ -100,6 +100,26 @@ describe('ActivitiesDetailsComponent', () => {
     expect(component['isSuperAdmin']()).toBe(false);
   });
 
+  it('should not show the MG deduction badge when mgDeduction is absent', () => {
+    // Assert
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.mg-deduction')).toBeNull();
+  });
+
+  it('should show the MG deduction badge when mgDeduction is greater than 0', () => {
+    // Arrange
+    fixture.componentRef.setInput('userScores', [{ ...mockUserScores[0], mgDeduction: 100 }]);
+    fixture.detectChanges();
+
+    // Act
+    const compiled = fixture.nativeElement as HTMLElement;
+    const badge = compiled.querySelector('.mg-deduction');
+
+    // Assert
+    expect(badge).toBeTruthy();
+    expect(badge?.textContent).toContain('-100');
+  });
+
   it('should show delete buttons when user is super admin', () => {
     // Arrange
     mockAuthService.isSuperAdmin.set(true);

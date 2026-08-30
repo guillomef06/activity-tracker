@@ -256,7 +256,8 @@
         "skipped": "omitido(s)",
         "error": "La importación falló. Por favor inténtalo de nuevo."
       },
-      "reset": "Importar otro archivo"
+      "reset": "Importar otro archivo",
+      "noActiveSeasonReference": "No hay ninguna temporada activa configurada — números de semana históricos no disponibles"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "¡Actividad enviada correctamente!",
     "error": "Error al enviar la actividad",
     "participated": "Participé esta semana",
-    "fillAllFields": "Por favor, complete todos los campos requeridos"
+    "fillAllFields": "Por favor, complete todos los campos requeridos",
+    "noActiveSeason": "No hay ninguna temporada configurada actualmente para esta fecha. Por favor, contacta con un administrador."
   },
   "activities": {
     "types": {
@@ -294,7 +296,8 @@
     "pointsShort": "pts",
     "currentWeek": "Semana Actual",
     "lastWeek": "Semana Pasada",
-    "weeksAgo": "semanas atrás"
+    "weeksAgo": "semanas atrás",
+    "mgDeductionTooltip": "Puntos gastados en la selección de Mightiest Governor"
   },
   "activitiesDetails": {
     "title": "Detalles de Actividades",
@@ -346,7 +349,9 @@
       "manageUsers": "Gestionar Usuarios",
       "manageUsersDesc": "Ver y gestionar todos los usuarios",
       "manageGuidesData": "Datos de Referencia de Guías",
-      "manageGuidesDataDesc": "Gestionar campeones, habilidades, caballos y gemas"
+      "manageGuidesDataDesc": "Gestionar campeones, habilidades, caballos y gemas",
+      "manageSeasons": "Gestionar Temporadas",
+      "manageSeasonsDesc": "Configura las temporadas de actividades y sus horarios semanales"
     },
     "servers": {
       "title": "Gestión de Servidors",
@@ -396,6 +401,38 @@
       "strategy": "Estrategia",
       "hero": "Héroe",
       "tactics": "Tácticas"
+    },
+    "seasons": {
+      "title": "Calendario de Temporadas",
+      "subtitle": "Configura las temporadas de actividades y sus horarios semanales",
+      "newSeason": "Nueva Temporada",
+      "noSeasons": "Aún no se ha creado ninguna temporada",
+      "weekCountLabel": "{{count}} semanas",
+      "week": "Semana {{number}}",
+      "weekCount": "Número de semanas",
+      "activityTypes": "Tipos de actividad",
+      "legionAlwaysAvailable": "Legión siempre disponible",
+      "legionAlwaysAvailableHint": "La Legión está implícita cada semana y no se puede eliminar",
+      "nameRequired": "El nombre es obligatorio (máximo 100 caracteres)",
+      "createFailed": "Error al crear la temporada",
+      "lockedTooltip": "Esta temporada tiene actividad registrada y su estructura está bloqueada",
+      "lockedHint": "Esta temporada tiene actividad registrada. Solo se puede editar el nombre.",
+      "deleteLockedTooltip": "No se puede eliminar una temporada con actividad registrada",
+      "status": {
+        "past": "Pasada",
+        "current": "En curso",
+        "future": "Futura"
+      },
+      "wizard": {
+        "stepDetails": "Detalles",
+        "stepWeeks": "Horario semanal",
+        "stepReview": "Revisión",
+        "name": "Nombre de la temporada",
+        "startDate": "Fecha de inicio",
+        "weekCount": "Número de semanas",
+        "reviewTitle": "Revisar temporada",
+        "confirmCreate": "Crear temporada"
+      }
     }
   },
   "super_admin": "Super Administrador",
@@ -475,7 +512,7 @@
     "medal": "Medalla",
     "cost": "Coste",
     "targetScore": "Puntuación Objetivo",
-    "notice": "El sistema DKP está en desarrollo. Los costes mostrados son indicativos y pueden cambiar."
+    "notice": "Los costes mostrados pueden cambiar de un evento a otro. Los puntos se deducen de tu total a partir del lunes siguiente al evento."
   },
   "gemCalculator": {
     "title": "Calculadora de Gemas",
@@ -790,6 +827,19 @@
       "selectionLocked": "La selección está bloqueada — el evento está en curso.",
       "configSaved": "Configuración guardada.",
       "configSaveError": "Error al guardar la configuración.",
+      "slotConfig": {
+        "title": "Configuración de costes y objetivos por rango",
+        "rank": "Rango",
+        "medal": "Medalla",
+        "cost": "Coste",
+        "targetMin": "Objetivo mín.",
+        "targetMax": "Objetivo máx.",
+        "targetRangeError": "El objetivo máximo debe ser mayor o igual que el objetivo mínimo",
+        "required": "Campo obligatorio",
+        "save": "Guardar"
+      },
+      "slotConfigSaved": "Configuración de plazas guardada.",
+      "slotConfigSaveError": "Error al guardar la configuración de plazas.",
       "selectionSaved": "Selección guardada.",
       "selectionSaveError": "Error al guardar la selección.",
       "selectionPublished": "Selección publicada con éxito.",
@@ -800,7 +850,9 @@
         "mode": "Modo de selección",
         "modeAutomatic": "Automático",
         "modeManual": "Manual",
-        "save": "Guardar"
+        "save": "Guardar",
+        "dkpEnabled": "Activar el sistema DKP",
+        "dkpEnabledHint": "Una vez activado, el coste del puesto de los jugadores seleccionados se deduce de su total en el marcador."
       },
       "registrations": {
         "title": "Inscripciones",

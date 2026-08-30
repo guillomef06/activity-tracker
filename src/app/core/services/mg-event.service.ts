@@ -10,7 +10,11 @@ import type {
   MgSelectionPayload,
   MgLeaderboardEntry,
   UpsertServerMgConfigRequest,
+  ServerMgSlotConfig,
+  UpsertMgSlotConfigRow,
 } from '@shared/models';
+import { resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
+import { getWeekStart, getWeekEnd } from '@shared/utils/date.util';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +63,28 @@ export class MgEventService {
       },
       { onConflict: 'server_id' }
     );
+    return { error };
+  }
+
+  async loadSlotConfig(serverId: string): Promise<ServerMgSlotConfig[]> {
+    const { data, error } = await this.supabase
+      .from('server_mg_slot_config')
+      .select('*')
+      .eq('server_id', serverId)
+      .order('slot_order', { ascending: true });
+
+    if (error) {
+      console.error('Error loading MG slot config:', error);
+      return [];
+    }
+    return (data ?? []) as ServerMgSlotConfig[];
+  }
+
+  async saveSlotConfig(serverId: string, rows: UpsertMgSlotConfigRow[]): Promise<{ error: unknown }> {
+    const payload = rows.map(r => ({ server_id: serverId, ...r }));
+    const { error } = await this.supabase
+      .from('server_mg_slot_config')
+      .upsert(payload, { onConflict: 'server_id,slot_order' });
     return { error };
   }
 
@@ -127,7 +153,8 @@ export class MgEventService {
     mgEventId: string,
     registrations: MgRegistration[],
     scores: MgLeaderboardEntry[],
-    capacity: number
+    capacity: number,
+    slotRows: MgSlotRow[]
   ): MgSelectionPayload[] {
     const scoreByUserId = new Map(scores.map(s => [s.user_id, s.total_points]));
     const sorted = [...registrations].sort(
@@ -143,6 +170,7 @@ export class MgEventService {
       rank: i + 1,
       selection_type: 'selected',
       selected_by: 'automatic',
+      cost: resolveSlotForRank(i + 1, slotRows)?.cost ?? 0,
     }));
 
     for (let i = 0; i < ffaCount; i++) {
@@ -152,20 +180,69 @@ export class MgEventService {
         rank: selected.length + i + 1,
         selection_type: 'ffa',
         selected_by: 'automatic',
+        cost: 0,
       });
     }
 
     return payloads;
   }
 
-  buildManualSelectionPayload(mgEventId: string, orderedUserIds: string[]): MgSelectionPayload[] {
+  buildManualSelectionPayload(
+    mgEventId: string,
+    orderedUserIds: string[],
+    slotRows: MgSlotRow[]
+  ): MgSelectionPayload[] {
     return orderedUserIds.map((userId, i) => ({
       mg_event_id: mgEventId,
       user_id: userId,
       rank: i + 1,
       selection_type: 'selected',
       selected_by: 'manual',
+      cost: resolveSlotForRank(i + 1, slotRows)?.cost ?? 0,
     }));
+  }
+
+  /**
+   * Sums DKP deductions (mg_selections.cost) per user for the given server,
+   * scoped to the same rolling window as the leaderboard (`sinceDate`).
+   * A deduction only counts once the calendar week containing its MG
+   * event's start_date has fully ended — mirrors how activities "expire"
+   * out of the rolling total, so a deduction never appears mid-event.
+   * Requires `selection_published_at` to be set: mg_selections RLS already
+   * hides unpublished rows from regular members, but admins bypass that via
+   * their "manage" policy, so this filter is applied explicitly rather than
+   * relying on RLS alone.
+   */
+  async loadCostDeductions(serverId: string, sinceDate: Date): Promise<Map<string, number>> {
+    const { data, error } = await this.supabase
+      .from('mg_selections')
+      .select('user_id, cost, mg_events!inner(start_date, server_id, selection_published_at)')
+      .eq('mg_events.server_id', serverId)
+      .not('user_id', 'is', null)
+      .not('mg_events.selection_published_at', 'is', null)
+      .gte('mg_events.start_date', sinceDate.toISOString().slice(0, 10));
+
+    if (error) {
+      console.error('Error loading MG cost deductions:', error);
+      return new Map();
+    }
+
+    const rows = (data ?? []) as unknown as {
+      user_id: string;
+      cost: number;
+      mg_events: { start_date: string };
+    }[];
+
+    const now = new Date();
+    const deductions = new Map<string, number>();
+    for (const row of rows) {
+      const eventWeekEnd = getWeekEnd(getWeekStart(new Date(row.mg_events.start_date)));
+      if (eventWeekEnd >= now) continue;
+
+      deductions.set(row.user_id, (deductions.get(row.user_id) ?? 0) + row.cost);
+    }
+
+    return deductions;
   }
 
   async loadUserRegistration(mgEventId: string, userId: string): Promise<MgRegistration | null> {

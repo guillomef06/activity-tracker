@@ -27,6 +27,13 @@
               <mat-option value="manual">{{ 'mg.admin.config.modeManual' | translate }}</mat-option>
             </mat-select>
           </mat-form-field>
+
+          <div class="dkp-toggle">
+            <mat-slide-toggle formControlName="dkp_enabled">
+              {{ 'mg.admin.config.dkpEnabled' | translate }}
+            </mat-slide-toggle>
+            <p class="dkp-hint">{{ 'mg.admin.config.dkpEnabledHint' | translate }}</p>
+          </div>
         </form>
       </mat-card-content>
       <mat-card-actions align="end">
@@ -37,6 +44,74 @@
           (click)="saveConfig()"
         >
           {{ 'mg.admin.config.save' | translate }}
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Slot configuration -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>tune</mat-icon>
+        <mat-card-title>{{ 'mg.admin.slotConfig.title' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="slotConfigForm">
+          <div class="slot-config-list" formArrayName="rows">
+            @for (row of slotRows; track trackBySlotRow($index, row); let i = $index) {
+              <div class="slot-config-row" [formGroupName]="i">
+                <div class="slot-config-identity">
+                  <span
+                    class="slot-rank"
+                    [attr.aria-label]="('mg.admin.slotConfig.rank' | translate) + ': ' + row.get('rankLabel')?.value"
+                  >
+                    {{ row.get('rankLabel')?.value }}
+                  </span>
+                  <span
+                    class="slot-medal"
+                    [attr.aria-label]="('mg.admin.slotConfig.medal' | translate) + ': ' + row.get('medal')?.value"
+                  >
+                    {{ row.get('medal')?.value }}
+                  </span>
+                </div>
+
+                <mat-form-field appearance="outline" class="slot-field">
+                  <mat-label>{{ 'mg.admin.slotConfig.cost' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="cost" />
+                  @if (row.get('cost')?.hasError('required')) {
+                    <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="slot-field">
+                  <mat-label>{{ 'mg.admin.slotConfig.targetMin' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="targetMin" />
+                  @if (row.get('targetMin')?.hasError('required')) {
+                    <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="slot-field">
+                  <mat-label>{{ 'mg.admin.slotConfig.targetMax' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="targetMax" />
+                  @if (row.get('targetMax')?.hasError('required')) {
+                    <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
+                  } @else if (row.hasError('targetRange')) {
+                    <mat-error>{{ 'mg.admin.slotConfig.targetRangeError' | translate }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            }
+          </div>
+        </form>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="isSavingSlotConfig() || slotConfigForm.invalid"
+          (click)="saveSlotConfig()"
+        >
+          {{ 'mg.admin.slotConfig.save' | translate }}
         </button>
       </mat-card-actions>
     </mat-card>

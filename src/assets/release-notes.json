@@ -1,5 +1,30 @@
 [
   {
+    "version": "1.6.0",
+    "date": "2026-08-29",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "DKP system for Mightiest Governor — servers can opt in to deduct a selected player's slot cost from their leaderboard total, shown next to their name once the event's week is over",
+          "fr": "Système DKP du Gouverneur Suprême — les serveurs peuvent activer la déduction du coût du slot d'un joueur sélectionné sur son total au classement, affichée à côté de son pseudo une fois la semaine de l'événement terminée",
+          "es": "Sistema DKP del Gobernador Supremo — los servidores pueden activar la deducción del costo del slot de un jugador seleccionado de su total en la clasificación, mostrada junto a su nombre una vez terminada la semana del evento",
+          "it": "Sistema DKP del Governatore Supremo — i server possono attivare la deduzione del costo dello slot di un giocatore selezionato dal suo totale in classifica, mostrata accanto al suo nome una volta terminata la settimana dell'evento",
+          "de": "DKP-System für den Mächtigsten Gouverneur — Server können aktivieren, dass die Slot-Kosten eines ausgewählten Spielers von seinem Ranglisten-Gesamtwert abgezogen werden, angezeigt neben seinem Namen, sobald die Event-Woche vorbei ist",
+          "tr": "En Güçlü Vali için DKP sistemi — sunucular, seçilen bir oyuncunun slot maliyetinin liderlik tablosu toplamından düşülmesini etkinleştirebilir; bu düşüş, etkinlik haftası bittiğinde adının yanında gösterilir",
+          "pt": "Sistema DKP do Governador Supremo — os servidores podem ativar a dedução do custo do slot de um jogador selecionado do seu total no ranking, exibida ao lado do seu nome assim que a semana do evento terminar",
+          "el": "Σύστημα DKP για τον Ισχυρότερο Κυβερνήτη — οι διακομιστές μπορούν να ενεργοποιήσουν την αφαίρεση του κόστους θέσης ενός επιλεγμένου παίκτη από το συνολικό του σκορ στην κατάταξη, εμφανιζόμενη δίπλα στο όνομά του μόλις ολοκληρωθεί η εβδομάδα του γεγονότος",
+          "ko": "최강 총독 DKP 시스템 — 서버는 선발된 플레이어의 슬롯 비용을 리더보드 총점에서 차감하도록 설정할 수 있으며, 이벤트 주가 끝나면 이름 옆에 표시됩니다",
+          "hi": "मजबूत गवर्नर DKP सिस्टम — सर्वर चुने गए खिलाड़ी के स्लॉट खर्च को उसके लीडरबोर्ड टोटल से घटाने का विकल्प चालू कर सकते हैं, जो इवेंट सप्ताह समाप्त होने पर उसके नाम के बगल में दिखाया जाता है",
+          "zh": "最强总督DKP系统 — 服务器可以启用从被选中玩家的排行榜总分中扣除其名额费用的功能，该扣除会在活动周结束后显示在其名字旁边",
+          "ku": "Pergala DKP ya Walîyê Herî Hêzdar — server dikarin vekin ku lêçûna cihê lîstikvanekî hilbijartî ji tevahiya wî ya di tabloya pêşengiyê de were kêmkirin, ku li kêleka navê wî tê nîşandan piştî ku hefteya bûyerê xilas bibe",
+          "ar": "نظام DKP للحاكم الأقوى — يمكن للخوادم تفعيل خصم تكلفة مقعد اللاعب المختار من إجماليه في لوحة المتصدرين، ويظهر ذلك بجانب اسمه بمجرد انتهاء أسبوع الحدث",
+          "id": "Sistem DKP untuk Gubernur Terkuat — server dapat mengaktifkan pengurangan biaya slot pemain yang terpilih dari total papan peringkat mereka, ditampilkan di samping nama mereka setelah minggu acara berakhir"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.5.0",
     "date": "2026-08-25",
     "entries": [

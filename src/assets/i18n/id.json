@@ -256,7 +256,8 @@
         "skipped": "dilewati",
         "error": "Impor gagal. Silakan coba lagi."
       },
-      "reset": "Impor file lain"
+      "reset": "Impor file lain",
+      "noActiveSeasonReference": "Tidak ada musim aktif yang dikonfigurasi — nomor minggu historis tidak tersedia"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "Aktivitas berhasil dikirim!",
     "error": "Gagal mengirim aktivitas",
     "participated": "Saya berpartisipasi minggu ini",
-    "fillAllFields": "Harap isi semua kolom yang diperlukan"
+    "fillAllFields": "Harap isi semua kolom yang diperlukan",
+    "noActiveSeason": "Tidak ada musim yang saat ini dikonfigurasi untuk tanggal ini. Silakan hubungi administrator."
   },
   "activities": {
     "types": {
@@ -294,7 +296,8 @@
     "pointsShort": "poin",
     "currentWeek": "Minggu Ini",
     "lastWeek": "Minggu Lalu",
-    "weeksAgo": "minggu lalu"
+    "weeksAgo": "minggu lalu",
+    "mgDeductionTooltip": "Poin yang digunakan untuk seleksi Mightiest Governor"
   },
   "activitiesDetails": {
     "title": "Detail Aktivitas",
@@ -346,7 +349,9 @@
       "manageUsers": "Kelola Pengguna",
       "manageUsersDesc": "Lihat dan kelola semua pengguna",
       "manageGuidesData": "Data Referensi Panduan",
-      "manageGuidesDataDesc": "Kelola champion, skill, kuda dan permata"
+      "manageGuidesDataDesc": "Kelola champion, skill, kuda dan permata",
+      "manageSeasons": "Kelola Musim",
+      "manageSeasonsDesc": "Konfigurasi musim aktivitas dan jadwal mingguannya"
     },
     "servers": {
       "title": "Manajemen Server",
@@ -396,6 +401,38 @@
       "strategy": "Strategi",
       "hero": "Pahlawan",
       "tactics": "Taktik"
+    },
+    "seasons": {
+      "title": "Jadwal Musim",
+      "subtitle": "Konfigurasi musim aktivitas dan jadwal mingguannya",
+      "newSeason": "Musim Baru",
+      "noSeasons": "Belum ada musim yang dibuat",
+      "weekCountLabel": "{{count}} minggu",
+      "week": "Minggu {{number}}",
+      "weekCount": "Jumlah minggu",
+      "activityTypes": "Jenis aktivitas",
+      "legionAlwaysAvailable": "Legion selalu tersedia",
+      "legionAlwaysAvailableHint": "Legion tersirat setiap minggu dan tidak dapat dihapus",
+      "nameRequired": "Nama wajib diisi (maksimal 100 karakter)",
+      "createFailed": "Gagal membuat musim",
+      "lockedTooltip": "Musim ini memiliki aktivitas yang tercatat dan strukturnya terkunci",
+      "lockedHint": "Musim ini memiliki aktivitas yang tercatat. Hanya nama yang dapat diedit.",
+      "deleteLockedTooltip": "Tidak dapat menghapus musim dengan aktivitas yang tercatat",
+      "status": {
+        "past": "Lalu",
+        "current": "Berlangsung",
+        "future": "Mendatang"
+      },
+      "wizard": {
+        "stepDetails": "Detail",
+        "stepWeeks": "Jadwal mingguan",
+        "stepReview": "Tinjauan",
+        "name": "Nama musim",
+        "startDate": "Tanggal mulai",
+        "weekCount": "Jumlah minggu",
+        "reviewTitle": "Tinjau musim",
+        "confirmCreate": "Buat musim"
+      }
     }
   },
   "super_admin": "Super Admin",
@@ -475,7 +512,7 @@
     "medal": "Medali",
     "cost": "Biaya",
     "targetScore": "Skor Target",
-    "notice": "Sistem DKP sedang dalam pengembangan. Biaya yang ditampilkan bersifat indikatif dan dapat berubah."
+    "notice": "Biaya yang ditampilkan dapat berubah dari satu event ke event berikutnya. Poin akan dikurangi dari total Anda mulai hari Senin setelah event."
   },
   "gemCalculator": {
     "title": "Kalkulator Permata",
@@ -790,6 +827,19 @@
       "selectionLocked": "Seleksi terkunci — acara sedang berlangsung.",
       "configSaved": "Konfigurasi disimpan.",
       "configSaveError": "Gagal menyimpan konfigurasi.",
+      "slotConfig": {
+        "title": "Konfigurasi Biaya & Target Slot",
+        "rank": "Peringkat",
+        "medal": "Medali",
+        "cost": "Biaya",
+        "targetMin": "Target Min",
+        "targetMax": "Target Maks",
+        "targetRangeError": "Target maks harus lebih besar atau sama dengan target min",
+        "required": "Wajib diisi",
+        "save": "Simpan"
+      },
+      "slotConfigSaved": "Konfigurasi slot disimpan.",
+      "slotConfigSaveError": "Gagal menyimpan konfigurasi slot.",
       "selectionSaved": "Seleksi disimpan.",
       "selectionSaveError": "Gagal menyimpan seleksi.",
       "selectionPublished": "Seleksi berhasil dipublikasikan.",
@@ -800,7 +850,9 @@
         "mode": "Mode seleksi",
         "modeAutomatic": "Otomatis",
         "modeManual": "Manual",
-        "save": "Simpan"
+        "save": "Simpan",
+        "dkpEnabled": "Aktifkan sistem DKP",
+        "dkpEnabledHint": "Saat diaktifkan, biaya slot pemain yang terpilih dikurangi dari total mereka di papan peringkat."
       },
       "registrations": {
         "title": "Pendaftaran",

@@ -23,14 +23,6 @@ const SOURCE_EXTENSIONS = ['.ts', '.html'];
 const ALL_LOCALES = ['fr', 'en', 'es', 'it', 'de', 'tr', 'pt', 'el', 'ko', 'hi', 'zh', 'ku', 'ar', 'id'];
 
 // ---------------------------------------------------------------------------
-// CLI flags
-// ---------------------------------------------------------------------------
-const args = process.argv.slice(2);
-const localeFlag = args.indexOf('--locale');
-const locales = localeFlag !== -1 ? [args[localeFlag + 1]] : ALL_LOCALES;
-const verbose = args.includes('--verbose');
-
-// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -56,30 +48,52 @@ function collectFiles(dir, extensions) {
   });
 }
 
-/** Find dynamic key prefixes — e.g. `'activities.types.' + variable`. */
+/** Find dynamic key prefixes — e.g. `'xx.yyy.' + variable`. */
 function findDynamicPrefixes(content) {
   const prefixes = new Set();
+  const addPrefix = (raw) => {
+    if (!raw?.includes('.')) return;
+    const normalized = raw.replace(/\.$/, '').trim();
+    if (!normalized) return;
+    prefixes.add(normalized);
+  };
+
   // Matches:
   //   'some.prefix.' + var   (string literal with closing quote before +)
-  //   'some.prefix' + var    (string literal without trailing dot, e.g. 'gemCalculator.troop' + titlecase)
+  //   'some.prefix' + var    (string literal without trailing dot, e.g. 'xx.yyy' + titlecase)
   //   `some.prefix.${var}`   (template literal)
+  //   condition ? 'prefix.a' : 'prefix.b' + suffix
   const patterns = [
     /['"`]([\w.-]+)['"`]\s*\+/g,
-    /`([\w.-]+\.)\$\{/g,
+    /`([\w.-]+)\.\$\{/g,
+    /\?\s*['"`]([\w.-]+)['"`]\s*:\s*['"`]([\w.-]+)['"`]\s*\)?\s*\+/g,
+    /\?\s*['"`]([\w.-]+)['"`]\s*:\s*['"`]([\w.-]+)['"`]/g,
   ];
+
   for (const regex of patterns) {
-    let m;
-    while ((m = regex.exec(content)) !== null) {
-      const raw = m[1];
-      // Only keep if it looks like a translation key prefix (contains at least one dot)
-      if (!raw.includes('.')) continue;
-      // Normalize: strip trailing dot so key.startsWith(prefix + '.') works uniformly,
-      // but also keep the raw form for cases where the prefix already includes the separator.
-      const normalized = raw.replace(/\.$/, '');
-      prefixes.add(normalized);
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+      match.slice(1).filter(Boolean).forEach(addPrefix);
     }
   }
+
   return prefixes;
+}
+
+/**
+ * A key is only skipped when it is part of a dynamic prefix and is not explicitly
+ * referenced anywhere in the source code.
+ */
+function isKeyCoveredByDynamicPrefix(key, dynamicPrefixes) {
+  return [...dynamicPrefixes].some((prefix) => {
+    if (!prefix) return false;
+    return key === prefix || key.startsWith(prefix + '.') || key.startsWith(prefix);
+  });
+}
+
+function shouldSkipDynamicKey(key, sourceContent, dynamicPrefixes) {
+  if (sourceContent.includes(key)) return false;
+  return isKeyCoveredByDynamicPrefix(key, dynamicPrefixes);
 }
 
 // ---------------------------------------------------------------------------
@@ -92,73 +106,80 @@ const GREEN = '\x1b[32m';
 const YELLOW = '\x1b[33m';
 const BOLD = '\x1b[1m';
 
-// Source files are shared across all locales — scan once.
-const sourceFiles = collectFiles(SRC_DIR, SOURCE_EXTENSIONS);
-if (verbose) {
-  console.log(`Scanning ${sourceFiles.length} source file(s) in ${SRC_DIR}\n`);
-}
+function runCheck() {
+  const args = process.argv.slice(2);
+  const localeFlag = args.indexOf('--locale');
+  const locales = localeFlag !== -1 ? [args[localeFlag + 1]] : ALL_LOCALES;
+  const verbose = args.includes('--verbose');
 
-const sourceContent = sourceFiles.map((f) => fs.readFileSync(f, 'utf8')).join('\n');
-
-const dynamicPrefixes = findDynamicPrefixes(sourceContent);
-if (verbose && dynamicPrefixes.size > 0) {
-  console.log('Dynamic key prefixes detected:');
-  [...dynamicPrefixes].forEach((p) => console.log(`  "${p}"`));
-  console.log();
-}
-
-// ---------------------------------------------------------------------------
-// Check each locale
-// ---------------------------------------------------------------------------
-let globalFailed = false;
-
-for (const locale of locales) {
-  const localeFile = path.join(I18N_DIR, `${locale}.json`);
-  if (!fs.existsSync(localeFile)) {
-    console.error(`${RED}Error: locale file not found: ${localeFile}${RESET}`);
-    globalFailed = true;
-    continue;
+  const sourceFiles = collectFiles(SRC_DIR, SOURCE_EXTENSIONS);
+  if (verbose) {
+    console.log(`Scanning ${sourceFiles.length} source file(s) in ${SRC_DIR}\n`);
   }
 
-  const allKeys = flattenKeys(JSON.parse(fs.readFileSync(localeFile, 'utf8')));
+  const sourceContent = sourceFiles.map((f) => fs.readFileSync(f, 'utf8')).join('\n');
+  const dynamicPrefixes = findDynamicPrefixes(sourceContent);
 
-  const unused = [];
-  const skippedDynamic = [];
+  if (verbose && dynamicPrefixes.size > 0) {
+    console.log('Dynamic key prefixes detected:');
+    [...dynamicPrefixes].forEach((p) => console.log(`  "${p}"`));
+    console.log();
+  }
 
-  for (const key of allKeys) {
-    const coveredByDynamicPrefix = [...dynamicPrefixes].some(
-      (prefix) => key.startsWith(prefix + '.') || key.startsWith(prefix)
-    );
-    if (coveredByDynamicPrefix) {
-      skippedDynamic.push(key);
-    } else if (!sourceContent.includes(key)) {
-      unused.push(key);
+  let globalFailed = false;
+
+  for (const locale of locales) {
+    const localeFile = path.join(I18N_DIR, `${locale}.json`);
+    if (!fs.existsSync(localeFile)) {
+      console.error(`${RED}Error: locale file not found: ${localeFile}${RESET}`);
+      globalFailed = true;
+      continue;
     }
+
+    const allKeys = flattenKeys(JSON.parse(fs.readFileSync(localeFile, 'utf8')));
+    const unused = [];
+    const skippedDynamic = [];
+
+    for (const key of allKeys) {
+      if (shouldSkipDynamicKey(key, sourceContent, dynamicPrefixes)) {
+        skippedDynamic.push(key);
+      } else if (!sourceContent.includes(key)) {
+        unused.push(key);
+      }
+    }
+
+    console.log(`${BOLD}i18n unused-key check — locale: ${locale}${RESET}`);
+    console.log(`  Total keys   : ${allKeys.length}`);
+    console.log(`  Scanned files: ${sourceFiles.length}`);
+    console.log(`  Dynamic skip : ${skippedDynamic.length}`);
+    console.log(`  ${unused.length === 0 ? GREEN : RED}Unused keys  : ${unused.length}${RESET}`);
+
+    if (skippedDynamic.length > 0 && verbose) {
+      console.log(`\n${YELLOW}Keys skipped (covered by a dynamic prefix):${RESET}`);
+      skippedDynamic.forEach((k) => console.log(`  ~ ${k}`));
+    }
+
+    if (unused.length > 0) {
+      console.log(`\n${RED}Unused translation keys:${RESET}`);
+      unused.forEach((k) => console.log(`  ✗ ${k}`));
+      globalFailed = true;
+    } else {
+      console.log(`\n${GREEN}All keys are used. ✓${RESET}`);
+    }
+
+    console.log();
   }
 
-  // ---------------------------------------------------------------------------
-  // Report
-  // ---------------------------------------------------------------------------
-  console.log(`${BOLD}i18n unused-key check — locale: ${locale}${RESET}`);
-  console.log(`  Total keys   : ${allKeys.length}`);
-  console.log(`  Scanned files: ${sourceFiles.length}`);
-  console.log(`  Dynamic skip : ${skippedDynamic.length}`);
-  console.log(`  ${unused.length === 0 ? GREEN : RED}Unused keys  : ${unused.length}${RESET}`);
-
-  if (skippedDynamic.length > 0 && verbose) {
-    console.log(`\n${YELLOW}Keys skipped (covered by a dynamic prefix):${RESET}`);
-    skippedDynamic.forEach((k) => console.log(`  ~ ${k}`));
-  }
-
-  if (unused.length > 0) {
-    console.log(`\n${RED}Unused translation keys:${RESET}`);
-    unused.forEach((k) => console.log(`  ✗ ${k}`));
-    globalFailed = true;
-  } else {
-    console.log(`\n${GREEN}All keys are used. ✓${RESET}`);
-  }
-
-  console.log();
+  if (globalFailed) process.exit(1);
 }
 
-if (globalFailed) process.exit(1);
+if (require.main === module) {
+  runCheck();
+}
+
+module.exports = {
+  findDynamicPrefixes,
+  isKeyCoveredByDynamicPrefix,
+  shouldSkipDynamicKey,
+  runCheck,
+};
