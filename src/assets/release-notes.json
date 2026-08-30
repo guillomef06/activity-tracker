@@ -1,5 +1,49 @@
 [
   {
+    "version": "1.6.1",
+    "date": "2026-08-30",
+    "entries": [
+      {
+        "type": "fix",
+        "text": {
+          "en": "Password — displayed requirements now match the server's actual policy (uppercase, lowercase, and a number), with a clear error message on failure",
+          "fr": "Mot de passe — les règles affichées correspondent désormais aux exigences réelles du serveur (majuscule, minuscule et chiffre), avec un message d'erreur clair en cas d'échec",
+          "es": "Contraseña — los requisitos mostrados ahora coinciden con la política real del servidor (mayúscula, minúscula y número), con un mensaje de error claro en caso de fallo",
+          "it": "Password — i requisiti mostrati ora corrispondono alla politica reale del server (maiuscola, minuscola e numero), con un messaggio di errore chiaro in caso di fallimento",
+          "de": "Passwort — die angezeigten Anforderungen entsprechen jetzt der tatsächlichen Serverrichtlinie (Großbuchstabe, Kleinbuchstabe und Zahl), mit einer klaren Fehlermeldung bei Fehlschlag",
+          "tr": "Şifre — görüntülenen gereksinimler artık sunucunun gerçek politikasıyla eşleşiyor (büyük harf, küçük harf ve rakam), başarısızlık durumunda net bir hata mesajıyla",
+          "pt": "Senha — os requisitos exibidos agora correspondem à política real do servidor (maiúscula, minúscula e número), com uma mensagem de erro clara em caso de falha",
+          "el": "Κωδικός πρόσβασης — οι απαιτήσεις που εμφανίζονται ταιριάζουν πλέον με την πραγματική πολιτική του διακομιστή (κεφαλαίο, πεζό γράμμα και αριθμός), με σαφές μήνυμα σφάλματος σε περίπτωση αποτυχίας",
+          "ko": "비밀번호 — 표시되는 요구사항이 서버의 실제 정책(대문자, 소문자, 숫자)과 일치하도록 수정했으며, 실패 시 명확한 오류 메시지를 표시합니다",
+          "hi": "पासवर्ड — दिखाई गई आवश्यकताएं अब सर्वर की वास्तविक नीति (बड़ा अक्षर, छोटा अक्षर और अंक) से मेल खाती हैं, विफल होने पर स्पष्ट त्रुटि संदेश के साथ",
+          "zh": "密码 — 显示的要求现在与服务器的实际策略（大写字母、小写字母和数字）一致，失败时会显示清晰的错误信息",
+          "ku": "وشەی نهێنی — پێداویستییە پیشاندراوەکان ئێستا لەگەڵ سیاسەتی ڕاستەقینەی سێرڤەر دەگونجێن (پیتی گەورە، پیتی بچووک و ژمارە)، لەگەڵ پەیامێکی هەڵەی ڕوون لە کاتی سەرنەکەوتندا",
+          "ar": "كلمة المرور — أصبحت المتطلبات المعروضة مطابقة الآن لسياسة الخادم الفعلية (حرف كبير وحرف صغير ورقم)، مع رسالة خطأ واضحة عند الفشل",
+          "id": "Kata sandi — persyaratan yang ditampilkan sekarang sesuai dengan kebijakan server yang sebenarnya (huruf besar, huruf kecil, dan angka), dengan pesan kesalahan yang jelas jika gagal"
+        }
+      },
+      {
+        "type": "improvement",
+        "text": {
+          "en": "Translations — several texts simplified and corrected across the landing page and release notes, in all 14 languages",
+          "fr": "Traductions — plusieurs textes simplifiés et corrigés sur la page d'accueil et les notes de version, dans les 14 langues",
+          "es": "Traducciones — varios textos simplificados y corregidos en la página de inicio y las notas de la versión, en los 14 idiomas",
+          "it": "Traduzioni — diversi testi semplificati e corretti nella pagina di destinazione e nelle note di rilascio, in tutte le 14 lingue",
+          "de": "Übersetzungen — mehrere Texte auf der Landingpage und in den Versionshinweisen vereinfacht und korrigiert, in allen 14 Sprachen",
+          "tr": "Çeviriler — açılış sayfası ve sürüm notlarındaki çeşitli metinler 14 dilin tümünde sadeleştirildi ve düzeltildi",
+          "pt": "Traduções — vários textos simplificados e corrigidos na página inicial e nas notas de versão, nos 14 idiomas",
+          "el": "Μεταφράσεις — αρκετά κείμενα απλοποιήθηκαν και διορθώθηκαν στη σελίδα προορισμού και στις σημειώσεις έκδοσης, και στις 14 γλώσσες",
+          "ko": "번역 — 랜딩 페이지와 릴리스 노트의 여러 텍스트를 14개 언어 모두에서 간결하게 다듬고 수정했습니다",
+          "hi": "अनुवाद — लैंडिंग पेज और रिलीज़ नोट्स में कई टेक्स्ट को सभी 14 भाषाओं में सरल और सही किया गया",
+          "zh": "翻译 — 已在全部14种语言中简化并修正了首页和更新日志中的多处文本",
+          "ku": "وەرگێڕان — چەندین دەق لە پەڕەی سەرەکی و تێبینییەکانی وەشان لە هەموو ١٤ زمانەکەدا سادەکراوەتەوە و ڕاستکراوەتەوە",
+          "ar": "الترجمات — تم تبسيط وتصحيح عدة نصوص في الصفحة الرئيسية وملاحظات الإصدار، في جميع اللغات الـ14",
+          "id": "Terjemahan — beberapa teks disederhanakan dan diperbaiki di halaman landing dan catatan rilis, dalam ke-14 bahasa"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.6.0",
     "date": "2026-08-29",
     "entries": [
