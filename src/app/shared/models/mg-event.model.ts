@@ -36,6 +36,7 @@ export interface ServerMgConfig {
   server_id: string;
   capacity: 10 | 50;
   assignment_mode: MgAssignmentMode;
+  dkp_enabled: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -70,6 +71,7 @@ export interface MgSelection {
   rank: number;
   selection_type: MgSelectionType;
   selected_by: MgSelectedBy;
+  cost: number;
 }
 
 /**
@@ -88,6 +90,7 @@ export interface MgSelectionWithUser extends MgSelection {
 export interface UpsertServerMgConfigRequest {
   capacity: 10 | 50;
   assignment_mode: MgAssignmentMode;
+  dkp_enabled: boolean;
 }
 
 /**
@@ -99,6 +102,7 @@ export interface MgSelectionPayload {
   rank: number;
   selection_type: MgSelectionType;
   selected_by: MgSelectedBy;
+  cost: number;
 }
 
 /**
@@ -109,4 +113,31 @@ export interface MgLeaderboardEntry {
   user_id: string;
   display_name: string;
   total_points: number;
+}
+
+/**
+ * Per-server override of a single MG rank slot's cost/target thresholds.
+ * Rank labels and medal counts are fixed (see MG_SLOT_DEFAULTS); only
+ * cost/target_min/target_max are configurable per server, one row per
+ * slot_order. A missing slot_order falls back to the hardcoded default.
+ */
+export interface ServerMgSlotConfig {
+  id: string;
+  server_id: string;
+  slot_order: number;
+  cost: number;
+  target_min: number;
+  target_max: number;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Row payload used to upsert a server's MG slot config
+ */
+export interface UpsertMgSlotConfigRow {
+  slot_order: number;
+  cost: number;
+  target_min: number;
+  target_max: number;
 }

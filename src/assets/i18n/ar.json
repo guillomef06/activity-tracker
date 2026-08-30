@@ -256,7 +256,8 @@
         "skipped": "تم تخطيه",
         "error": "فشل الاستيراد. يرجى المحاولة مرة أخرى."
       },
-      "reset": "استيراد ملف آخر"
+      "reset": "استيراد ملف آخر",
+      "noActiveSeasonReference": "لا يوجد موسم نشط مُهيأ — أرقام الأسابيع السابقة غير متوفرة"
     }
   },
   "activityInput": {
@@ -272,7 +273,8 @@
     "success": "تم تقديم النشاط بنجاح!",
     "error": "فشل تقديم النشاط",
     "participated": "شاركت هذا الأسبوع",
-    "fillAllFields": "يرجى ملء جميع الحقول المطلوبة"
+    "fillAllFields": "يرجى ملء جميع الحقول المطلوبة",
+    "noActiveSeason": "لا يوجد موسم مُهيأ حاليًا لهذا التاريخ. يرجى التواصل مع أحد المسؤولين."
   },
   "activities": {
     "types": {
@@ -294,7 +296,8 @@
     "pointsShort": "نقطة",
     "currentWeek": "هذا الأسبوع",
     "lastWeek": "الأسبوع الماضي",
-    "weeksAgo": "أسابيع مضت"
+    "weeksAgo": "أسابيع مضت",
+    "mgDeductionTooltip": "النقاط المُنفقة على اختيار Mightiest Governor"
   },
   "activitiesDetails": {
     "title": "تفاصيل الأنشطة",
@@ -346,7 +349,9 @@
       "manageUsers": "إدارة المستخدمين",
       "manageUsersDesc": "عرض وإدارة جميع المستخدمين",
       "manageGuidesData": "بيانات مرجع الأدلة",
-      "manageGuidesDataDesc": "إدارة الأبطال والمهارات والخيول والجواهر"
+      "manageGuidesDataDesc": "إدارة الأبطال والمهارات والخيول والجواهر",
+      "manageSeasons": "إدارة المواسم",
+      "manageSeasonsDesc": "تهيئة مواسم الأنشطة وجداولها الأسبوعية"
     },
     "servers": {
       "title": "إدارة الخادمات",
@@ -396,6 +401,38 @@
       "strategy": "الاستراتيجية",
       "hero": "البطل",
       "tactics": "التكتيكات"
+    },
+    "seasons": {
+      "title": "جداول المواسم",
+      "subtitle": "تهيئة مواسم الأنشطة وجداولها الأسبوعية",
+      "newSeason": "موسم جديد",
+      "noSeasons": "لم يتم إنشاء أي موسم بعد",
+      "weekCountLabel": "{{count}} أسابيع",
+      "week": "الأسبوع {{number}}",
+      "weekCount": "عدد الأسابيع",
+      "activityTypes": "أنواع الأنشطة",
+      "legionAlwaysAvailable": "الفيلق متاح دائمًا",
+      "legionAlwaysAvailableHint": "الفيلق ضمني كل أسبوع ولا يمكن إزالته",
+      "nameRequired": "الاسم مطلوب (100 حرف كحد أقصى)",
+      "createFailed": "فشل إنشاء الموسم",
+      "lockedTooltip": "هذا الموسم يحتوي على نشاط مسجَّل وبنيته مقفلة",
+      "lockedHint": "هذا الموسم يحتوي على نشاط مسجَّل. يمكن تعديل الاسم فقط.",
+      "deleteLockedTooltip": "لا يمكن حذف موسم يحتوي على نشاط مسجَّل",
+      "status": {
+        "past": "سابق",
+        "current": "حالي",
+        "future": "قادم"
+      },
+      "wizard": {
+        "stepDetails": "التفاصيل",
+        "stepWeeks": "الجدول الأسبوعي",
+        "stepReview": "المراجعة",
+        "name": "اسم الموسم",
+        "startDate": "تاريخ البدء",
+        "weekCount": "عدد الأسابيع",
+        "reviewTitle": "مراجعة الموسم",
+        "confirmCreate": "إنشاء الموسم"
+      }
     }
   },
   "super_admin": "مسؤول رئيسي",
@@ -475,7 +512,7 @@
     "medal": "ميدالية",
     "cost": "التكلفة",
     "targetScore": "النقاط المستهدفة",
-    "notice": "نظام DKP قيد التطوير. التكاليف المعروضة استرشادية وقد تتغير."
+    "notice": "قد تتغير التكاليف المعروضة من حدث إلى آخر. تُخصم النقاط من إجماليك ابتداءً من يوم الاثنين التالي للحدث."
   },
   "gemCalculator": {
     "title": "حاسبة الجواهر",
@@ -790,6 +827,19 @@
       "selectionLocked": "القائمة مقفلة — الحدث جارٍ.",
       "configSaved": "تم حفظ الإعدادات.",
       "configSaveError": "فشل حفظ الإعدادات.",
+      "slotConfig": {
+        "title": "إعداد تكلفة وأهداف الخانات",
+        "rank": "الرتبة",
+        "medal": "الميدالية",
+        "cost": "التكلفة",
+        "targetMin": "الحد الأدنى للهدف",
+        "targetMax": "الحد الأقصى للهدف",
+        "targetRangeError": "يجب أن يكون الحد الأقصى للهدف أكبر من أو يساوي الحد الأدنى",
+        "required": "مطلوب",
+        "save": "حفظ"
+      },
+      "slotConfigSaved": "تم حفظ إعدادات الخانات.",
+      "slotConfigSaveError": "فشل حفظ إعدادات الخانات.",
       "selectionSaved": "تم حفظ الاختيار.",
       "selectionSaveError": "فشل حفظ الاختيار.",
       "selectionPublished": "تم نشر القائمة بنجاح.",
@@ -800,7 +850,9 @@
         "mode": "وضع الاختيار",
         "modeAutomatic": "تلقائي",
         "modeManual": "يدوي",
-        "save": "حفظ"
+        "save": "حفظ",
+        "dkpEnabled": "تفعيل نظام DKP",
+        "dkpEnabledHint": "عند التفعيل، يتم خصم تكلفة موقع اللاعبين المختارين من إجماليهم في لوحة الصدارة."
       },
       "registrations": {
         "title": "التسجيلات",

@@ -60,7 +60,8 @@ export class ActivityService {
 
       const { data, error } = await this.supabase
         .from('activities')
-        .select('id, user_id, activity_type, position, points, date, user_profiles(display_name)')
+        .select('id, user_id, activity_type, position, points, date, user_profiles!inner(display_name, server_id)')
+        .eq('user_profiles.server_id', serverId)
         .gte('date', cutoffDate.toISOString())
         .order('date', { ascending: false });
 
@@ -363,23 +364,41 @@ export class ActivityService {
       }
     }
 
-    return userScores.sort((a, b) => {
-      const diff = b.sixWeekTotal - a.sixWeekTotal;
-      if (diff !== 0) return diff;
+    return userScores.sort((a, b) => this.compareByScoreDesc(a, b));
+  }
 
-      const tiebreaker = this.serverService.server()?.tiebreaker_activity_type;
-      if (!tiebreaker) return 0;
+  /**
+   * Applies per-user DKP deductions (MG event selection cost) on top of
+   * getUserScores() output, then re-sorts since a deduction can change the
+   * ranking. Kept here rather than in MgEventService so ActivityService
+   * stays the single owner of "how the leaderboard total/ranking is
+   * computed" (it already owns compareByScoreDesc's tiebreak rule).
+   */
+  applyMgDeductions(scores: UserScore[], deductions: Map<string, number>): UserScore[] {
+    return scores
+      .map(s => {
+        const mgDeduction = deductions.get(s.userId) ?? 0;
+        return { ...s, mgDeduction, sixWeekTotal: s.sixWeekTotal - mgDeduction };
+      })
+      .sort((a, b) => this.compareByScoreDesc(a, b));
+  }
 
-      const tiebreakerScore = (u: UserScore) =>
-        u.weeklyScores.reduce(
-          (total, week) =>
-            total +
-            week.activities.filter(act => act.activityType === tiebreaker).reduce((sum, act) => sum + act.points, 0),
-          0
-        );
+  private compareByScoreDesc(a: UserScore, b: UserScore): number {
+    const diff = b.sixWeekTotal - a.sixWeekTotal;
+    if (diff !== 0) return diff;
 
-      return tiebreakerScore(b) - tiebreakerScore(a);
-    });
+    const tiebreaker = this.serverService.server()?.tiebreaker_activity_type;
+    if (!tiebreaker) return 0;
+
+    const tiebreakerScore = (u: UserScore) =>
+      u.weeklyScores.reduce(
+        (total, week) =>
+          total +
+          week.activities.filter(act => act.activityType === tiebreaker).reduce((sum, act) => sum + act.points, 0),
+        0
+      );
+
+    return tiebreakerScore(b) - tiebreakerScore(a);
   }
 
   private calculateWeeklyScores(

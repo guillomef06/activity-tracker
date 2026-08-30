@@ -1,0 +1,53 @@
+-- ============================================
+-- Migration 38: Fix regression from migrations 34/37 (SECURITY DEFINER revokes)
+-- ============================================
+-- Purpose:  Migrations 34 and 37 revoked EXECUTE on 7 SECURITY DEFINER
+--           functions from anon/authenticated/PUBLIC. Two of them were
+--           revoked incorrectly and broke live functionality the moment
+--           37 also closed the PUBLIC grant that had been silently masking
+--           the bug in 34:
+--
+--           - super_admin_exists(): referenced inside the WITH CHECK clause
+--             of the "Users can create their own profile" INSERT policy on
+--             user_profiles (30-fix-role-privilege-escalation.sql:74).
+--             RLS policy expressions run under the querying role's own
+--             privileges, so authenticated MUST retain EXECUTE — exactly the
+--             same reason get_user_server_id/is_super_admin/is_user_admin
+--             were already left alone. Migration 34's comment claiming this
+--             function is "only called from the privilege-escalation
+--             trigger" was wrong (that trigger, prevent_role_escalation,
+--             actually calls is_super_admin, not super_admin_exists).
+--             Confirmed broken: every new user_profiles INSERT (i.e. every
+--             signup) started failing with "permission denied for function
+--             super_admin_exists".
+--
+--           - season_has_logged_activities(uuid): called from inside three
+--             SECURITY INVOKER trigger functions defined in
+--             31-season-schedule.sql (prevent_locked_season_activities_change,
+--             prevent_locked_season_delete, prevent_locked_season_structure_change).
+--             Because those trigger functions are SECURITY INVOKER (not
+--             DEFINER), they execute as the querying role when fired by an
+--             admin's UPDATE/DELETE — so authenticated needs EXECUTE on this
+--             function directly, same reasoning as above.
+--
+--           Both are re-granted to `authenticated` only (never `anon` —
+--           the season triggers only ever fire for authenticated admin
+--           DML, and the user_profiles INSERT check requires auth.uid() IS
+--           NOT NULL, which already implies an authenticated session).
+--           anon and PUBLIC stay revoked on both, so neither is directly
+--           callable as a client RPC — the original intent of 34/37 is
+--           preserved, just scoped correctly this time.
+-- ============================================
+
+GRANT EXECUTE ON FUNCTION public.super_admin_exists() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.season_has_logged_activities(uuid) TO authenticated;
+
+-- ============================================
+-- DONE
+-- ============================================
+
+-- ============================================
+-- ROLLBACK (not executed — for reference only)
+-- ============================================
+-- REVOKE EXECUTE ON FUNCTION public.super_admin_exists() FROM authenticated;
+-- REVOKE EXECUTE ON FUNCTION public.season_has_logged_activities(uuid) FROM authenticated;

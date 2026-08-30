@@ -92,6 +92,13 @@
     font-size: 1rem;
   }
 
+  .mg-deduction {
+    flex-shrink: 0;
+    color: var(--mat-sys-error);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
   .score-chip {
     flex-shrink: 0;
   }

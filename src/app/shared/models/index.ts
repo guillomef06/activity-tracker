@@ -66,6 +66,8 @@ export type {
   MgSelectionPayload,
   MgLeaderboardEntry,
   UpsertServerMgConfigRequest,
+  ServerMgSlotConfig,
+  UpsertMgSlotConfigRow,
 } from './mg-event.model';
 
 // Guide models

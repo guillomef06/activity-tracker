@@ -21,7 +21,7 @@
           <span class="header-right">{{ 'mightiestGovernor.targetScore' | translate }}</span>
         </div>
 
-        @for (slot of slots; track trackByRank($index, slot)) {
+        @for (slot of slots(); track trackByRank($index, slot)) {
           <div class="mg-row">
             <span class="mg-rank">{{ slot.rankLabel }}</span>
             <span class="mg-medal">{{ slot.medal }}</span>

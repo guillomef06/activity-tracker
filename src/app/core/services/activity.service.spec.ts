@@ -79,6 +79,46 @@ describe('ActivityService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('initialize() server scoping', () => {
+    it('should filter activities by the current user server_id instead of relying on RLS alone', async () => {
+      // Arrange — a super_admin session bypasses the RLS server scoping on `activities`
+      // (see 24-rename-alliance-to-server.sql), so the client query must filter explicitly
+      // or activities from every server leak into the current leaderboard.
+      const eqMock = vi.fn().mockReturnThis();
+      const scopedSupabaseMock = {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnThis(),
+          eq: eqMock,
+          gte: vi.fn().mockReturnThis(),
+          order: vi.fn().mockReturnThis(),
+          then: vi.fn().mockImplementation((resolve: (v: unknown) => void) => resolve({ data: [], error: null })),
+        }),
+      };
+      const scopedAuthMock = {
+        getServerId: vi.fn().mockReturnValue('server-era008'),
+        getUserId: vi.fn().mockReturnValue(null),
+        userProfile: signal(null),
+      };
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          ActivityService,
+          { provide: SupabaseService, useValue: scopedSupabaseMock },
+          { provide: AuthService, useValue: scopedAuthMock },
+          { provide: ServerService, useValue: serverServiceMock },
+        ],
+      });
+      const scopedService = TestBed.inject(ActivityService);
+
+      // Act
+      await scopedService.initialize();
+
+      // Assert
+      expect(eqMock).toHaveBeenCalledWith('user_profiles.server_id', 'server-era008');
+    });
+  });
+
   describe('getUserScores() tiebreaker', () => {
     it('should exclude tiebreaker activity points from totalPoints and sixWeekTotal', () => {
       // Arrange
@@ -239,6 +279,56 @@ describe('ActivityService', () => {
       // No reordering when no tiebreaker configured
       expect(sorted[0].userId).toBe('a');
       expect(sorted[1].userId).toBe('b');
+    });
+  });
+
+  describe('applyMgDeductions', () => {
+    it('should subtract the deduction from sixWeekTotal and expose it as mgDeduction', () => {
+      // Arrange
+      const scores: UserScore[] = [
+        { userId: 'a', displayName: 'Alice', sixWeekTotal: 100, weeklyScores: [] },
+        { userId: 'b', displayName: 'Bob', sixWeekTotal: 50, weeklyScores: [] },
+      ];
+      const deductions = new Map([['a', 30]]);
+
+      // Act
+      const result = service.applyMgDeductions(scores, deductions);
+
+      // Assert
+      const alice = result.find(u => u.userId === 'a')!;
+      const bob = result.find(u => u.userId === 'b')!;
+      expect(alice.sixWeekTotal).toBe(70);
+      expect(alice.mgDeduction).toBe(30);
+      expect(bob.sixWeekTotal).toBe(50);
+      expect(bob.mgDeduction).toBe(0);
+    });
+
+    it('should re-sort when a deduction changes the ranking', () => {
+      // Arrange
+      const scores: UserScore[] = [
+        { userId: 'a', displayName: 'Alice', sixWeekTotal: 100, weeklyScores: [] },
+        { userId: 'b', displayName: 'Bob', sixWeekTotal: 90, weeklyScores: [] },
+      ];
+      const deductions = new Map([['a', 50]]); // Alice drops to 50, below Bob's 90
+
+      // Act
+      const result = service.applyMgDeductions(scores, deductions);
+
+      // Assert
+      expect(result[0].userId).toBe('b');
+      expect(result[1].userId).toBe('a');
+    });
+
+    it('should leave users absent from the deductions map untouched', () => {
+      // Arrange
+      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', sixWeekTotal: 100, weeklyScores: [] }];
+
+      // Act
+      const result = service.applyMgDeductions(scores, new Map());
+
+      // Assert
+      expect(result[0].sixWeekTotal).toBe(100);
+      expect(result[0].mgDeduction).toBe(0);
     });
   });
 

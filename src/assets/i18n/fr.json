@@ -292,6 +292,7 @@
   },
   "dashboard": {
     "noActivitiesThisWeek": "Aucune activité disponible cette semaine",
+    "mgDeductionTooltip": "Points dépensés pour la sélection Mightiest Governor",
     "totalPoints": "points totaux",
     "pointsShort": "pts",
     "currentWeek": "Semaine en Cours",
@@ -543,10 +544,25 @@
         "mode": "Mode de sélection",
         "modeAutomatic": "Automatique",
         "modeManual": "Manuel",
+        "dkpEnabled": "Activer le système DKP",
+        "dkpEnabledHint": "Une fois activé, le coût du slot des joueurs sélectionnés est déduit de leur total sur le classement.",
         "save": "Enregistrer"
       },
       "configSaved": "Configuration enregistrée.",
       "configSaveError": "Échec de l'enregistrement de la configuration.",
+      "slotConfig": {
+        "title": "Configuration des coûts et objectifs par rang",
+        "rank": "Rang",
+        "medal": "Médaille",
+        "cost": "Coût",
+        "targetMin": "Objectif min.",
+        "targetMax": "Objectif max.",
+        "targetRangeError": "L'objectif max. doit être supérieur ou égal à l'objectif min.",
+        "required": "Champ requis",
+        "save": "Enregistrer"
+      },
+      "slotConfigSaved": "Configuration des créneaux enregistrée.",
+      "slotConfigSaveError": "Échec de l'enregistrement de la configuration des créneaux.",
       "registrations": {
         "title": "Inscriptions",
         "empty": "Aucune inscription pour le moment."
@@ -574,7 +590,7 @@
     "medal": "Médaille",
     "cost": "Coût",
     "targetScore": "Score Objectif",
-    "notice": "Le système DKP est en cours de développement. Les coûts affichés sont indicatifs et peuvent évoluer."
+    "notice": "Les coûts affichés peuvent changer d'un événement à l'autre. Les points sont déduits de votre total à partir du lundi suivant l'événement."
   },
   "gemCalculator": {
     "title": "Gem Calculator",
