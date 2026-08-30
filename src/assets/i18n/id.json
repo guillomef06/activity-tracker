@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "Masukkan nama server Anda",
     "serverNameHint": "Pilih nama untuk server baru Anda",
     "passwordPlaceholder": "cth. KataSandi123!",
-    "passwordHint": "Min. 6 karakter, harus mengandung setidaknya satu huruf dan satu angka",
+    "passwordHint": "Min. 6 karakter, harus mengandung huruf besar, huruf kecil, dan angka",
     "confirmPasswordPlaceholder": "Masukkan ulang kata sandi Anda",
     "tokenPlaceholder": "Masukkan token undangan",
     "tokenHint": "Diberikan oleh administrator server Anda",
@@ -61,7 +61,7 @@
       "superAdminExists": "Super admin sudah ada",
       "serverCreationFailed": "Gagal membuat server",
       "invalidToken": "Token undangan tidak valid atau kadaluarsa",
-      "passwordPattern": "Kata sandi harus mengandung setidaknya satu huruf dan satu angka"
+      "passwordPattern": "Kata sandi harus mengandung huruf besar, huruf kecil, dan angka"
     },
     "recovery": {
       "forgotPassword": "Lupa kata sandi?"
@@ -741,8 +741,8 @@
       "eyebrow": "Pelacak Aktivitas Server",
       "title1": "Bermain Cerdas.",
       "title2": "Menang Bersama.",
-      "subtitleBefore": "Dirancang untuk setiap pemain aktif — bukan hanya yang banyak belanja. Lacak aktivitas server Anda, dapatkan poin strategis, dan raih",
-      "subtitleStrong": "Top 10 Governor Terkuat",
+      "subtitleBefore": "Dirancang untuk setiap pemain aktif — bukan hanya yang banyak belanja. Lacak aktivitas server Anda, dapatkan poin strategis, dan raih posisi Anda di",
+      "subtitleStrong": "\"Governor Terkuat\"",
       "subtitleAfter": "dengan jauh lebih sedikit speed-up dan sumber daya.",
       "ctaLogin": "Masuk",
       "ctaJoin": "Bergabung dengan Undangan"
@@ -752,11 +752,11 @@
       "title": "Tiga langkah menuju puncak",
       "step1": {
         "title": "Catat Aktivitas Anda",
-        "description": "Kirimkan pertempuran KvK, pertarungan Legion, Ekspedisi Emas dan lainnya. Setiap acara, setiap minggu — kontribusi Anda tercatat."
+        "description": "Kirimkan pertempuran Anda. Setiap acara, setiap minggu — kontribusi Anda tercatat."
       },
       "step2": {
         "title": "Dapatkan Poin Strategis",
-        "description": "Poin dihitung dari posisi dan performa Anda. Aturan yang dapat dikonfigurasi memberi penghargaan kepada pemain yang hadir dan bersaing."
+        "description": "Poin Anda dihitung berdasarkan performa Anda."
       },
       "step3": {
         "title": "Naiki Peringkat",
@@ -775,8 +775,8 @@
         "description": "Pelacakan terstruktur mengoptimalkan siapa yang berpartisipasi dan kapan, menghemat speed-up dan sumber daya untuk persiapan KvK."
       },
       "benefit3": {
-        "title": "Raih Top 10 Governor Terkuat",
-        "description": "Dapatkan pahlawan terkuat dengan lebih sedikit sumber daya. Perbedaan antara hampir dan juara diukur dengan upaya yang terorganisir."
+        "title": "Raih \"Governor Terkuat\"",
+        "description": "Dapatkan pahlawan terkuat dengan lebih sedikit sumber daya."
       }
     },
     "cta": {

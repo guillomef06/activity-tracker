@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "Enter your server name",
     "serverNameHint": "Choose a name for your new server",
     "passwordPlaceholder": "e.g. MyPass123!",
-    "passwordHint": "Min. 6 characters, must include at least one letter and one number",
+    "passwordHint": "Min. 6 characters, must include an uppercase letter, a lowercase letter, and a number",
     "confirmPasswordPlaceholder": "Re-enter your password",
     "tokenPlaceholder": "Enter invitation token",
     "tokenHint": "Provided by your server administrator",
@@ -61,7 +61,7 @@
       "superAdminExists": "Super admin already exists",
       "serverCreationFailed": "Failed to create server",
       "invalidToken": "Invalid or expired invitation token",
-      "passwordPattern": "Password must contain at least one letter and one number"
+      "passwordPattern": "Password must contain an uppercase letter, a lowercase letter, and a number"
     },
     "recovery": {
       "forgotPassword": "Forgot password?"
@@ -819,8 +819,8 @@
       "eyebrow": "Server Activity Tracker",
       "title1": "Play Smart.",
       "title2": "Win Together.",
-      "subtitleBefore": "Designed for every active player — not just spenders. Track your server activities, earn strategic points, and reach",
-      "subtitleStrong": "Top 10 Mightiest Governor",
+      "subtitleBefore": "Designed for every active player — not just spenders. Track your server activities, earn strategic points, and claim your spot in the",
+      "subtitleStrong": "\"Mightiest Governor\"",
       "subtitleAfter": "with significantly fewer speed-ups and resources.",
       "ctaLogin": "Login",
       "ctaJoin": "Join with Invitation"
@@ -830,11 +830,11 @@
       "title": "Three steps to the top",
       "step1": {
         "title": "Log Your Activities",
-        "description": "Submit KvK battles, Legion fights, Golden Expeditions and more. Every event, every week — your contribution recorded."
+        "description": "Submit your battles. Every event, every week — your contribution recorded."
       },
       "step2": {
         "title": "Earn Strategic Points",
-        "description": "Points are calculated from your position and performance. Configurable rules reward the players who show up and compete."
+        "description": "Your points are calculated based on your performance."
       },
       "step3": {
         "title": "Rise in the Rankings",
@@ -850,11 +850,11 @@
       },
       "benefit2": {
         "title": "Save Resources Server-Wide",
-        "description": "Structured tracking optimizes who participates and when, preserving speed-ups and resources for KvK preparation and Mightiest Empire."
+        "description": "Structured tracking optimizes who participates and when, preserving speed-ups and resources for KvK preparation."
       },
       "benefit3": {
-        "title": "Reach Top 10 Mightiest Governor",
-        "description": "Claim the strongest heroes with fewer resources. The difference between almost and champion is measured in organized effort."
+        "title": "Reach the \"Mightiest Governor\"",
+        "description": "Claim the strongest heroes with fewer resources."
       }
     },
     "cta": {

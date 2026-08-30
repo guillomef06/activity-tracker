@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "Entrez le nom de votre serveur",
     "serverNameHint": "Choisissez un nom pour votre nouveau serveur",
     "passwordPlaceholder": "ex. MonPass123!",
-    "passwordHint": "Min. 6 caractères, doit contenir au moins une lettre et un chiffre",
+    "passwordHint": "Min. 6 caractères, doit contenir une majuscule, une minuscule et un chiffre",
     "confirmPasswordPlaceholder": "Ressaisissez votre mot de passe",
     "tokenPlaceholder": "Entrez le jeton d'invitation",
     "tokenHint": "Fourni par l'administrateur de votre serveur",
@@ -61,7 +61,7 @@
       "superAdminExists": "Le super administrateur existe déjà",
       "serverCreationFailed": "Échec de la création du serveur",
       "invalidToken": "Jeton d'invitation invalide ou expiré",
-      "passwordPattern": "Le mot de passe doit contenir au moins une lettre et un chiffre"
+      "passwordPattern": "Le mot de passe doit contenir une majuscule, une minuscule et un chiffre"
     },
     "recovery": {
       "forgotPassword": "Mot de passe oublié ?"
@@ -819,8 +819,8 @@
       "eyebrow": "Suivi d'Activités de serveur",
       "title1": "Jouez Malin.",
       "title2": "Gagnez Ensemble.",
-      "subtitleBefore": "Conçu pour tous les joueurs actifs — pas seulement les gros dépensiers. Suivez les activités de votre serveur, accumulez des points stratégiques et décrochez",
-      "subtitleStrong": "le Top 10 Gouverneur le Plus Puissant",
+      "subtitleBefore": "Conçu pour tous les joueurs actifs — pas seulement les gros dépensiers. Suivez les activités de votre serveur, accumulez des points stratégiques et décrochez votre place dans le",
+      "subtitleStrong": "\"Gouverneur le Plus Puissant\"",
       "subtitleAfter": "avec bien moins d'accélérations et de ressources.",
       "ctaLogin": "Connexion",
       "ctaJoin": "Rejoindre avec une Invitation"
@@ -830,11 +830,11 @@
       "title": "Trois étapes vers le sommet",
       "step1": {
         "title": "Déclarez vos Activités",
-        "description": "Soumettez vos batailles KvK, combats de Légion, Expéditions Dorées et plus encore. Chaque événement, chaque semaine — votre contribution enregistrée."
+        "description": "Soumettez vos batailles. Chaque événement, chaque semaine — votre contribution enregistrée."
       },
       "step2": {
         "title": "Accumulez des Points Stratégiques",
-        "description": "Les points sont calculés selon votre position et vos performances. Des règles configurables récompensent les joueurs présents et engagés."
+        "description": "Vos points sont calculés selon vos performances."
       },
       "step3": {
         "title": "Grimpez dans les Classements",
@@ -850,11 +850,11 @@
       },
       "benefit2": {
         "title": "Préservez les Ressources du serveur",
-        "description": "Le suivi structuré optimise qui participe et à quel moment, pour économiser accélérations et ressources avant le KvK et le Mightiest Empire."
+        "description": "Le suivi structuré optimise qui participe et à quel moment, pour économiser accélérations et ressources avant le KvK."
       },
       "benefit3": {
-        "title": "Visez le Top 10 Gouverneur le Plus Puissant",
-        "description": "Réclamez les meilleurs héros avec moins de ressources. Entre presque et champion, la différence tient à une organisation sans faille."
+        "title": "Visez le \"Gouverneur le Plus Puissant\"",
+        "description": "Réclamez les meilleurs héros avec moins de ressources."
       }
     },
     "cta": {

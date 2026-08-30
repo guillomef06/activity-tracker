@@ -43,7 +43,15 @@ export class SuperAdminSetupPage {
     {
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-Z0-9]+$/)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(128),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
+        ],
+      ],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: passwordMatchValidator }
@@ -60,7 +68,9 @@ export class SuperAdminSetupPage {
   // Reactive error signals (automatically update when form state changes)
   protected readonly usernameError = createFieldErrorSignal(this.setupForm, 'username', this.destroyRef);
   protected readonly displayNameError = createFieldErrorSignal(this.setupForm, 'displayName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.setupForm, 'password', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.setupForm, 'password', this.destroyRef, undefined, {
+    pattern: 'auth.errors.passwordPattern',
+  });
   protected readonly confirmPasswordError = createFieldErrorSignal(this.setupForm, 'confirmPassword', this.destroyRef);
 
   protected async onSubmit(): Promise<void> {

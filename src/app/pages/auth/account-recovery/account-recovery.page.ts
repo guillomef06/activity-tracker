@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -11,7 +11,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
-import { passwordMatchValidator } from '@app/shared/utils/form-validation.utils';
+import {
+  passwordMatchValidator,
+  createFieldErrorSignal,
+  createFieldValidSignal,
+} from '@app/shared/utils/form-validation.utils';
 
 type Step = 1 | 2 | 3;
 
@@ -36,6 +40,7 @@ type Step = 1 | 2 | 3;
 export class AccountRecoveryPage {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly step = signal<Step>(1);
   protected readonly isLoading = signal(false);
@@ -55,11 +60,25 @@ export class AccountRecoveryPage {
   protected readonly step2Form: FormGroup = this.fb.group(
     {
       answer: ['', [Validators.required, Validators.minLength(2)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(128),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
+        ],
+      ],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: passwordMatchValidator }
   );
+
+  protected readonly passwordError = createFieldErrorSignal(this.step2Form, 'password', this.destroyRef, undefined, {
+    pattern: 'auth.errors.passwordPattern',
+  });
+  protected readonly confirmPasswordError = createFieldErrorSignal(this.step2Form, 'confirmPassword', this.destroyRef);
+  protected readonly confirmPasswordValid = createFieldValidSignal(this.step2Form, 'confirmPassword', this.destroyRef);
 
   protected get currentQuestion() {
     const id = this.questionId();

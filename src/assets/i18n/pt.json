@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "Digite o nome da servidor",
     "serverNameHint": "Escolha um nome para sua nova servidor",
     "passwordPlaceholder": "ex. MinhaSenha123!",
-    "passwordHint": "Mín. 6 caracteres, deve incluir pelo menos uma letra e um número",
+    "passwordHint": "Mín. 6 caracteres, deve incluir uma letra maiúscula, uma minúscula e um número",
     "confirmPasswordPlaceholder": "Digite a senha novamente",
     "tokenPlaceholder": "Digite o token de convite",
     "tokenHint": "Fornecido pelo seu administrador de servidor",
@@ -61,7 +61,7 @@
       "superAdminExists": "Super admin já existe",
       "serverCreationFailed": "Falha ao criar servidor",
       "invalidToken": "Token de convite inválido ou expirado",
-      "passwordPattern": "A senha deve conter pelo menos uma letra e um número"
+      "passwordPattern": "A senha deve conter uma letra maiúscula, uma minúscula e um número"
     },
     "recovery": {
       "forgotPassword": "Esqueceu a senha?"
@@ -741,8 +741,8 @@
       "eyebrow": "Rastreador de Atividades da Servidor",
       "title1": "Jogue com Inteligência.",
       "title2": "Vença Juntos.",
-      "subtitleBefore": "Desenvolvido para cada jogador ativo — não apenas para quem gasta. Acompanhe as atividades da servidor, ganhe pontos estratégicos e alcance o",
-      "subtitleStrong": "Top 10 Governador Mais Poderoso",
+      "subtitleBefore": "Desenvolvido para cada jogador ativo — não apenas para quem gasta. Acompanhe as atividades da servidor, ganhe pontos estratégicos e conquiste seu lugar no",
+      "subtitleStrong": "\"Governador Mais Poderoso\"",
       "subtitleAfter": "com significativamente menos speed-ups e recursos.",
       "ctaLogin": "Entrar",
       "ctaJoin": "Entrar com Convite"
@@ -752,11 +752,11 @@
       "title": "Três passos para o topo",
       "step1": {
         "title": "Registre Suas Atividades",
-        "description": "Envie batalhas KvK, lutas de Legião, Expedições Douradas e mais. Cada evento, cada semana — sua contribuição registrada."
+        "description": "Envie suas batalhas. Cada evento, cada semana — sua contribuição registrada."
       },
       "step2": {
         "title": "Ganhe Pontos Estratégicos",
-        "description": "Os pontos são calculados com base na sua posição e desempenho. Regras configuráveis recompensam os jogadores que aparecem e competem."
+        "description": "Seus pontos são calculados com base no seu desempenho."
       },
       "step3": {
         "title": "Suba na Classificação",
@@ -772,11 +772,11 @@
       },
       "benefit2": {
         "title": "Economize Recursos em Toda a Servidor",
-        "description": "O rastreamento estruturado otimiza quem participa e quando, preservando speed-ups e recursos para preparação do KvK e Império Mais Poderoso."
+        "description": "O rastreamento estruturado otimiza quem participa e quando, preservando speed-ups e recursos para a preparação do KvK."
       },
       "benefit3": {
-        "title": "Alcance o Top 10 Governador Mais Poderoso",
-        "description": "Conquiste os heróis mais poderosos com menos recursos. A diferença entre quase e campeão é medida em esforço organizado."
+        "title": "Alcance o \"Governador Mais Poderoso\"",
+        "description": "Conquiste os heróis mais poderosos com menos recursos."
       }
     },
     "cta": {

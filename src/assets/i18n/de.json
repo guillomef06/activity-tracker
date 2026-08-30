@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "Servername eingeben",
     "serverNameHint": "Wähle einen Namen für deine neue Server",
     "passwordPlaceholder": "z.B. MeinPass123!",
-    "passwordHint": "Min. 6 Zeichen, muss mindestens einen Buchstaben und eine Zahl enthalten",
+    "passwordHint": "Min. 6 Zeichen, muss einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten",
     "confirmPasswordPlaceholder": "Passwort erneut eingeben",
     "tokenPlaceholder": "Einladungstoken eingeben",
     "tokenHint": "Von deinem Server-Administrator bereitgestellt",
@@ -61,7 +61,7 @@
       "superAdminExists": "Super-Admin existiert bereits",
       "serverCreationFailed": "Server konnte nicht erstellt werden",
       "invalidToken": "Ungültiger oder abgelaufener Einladungstoken",
-      "passwordPattern": "Das Passwort muss mindestens einen Buchstaben und eine Zahl enthalten"
+      "passwordPattern": "Das Passwort muss einen Großbuchstaben, einen Kleinbuchstaben und eine Zahl enthalten"
     },
     "recovery": {
       "forgotPassword": "Passwort vergessen?"
@@ -741,8 +741,8 @@
       "eyebrow": "Server-Aktivitäts-Tracker",
       "title1": "Clever spielen.",
       "title2": "Gemeinsam gewinnen.",
-      "subtitleBefore": "Entwickelt für jeden aktiven Spieler — nicht nur für Spender. Verfolge Serveraktivitäten, verdiene strategische Punkte und erreiche",
-      "subtitleStrong": "Top 10 Mächtigster Gouverneur",
+      "subtitleBefore": "Entwickelt für jeden aktiven Spieler — nicht nur für Spender. Verfolge Serveraktivitäten, verdiene strategische Punkte und sichere dir deinen Platz im",
+      "subtitleStrong": "\"Mächtigsten Gouverneur\"",
       "subtitleAfter": "mit deutlich weniger Speed-Ups und Ressourcen.",
       "ctaLogin": "Anmelden",
       "ctaJoin": "Mit Einladung beitreten"
@@ -752,11 +752,11 @@
       "title": "Drei Schritte nach oben",
       "step1": {
         "title": "Aktivitäten aufzeichnen",
-        "description": "KvK-Kämpfe, Legiongefechte, Goldene Expeditionen und mehr einreichen. Jedes Event, jede Woche — dein Beitrag wird erfasst."
+        "description": "Reiche deine Kämpfe ein. Jedes Event, jede Woche — dein Beitrag wird erfasst."
       },
       "step2": {
         "title": "Strategische Punkte verdienen",
-        "description": "Punkte werden nach deiner Position und Leistung berechnet. Konfigurierbare Regeln belohnen Spieler, die auftauchen und kämpfen."
+        "description": "Deine Punkte werden nach deiner Leistung berechnet."
       },
       "step3": {
         "title": "In der Rangliste aufsteigen",
@@ -772,11 +772,11 @@
       },
       "benefit2": {
         "title": "Ressourcen serverweit sparen",
-        "description": "Strukturiertes Tracking optimiert, wer wann teilnimmt, und schont Speed-Ups und Ressourcen für KvK-Vorbereitung und Mächtigstes Imperium."
+        "description": "Strukturiertes Tracking optimiert, wer wann teilnimmt, und schont Speed-Ups und Ressourcen für die KvK-Vorbereitung."
       },
       "benefit3": {
-        "title": "Top 10 Mächtigster Gouverneur erreichen",
-        "description": "Die stärksten Helden mit weniger Ressourcen beanspruchen. Der Unterschied zwischen Fast und Champion liegt in organisierter Anstrengung."
+        "title": "\"Mächtigster Gouverneur\" erreichen",
+        "description": "Die stärksten Helden mit weniger Ressourcen beanspruchen."
       }
     },
     "cta": {

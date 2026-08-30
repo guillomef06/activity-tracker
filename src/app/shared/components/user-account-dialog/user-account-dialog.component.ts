@@ -75,7 +75,15 @@ export class UserAccountDialogComponent {
 
   protected readonly passwordForm: FormGroup = this.fb.group(
     {
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(128),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
+        ],
+      ],
       confirmPassword: ['', [Validators.required]],
     },
     { validators: passwordMatchValidator }
@@ -88,7 +96,9 @@ export class UserAccountDialogComponent {
 
   // Reactive error signals
   protected readonly displayNameError = createFieldErrorSignal(this.displayNameForm, 'displayName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.passwordForm, 'password', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.passwordForm, 'password', this.destroyRef, undefined, {
+    pattern: 'auth.errors.passwordPattern',
+  });
   protected readonly confirmPasswordError = createFieldErrorSignal(
     this.passwordForm,
     'confirmPassword',
