@@ -1,6 +1,6 @@
 {
   "name": "activity-tracker",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Activity tracking app with rolling scores for management",
   "scripts": {
     "ng": "ng",

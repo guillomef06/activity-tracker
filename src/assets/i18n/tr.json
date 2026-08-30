@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "Sunucu adı girin",
     "serverNameHint": "Yeni sunucuınız için bir ad seçin",
     "passwordPlaceholder": "örn. Sifrem123!",
-    "passwordHint": "Min. 6 karakter, en az bir harf ve bir rakam içermelidir",
+    "passwordHint": "Min. 6 karakter, büyük harf, küçük harf ve rakam içermelidir",
     "confirmPasswordPlaceholder": "Şifrenizi tekrar girin",
     "tokenPlaceholder": "Davet kodunu girin",
     "tokenHint": "Sunucu yöneticiniz tarafından sağlanır",
@@ -61,7 +61,7 @@
       "superAdminExists": "Süper admin zaten mevcut",
       "serverCreationFailed": "Sunucu oluşturulamadı",
       "invalidToken": "Geçersiz veya süresi dolmuş davet kodu",
-      "passwordPattern": "Şifre en az bir harf ve bir rakam içermelidir"
+      "passwordPattern": "Şifre büyük harf, küçük harf ve rakam içermelidir"
     },
     "recovery": {
       "forgotPassword": "Şifremi unuttum?"
@@ -742,8 +742,8 @@
       "title1": "Akıllıca Oyna.",
       "title2": "Birlikte Kazan.",
       "subtitleBefore": "Her aktif oyuncu için tasarlandı — yalnızca harcayanlar için değil. Sunucu aktivitelerinizi takip edin, stratejik puanlar kazanın ve",
-      "subtitleStrong": "Top 10 En Güçlü Vali",
-      "subtitleAfter": "olmayı çok daha az speed-up ve kaynak harcayarak başarın.",
+      "subtitleStrong": "\"En Güçlü Vali\"",
+      "subtitleAfter": "içinde yerinizi çok daha az speed-up ve kaynak harcayarak alın.",
       "ctaLogin": "Giriş Yap",
       "ctaJoin": "Davet ile Katıl"
     },
@@ -752,11 +752,11 @@
       "title": "Zirveye üç adım",
       "step1": {
         "title": "Aktivitelerinizi Kaydedin",
-        "description": "KvK savaşları, Legion mücadeleleri, Altın Keşifler ve daha fazlasını gönderin. Her etkinlik, her hafta — katkınız kaydedildi."
+        "description": "Savaşlarınızı gönderin. Her etkinlik, her hafta — katkınız kaydedildi."
       },
       "step2": {
         "title": "Stratejik Puan Kazanın",
-        "description": "Puanlar konumunuza ve performansınıza göre hesaplanır. Yapılandırılabilir kurallar, katılan ve rekabet eden oyuncuları ödüllendirir."
+        "description": "Puanlarınız performansınıza göre hesaplanır."
       },
       "step3": {
         "title": "Sıralamada Yüksel",
@@ -772,11 +772,11 @@
       },
       "benefit2": {
         "title": "Sunucu Genelinde Kaynak Tasarrufu",
-        "description": "Yapılandırılmış takip, kimin ne zaman katılacağını optimize ederek KvK hazırlığı ve En Güçlü İmparatorluk için speed-up ve kaynakları korur."
+        "description": "Yapılandırılmış takip, kimin ne zaman katılacağını optimize ederek KvK hazırlığı için speed-up ve kaynakları korur."
       },
       "benefit3": {
-        "title": "Top 10 En Güçlü Vali'ye Ulaşın",
-        "description": "En güçlü kahramanları daha az kaynaklarla edinin. Neredeyse ve şampiyon arasındaki fark organize çabayla ölçülür."
+        "title": "\"En Güçlü Vali\"ye Ulaşın",
+        "description": "En güçlü kahramanları daha az kaynaklarla edinin."
       }
     },
     "cta": {

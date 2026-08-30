@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "Inserisci il nome del tuo server",
     "serverNameHint": "Scegli un nome per il tuo nuovo server",
     "passwordPlaceholder": "es. MiaPass123!",
-    "passwordHint": "Min. 6 caratteri, deve includere almeno una lettera e un numero",
+    "passwordHint": "Min. 6 caratteri, deve includere una maiuscola, una minuscola e un numero",
     "confirmPasswordPlaceholder": "Reinserisci la tua password",
     "tokenPlaceholder": "Inserisci il token di invito",
     "tokenHint": "Fornito dall'amministratore del tuo server",
@@ -61,7 +61,7 @@
       "superAdminExists": "Il super amministratore esiste già",
       "serverCreationFailed": "Creazione del server non riuscita",
       "invalidToken": "Token di invito non valido o scaduto",
-      "passwordPattern": "La password deve contenere almeno una lettera e un numero"
+      "passwordPattern": "La password deve contenere una maiuscola, una minuscola e un numero"
     },
     "recovery": {
       "forgotPassword": "Password dimenticata?"
@@ -741,8 +741,8 @@
       "eyebrow": "Monitoraggio Attività del Server",
       "title1": "Gioca Furbo.",
       "title2": "Vinci Insieme.",
-      "subtitleBefore": "Pensato per ogni giocatore attivo — non solo per chi spende di più. Registra le attività del tuo server, accumula punti strategici e conquista",
-      "subtitleStrong": "la Top 10 del Governatore Più Potente",
+      "subtitleBefore": "Pensato per ogni giocatore attivo — non solo per chi spende di più. Registra le attività del tuo server, accumula punti strategici e conquista il tuo posto nel",
+      "subtitleStrong": "\"Governatore Più Potente\"",
       "subtitleAfter": "con molti meno acceleratori e risorse.",
       "ctaLogin": "Accedi",
       "ctaJoin": "Unisciti con Invito"
@@ -752,11 +752,11 @@
       "title": "Tre passi verso la vetta",
       "step1": {
         "title": "Registra le tue Attività",
-        "description": "Invia battaglie KvK, combattimenti di Legione, Spedizioni Dorate e altro ancora. Ogni evento, ogni settimana — il tuo contributo registrato."
+        "description": "Invia le tue battaglie. Ogni evento, ogni settimana — il tuo contributo registrato."
       },
       "step2": {
         "title": "Accumula Punti Strategici",
-        "description": "I punti vengono calcolati in base alla tua posizione e prestazione. Le regole configurabili premiano i giocatori presenti e costanti."
+        "description": "I tuoi punti vengono calcolati in base alle tue prestazioni."
       },
       "step3": {
         "title": "Scala le Classifiche",
@@ -772,11 +772,11 @@
       },
       "benefit2": {
         "title": "Risparmia Risorse in Tutta l'Server",
-        "description": "Il monitoraggio strutturato ottimizza chi partecipa e quando, conservando acceleratori e risorse per il KvK e il Mightiest Empire."
+        "description": "Il monitoraggio strutturato ottimizza chi partecipa e quando, conservando acceleratori e risorse per il KvK."
       },
       "benefit3": {
-        "title": "Punta alla Top 10 Governatore Più Potente",
-        "description": "Conquista i migliori eroi con meno risorse. Tra quasi e campione, la differenza sta nell'organizzazione."
+        "title": "Punta al \"Governatore Più Potente\"",
+        "description": "Conquista i migliori eroi con meno risorse."
       }
     },
     "cta": {

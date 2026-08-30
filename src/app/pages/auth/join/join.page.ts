@@ -72,7 +72,15 @@ export class JoinPage implements OnInit {
         [usernameAvailableValidator(u => from(this.authService.checkUsernameAvailable(u)))],
       ],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(128),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
+        ],
+      ],
       confirmPassword: ['', [Validators.required]],
       recoveryQuestionId: [null, [Validators.required]],
       recoveryAnswer: ['', [Validators.required, Validators.minLength(2)]],
