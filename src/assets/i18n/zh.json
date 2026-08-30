@@ -41,7 +41,7 @@
     "serverNamePlaceholder": "输入您的服务器名称",
     "serverNameHint": "为您的新服务器选择名称",
     "passwordPlaceholder": "例如 MyPass123!",
-    "passwordHint": "最少6个字符，必须包含至少一个字母和一个数字",
+    "passwordHint": "最少6个字符，必须包含大写字母、小写字母和数字",
     "confirmPasswordPlaceholder": "重新输入密码",
     "tokenPlaceholder": "输入邀请令牌",
     "tokenHint": "由您的服务器管理员提供",
@@ -61,7 +61,7 @@
       "superAdminExists": "超级管理员已存在",
       "serverCreationFailed": "创建服务器失败",
       "invalidToken": "邀请令牌无效或已过期",
-      "passwordPattern": "密码必须包含至少一个字母和一个数字"
+      "passwordPattern": "密码必须包含大写字母、小写字母和数字"
     },
     "recovery": {
       "forgotPassword": "忘记密码？"
@@ -741,9 +741,9 @@
       "eyebrow": "服务器活动追踪器",
       "title1": "智慧游戏。",
       "title2": "共同胜利。",
-      "subtitleBefore": "专为每位活跃玩家设计 — 不仅仅是付费玩家。追踪您的服务器活动，获得战略积分，以更少的加速道具和资源达到",
-      "subtitleStrong": "最强总督前10名",
-      "subtitleAfter": "。",
+      "subtitleBefore": "专为每位活跃玩家设计 — 不仅仅是付费玩家。追踪您的服务器活动，获得战略积分，以更少的加速道具和资源在",
+      "subtitleStrong": "\"最强总督\"",
+      "subtitleAfter": "中占据一席之地。",
       "ctaLogin": "登录",
       "ctaJoin": "凭邀请加入"
     },
@@ -752,11 +752,11 @@
       "title": "登顶的三个步骤",
       "step1": {
         "title": "记录您的活动",
-        "description": "提交KvK战斗、军团战、黄金远征等。每个活动，每周 — 您的贡献均被记录。"
+        "description": "提交您的战斗。每个活动，每周 — 您的贡献均被记录。"
       },
       "step2": {
         "title": "获得战略积分",
-        "description": "积分根据您的排名和表现计算。可配置的规则奖励参与并竞争的玩家。"
+        "description": "您的积分根据您的表现计算。"
       },
       "step3": {
         "title": "攀登排名",
@@ -772,11 +772,11 @@
       },
       "benefit2": {
         "title": "节省全服务器资源",
-        "description": "结构化追踪优化参与者和时机，为KvK准备和最强帝国保留加速道具和资源。"
+        "description": "结构化追踪优化参与者和时机，为KvK准备保留加速道具和资源。"
       },
       "benefit3": {
-        "title": "达到最强总督前10名",
-        "description": "以更少资源获得最强英雄。几乎成功与成为冠军之间的差距在于有组织的努力。"
+        "title": "达到\"最强总督\"",
+        "description": "以更少资源获得最强英雄。"
       }
     },
     "cta": {

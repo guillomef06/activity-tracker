@@ -66,7 +66,15 @@ export class SignupPage {
       ],
       displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       serverName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(128),
+          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
+        ],
+      ],
       confirmPassword: ['', [Validators.required]],
       recoveryQuestionId: [null, [Validators.required]],
       recoveryAnswer: ['', [Validators.required, Validators.minLength(2)]],
@@ -88,7 +96,9 @@ export class SignupPage {
   });
   protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName', this.destroyRef);
   protected readonly serverNameError = createFieldErrorSignal(this.signupForm, 'serverName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef);
+  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef, undefined, {
+    pattern: 'auth.errors.passwordPattern',
+  });
   protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
   protected readonly confirmPasswordValid = createFieldValidSignal(this.signupForm, 'confirmPassword', this.destroyRef);
   protected readonly recoveryQuestionIdError = createFieldErrorSignal(
