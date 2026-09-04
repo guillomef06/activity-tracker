@@ -60,6 +60,15 @@ export class AppHeaderComponent {
     return this.authService.userProfile()?.display_name ?? '';
   });
 
+  /** Admin-configured external link — shown as a button when both fields are set */
+  protected readonly externalLink = computed(() => {
+    const server = this.serverService.server();
+    if (server?.external_link_label && server?.external_link_url) {
+      return { label: server.external_link_label, url: server.external_link_url };
+    }
+    return null;
+  });
+
   constructor() {
     this.imageBaseUrl = environment.production ? '/activity-tracker/assets/favicon.png' : '/assets/favicon.png';
     // Load server for any authenticated user who belongs to one

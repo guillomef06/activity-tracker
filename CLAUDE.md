@@ -73,7 +73,6 @@ Users input activities, management views scores on rolling 6-week basis.
 - Keep components small and focused (SRP)
 
 ### TypeScript
-- Enable strict mode (tsconfig.json)
 - Explicit typing (avoid `any`)
 - Use interfaces/types for data structures
 - Implement proper null checks and optional chaining
@@ -84,20 +83,6 @@ Users input activities, management views scores on rolling 6-week basis.
 - Prefer async pipe in templates
 - Avoid nested subscriptions - use higher-order operators
 - Implement proper error handling with `catchError`
-
-## Code Organization
-
-```
-src/app/
-├── components/      # Presentational components
-├── pages/          # Route components (smart)
-├── services/       # Business logic and API
-├── models/         # TypeScript interfaces/types
-├── guards/         # Route guards
-├── interceptors/   # HTTP interceptors
-├── pipes/          # Custom pipes
-└── utils/          # Helper functions/constants
-```
 
 ## Forms
 - Use **Reactive Forms** (not template-driven)
@@ -112,14 +97,6 @@ src/app/
 - Touch-friendly UI (min 44px touch targets)
 - Use CSS Grid/Flexbox for responsive layouts
 - Use relative units (rem, em, %) over px
-
-## Performance
-- Lazy load routes
-- OnPush change detection
-- Virtual scrolling for large lists
-- Proper `trackBy` functions
-- Avoid heavy computations in templates
-- Optimize bundle size
 
 ## Accessibility
 - Use semantic HTML
@@ -155,11 +132,3 @@ src/app/
 - Meaningful branch names
 - Code review before commit
 - Keep main branch deployable
-
-## Development Principles
-- Mobile-first approach
-- Maintain type safety
-- Write clean, readable code
-- Respect SOLID and YAGNI
-- Follow established patterns
-- Test changes thoroughly

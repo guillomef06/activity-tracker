@@ -133,14 +133,15 @@
       </div>
     </div>
 
-    <!-- Add Point Rule Form -->
+    <!-- Point Rule Generator -->
     <div class="section">
       <h3 class="section-title">
-        <mat-icon>add</mat-icon>
-        {{ 'server.settings.pointRules.addRule' | translate }}
+        <mat-icon>auto_awesome</mat-icon>
+        {{ 'server.settings.pointRules.generator' | translate }}
       </h3>
+      <p class="section-hint">{{ 'server.settings.pointRules.generatorHint' | translate }}</p>
 
-      <form [formGroup]="pointRuleForm" (ngSubmit)="createPointRule()" class="point-rule-form">
+      <form [formGroup]="pointRuleForm" (ngSubmit)="generateRules()" class="point-rule-form">
         <mat-form-field appearance="outline">
           <mat-label>{{ 'server.settings.pointRules.activityType' | translate }}</mat-label>
           <mat-icon matIconPrefix>category</mat-icon>
@@ -157,36 +158,87 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
-          <mat-icon matIconPrefix>looks_one</mat-icon>
-          <mat-label>{{ 'server.settings.pointRules.positionMin' | translate }}</mat-label>
-          <input matInput type="number" formControlName="position_min" min="1" />
-          @if (positionMinError()) {
-            <mat-error>{{ positionMinError() | translate }}</mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-icon matIconPrefix>looks_two</mat-icon>
-          <mat-label>{{ 'server.settings.pointRules.positionMax' | translate }}</mat-label>
-          <input matInput type="number" formControlName="position_max" min="1" />
-          @if (positionMaxError()) {
-            <mat-error>{{ positionMaxError() | translate }}</mat-error>
+          <mat-icon matIconPrefix>straighten</mat-icon>
+          <mat-label>{{ 'server.settings.pointRules.rangeSize' | translate }}</mat-label>
+          <input matInput type="number" formControlName="range_size" min="5" step="5" />
+          @if (rangeSizeError()) {
+            <mat-error>{{ rangeSizeError() | translate }}</mat-error>
+          } @else {
+            <mat-hint>{{ 'server.settings.pointRules.rangeSizeHint' | translate }}</mat-hint>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-icon matIconPrefix>star</mat-icon>
           <mat-label>{{ 'server.settings.pointRules.points' | translate }}</mat-label>
-          <input matInput type="number" formControlName="points" min="0" />
+          <input matInput type="number" formControlName="points" min="1" />
           @if (pointsError()) {
             <mat-error>{{ pointsError() | translate }}</mat-error>
           }
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+          <mat-icon matIconPrefix>trending_down</mat-icon>
+          <mat-label>{{ 'server.settings.pointRules.decreasedNextRangePoints' | translate }}</mat-label>
+          <input matInput type="number" formControlName="decreased_next_range_points" min="1" />
+          @if (decreasedNextRangePointsError()) {
+            <mat-error>{{ decreasedNextRangePointsError() | translate }}</mat-error>
+          } @else {
+            <mat-hint>{{ 'server.settings.pointRules.decreasedNextRangePointsHint' | translate }}</mat-hint>
+          }
+        </mat-form-field>
+
+        <!-- Live preview -->
+        <div class="preview-section">
+          <h4 class="preview-title">{{ 'server.settings.pointRules.previewTitle' | translate }}</h4>
+
+          @if (existingRulesForSelectedType().length > 0) {
+            <p class="preview-warning">
+              <mat-icon>warning</mat-icon>
+              {{
+                'server.settings.pointRules.replaceWarning'
+                  | translate: { count: existingRulesForSelectedType().length }
+              }}
+            </p>
+          }
+
+          @if (trancheePreview().length === 0) {
+            <p class="preview-empty-hint">{{ 'server.settings.pointRules.previewEmptyHint' | translate }}</p>
+          } @else {
+            <div class="table-container">
+              <table mat-table [dataSource]="trancheePreview()" class="point-rules-table">
+                <ng-container matColumnDef="positionRange">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'server.settings.pointRules.positionRange' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let tranche">
+                    <span class="position-range">
+                      {{ tranche.position_min | positionRange: tranche.position_max }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="points">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'server.settings.pointRules.points' | translate }}</th>
+                  <td mat-cell *matCellDef="let tranche">
+                    <span class="points-value">
+                      <mat-icon>star</mat-icon>
+                      {{ tranche.points }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="previewColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: previewColumns"></tr>
+              </table>
+            </div>
+          }
+        </div>
+
         <app-loading-button
           type="submit"
-          icon="add"
-          [text]="'server.settings.pointRules.create' | translate"
+          icon="auto_awesome"
+          [text]="'server.settings.pointRules.generate' | translate"
           [loadingText]="'common.saving' | translate"
           [submitting]="isSubmitting()"
           [disabled]="pointRuleForm.invalid || isLoading()"
@@ -208,59 +260,61 @@
           <small>{{ 'server.settings.pointRules.noRulesHint' | translate }}</small>
         </div>
       } @else {
-        <div class="table-container">
-          <table mat-table [dataSource]="pointRules()" class="point-rules-table">
-            <!-- Activity Type Column -->
-            <ng-container matColumnDef="activityType">
-              <th mat-header-cell *matHeaderCellDef>{{ 'server.settings.pointRules.activityType' | translate }}</th>
-              <td mat-cell *matCellDef="let rule">
-                <mat-chip class="activity-chip">
-                  {{ getActivityTypeLabel(rule.activity_type) | translate }}
-                </mat-chip>
-              </td>
-            </ng-container>
+        @for (group of groupedPointRules(); track group.activityType) {
+          <mat-expansion-panel class="rule-group-panel" [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-chip class="activity-chip">{{ group.labelKey | translate }}</mat-chip>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
 
-            <!-- Position Range Column -->
-            <ng-container matColumnDef="positionRange">
-              <th mat-header-cell *matHeaderCellDef>{{ 'server.settings.pointRules.positionRange' | translate }}</th>
-              <td mat-cell *matCellDef="let rule">
-                <span class="position-range">
-                  {{ rule.position_min | positionRange: rule.position_max }}
-                </span>
-              </td>
-            </ng-container>
+            <div class="table-container">
+              <table mat-table [dataSource]="group.rules" class="point-rules-table">
+                <!-- Position Range Column -->
+                <ng-container matColumnDef="positionRange">
+                  <th mat-header-cell *matHeaderCellDef>
+                    {{ 'server.settings.pointRules.positionRange' | translate }}
+                  </th>
+                  <td mat-cell *matCellDef="let rule">
+                    <span class="position-range">
+                      {{ rule.position_min | positionRange: rule.position_max }}
+                    </span>
+                  </td>
+                </ng-container>
 
-            <!-- Points Column -->
-            <ng-container matColumnDef="points">
-              <th mat-header-cell *matHeaderCellDef>{{ 'server.settings.pointRules.points' | translate }}</th>
-              <td mat-cell *matCellDef="let rule">
-                <span class="points-value">
-                  <mat-icon>star</mat-icon>
-                  {{ rule.points }}
-                </span>
-              </td>
-            </ng-container>
+                <!-- Points Column -->
+                <ng-container matColumnDef="points">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'server.settings.pointRules.points' | translate }}</th>
+                  <td mat-cell *matCellDef="let rule">
+                    <span class="points-value">
+                      <mat-icon>star</mat-icon>
+                      {{ rule.points }}
+                    </span>
+                  </td>
+                </ng-container>
 
-            <!-- Actions Column -->
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
-              <td mat-cell *matCellDef="let rule">
-                <button
-                  mat-icon-button
-                  class="btn-danger"
-                  (click)="deletePointRule(rule.id)"
-                  [disabled]="isLoading() || isSubmitting()"
-                  [matTooltip]="'common.delete' | translate"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </ng-container>
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>{{ 'common.actions' | translate }}</th>
+                  <td mat-cell *matCellDef="let rule">
+                    <button
+                      mat-icon-button
+                      class="btn-danger"
+                      (click)="deletePointRule(rule.id)"
+                      [disabled]="isLoading() || isSubmitting()"
+                      [matTooltip]="'common.delete' | translate"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="pointRuleColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: pointRuleColumns"></tr>
-          </table>
-        </div>
+                <tr mat-header-row *matHeaderRowDef="groupColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: groupColumns"></tr>
+              </table>
+            </div>
+          </mat-expansion-panel>
+        }
       }
     </div>
   </mat-card-content>

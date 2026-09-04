@@ -130,6 +130,8 @@ describe('ActivityService', () => {
         tiebreaker_activity_type: 'stellar glory',
         scoring_weeks_multiplier: 1,
         discord_invite_url: null,
+        external_link_label: null,
+        external_link_url: null,
         created_at: '',
         updated_at: '',
       });
@@ -234,6 +236,8 @@ describe('ActivityService', () => {
         tiebreaker_activity_type: 'stellar glory',
         scoring_weeks_multiplier: 1,
         discord_invite_url: null,
+        external_link_label: null,
+        external_link_url: null,
         created_at: '',
         updated_at: '',
       });

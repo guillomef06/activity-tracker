@@ -124,6 +124,38 @@ $header-dot-border: 2px;
   align-items: center;
 }
 
+.external-link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 44px;
+  color: rgba($header-text, $header-btn-opacity);
+
+  &:hover {
+    color: $header-text;
+    background: $header-btn-bg-hover;
+  }
+
+  mat-icon {
+    display: none;
+    flex-shrink: 0;
+  }
+
+  // Hide the label on narrow screens (icon-only) to prevent header overflow
+  @media (max-width: 500px) {
+    .external-link-label {
+      display: none;
+    }
+
+    mat-icon {
+      display: inline-flex;
+    }
+
+    min-width: 44px;
+    padding: 0 8px;
+  }
+}
+
 .user-tag {
   font-size: 0.875rem;
   font-weight: 500;
