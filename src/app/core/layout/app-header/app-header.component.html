@@ -19,6 +19,19 @@
 
   @if (authService.isAuthenticated()) {
     <div class="user-section">
+      @if (externalLink(); as link) {
+        <a
+          mat-button
+          class="external-link-button"
+          [href]="link.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="link.label"
+        >
+          <mat-icon>home</mat-icon>
+          <span class="external-link-label">{{ link.label }}</span>
+        </a>
+      }
       @if (headerTag()) {
         <span class="user-tag">{{ headerTag() }}</span>
       }

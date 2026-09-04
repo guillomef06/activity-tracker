@@ -14,6 +14,8 @@ export interface Server {
   tiebreaker_activity_type: string | null;
   scoring_weeks_multiplier: number;
   discord_invite_url: string | null;
+  external_link_label: string | null;
+  external_link_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -35,6 +37,8 @@ export interface UpdateServerRequest {
   tiebreaker_activity_type?: string | null;
   scoring_weeks_multiplier?: number;
   discord_invite_url?: string | null;
+  external_link_label?: string | null;
+  external_link_url?: string | null;
 }
 
 /**

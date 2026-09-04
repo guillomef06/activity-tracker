@@ -1,12 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, Mocked } from 'vitest';
 import { signal, WritableSignal, provideZonelessChangeDetection } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { of } from 'rxjs';
 import { DiscordTabComponent } from './discord-tab.component';
 import { DiscordService } from '@app/core/services/discord.service';
+import { DiscordScheduledMessageService } from '@app/core/services/discord-scheduled-message.service';
 import { SnackbarService } from '@app/core/services';
 import { TranslateModule } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import type { DiscordWebhook } from '@app/shared/models';
+import type { DiscordWebhook, DiscordScheduledMessage } from '@app/shared/models';
 
 const mockWebhook: DiscordWebhook = {
   id: 'w1',
@@ -18,15 +21,34 @@ const mockWebhook: DiscordWebhook = {
   updated_at: '2024-01-01T00:00:00Z',
 };
 
+const mockSchedule: DiscordScheduledMessage = {
+  id: 's1',
+  server_id: 'a1',
+  webhook_id: 'w1',
+  message: 'Reminder!',
+  frequency: 'weekly',
+  days_of_week: [2, 6],
+  day_of_month: null,
+  hour_utc: 19,
+  is_active: true,
+  created_by: 'u1',
+  created_at: '2024-01-01T00:00:00Z',
+  updated_at: '2024-01-01T00:00:00Z',
+};
+
 describe('DiscordTabComponent', () => {
   let component: DiscordTabComponent;
   let fixture: ComponentFixture<DiscordTabComponent>;
   let discordService: Mocked<DiscordService>;
+  let discordScheduleService: Mocked<DiscordScheduledMessageService>;
   let snackbarService: Mocked<SnackbarService>;
   let webhooksSignal: WritableSignal<DiscordWebhook[]>;
+  let schedulesSignal: WritableSignal<DiscordScheduledMessage[]>;
+  let dialogSpy: { open: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     webhooksSignal = signal<DiscordWebhook[]>([]);
+    schedulesSignal = signal<DiscordScheduledMessage[]>([]);
 
     const discordSpy = {
       webhooks: webhooksSignal,
@@ -37,23 +59,41 @@ describe('DiscordTabComponent', () => {
       sendMessage: vi.fn().mockResolvedValue({ error: null }),
     };
 
+    const discordScheduleSpy = {
+      schedules: schedulesSignal,
+      loadSchedules: vi.fn().mockResolvedValue({ error: null }),
+      createSchedule: vi.fn().mockResolvedValue({ error: null }),
+      updateSchedule: vi.fn().mockResolvedValue({ error: null }),
+      toggleActive: vi.fn().mockResolvedValue({ error: null }),
+      deleteSchedule: vi.fn().mockResolvedValue({ error: null }),
+    };
+
     const snackbarSpy = {
       success: vi.fn(),
       error: vi.fn(),
     };
 
+    dialogSpy = { open: vi.fn().mockReturnValue({ afterClosed: () => of(true) }) };
+
     await TestBed.configureTestingModule({
       imports: [DiscordTabComponent, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
         { provide: DiscordService, useValue: discordSpy },
+        { provide: DiscordScheduledMessageService, useValue: discordScheduleSpy },
         { provide: SnackbarService, useValue: snackbarSpy },
+        { provide: MatDialog, useValue: dialogSpy },
         provideZonelessChangeDetection(),
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(DiscordTabComponent, { remove: { imports: [MatDialogModule] } })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DiscordTabComponent);
     component = fixture.componentInstance;
     discordService = TestBed.inject(DiscordService) as unknown as Mocked<DiscordService>;
+    discordScheduleService = TestBed.inject(
+      DiscordScheduledMessageService
+    ) as unknown as Mocked<DiscordScheduledMessageService>;
     snackbarService = TestBed.inject(SnackbarService) as unknown as Mocked<SnackbarService>;
 
     fixture.detectChanges();
@@ -324,6 +364,304 @@ describe('DiscordTabComponent', () => {
 
       expect(discordService.createWebhook).toHaveBeenCalled();
       expect(discordService.updateWebhook).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('scheduleForm validity (isScheduleFormValid)', () => {
+    it('should be invalid when webhook_id and message are empty', () => {
+      expect(component['isScheduleFormValid']).toBe(false);
+    });
+
+    it('should be valid for daily frequency once webhook_id and message are filled', () => {
+      component['scheduleForm'].patchValue({
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'daily',
+      });
+
+      expect(component['isScheduleFormValid']).toBe(true);
+    });
+
+    it('should be invalid for weekly frequency when no day of week is checked', () => {
+      component['scheduleForm'].patchValue({
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'weekly',
+      });
+
+      expect(component['isScheduleFormValid']).toBe(false);
+    });
+
+    it('should be valid for weekly frequency once at least one day of week is checked', () => {
+      component['scheduleForm'].patchValue({
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'weekly',
+      });
+      component['scheduleForm'].controls.days_of_week.controls[0].setValue(true);
+
+      expect(component['isScheduleFormValid']).toBe(true);
+    });
+
+    it('should be valid for monthly frequency without checking days of week', () => {
+      component['scheduleForm'].patchValue({
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'monthly',
+        day_of_month: 15,
+      });
+
+      expect(component['isScheduleFormValid']).toBe(true);
+    });
+  });
+
+  describe('startAddSchedule / startEditSchedule / closeScheduleForm', () => {
+    it('should show the form and clear editingSchedule on startAddSchedule', () => {
+      component['startAddSchedule']();
+
+      expect(component['isAddingSchedule']()).toBe(true);
+      expect(component['editingSchedule']()).toBeNull();
+      expect(component['scheduleForm'].get('webhook_id')?.value).toBe('');
+      expect(component['scheduleForm'].get('message')?.value).toBe('');
+    });
+
+    it('should hide the form and reset state on closeScheduleForm', () => {
+      component['startAddSchedule']();
+      component['scheduleForm'].patchValue({ webhook_id: 'w1', message: 'Reminder!' });
+
+      component['closeScheduleForm']();
+
+      expect(component['isAddingSchedule']()).toBe(false);
+      expect(component['editingSchedule']()).toBeNull();
+      expect(component['scheduleForm'].get('webhook_id')?.value).toBe('');
+      expect(component['scheduleForm'].get('message')?.value).toBe('');
+    });
+
+    it('should reset all days_of_week checkboxes on closeScheduleForm', () => {
+      component['startEditSchedule'](mockSchedule);
+
+      component['closeScheduleForm']();
+
+      const daysChecked = component['scheduleForm'].controls.days_of_week.controls.map(c => c.value);
+      expect(daysChecked).toEqual([false, false, false, false, false, false, false]);
+    });
+
+    it('should populate scheduleForm fields and check the matching days_of_week controls on startEditSchedule', () => {
+      component['startEditSchedule'](mockSchedule);
+
+      expect(component['editingSchedule']()).toEqual(mockSchedule);
+      expect(component['isAddingSchedule']()).toBe(false);
+      expect(component['scheduleForm'].get('webhook_id')?.value).toBe('w1');
+      expect(component['scheduleForm'].get('message')?.value).toBe('Reminder!');
+      expect(component['scheduleForm'].get('frequency')?.value).toBe('weekly');
+      expect(component['scheduleForm'].get('hour_utc')?.value).toBe(19);
+
+      // WEEK_DAYS order is [Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6, Sun=7]; schedule has days_of_week [2, 6]
+      const daysChecked = component['scheduleForm'].controls.days_of_week.controls.map(c => c.value);
+      expect(daysChecked).toEqual([false, true, false, false, false, true, false]);
+    });
+
+    it('should default day_of_month when schedule has none set', () => {
+      const scheduleNoDayOfMonth: DiscordScheduledMessage = { ...mockSchedule, day_of_month: null };
+
+      component['startEditSchedule'](scheduleNoDayOfMonth);
+
+      expect(component['scheduleForm'].get('day_of_month')?.value).toBe(1);
+    });
+  });
+
+  describe('addSchedule', () => {
+    it('should not call createSchedule when form is invalid', async () => {
+      await component['addSchedule']();
+      expect(discordScheduleService.createSchedule).not.toHaveBeenCalled();
+    });
+
+    it('should create schedule with correctly-shaped request and close the form on success', async () => {
+      component['startAddSchedule']();
+      component['scheduleForm'].patchValue({
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'weekly',
+        hour_utc: 9,
+      });
+      component['scheduleForm'].controls.days_of_week.controls[1].setValue(true);
+      component['scheduleForm'].controls.days_of_week.controls[5].setValue(true);
+
+      await component['addSchedule']();
+
+      expect(discordScheduleService.createSchedule).toHaveBeenCalledWith({
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'weekly',
+        days_of_week: [2, 6],
+        day_of_month: null,
+        hour_utc: 9,
+      });
+      expect(snackbarService.success).toHaveBeenCalled();
+      expect(component['isAddingSchedule']()).toBe(false);
+    });
+
+    it('should build a monthly request with day_of_month and null days_of_week', async () => {
+      component['startAddSchedule']();
+      component['scheduleForm'].patchValue({
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'monthly',
+        day_of_month: 15,
+        hour_utc: 9,
+      });
+
+      await component['addSchedule']();
+
+      expect(discordScheduleService.createSchedule).toHaveBeenCalledWith(
+        expect.objectContaining({ frequency: 'monthly', day_of_month: 15, days_of_week: null })
+      );
+    });
+
+    it('should show error snackbar and keep the form open when createSchedule fails', async () => {
+      discordScheduleService.createSchedule.mockResolvedValue({ error: new Error('DB error') });
+      component['startAddSchedule']();
+      component['scheduleForm'].patchValue({ webhook_id: 'w1', message: 'Reminder!', frequency: 'daily' });
+
+      await component['addSchedule']();
+
+      expect(snackbarService.error).toHaveBeenCalled();
+      expect(component['isAddingSchedule']()).toBe(true);
+    });
+  });
+
+  describe('saveScheduleEdit', () => {
+    it('should not call updateSchedule when form is invalid', async () => {
+      component['startEditSchedule'](mockSchedule);
+      component['scheduleForm'].get('message')?.setValue('');
+
+      await component['saveScheduleEdit']();
+
+      expect(discordScheduleService.updateSchedule).not.toHaveBeenCalled();
+    });
+
+    it('should update schedule with correctly-shaped request and close the form on success', async () => {
+      component['startEditSchedule'](mockSchedule);
+      component['scheduleForm'].patchValue({ message: 'Updated reminder!' });
+
+      await component['saveScheduleEdit']();
+
+      expect(discordScheduleService.updateSchedule).toHaveBeenCalledWith('s1', {
+        webhook_id: 'w1',
+        message: 'Updated reminder!',
+        frequency: 'weekly',
+        days_of_week: [2, 6],
+        day_of_month: null,
+        hour_utc: 19,
+      });
+      expect(snackbarService.success).toHaveBeenCalled();
+      expect(component['editingSchedule']()).toBeNull();
+    });
+
+    it('should show error snackbar and keep the form open when updateSchedule fails', async () => {
+      discordScheduleService.updateSchedule.mockResolvedValue({ error: new Error('DB error') });
+      component['startEditSchedule'](mockSchedule);
+
+      await component['saveScheduleEdit']();
+
+      expect(snackbarService.error).toHaveBeenCalled();
+      expect(component['editingSchedule']()).toEqual(mockSchedule);
+    });
+  });
+
+  describe('handleScheduleFormSubmit', () => {
+    it('should route to saveScheduleEdit when editing', async () => {
+      component['startEditSchedule'](mockSchedule);
+
+      await component['handleScheduleFormSubmit']();
+
+      expect(discordScheduleService.updateSchedule).toHaveBeenCalled();
+      expect(discordScheduleService.createSchedule).not.toHaveBeenCalled();
+    });
+
+    it('should route to addSchedule when not editing', async () => {
+      component['startAddSchedule']();
+      component['scheduleForm'].patchValue({ webhook_id: 'w1', message: 'Reminder!', frequency: 'daily' });
+
+      await component['handleScheduleFormSubmit']();
+
+      expect(discordScheduleService.createSchedule).toHaveBeenCalled();
+      expect(discordScheduleService.updateSchedule).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleScheduleActive', () => {
+    it('should toggle is_active to the opposite value and show success snackbar', async () => {
+      await component['toggleScheduleActive'](mockSchedule);
+
+      expect(discordScheduleService.toggleActive).toHaveBeenCalledWith('s1', false);
+      expect(snackbarService.success).toHaveBeenCalled();
+    });
+
+    it('should show error snackbar when toggleActive fails', async () => {
+      discordScheduleService.toggleActive.mockResolvedValue({ error: new Error('DB error') });
+
+      await component['toggleScheduleActive'](mockSchedule);
+
+      expect(snackbarService.error).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteSchedule', () => {
+    it('should not delete when confirmation dialog is dismissed', async () => {
+      dialogSpy.open.mockReturnValue({ afterClosed: () => of(false) });
+
+      await component['deleteSchedule'](mockSchedule);
+
+      expect(discordScheduleService.deleteSchedule).not.toHaveBeenCalled();
+    });
+
+    it('should delete the schedule after confirmation and show success snackbar', async () => {
+      await component['deleteSchedule'](mockSchedule);
+
+      expect(discordScheduleService.deleteSchedule).toHaveBeenCalledWith('s1');
+      expect(snackbarService.success).toHaveBeenCalled();
+    });
+
+    it('should close the schedule form when the deleted schedule was being edited', async () => {
+      component['startEditSchedule'](mockSchedule);
+
+      await component['deleteSchedule'](mockSchedule);
+
+      expect(component['isAddingSchedule']()).toBe(false);
+      expect(component['editingSchedule']()).toBeNull();
+    });
+
+    it('should show error snackbar when deleteSchedule fails', async () => {
+      discordScheduleService.deleteSchedule.mockResolvedValue({ error: new Error('DB error') });
+
+      await component['deleteSchedule'](mockSchedule);
+
+      expect(snackbarService.error).toHaveBeenCalled();
+    });
+  });
+
+  describe('scheduleViewModels', () => {
+    it('should build channelName and summary from the matching webhook and schedule fields', () => {
+      webhooksSignal.set([mockWebhook]);
+      schedulesSignal.set([mockSchedule]);
+      fixture.detectChanges();
+
+      const viewModels = component['scheduleViewModels']();
+
+      expect(viewModels).toHaveLength(1);
+      expect(viewModels[0].schedule).toEqual(mockSchedule);
+      expect(viewModels[0].channelName).toBe('general');
+      expect(viewModels[0].summary).toContain('discord.schedule.summaryWeekly');
+    });
+
+    it('should use an empty channelName when no webhook matches the schedule', () => {
+      schedulesSignal.set([{ ...mockSchedule, webhook_id: 'missing-webhook' }]);
+      fixture.detectChanges();
+
+      const viewModels = component['scheduleViewModels']();
+
+      expect(viewModels[0].channelName).toBe('');
     });
   });
 });
