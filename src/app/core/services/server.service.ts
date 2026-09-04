@@ -24,6 +24,13 @@ type ServerWithRelations = Server & {
 };
 
 /**
+ * Prefix used to mark an error raised when a `replaceRulesForActivityType` insert fails
+ * after its delete already succeeded — the caller uses this to warn the admin that the
+ * previous rules are already gone and a retry is needed (see method doc for details).
+ */
+export const PARTIAL_REPLACE_FAILURE_PREFIX = 'PARTIAL_REPLACE_FAILURE:';
+
+/**
  * Server Service
  * Manages server operations, invitations, members, point rules and activity settings.
  */
@@ -196,9 +203,13 @@ export class ServerService {
       };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- intentional discard of server_id
+    const { server_id: _ignored, ...ruleWithoutServerId } = rule as CreatePointRuleRequest & {
+      server_id?: string;
+    };
     const { error } = await this.supabase.from('activity_point_rules').insert({
+      ...ruleWithoutServerId,
       server_id: profile.server_id,
-      ...rule,
     });
 
     if (error) {
@@ -210,10 +221,68 @@ export class ServerService {
   }
 
   /**
+   * Replace all point rules for an activity type with a new set (admin only).
+   * Used by the tranche generator: deletes every existing rule for the activity type, then
+   * inserts the newly generated ones.
+   *
+   * Non-atomic limitation: this project's Supabase client issues two sequential requests
+   * (no server-side transaction/RPC available here). If the insert fails after the delete
+   * already succeeded, the previous rules are gone — the rules signal is still reloaded so
+   * the UI reflects that, and the returned error is prefixed with
+   * `PARTIAL_REPLACE_FAILURE_PREFIX` so the caller can tell the admin to retry.
+   */
+  async replaceRulesForActivityType(
+    activityType: string,
+    rules: CreatePointRuleRequest[]
+  ): Promise<{ error: Error | null }> {
+    const profile = this.authService.userProfile();
+    if (!profile?.server_id) {
+      return { error: new Error('No server ID') };
+    }
+
+    const { error: deleteError } = await this.supabase
+      .from('activity_point_rules')
+      .delete()
+      .eq('server_id', profile.server_id)
+      .eq('activity_type', activityType);
+
+    if (deleteError) {
+      return { error: new Error(deleteError.message) };
+    }
+
+    const { error: insertError } = await this.supabase.from('activity_point_rules').insert(
+      rules.map(rule => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- intentional discard of server_id
+        const { server_id: _ignored, ...ruleWithoutServerId } = rule as CreatePointRuleRequest & {
+          server_id?: string;
+        };
+        return { ...ruleWithoutServerId, server_id: profile.server_id };
+      })
+    );
+
+    if (insertError) {
+      await this.loadRules();
+      return { error: new Error(`${PARTIAL_REPLACE_FAILURE_PREFIX}${insertError.message}`) };
+    }
+
+    await this.loadRules();
+    return { error: null };
+  }
+
+  /**
    * Update an existing point rule
    */
   async updateRule(id: string, updates: UpdatePointRuleRequest): Promise<{ error: Error | null }> {
-    const { error } = await this.supabase.from('activity_point_rules').update(updates).eq('id', id);
+    const profile = this.authService.userProfile();
+    if (!profile?.server_id) {
+      return { error: new Error('No server ID') };
+    }
+
+    const { error } = await this.supabase
+      .from('activity_point_rules')
+      .update(updates)
+      .eq('id', id)
+      .eq('server_id', profile.server_id);
 
     if (error) {
       return { error: new Error(error.message) };
@@ -227,7 +296,16 @@ export class ServerService {
    * Delete a point rule
    */
   async deleteRule(id: string): Promise<{ error: Error | null }> {
-    const { error } = await this.supabase.from('activity_point_rules').delete().eq('id', id);
+    const profile = this.authService.userProfile();
+    if (!profile?.server_id) {
+      return { error: new Error('No server ID') };
+    }
+
+    const { error } = await this.supabase
+      .from('activity_point_rules')
+      .delete()
+      .eq('id', id)
+      .eq('server_id', profile.server_id);
 
     if (error) {
       return { error: new Error(error.message) };

@@ -193,4 +193,188 @@
       }
     </mat-card-content>
   </mat-card>
+
+  <!-- Scheduled Messages Section -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="section-icon">schedule</mat-icon>
+      <mat-card-title>{{ 'discord.schedule.title' | translate }}</mat-card-title>
+      <mat-card-subtitle>{{ 'discord.schedule.subtitle' | translate }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (webhooks().length === 0) {
+        <p class="no-data">{{ 'discord.noChannelsForMessage' | translate }}</p>
+      } @else {
+        <!-- Schedules list -->
+        @if (scheduleViewModels().length > 0) {
+          <div class="schedule-list">
+            @for (vm of scheduleViewModels(); track vm.schedule.id) {
+              <div class="schedule-row" [class.editing-row]="editingSchedule()?.id === vm.schedule.id">
+                <div class="schedule-info">
+                  <span class="channel-name">
+                    <mat-icon class="discord-icon">tag</mat-icon>
+                    <span class="channel-name__text">{{ vm.channelName }}</span>
+                    @if (!vm.schedule.is_active) {
+                      <span class="paused-badge">{{ 'discord.schedule.paused' | translate }}</span>
+                    }
+                  </span>
+                  <span class="schedule-summary">{{ vm.summary }}</span>
+                  <span class="schedule-message-preview">{{ vm.schedule.message }}</span>
+                </div>
+                <div class="row-actions">
+                  <button
+                    mat-icon-button
+                    (click)="toggleScheduleActive(vm.schedule)"
+                    [attr.aria-label]="
+                      (vm.schedule.is_active ? 'discord.schedule.pause' : 'discord.schedule.resume') | translate
+                    "
+                  >
+                    <mat-icon>{{ vm.schedule.is_active ? 'pause_circle' : 'play_circle' }}</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    (click)="startEditSchedule(vm.schedule)"
+                    [color]="editingSchedule()?.id === vm.schedule.id ? 'primary' : undefined"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="btn-danger"
+                    (click)="deleteSchedule(vm.schedule)"
+                    [attr.aria-label]="'discord.schedule.delete' | translate"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (!isLoadingSchedules()) {
+          <p class="no-data">{{ 'discord.schedule.noSchedules' | translate }}</p>
+        }
+
+        <!-- Add / edit schedule form -->
+        @if (isAddingSchedule() || editingSchedule()) {
+          <div class="form-container">
+            @if (editingSchedule()) {
+              <p class="edit-title">
+                <mat-icon>edit</mat-icon>
+                {{ 'discord.schedule.editSchedule' | translate }}
+              </p>
+            }
+
+            <form [formGroup]="scheduleForm" (ngSubmit)="handleScheduleFormSubmit()" class="schedule-form">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>{{ 'discord.selectChannel' | translate }}</mat-label>
+                <mat-select formControlName="webhook_id">
+                  @for (webhook of webhooks(); track webhook.id) {
+                    <mat-option [value]="webhook.id">
+                      <mat-icon>tag</mat-icon>
+                      {{ webhook.channel_name }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field form-field--full">
+                <mat-label>{{ 'discord.messageContent' | translate }}</mat-label>
+                <textarea
+                  matInput
+                  formControlName="message"
+                  rows="3"
+                  [placeholder]="'discord.messageContentPlaceholder' | translate"
+                ></textarea>
+                <mat-hint align="end">{{ scheduleForm.controls.message.value.length }} / 2000</mat-hint>
+                @if (scheduleMessageError()) {
+                  <mat-error>{{ scheduleMessageError() | translate }}</mat-error>
+                }
+              </mat-form-field>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>{{ 'discord.schedule.frequency' | translate }}</mat-label>
+                  <mat-select formControlName="frequency">
+                    <mat-option value="daily">{{ 'discord.schedule.frequencyDaily' | translate }}</mat-option>
+                    <mat-option value="weekly">{{ 'discord.schedule.frequencyWeekly' | translate }}</mat-option>
+                    <mat-option value="monthly">{{ 'discord.schedule.frequencyMonthly' | translate }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>{{ 'discord.schedule.hourUtc' | translate }}</mat-label>
+                  <mat-select formControlName="hour_utc">
+                    @for (hourOption of hourOptions; track hourOption.value) {
+                      <mat-option [value]="hourOption.value">{{ hourOption.label }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-hint>{{ 'discord.schedule.hourUtcHint' | translate }}</mat-hint>
+                </mat-form-field>
+              </div>
+
+              @if (scheduleForm.controls.frequency.value === 'weekly') {
+                <div class="days-of-week" formArrayName="days_of_week">
+                  <span class="days-of-week__label">{{ 'discord.schedule.daysOfWeek' | translate }}</span>
+                  <div class="days-of-week__options">
+                    @for (day of weekDays; track day.iso; let i = $index) {
+                      <mat-checkbox [formControlName]="i">{{ day.labelKey | translate }}</mat-checkbox>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (scheduleForm.controls.frequency.value === 'monthly') {
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>{{ 'discord.schedule.dayOfMonth' | translate }}</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="day_of_month"
+                    [min]="minDayOfMonth"
+                    [max]="maxDayOfMonth"
+                  />
+                  <mat-hint>{{ 'discord.schedule.dayOfMonthHint' | translate }}</mat-hint>
+                  @if (scheduleDayOfMonthError()) {
+                    <mat-error>{{ scheduleDayOfMonthError() | translate }}</mat-error>
+                  }
+                </mat-form-field>
+              }
+
+              <div class="form-actions">
+                <button mat-button type="button" (click)="closeScheduleForm()">
+                  {{ 'common.cancel' | translate }}
+                </button>
+                @if (editingSchedule()) {
+                  <app-loading-button
+                    type="submit"
+                    [submitting]="isUpdatingSchedule()"
+                    [disabled]="!isScheduleFormValid"
+                    [text]="'common.update' | translate"
+                    icon="check"
+                    color="primary"
+                  />
+                } @else {
+                  <app-loading-button
+                    type="submit"
+                    [submitting]="isSubmittingSchedule()"
+                    [disabled]="!isScheduleFormValid"
+                    [text]="'common.save' | translate"
+                    icon="add"
+                  />
+                }
+              </div>
+            </form>
+          </div>
+        } @else {
+          <div class="add-channel-row">
+            <button mat-stroked-button (click)="startAddSchedule()">
+              <mat-icon>add</mat-icon>
+              {{ 'discord.schedule.addSchedule' | translate }}
+            </button>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
 </div>

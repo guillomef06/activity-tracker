@@ -231,4 +231,113 @@ describe('ServerOverviewTabComponent', () => {
 
     expect(serverService.updateServer).not.toHaveBeenCalled();
   });
+
+  // External link form
+  it('should have externalLinkForm with label and url fields', () => {
+    expect(component['externalLinkForm']).toBeDefined();
+    expect(component['externalLinkForm'].get('label')).toBeDefined();
+    expect(component['externalLinkForm'].get('url')).toBeDefined();
+  });
+
+  it('should reject a url that does not start with https://', () => {
+    const urlControl = component['externalLinkForm'].get('url');
+
+    urlControl?.setValue('http://example.com');
+
+    expect(urlControl?.valid).toBe(false);
+  });
+
+  it('should accept a valid https:// url', () => {
+    const urlControl = component['externalLinkForm'].get('url');
+
+    urlControl?.setValue('https://example.com/wiki');
+
+    expect(urlControl?.valid).toBe(true);
+  });
+
+  it('should reject a label longer than 50 characters', () => {
+    const labelControl = component['externalLinkForm'].get('label');
+
+    labelControl?.setValue('a'.repeat(51));
+
+    expect(labelControl?.valid).toBe(false);
+  });
+
+  it('should accept a label of 50 characters or fewer', () => {
+    const labelControl = component['externalLinkForm'].get('label');
+
+    labelControl?.setValue('a'.repeat(50));
+
+    expect(labelControl?.valid).toBe(true);
+  });
+
+  it('should patch externalLinkForm when server input has external link fields set', () => {
+    fixture.componentRef.setInput('server', {
+      ...mockServer,
+      external_link_label: 'Wiki',
+      external_link_url: 'https://example.com/wiki',
+    });
+    fixture.detectChanges();
+
+    expect(component['externalLinkForm'].get('label')?.value).toBe('Wiki');
+    expect(component['externalLinkForm'].get('url')?.value).toBe('https://example.com/wiki');
+  });
+
+  it('should patch externalLinkForm to empty strings when external link fields are null', () => {
+    fixture.componentRef.setInput('server', {
+      ...mockServer,
+      external_link_label: null,
+      external_link_url: null,
+    });
+    fixture.detectChanges();
+
+    expect(component['externalLinkForm'].get('label')?.value).toBe('');
+    expect(component['externalLinkForm'].get('url')?.value).toBe('');
+  });
+
+  it('should call updateServer with trimmed label/url and emit serverUpdated on saveExternalLink success', async () => {
+    const emitSpy = vi.spyOn(component.serverUpdated, 'emit');
+    // Leading whitespace is intentionally omitted from the url: the pattern validator anchors
+    // at the start (`^https://`), so a leading space would make the form invalid before trim()
+    // ever runs — same behavior as the pre-existing discordInviteForm pattern in this component.
+    component['externalLinkForm'].patchValue({ label: '  Wiki  ', url: 'https://example.com/wiki  ' });
+
+    await component['saveExternalLink']();
+
+    expect(serverService.updateServer).toHaveBeenCalledWith({
+      external_link_label: 'Wiki',
+      external_link_url: 'https://example.com/wiki',
+    });
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
+  it('should call updateServer with both fields null when clearing the external link', async () => {
+    component['externalLinkForm'].patchValue({ label: '', url: '' });
+
+    await component['saveExternalLink']();
+
+    expect(serverService.updateServer).toHaveBeenCalledWith({
+      external_link_label: null,
+      external_link_url: null,
+    });
+  });
+
+  it('should not call updateServer when externalLinkForm is invalid', async () => {
+    serverService.updateServer.mockClear();
+    component['externalLinkForm'].patchValue({ url: 'http://not-https.com' });
+
+    await component['saveExternalLink']();
+
+    expect(serverService.updateServer).not.toHaveBeenCalled();
+  });
+
+  it('should show error snackbar and not emit serverUpdated when saveExternalLink fails', async () => {
+    serverService.updateServer.mockResolvedValueOnce({ error: new Error('DB error') });
+    const emitSpy = vi.spyOn(component.serverUpdated, 'emit');
+    component['externalLinkForm'].patchValue({ label: 'Wiki', url: 'https://example.com/wiki' });
+
+    await component['saveExternalLink']();
+
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
 });

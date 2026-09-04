@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 18 août 2026
+**Dernière mise à jour:** 4 septembre 2026
 
 ## 📋 Résumé
 
@@ -11,7 +11,7 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 ## ✅ Fonctionnalités Complétées
 
 ### Infrastructure
-- Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
+- Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `discord_scheduled_messages`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
 - Authentification par username uniquement (email généré en interne `username@app.tracker`)
 - RLS configuré avec helper functions `SECURITY DEFINER`
 - PWA (manifest, service worker, banner d'installation A2HS)
@@ -44,11 +44,13 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
 
 ### Server Settings
 - Gestion membres (invitations, suppression)
-- Règles de points configurables par activité + plage de positions
+- **Générateur de règles de points par tranches** : remplace la saisie manuelle une-à-une — l'admin choisit un type d'activité, une taille de tranche (multiple de 5), des points de départ et une baisse de points par tranche suivante ; aperçu live (`computed signal`, aucun appel de fonction dans le template) des règles générées avant validation. À la soumission, remplacement complet (delete-then-insert, `ServerService.replaceRulesForActivityType()`) des règles existantes pour ce type d'activité, avec confirmation (`ConfirmDialogComponent`) si des règles existent déjà. **Limitation connue** : suppression puis insertion non-atomiques (pas de transaction/RPC côté client) — si l'insertion échoue après la suppression, les anciennes règles sont déjà perdues ; le service renvoie une erreur préfixée (`PARTIAL_REPLACE_FAILURE_PREFIX`) pour que l'UI avertisse l'admin et propose de réessayer. Tableau des règles existantes regroupé par type d'activité (`mat-expansion-panel`, `MatExpansionModule`)
 - Paramètres d'activités (activation, mode participation, tiebreaker, multiplicateur de semaines)
 - Discord webhooks : envoi de messages vers channels Discord
+- **Messages Discord programmés** (`discord_scheduled_messages`) : nouvel onglet dans `discord-tab` — admin choisit un channel webhook existant, un message (max 2000 car.) et une fréquence quotidienne/hebdomadaire (jours ISO 1-7)/mensuelle (jour 1-28), heure en UTC uniquement (pas de fuseau par serveur). Pause/reprise sans suppression (`is_active`), suppression avec confirmation. `DiscordScheduledMessageService` (service dédié, distinct de `DiscordService` qui gère déjà webhooks + envoi direct — un seul domaine de responsabilité par service). Résumé de fréquence lisible (ex. "Every Tue, Sat at 19:00 UTC") calculé via `computed signal`, jamais un appel de fonction dans le template. L'envoi effectif est piloté côté backend par un job `pg_cron` horaire (`supabase/39-discord-scheduled-messages.sql`, hors scope frontend) — aucun historique d'envoi en v1.
 - Server tag (3 caractères, affiché dans le header)
 - **Lien d'invitation Discord** : admins configurent un lien `discord.gg` ou `discord.com/invite` depuis l'onglet Serveur ; les membres voient un banner dismissible sous le formulaire d'activité
+- **Lien externe configurable (header)** : admins configurent un label court + une URL (`external_link_label`/`external_link_url`, migration `40-add-external-link.sql`, appliquée en prod) depuis l'onglet Serveur (`server-overview-tab`, section miroir de "Lien d'invitation Discord") ; le lien apparaît en bouton visible dans la toolbar du header (`app-header`) pour tout membre authentifié dès que les deux champs sont renseignés (les deux ou aucun — contrainte `CHECK` DB), ouvre dans un nouvel onglet (`rel="noopener noreferrer"`). URL restreinte à `https://` (validateur client + `CHECK` DB), label max 50 car., url max 200 car. Icône seule sur écrans < 400px (label masqué, même traitement que `.user-tag`)
 
 ### Banner Discord (membres)
 - `DiscordInviteBannerComponent` : banner dismissible (localStorage) affiché si un lien Discord est configuré

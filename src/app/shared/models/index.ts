@@ -51,6 +51,13 @@ export type { ServerActivitySettings, UpsertActivitySettingsRequest } from './se
 // Discord Webhook models
 export type { DiscordWebhook, CreateDiscordWebhookRequest } from './discord-webhook.model';
 
+// Discord Scheduled Message models
+export type {
+  DiscordScheduleFrequency,
+  DiscordScheduledMessage,
+  CreateDiscordScheduledMessageRequest,
+} from './discord-scheduled-message.model';
+
 // MG Event models
 export type {
   MgEvent,

@@ -3,7 +3,7 @@
  * Helper functions for form error handling with i18n
  */
 
-import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Signal, signal, computed, DestroyRef } from '@angular/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { merge, Observable, timer, switchMap, map, catchError, of, first } from 'rxjs';
@@ -59,6 +59,19 @@ export function usernameAvailableValidator(checkFn: (username: string) => Observ
       catchError(() => of(null)),
       first()
     );
+  };
+}
+
+/**
+ * Validator factory rejecting values that are not a strictly positive multiple of `multiple`.
+ * Emits a `multipleOf` error (with the required multiple) when the value fails the check.
+ * Empty values are left to `Validators.required` — this validator only checks the multiple.
+ */
+export function multipleOfValidator(multiple: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = control.value;
+    if (value === null || value === undefined || value === '') return null;
+    return Number.isInteger(value) && value % multiple === 0 ? null : { multipleOf: { multiple } };
   };
 }
 

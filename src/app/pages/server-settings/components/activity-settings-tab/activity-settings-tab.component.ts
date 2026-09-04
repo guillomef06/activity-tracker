@@ -1,4 +1,5 @@
 import { Component, inject, input, output, signal, computed, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -12,18 +13,43 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { SnackbarService } from '@app/core/services';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
-import { ServerService } from '@app/core/services/server.service';
+import { ServerService, PARTIAL_REPLACE_FAILURE_PREFIX } from '@app/core/services/server.service';
 import { ActivityService } from '@app/core/services/activity.service';
-import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { createFieldErrorSignal, multipleOfValidator } from '@app/shared/utils/form-validation.utils';
 import { PositionRangePipe } from '@app/shared/pipes/position-range.pipe';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
-import type { ActivityPointRule, ServerActivitySettings } from '@app/shared/models';
+import type { ActivityPointRule, CreatePointRuleRequest, ServerActivitySettings } from '@app/shared/models';
 import { APP_CONSTANTS } from '@app/shared/constants/constants';
 import { firstValueFrom } from 'rxjs';
+
+/** Range size must be a multiple of this step (admin-facing tranche generator). */
+const RANGE_SIZE_STEP = 5;
+/** Default form values — also used to reset the generator after a successful submit. */
+const DEFAULT_RANGE_SIZE = 5;
+const DEFAULT_POINTS = 10;
+const DEFAULT_DECREASED_NEXT_RANGE_POINTS = 1;
+/** Upper bounds on the tranche generator's numeric inputs, to cap client-side row generation. */
+const MAX_POINTS = 10000;
+const MAX_RANGE_SIZE = 1000;
+
+/** One row of the grouped point rules table, keyed by activity type. */
+interface PointRuleGroup {
+  readonly activityType: string;
+  readonly labelKey: string;
+  readonly rules: readonly ActivityPointRule[];
+}
+
+/** Values driving tranche generation — mirrors the 3 numeric fields of `pointRuleForm`. */
+interface TrancheGeneratorConfig {
+  readonly range_size: number;
+  readonly points: number;
+  readonly decreased_next_range_points: number;
+}
 
 @Component({
   selector: 'app-activity-settings-tab',
@@ -39,6 +65,7 @@ import { firstValueFrom } from 'rxjs';
     MatChipsModule,
     MatTooltipModule,
     MatSlideToggleModule,
+    MatExpansionModule,
     MatDialogModule,
     TranslateModule,
     PositionRangePipe,
@@ -73,7 +100,8 @@ export class ActivitySettingsTabComponent {
   protected readonly isDeletingByType = signal(false);
   protected readonly selectedTypeForDeletion = signal<string>('');
   protected readonly activityTypes = APP_CONSTANTS.ACTIVITY_TYPES;
-  protected readonly pointRuleColumns: string[] = ['activityType', 'positionRange', 'points', 'actions'];
+  protected readonly previewColumns: string[] = ['positionRange', 'points'];
+  protected readonly groupColumns: string[] = ['positionRange', 'points', 'actions'];
 
   // Current tiebreaker activity (derived from server signal)
   protected readonly tiebreakerActivity = computed(() => this.serverService.server()?.tiebreaker_activity_type ?? null);
@@ -105,59 +133,177 @@ export class ActivitySettingsTabComponent {
 
   protected readonly pointRuleForm: FormGroup = this.fb.group({
     activity_type: ['', Validators.required],
-    position_min: [1, [Validators.required, Validators.min(1)]],
-    position_max: [1, [Validators.required, Validators.min(1)]],
-    points: [10, [Validators.required, Validators.min(0)]],
+    range_size: [
+      DEFAULT_RANGE_SIZE,
+      [
+        Validators.required,
+        Validators.min(RANGE_SIZE_STEP),
+        Validators.max(MAX_RANGE_SIZE),
+        multipleOfValidator(RANGE_SIZE_STEP),
+      ],
+    ],
+    points: [DEFAULT_POINTS, [Validators.required, Validators.min(1), Validators.max(MAX_POINTS)]],
+    decreased_next_range_points: [DEFAULT_DECREASED_NEXT_RANGE_POINTS, [Validators.required, Validators.min(1)]],
   });
 
   // Error signals for validation
   protected readonly activityTypeError = createFieldErrorSignal(this.pointRuleForm, 'activity_type', this.destroyRef);
-  protected readonly positionMinError = createFieldErrorSignal(this.pointRuleForm, 'position_min', this.destroyRef);
-  protected readonly positionMaxError = createFieldErrorSignal(this.pointRuleForm, 'position_max', this.destroyRef);
+  protected readonly rangeSizeError = createFieldErrorSignal(
+    this.pointRuleForm,
+    'range_size',
+    this.destroyRef,
+    undefined,
+    { multipleOf: 'server.settings.pointRules.rangeSizeMultipleError' }
+  );
   protected readonly pointsError = createFieldErrorSignal(this.pointRuleForm, 'points', this.destroyRef);
+  protected readonly decreasedNextRangePointsError = createFieldErrorSignal(
+    this.pointRuleForm,
+    'decreased_next_range_points',
+    this.destroyRef
+  );
 
-  protected async createPointRule(): Promise<void> {
+  // Reactive snapshot of the form value — drives the live preview without a "Preview" button
+  private readonly formValue = toSignal(this.pointRuleForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)), {
+    initialValue: this.pointRuleForm.getRawValue(),
+  });
+
+  // Live preview of the tranches that would be generated — empty while the 3 generator fields are invalid
+  protected readonly trancheePreview = computed<CreatePointRuleRequest[]>(() => {
+    this.formValue();
+    if (!this.isGeneratorConfigValid()) {
+      return [];
+    }
+    const { activity_type, range_size, points, decreased_next_range_points } = this.pointRuleForm.getRawValue();
+    return ActivitySettingsTabComponent.generateTranches(activity_type ?? '', {
+      range_size,
+      points,
+      decreased_next_range_points,
+    });
+  });
+
+  // Existing rules for the currently selected activity type — non-empty means submit will replace them
+  protected readonly existingRulesForSelectedType = computed<ActivityPointRule[]>(() => {
+    const activityType = this.formValue()?.activity_type as string | undefined;
+    if (!activityType) {
+      return [];
+    }
+    return this.serverService.getRulesForActivityType(activityType);
+  });
+
+  // Point rules grouped by activity_type — pointRules() already arrives sorted by activity_type then position_min
+  protected readonly groupedPointRules = computed<PointRuleGroup[]>(() => {
+    const groups = new Map<string, ActivityPointRule[]>();
+    for (const rule of this.pointRules()) {
+      const existing = groups.get(rule.activity_type);
+      if (existing) {
+        existing.push(rule);
+      } else {
+        groups.set(rule.activity_type, [rule]);
+      }
+    }
+    return Array.from(groups.entries()).map(([activityType, rules]) => ({
+      activityType,
+      labelKey: this.getActivityTypeLabel(activityType),
+      rules,
+    }));
+  });
+
+  private isGeneratorConfigValid(): boolean {
+    return (
+      (this.pointRuleForm.get('range_size')?.valid ?? false) &&
+      (this.pointRuleForm.get('points')?.valid ?? false) &&
+      (this.pointRuleForm.get('decreased_next_range_points')?.valid ?? false)
+    );
+  }
+
+  /**
+   * Pure tranche generator: turns 3 numeric inputs into contiguous, non-overlapping point rules.
+   * Tranche N (1-indexed) covers positions [(N-1)*range_size+1, N*range_size] with
+   * points - (N-1)*decreased_next_range_points points. Stops before a tranche whose points
+   * would drop to zero or below — guaranteed to terminate since decreased_next_range_points >= 1.
+   */
+  private static generateTranches(activityType: string, config: TrancheGeneratorConfig): CreatePointRuleRequest[] {
+    const { range_size, points, decreased_next_range_points } = config;
+    const tranches: CreatePointRuleRequest[] = [];
+    let tranche = 1;
+    let tranchePoints = points;
+
+    while (tranchePoints > 0) {
+      tranches.push({
+        activity_type: activityType,
+        position_min: (tranche - 1) * range_size + 1,
+        position_max: tranche * range_size,
+        points: tranchePoints,
+      });
+      tranche++;
+      tranchePoints = points - (tranche - 1) * decreased_next_range_points;
+    }
+
+    return tranches;
+  }
+
+  protected async generateRules(): Promise<void> {
     if (this.pointRuleForm.invalid) {
       return;
     }
 
-    const formValue = this.pointRuleForm.value;
+    const { activity_type, range_size, points, decreased_next_range_points } = this.pointRuleForm.getRawValue();
+    const tranches = ActivitySettingsTabComponent.generateTranches(activity_type, {
+      range_size,
+      points,
+      decreased_next_range_points,
+    });
 
-    // Validate position range
-    if (formValue.position_min > formValue.position_max) {
-      this.snackbarService.error(this.translate.instant('server.settings.pointRules.positionRangeError'));
-      return;
+    const existingRules = this.serverService.getRulesForActivityType(activity_type);
+    if (existingRules.length > 0) {
+      const confirmed = await this.confirmReplaceExistingRules(existingRules.length);
+      if (!confirmed) {
+        return;
+      }
     }
 
+    await this.submitTranches(activity_type, tranches);
+  }
+
+  private async confirmReplaceExistingRules(count: number): Promise<boolean> {
+    return firstValueFrom(
+      this.dialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            title: this.translate.instant('server.settings.pointRules.replaceConfirmTitle'),
+            message: this.translate.instant('server.settings.pointRules.replaceConfirmMessage', { count }),
+          },
+        })
+        .afterClosed()
+    );
+  }
+
+  private async submitTranches(activityType: string, tranches: CreatePointRuleRequest[]): Promise<void> {
     this.isSubmitting.set(true);
     try {
-      const { error } = await this.serverService.createRule({
-        activity_type: formValue.activity_type,
-        position_min: formValue.position_min,
-        position_max: formValue.position_max,
-        points: formValue.points,
-      });
+      const { error } = await this.serverService.replaceRulesForActivityType(activityType, tranches);
 
       if (error) {
         throw error;
       }
 
-      this.snackbarService.success(this.translate.instant('server.settings.pointRules.created'));
+      this.snackbarService.success(this.translate.instant('server.settings.pointRules.generated'));
 
-      // Reset form
       this.pointRuleForm.reset({
         activity_type: '',
-        position_min: 1,
-        position_max: 1,
-        points: 10,
+        range_size: DEFAULT_RANGE_SIZE,
+        points: DEFAULT_POINTS,
+        decreased_next_range_points: DEFAULT_DECREASED_NEXT_RANGE_POINTS,
       });
 
-      // Notify parent to reload
       this.ruleCreated.emit();
     } catch (error) {
-      console.error('Error creating point rule:', error);
+      console.error('Error generating point rules:', error);
+      const isPartialFailure = error instanceof Error && error.message.startsWith(PARTIAL_REPLACE_FAILURE_PREFIX);
       this.snackbarService.error(
-        error instanceof Error ? error.message : this.translate.instant('server.settings.pointRules.createFailed'),
+        isPartialFailure
+          ? this.translate.instant('server.settings.pointRules.generatePartialFailed')
+          : this.translate.instant('server.settings.pointRules.generateFailed'),
         5000
       );
     } finally {

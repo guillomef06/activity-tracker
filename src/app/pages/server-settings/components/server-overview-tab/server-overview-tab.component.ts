@@ -81,6 +81,7 @@ export class ServerOverviewTabComponent {
   protected readonly isServerSubmitting = signal(false);
   protected readonly isInvitationSubmitting = signal(false);
   protected readonly isDiscordInviteSubmitting = signal(false);
+  protected readonly isExternalLinkSubmitting = signal(false);
 
   // Forms
   protected readonly serverForm: FormGroup = this.fb.group({
@@ -99,6 +100,11 @@ export class ServerOverviewTabComponent {
     ],
   });
 
+  protected readonly externalLinkForm: FormGroup = this.fb.group({
+    label: ['', [Validators.maxLength(50)]],
+    url: ['', [Validators.maxLength(200), Validators.pattern(/^https:\/\/.+/)]],
+  });
+
   // Error signals for validation
   protected readonly nameError = createFieldErrorSignal(this.serverForm, 'name', this.destroyRef);
   protected readonly tagError = createFieldErrorSignal(this.serverForm, 'tag', this.destroyRef);
@@ -109,6 +115,14 @@ export class ServerOverviewTabComponent {
     this.destroyRef,
     undefined,
     { pattern: 'server.settings.discordInvite.invalidUrl' }
+  );
+  protected readonly externalLinkLabelError = createFieldErrorSignal(this.externalLinkForm, 'label', this.destroyRef);
+  protected readonly externalLinkUrlError = createFieldErrorSignal(
+    this.externalLinkForm,
+    'url',
+    this.destroyRef,
+    undefined,
+    { pattern: 'server.settings.externalLink.invalidUrl' }
   );
 
   // Table columns for members table
@@ -142,6 +156,13 @@ export class ServerOverviewTabComponent {
         this.serverForm.patchValue({ name: currentServer.name, tag: currentServer.tag ?? '' }, { emitEvent: false });
         this.discordInviteForm.patchValue(
           { discord_invite_url: currentServer.discord_invite_url ?? '' },
+          { emitEvent: false }
+        );
+        this.externalLinkForm.patchValue(
+          {
+            label: currentServer.external_link_label ?? '',
+            url: currentServer.external_link_url ?? '',
+          },
           { emitEvent: false }
         );
       }
@@ -276,6 +297,34 @@ export class ServerOverviewTabComponent {
       this.snackbarService.error(this.translate.instant('server.settings.discordInvite.saveFailed'));
     } finally {
       this.isDiscordInviteSubmitting.set(false);
+    }
+  }
+
+  protected async saveExternalLink(): Promise<void> {
+    if (this.externalLinkForm.invalid) {
+      return;
+    }
+
+    this.isExternalLinkSubmitting.set(true);
+    try {
+      const label: string = this.externalLinkForm.value.label?.trim() ?? '';
+      const url: string = this.externalLinkForm.value.url?.trim() ?? '';
+      const { error } = await this.serverService.updateServer({
+        external_link_label: label || null,
+        external_link_url: url || null,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      this.snackbarService.success(this.translate.instant('server.settings.externalLink.saved'));
+      this.serverUpdated.emit();
+    } catch (error) {
+      console.error('Error saving external link:', error);
+      this.snackbarService.error(this.translate.instant('server.settings.externalLink.saveFailed'));
+    } finally {
+      this.isExternalLinkSubmitting.set(false);
     }
   }
 }

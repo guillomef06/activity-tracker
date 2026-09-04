@@ -39,6 +39,8 @@ export const PACK_ITEM_CATALOG: readonly PackItem[] = [
   { id: 'refined-iron', nameKey: 'packValue.items.refinedIron', apexCoinsPerUnit: 20, unitKey: QTY },
   { id: 'golden-key', nameKey: 'packValue.items.goldenKey', apexCoinsPerUnit: 10, unitKey: QTY },
   { id: 'torch-of-enlightenment', nameKey: 'packValue.items.torchOfEnlightenment', apexCoinsPerUnit: 10, unitKey: QTY },
+  { id: 'meteor-steel', nameKey: 'packValue.items.meteorSteel', apexCoinsPerUnit: 1000, unitKey: QTY },
+  { id: 'crimson-meteorite', nameKey: 'packValue.items.crimsonMeteorite', apexCoinsPerUnit: 30, unitKey: QTY },
 ] as const;
 
 export const PACK_VALUE_TIERS: readonly TierDefinition[] = [

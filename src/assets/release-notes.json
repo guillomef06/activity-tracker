@@ -1,5 +1,49 @@
 [
   {
+    "version": "1.7.0",
+    "date": "2026-09-04",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Scheduled Discord messages — admins can configure recurring messages (daily, weekly, or monthly) sent automatically to a Discord channel, with pause/resume and edit support",
+          "fr": "Messages Discord programmés — les admins peuvent configurer des messages récurrents (quotidiens, hebdomadaires ou mensuels) envoyés automatiquement sur un salon Discord, avec pause/reprise et modification",
+          "es": "Mensajes programados de Discord — los admins pueden configurar mensajes recurrentes (diarios, semanales o mensuales) enviados automáticamente a un canal de Discord, con pausa/reanudación y edición",
+          "it": "Messaggi Discord programmati — gli admin possono configurare messaggi ricorrenti (giornalieri, settimanali o mensili) inviati automaticamente a un canale Discord, con pausa/ripresa e modifica",
+          "de": "Geplante Discord-Nachrichten — Admins können wiederkehrende Nachrichten (täglich, wöchentlich oder monatlich) konfigurieren, die automatisch an einen Discord-Kanal gesendet werden, mit Pause/Fortsetzen und Bearbeiten",
+          "tr": "Zamanlanmış Discord mesajları — yöneticiler bir Discord kanalına otomatik olarak gönderilen tekrarlayan mesajlar (günlük, haftalık veya aylık) yapılandırabilir; duraklatma/devam ettirme ve düzenleme desteğiyle",
+          "pt": "Mensagens agendadas do Discord — os admins podem configurar mensagens recorrentes (diárias, semanais ou mensais) enviadas automaticamente para um canal do Discord, com suporte a pausar/retomar e editar",
+          "el": "Προγραμματισμένα μηνύματα Discord — οι διαχειριστές μπορούν να ρυθμίσουν επαναλαμβανόμενα μηνύματα (καθημερινά, εβδομαδιαία ή μηνιαία) που αποστέλλονται αυτόματα σε ένα κανάλι Discord, με δυνατότητα παύσης/συνέχισης και επεξεργασίας",
+          "ko": "예약된 디스코드 메시지 — 관리자가 디스코드 채널로 자동 전송되는 반복 메시지(매일, 매주 또는 매월)를 설정할 수 있으며, 일시중지/재개 및 수정을 지원합니다",
+          "hi": "शेड्यूल्ड डिस्कॉर्ड संदेश — एडमिन एक डिस्कॉर्ड चैनल पर स्वचालित रूप से भेजे जाने वाले आवर्ती संदेश (दैनिक, साप्ताहिक या मासिक) कॉन्फ़िगर कर सकते हैं, जिसमें रोकने/फिर से शुरू करने और संपादन का समर्थन है",
+          "zh": "定时Discord消息 — 管理员可以配置定期消息（每天、每周或每月）自动发送到Discord频道，支持暂停/恢复和编辑",
+          "ku": "Peyamên Discord ên demkirî — rêvebir dikarin peyamên dubarebûyî (rojane, heftane an mehane) ku bixweber li kanaleke Discord tên şandin saz bikin, bi piştgiriya rawestandin/dewamkirin û biguherandinê",
+          "ar": "رسائل ديسكورد مجدولة — يمكن للمسؤولين تكوين رسائل متكررة (يومية أو أسبوعية أو شهرية) تُرسل تلقائياً إلى قناة ديسكورد، مع إمكانية الإيقاف المؤقت/الاستئناف والتعديل",
+          "id": "Pesan Discord terjadwal — admin dapat mengonfigurasi pesan berulang (harian, mingguan, atau bulanan) yang dikirim otomatis ke saluran Discord, dengan dukungan jeda/lanjutkan dan edit"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "External link button — admins can add a custom link (e.g. your alliance's website) that appears as a button in the header for all members",
+          "fr": "Bouton lien externe — les admins peuvent ajouter un lien personnalisé (ex : le site web de votre alliance) qui apparaît comme un bouton dans l'en-tête pour tous les membres",
+          "es": "Botón de enlace externo — los admins pueden añadir un enlace personalizado (p. ej. el sitio web de tu alianza) que aparece como un botón en la cabecera para todos los miembros",
+          "it": "Pulsante link esterno — gli admin possono aggiungere un link personalizzato (es. il sito web della tua alleanza) che appare come pulsante nell'intestazione per tutti i membri",
+          "de": "Externer-Link-Button — Admins können einen benutzerdefinierten Link (z. B. die Website eurer Allianz) hinzufügen, der als Button in der Kopfzeile für alle Mitglieder erscheint",
+          "tr": "Harici bağlantı düğmesi — yöneticiler özel bir bağlantı (ör. ittifakınızın web sitesi) ekleyebilir; bu bağlantı tüm üyeler için üst bilgide bir düğme olarak görünür",
+          "pt": "Botão de link externo — os admins podem adicionar um link personalizado (ex: o site da sua aliança) que aparece como um botão no cabeçalho para todos os membros",
+          "el": "Κουμπί εξωτερικού συνδέσμου — οι διαχειριστές μπορούν να προσθέσουν έναν προσαρμοσμένο σύνδεσμο (π.χ. την ιστοσελίδα της συμμαχίας σας) που εμφανίζεται ως κουμπί στην κεφαλίδα για όλα τα μέλη",
+          "ko": "외부 링크 버튼 — 관리자가 사용자 지정 링크(예: 연맹 웹사이트)를 추가하면 모든 멤버에게 헤더의 버튼으로 표시됩니다",
+          "hi": "बाहरी लिंक बटन — एडमिन एक कस्टम लिंक (जैसे आपके गठबंधन की वेबसाइट) जोड़ सकते हैं जो सभी सदस्यों के लिए हेडर में एक बटन के रूप में दिखाई देता है",
+          "zh": "外部链接按钮 — 管理员可以添加自定义链接（例如联盟网站），该链接将作为按钮显示在页眉中，供所有成员使用",
+          "ku": "Bişkoka girêdana derveyî — rêvebir dikarin girêdaneke taybet (bo nimûne malpera yekîtiya we) zêde bikin ku wekî bişkokek li sernavê ji bo hemû endaman xuya dibe",
+          "ar": "زر رابط خارجي — يمكن للمسؤولين إضافة رابط مخصص (مثل موقع تحالفكم الإلكتروني) يظهر كزر في الترويسة لجميع الأعضاء",
+          "id": "Tombol tautan eksternal — admin dapat menambahkan tautan khusus (mis. situs web aliansi Anda) yang muncul sebagai tombol di header untuk semua anggota"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.6.1",
     "date": "2026-08-30",
     "entries": [
