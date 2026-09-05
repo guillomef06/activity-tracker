@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { Subject } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { PwaService } from './pwa.service';
 import { SnackbarService } from './snackbar.service';
@@ -40,6 +41,7 @@ describe('PwaService', () => {
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         PwaService,
         { provide: StorageService, useValue: storageServiceMock },
         { provide: SwUpdate, useValue: swUpdateMock },

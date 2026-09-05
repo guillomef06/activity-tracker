@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
@@ -14,6 +14,8 @@ import { SwipeTabsDirective } from './swipe-tabs.directive';
     </mat-tab-group>
   `,
   imports: [SwipeTabsDirective, MatTabsModule],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- added by the official Angular v22 `ng update` codemod to preserve pre-v22 change detection behavior for this test host; not a new violation introduced by this migration.
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 class TestHostComponent {}
@@ -35,6 +37,7 @@ describe('SwipeTabsDirective', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestHostComponent, NoopAnimationsModule],
+      providers: [provideZonelessChangeDetection()],
     });
     fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
@@ -42,69 +45,66 @@ describe('SwipeTabsDirective', () => {
     el = fixture.debugElement.query(By.directive(SwipeTabsDirective)).nativeElement;
   });
 
-  it('moves to next tab on left swipe', () => {
-    tabGroup.selectedIndex = 0;
+  it.each([
+    { desc: 'moves to next tab on left swipe', from: 0, startX: 200, startY: 100, endX: 100, endY: 102, expected: 1 },
+    {
+      desc: 'moves to previous tab on right swipe',
+      from: 1,
+      startX: 100,
+      startY: 100,
+      endX: 200,
+      endY: 102,
+      expected: 0,
+    },
+    {
+      desc: 'does not go past last tab on left swipe',
+      from: 2,
+      startX: 200,
+      startY: 100,
+      endX: 100,
+      endY: 102,
+      expected: 2,
+    },
+    {
+      desc: 'does not go below first tab on right swipe',
+      from: 0,
+      startX: 100,
+      startY: 100,
+      endX: 200,
+      endY: 102,
+      expected: 0,
+    },
+    {
+      desc: 'ignores swipe below threshold',
+      from: 1,
+      startX: 100,
+      startY: 100,
+      endX: 130,
+      endY: 102,
+      expected: 1,
+    },
+    {
+      desc: 'ignores predominantly vertical swipe',
+      from: 1,
+      startX: 100,
+      startY: 100,
+      endX: 160,
+      endY: 250,
+      expected: 1,
+    },
+  ])('$desc', async ({ from, startX, startY, endX, endY, expected }) => {
+    tabGroup.selectedIndex = from;
     fixture.detectChanges();
+    // MatTabGroup applies a signal-driven `selectedIndex` write on a later change-detection
+    // pass — under zoneless CD there's no zone-triggered microtask flush to catch it, so wait
+    // for the fixture to stabilize before the directive reads the "current" tab.
+    await fixture.whenStable();
 
-    el.dispatchEvent(makeTouchEvent('touchstart', 200, 100));
-    el.dispatchEvent(makeTouchEvent('touchend', 100, 102));
+    el.dispatchEvent(makeTouchEvent('touchstart', startX, startY));
+    el.dispatchEvent(makeTouchEvent('touchend', endX, endY));
     fixture.detectChanges();
+    await fixture.whenStable();
 
-    expect(tabGroup.selectedIndex).toBe(1);
-  });
-
-  it('moves to previous tab on right swipe', () => {
-    tabGroup.selectedIndex = 1;
-    fixture.detectChanges();
-
-    el.dispatchEvent(makeTouchEvent('touchstart', 100, 100));
-    el.dispatchEvent(makeTouchEvent('touchend', 200, 102));
-    fixture.detectChanges();
-
-    expect(tabGroup.selectedIndex).toBe(0);
-  });
-
-  it('does not go past last tab on left swipe', () => {
-    tabGroup.selectedIndex = 2;
-    fixture.detectChanges();
-
-    el.dispatchEvent(makeTouchEvent('touchstart', 200, 100));
-    el.dispatchEvent(makeTouchEvent('touchend', 100, 102));
-    fixture.detectChanges();
-
-    expect(tabGroup.selectedIndex).toBe(2);
-  });
-
-  it('does not go below first tab on right swipe', () => {
-    tabGroup.selectedIndex = 0;
-    fixture.detectChanges();
-
-    el.dispatchEvent(makeTouchEvent('touchstart', 100, 100));
-    el.dispatchEvent(makeTouchEvent('touchend', 200, 102));
-    fixture.detectChanges();
-
-    expect(tabGroup.selectedIndex).toBe(0);
-  });
-
-  it('ignores swipe below threshold', () => {
-    tabGroup.selectedIndex = 1;
-    fixture.detectChanges();
-
-    el.dispatchEvent(makeTouchEvent('touchstart', 100, 100));
-    el.dispatchEvent(makeTouchEvent('touchend', 130, 102));
-    fixture.detectChanges();
-
-    expect(tabGroup.selectedIndex).toBe(1);
-  });
-
-  it('ignores predominantly vertical swipe', () => {
-    tabGroup.selectedIndex = 1;
-    fixture.detectChanges();
-
-    el.dispatchEvent(makeTouchEvent('touchstart', 100, 100));
-    el.dispatchEvent(makeTouchEvent('touchend', 160, 250));
-    fixture.detectChanges();
-
-    expect(tabGroup.selectedIndex).toBe(1);
+    expect(tabGroup.selectedIndex).toBe(expected);
   });
 });

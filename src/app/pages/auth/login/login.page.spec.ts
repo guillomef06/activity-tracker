@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { LoginPage } from './login.page';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -20,7 +20,7 @@ describe('LoginPage', () => {
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],
@@ -35,26 +35,46 @@ describe('LoginPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a valid form with username and password', () => {
-    expect(component['loginForm'].valid).toBe(false);
+  it('should be invalid when username and password are empty', () => {
+    expect(component['loginForm']().valid()).toBe(false);
+  });
 
-    component['loginForm'].patchValue({
-      username: 'testuser',
-      password: 'password123',
-    });
+  it('should become valid once username and password are filled', () => {
+    component['loginModel'].set({ username: 'testuser', password: 'password123' });
 
-    expect(component['loginForm'].valid).toBe(true);
+    expect(component['loginForm']().valid()).toBe(true);
   });
 
   it('should require username', () => {
-    const usernameControl = component['loginForm'].get('username');
-    usernameControl?.setValue('');
-    expect(usernameControl?.hasError('required')).toBe(true);
+    component['loginModel'].set({ username: '', password: 'password123' });
+
+    expect(
+      component['loginForm']
+        .username()
+        .errors()
+        .some(error => error.kind === 'required')
+    ).toBe(true);
   });
 
   it('should require password', () => {
-    const passwordControl = component['loginForm'].get('password');
-    passwordControl?.setValue('');
-    expect(passwordControl?.hasError('required')).toBe(true);
+    component['loginModel'].set({ username: 'testuser', password: '' });
+
+    expect(
+      component['loginForm']
+        .password()
+        .errors()
+        .some(error => error.kind === 'required')
+    ).toBe(true);
+  });
+
+  it('should not submit and should mark fields as touched when the form is invalid', async () => {
+    const submitEvent = new Event('submit');
+    const preventDefaultSpy = vi.spyOn(submitEvent, 'preventDefault');
+
+    await component['onSubmit'](submitEvent);
+
+    expect(preventDefaultSpy).toHaveBeenCalled();
+    expect(component['loginForm'].username().touched()).toBe(true);
+    expect(component['loginForm'].password().touched()).toBe(true);
   });
 });

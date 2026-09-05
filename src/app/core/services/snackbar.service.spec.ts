@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { Subject } from 'rxjs';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { SnackbarService } from './snackbar.service';
@@ -20,6 +21,7 @@ describe('SnackbarService', () => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         SnackbarService,
         {
           provide: MatSnackBar,

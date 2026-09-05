@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { GuidesListPage } from './guides-list.page';
 import { provideRouter } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -33,7 +34,11 @@ describe('GuidesListPage', () => {
 
     await TestBed.configureTestingModule({
       imports: [GuidesListPage, TranslateModule.forRoot(), NoopAnimationsModule],
-      providers: [provideRouter([]), { provide: GuideService, useValue: guideServiceMock }],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter([]),
+        { provide: GuideService, useValue: guideServiceMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GuidesListPage);

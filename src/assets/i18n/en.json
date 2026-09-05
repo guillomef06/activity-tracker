@@ -354,7 +354,8 @@
     "deleteConfirm": "Are you sure you want to delete \"{{name}}\"?",
     "uploadImage": "Upload image",
     "next": "Next",
-    "clear": "Clear"
+    "clear": "Clear",
+    "retry": "Retry"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "Legion is implicit every week and cannot be removed",
       "nameRequired": "Name is required (max 100 characters)",
       "createFailed": "Failed to create season",
+      "loadFailed": "Failed to load seasons",
       "lockedTooltip": "This season has logged activity and its structure is locked",
       "lockedHint": "This season has logged activity. Only the name can be edited.",
       "deleteLockedTooltip": "Cannot delete a season with logged activity",
@@ -554,7 +556,13 @@
       "registerSuccess": "Registration confirmed.",
       "registerError": "Registration failed. Please try again.",
       "unregisterSuccess": "You have been unregistered.",
-      "unregisterError": "Unregistration failed. Please try again."
+      "unregisterError": "Unregistration failed. Please try again.",
+      "positionLabel": "Desired position",
+      "positionPlaceholder": "Choose the rank you're aiming for",
+      "positionInvalid": "Select a valid position.",
+      "medalsUnit": "medals",
+      "commentLabel": "Comment (optional)",
+      "commentPlaceholder": "Anything admins should know? (optional)"
     },
     "admin": {
       "loadError": "Failed to load MG data.",
@@ -588,7 +596,9 @@
       "slotConfigSaveError": "Failed to save slot configuration.",
       "registrations": {
         "title": "Registrations",
-        "empty": "No registrations yet."
+        "empty": "No registrations yet.",
+        "position": "Desired position",
+        "noPosition": "Not specified"
       },
       "selection": {
         "title": "Selection",

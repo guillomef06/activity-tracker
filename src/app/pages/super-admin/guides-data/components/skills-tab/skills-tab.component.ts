@@ -1,5 +1,5 @@
 import { Component, inject, signal, input, effect, ChangeDetectionStrategy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, required, maxLength, min } from '@angular/forms/signals';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,12 +13,23 @@ import { firstValueFrom } from 'rxjs';
 import { GuideAdminService } from '@app/core/services/guide-admin.service';
 import { SnackbarService } from '@app/core/services';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
+import { getFieldErrorKey } from '@app/shared/utils/form-validation.utils';
 import type { Skill } from '@app/shared/models/guide.model';
+
+const NAME_MAX_LENGTH = 100;
+const DESCRIPTION_MAX_LENGTH = 500;
+const SORT_ORDER_MIN = 0;
+
+interface SkillFormValue {
+  name: string;
+  description: string;
+  sort_order: number;
+}
 
 @Component({
   selector: 'app-skills-tab',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
@@ -38,7 +49,6 @@ export class SkillsTabComponent {
   private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
-  private readonly fb = inject(FormBuilder);
 
   readonly refreshTrigger = input<number>(0);
 
@@ -48,17 +58,25 @@ export class SkillsTabComponent {
 
   protected readonly columns = ['icon', 'name', 'description', 'active', 'order', 'actions'];
 
-  protected readonly addForm: FormGroup = this.fb.group({
-    name: ['', [Validators.required, Validators.maxLength(100)]],
-    description: ['', Validators.maxLength(500)],
-    sort_order: [0, [Validators.required, Validators.min(0)]],
+  protected readonly addModel = signal<SkillFormValue>({ name: '', description: '', sort_order: 0 });
+  protected readonly addForm = form(this.addModel, path => {
+    required(path.name);
+    maxLength(path.name, NAME_MAX_LENGTH);
+    maxLength(path.description, DESCRIPTION_MAX_LENGTH);
+    required(path.sort_order);
+    min(path.sort_order, SORT_ORDER_MIN);
   });
 
-  protected readonly editForm: FormGroup = this.fb.group({
-    name: ['', [Validators.required, Validators.maxLength(100)]],
-    description: ['', Validators.maxLength(500)],
-    sort_order: [0, [Validators.required, Validators.min(0)]],
+  protected readonly editModel = signal<SkillFormValue>({ name: '', description: '', sort_order: 0 });
+  protected readonly editForm = form(this.editModel, path => {
+    required(path.name);
+    maxLength(path.name, NAME_MAX_LENGTH);
+    maxLength(path.description, DESCRIPTION_MAX_LENGTH);
+    required(path.sort_order);
+    min(path.sort_order, SORT_ORDER_MIN);
   });
+
+  protected readonly getFieldErrorKey = getFieldErrorKey;
 
   constructor() {
     effect(() => {
@@ -74,21 +92,17 @@ export class SkillsTabComponent {
 
   protected startEdit(item: Skill): void {
     this.editingId.set(item.id);
-    this.editForm.patchValue({ name: item.name, description: item.description, sort_order: item.sort_order });
+    this.editModel.set({ name: item.name, description: item.description ?? '', sort_order: item.sort_order });
   }
 
   protected cancelEdit(): void {
     this.editingId.set(null);
-    this.editForm.reset();
+    this.editModel.set({ name: '', description: '', sort_order: 0 });
   }
 
   protected async save(item: Skill): Promise<void> {
-    if (this.editForm.invalid) return;
-    const { name, description, sort_order } = this.editForm.value as {
-      name: string;
-      description: string;
-      sort_order: number;
-    };
+    if (this.editForm().invalid()) return;
+    const { name, description, sort_order } = this.editModel();
     const { error } = await this.guideAdminService.updateSkill(item.id, { name, description, sort_order });
     if (error) {
       this.snackbarService.error(error);
@@ -128,12 +142,8 @@ export class SkillsTabComponent {
   }
 
   protected async add(): Promise<void> {
-    if (this.addForm.invalid) return;
-    const { name, description, sort_order } = this.addForm.value as {
-      name: string;
-      description: string;
-      sort_order: number;
-    };
+    if (this.addForm().invalid()) return;
+    const { name, description, sort_order } = this.addModel();
     const { skill, error } = await this.guideAdminService.createSkill({
       name,
       description: description || null,
@@ -146,7 +156,7 @@ export class SkillsTabComponent {
     } else {
       this.snackbarService.success(this.translate.instant('common.created'));
       this.skills.update(list => [...list, skill]);
-      this.addForm.reset({ sort_order: 0 });
+      this.addModel.set({ name: '', description: '', sort_order: 0 });
       this.showAddForm.set(false);
     }
   }

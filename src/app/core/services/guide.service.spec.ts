@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { GuideService } from './guide.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
@@ -39,6 +39,7 @@ describe('GuideService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         GuideService,
         { provide: SupabaseService, useValue: { from: fromMock } },
         { provide: AuthService, useValue: authMock },

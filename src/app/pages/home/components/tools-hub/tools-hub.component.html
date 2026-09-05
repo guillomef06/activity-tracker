@@ -18,7 +18,7 @@
       <button mat-icon-button (click)="selectedTool.set(null)" [attr.aria-label]="'common.back' | translate">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2 class="tool-view__title">{{ currentTool()?.titleKey | translate }}</h2>
+      <h2 class="tool-view__title">{{ $safeNavigationMigration(currentTool()?.titleKey) | translate }}</h2>
       <div class="tool-view__spacer" aria-hidden="true"></div>
     </div>
     @switch (selectedTool()) {

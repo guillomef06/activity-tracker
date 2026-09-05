@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ChampionSlotComponent } from './champion-slot.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -22,7 +23,7 @@ describe('ChampionSlotComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ChampionSlotComponent, TranslateModule.forRoot()],
-      providers: [provideAnimationsAsync()],
+      providers: [provideZonelessChangeDetection(), provideAnimationsAsync()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ChampionSlotComponent);

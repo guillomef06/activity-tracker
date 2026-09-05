@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { GuideAdminService } from './guide-admin.service';
 import { SupabaseService } from './supabase.service';
 import type { Champion, Ring } from '@shared/models';
@@ -41,6 +42,7 @@ describe('GuideAdminService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         GuideAdminService,
         {
           provide: SupabaseService,

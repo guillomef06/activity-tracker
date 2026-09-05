@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { signal, WritableSignal } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { signal, WritableSignal, provideZonelessChangeDetection } from '@angular/core';
+import { FieldTree } from '@angular/forms/signals';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,15 +24,39 @@ const mockProfile: UserProfile = {
   updated_at: '',
 };
 
+interface DisplayNameFormModel {
+  displayName: string;
+}
+
+interface PasswordFormModel {
+  password: string;
+  confirmPassword: string;
+}
+
+interface RecoveryFormModel {
+  questionId: number | null;
+  answer: string;
+}
+
 interface DialogInternals {
-  displayNameForm: FormGroup;
-  passwordForm: FormGroup;
-  recoveryForm: FormGroup;
-  onSaveDisplayName(): Promise<void>;
-  onSavePassword(): Promise<void>;
-  onSaveRecovery(): Promise<void>;
+  displayNameModel: WritableSignal<DisplayNameFormModel>;
+  passwordModel: WritableSignal<PasswordFormModel>;
+  recoveryModel: WritableSignal<RecoveryFormModel>;
+  displayNameForm: FieldTree<DisplayNameFormModel>;
+  passwordForm: FieldTree<PasswordFormModel>;
+  recoveryForm: FieldTree<RecoveryFormModel>;
+  displayNameError: () => string;
+  passwordError: () => string;
+  confirmPasswordError: () => string;
+  onSaveDisplayName(event: Event): Promise<void>;
+  onSavePassword(event: Event): Promise<void>;
+  onSaveRecovery(event: Event): Promise<void>;
   changeLanguage(lang: SupportedLanguage): Promise<void>;
   close(): void;
+}
+
+function submitEvent(): Event {
+  return new Event('submit', { cancelable: true });
 }
 
 describe('UserAccountDialogComponent', () => {
@@ -83,6 +107,7 @@ describe('UserAccountDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [UserAccountDialogComponent, NoopAnimationsModule, TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         { provide: AuthService, useValue: authService },
         { provide: LanguageService, useValue: languageService },
         { provide: SnackbarService, useValue: snackbar },
@@ -100,19 +125,18 @@ describe('UserAccountDialogComponent', () => {
   });
 
   it('should pre-fill display name from user profile', () => {
-    expect(internals().displayNameForm.get('displayName')?.value).toBe('Test User');
+    expect(internals().displayNameModel().displayName).toBe('Test User');
   });
 
   it('should pre-select recovery question from user profile', () => {
-    expect(internals().recoveryForm.get('questionId')?.value).toBe(1);
+    expect(internals().recoveryModel().questionId).toBe(1);
   });
 
   describe('onSaveDisplayName', () => {
     it('calls updateDisplayName and shows success snackbar', async () => {
-      internals().displayNameForm.setValue({ displayName: 'New Name' });
-      internals().displayNameForm.markAsDirty();
+      internals().displayNameModel.set({ displayName: 'New Name' });
 
-      await internals().onSaveDisplayName();
+      await internals().onSaveDisplayName(submitEvent());
 
       expect(authService.updateDisplayName).toHaveBeenCalledWith('New Name');
       expect(snackbar.success).toHaveBeenCalled();
@@ -120,51 +144,81 @@ describe('UserAccountDialogComponent', () => {
 
     it('shows error snackbar on failure', async () => {
       authService.updateDisplayName.mockResolvedValue({ error: 'DB error' });
-      internals().displayNameForm.setValue({ displayName: 'New Name' });
-      internals().displayNameForm.markAsDirty();
+      internals().displayNameModel.set({ displayName: 'New Name' });
 
-      await internals().onSaveDisplayName();
+      await internals().onSaveDisplayName(submitEvent());
 
       expect(snackbar.error).toHaveBeenCalled();
     });
 
-    it('does not submit if form is invalid', async () => {
-      internals().displayNameForm.setValue({ displayName: '' });
+    it('does not submit if the display name is empty', async () => {
+      internals().displayNameModel.set({ displayName: '' });
 
-      await internals().onSaveDisplayName();
+      await internals().onSaveDisplayName(submitEvent());
 
       expect(authService.updateDisplayName).not.toHaveBeenCalled();
+    });
+
+    it('exposes a required error kind once the field is touched and empty', () => {
+      internals().displayNameModel.set({ displayName: '' });
+      internals().displayNameForm.displayName().markAsTouched();
+
+      expect(internals().displayNameError()).toBe('errors.required');
+    });
+
+    it('exposes a minLength error kind for a single-character name', () => {
+      internals().displayNameModel.set({ displayName: 'A' });
+
+      expect(internals().displayNameError()).toBe('errors.minLength');
     });
   });
 
   describe('onSavePassword', () => {
     it('calls updatePassword and resets form on success', async () => {
-      internals().passwordForm.setValue({ password: 'NewPass1', confirmPassword: 'NewPass1' });
-      internals().passwordForm.markAsDirty();
+      internals().passwordModel.set({ password: 'NewPass1', confirmPassword: 'NewPass1' });
 
-      await internals().onSavePassword();
+      await internals().onSavePassword(submitEvent());
 
       expect(authService.updatePassword).toHaveBeenCalledWith('NewPass1');
       expect(snackbar.success).toHaveBeenCalled();
+      expect(internals().passwordModel()).toEqual({ password: '', confirmPassword: '' });
     });
 
     it('shows error snackbar on failure', async () => {
       authService.updatePassword.mockResolvedValue({ error: 'Auth error' });
-      internals().passwordForm.setValue({ password: 'NewPass1', confirmPassword: 'NewPass1' });
-      internals().passwordForm.markAsDirty();
+      internals().passwordModel.set({ password: 'NewPass1', confirmPassword: 'NewPass1' });
 
-      await internals().onSavePassword();
+      await internals().onSavePassword(submitEvent());
 
       expect(snackbar.error).toHaveBeenCalled();
+    });
+
+    it('does not submit when the password fails the complexity pattern', async () => {
+      internals().passwordModel.set({ password: 'alllowercase1', confirmPassword: 'alllowercase1' });
+
+      await internals().onSavePassword(submitEvent());
+
+      expect(authService.updatePassword).not.toHaveBeenCalled();
+    });
+
+    it('exposes a passwordMismatch error kind on confirmPassword when passwords differ', () => {
+      internals().passwordModel.set({ password: 'NewPass1', confirmPassword: 'Different1' });
+
+      expect(internals().confirmPasswordError()).toBe('errors.passwordMismatch');
+    });
+
+    it('maps a pattern error to the custom passwordPattern translation key', () => {
+      internals().passwordModel.set({ password: 'alllowercase1', confirmPassword: 'alllowercase1' });
+
+      expect(internals().passwordError()).toBe('auth.errors.passwordPattern');
     });
   });
 
   describe('onSaveRecovery', () => {
     it('calls updateRecovery with questionId and trimmed answer', async () => {
-      internals().recoveryForm.setValue({ questionId: 2, answer: '  my answer  ' });
-      internals().recoveryForm.markAsDirty();
+      internals().recoveryModel.set({ questionId: 2, answer: '  my answer  ' });
 
-      await internals().onSaveRecovery();
+      await internals().onSaveRecovery(submitEvent());
 
       expect(authService.updateRecovery).toHaveBeenCalledWith(2, 'my answer');
       expect(snackbar.success).toHaveBeenCalled();
@@ -172,12 +226,27 @@ describe('UserAccountDialogComponent', () => {
 
     it('shows error snackbar on failure', async () => {
       authService.updateRecovery.mockResolvedValue({ error: 'DB error' });
-      internals().recoveryForm.setValue({ questionId: 2, answer: 'answer' });
-      internals().recoveryForm.markAsDirty();
+      internals().recoveryModel.set({ questionId: 2, answer: 'answer' });
 
-      await internals().onSaveRecovery();
+      await internals().onSaveRecovery(submitEvent());
 
       expect(snackbar.error).toHaveBeenCalled();
+    });
+
+    it('clears the answer but keeps the selected question after a successful save', async () => {
+      internals().recoveryModel.set({ questionId: 3, answer: 'my answer' });
+
+      await internals().onSaveRecovery(submitEvent());
+
+      expect(internals().recoveryModel()).toEqual({ questionId: 3, answer: '' });
+    });
+
+    it('does not submit when the answer is too short', async () => {
+      internals().recoveryModel.set({ questionId: 2, answer: 'a' });
+
+      await internals().onSaveRecovery(submitEvent());
+
+      expect(authService.updateRecovery).not.toHaveBeenCalled();
     });
   });
 

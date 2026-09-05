@@ -1,5 +1,5 @@
-import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { form, FormField, required, minLength, maxLength, pattern } from '@angular/forms/signals';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -10,19 +10,30 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
-import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
-import {
-  passwordMatchValidator,
-  createFieldErrorSignal,
-  createFieldValidSignal,
-} from '@app/shared/utils/form-validation.utils';
+import { RECOVERY_QUESTIONS, RecoveryQuestion } from '@app/shared/constants/recovery-questions.constants';
+import { getFieldErrorKey, validatePasswordsMatch } from '@app/shared/utils/form-validation.utils';
 
 type Step = 1 | 2 | 3;
+
+const RECOVERY_ANSWER_MIN_LENGTH = 2;
+const PASSWORD_MIN_LENGTH = 6;
+const PASSWORD_MAX_LENGTH = 128;
+const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+
+interface Step1FormValue {
+  username: string;
+}
+
+interface Step2FormValue {
+  answer: string;
+  password: string;
+  confirmPassword: string;
+}
 
 @Component({
   selector: 'app-account-recovery',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     DatePipe,
     RouterLink,
     MatCardModule,
@@ -39,8 +50,6 @@ type Step = 1 | 2 | 3;
 })
 export class AccountRecoveryPage {
   private readonly authService = inject(AuthService);
-  private readonly fb = inject(FormBuilder);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly step = signal<Step>(1);
   protected readonly isLoading = signal(false);
@@ -53,48 +62,47 @@ export class AccountRecoveryPage {
   protected readonly hideConfirmPassword = signal(true);
   protected readonly RECOVERY_QUESTIONS = RECOVERY_QUESTIONS;
 
-  protected readonly step1Form: FormGroup = this.fb.group({
-    username: ['', [Validators.required]],
+  protected readonly step1Model = signal<Step1FormValue>({ username: '' });
+
+  protected readonly step1Form = form(this.step1Model, path => {
+    required(path.username);
   });
 
-  protected readonly step2Form: FormGroup = this.fb.group(
-    {
-      answer: ['', [Validators.required, Validators.minLength(2)]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(128),
-          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
-        ],
-      ],
-      confirmPassword: ['', [Validators.required]],
-    },
-    { validators: passwordMatchValidator }
-  );
+  protected readonly step2Model = signal<Step2FormValue>({ answer: '', password: '', confirmPassword: '' });
 
-  protected readonly passwordError = createFieldErrorSignal(this.step2Form, 'password', this.destroyRef, undefined, {
-    pattern: 'auth.errors.passwordPattern',
+  protected readonly step2Form = form(this.step2Model, path => {
+    required(path.answer);
+    minLength(path.answer, RECOVERY_ANSWER_MIN_LENGTH);
+
+    required(path.password);
+    minLength(path.password, PASSWORD_MIN_LENGTH);
+    maxLength(path.password, PASSWORD_MAX_LENGTH);
+    pattern(path.password, PASSWORD_PATTERN);
+
+    required(path.confirmPassword);
+    validatePasswordsMatch(path.password, path.confirmPassword);
   });
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.step2Form, 'confirmPassword', this.destroyRef);
-  protected readonly confirmPasswordValid = createFieldValidSignal(this.step2Form, 'confirmPassword', this.destroyRef);
 
-  protected get currentQuestion() {
+  protected readonly getFieldErrorKey = getFieldErrorKey;
+  protected readonly passwordErrorKeys: Record<string, string> = { pattern: 'auth.errors.passwordPattern' };
+
+  protected readonly currentQuestion = computed<RecoveryQuestion | null>(() => {
     const id = this.questionId();
     if (id === null) return null;
     return RECOVERY_QUESTIONS.find(q => q.id === id) ?? null;
-  }
+  });
 
-  protected async onStep1Submit(): Promise<void> {
-    if (this.step1Form.invalid || this.isLoading()) {
-      this.step1Form.markAllAsTouched();
+  protected async onStep1Submit(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (this.step1Form().invalid() || this.isLoading()) {
+      this.step1Form().markAsTouched();
       return;
     }
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    const { username } = this.step1Form.value;
+    const { username } = this.step1Model();
     const { questionId, error } = await this.authService.getRecoveryQuestion(username);
 
     if (error || questionId === null) {
@@ -106,9 +114,11 @@ export class AccountRecoveryPage {
     this.isLoading.set(false);
   }
 
-  protected async onStep2Submit(): Promise<void> {
-    if (this.step2Form.invalid || this.isLoading()) {
-      this.step2Form.markAllAsTouched();
+  protected async onStep2Submit(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (this.step2Form().invalid() || this.isLoading()) {
+      this.step2Form().markAsTouched();
       return;
     }
     this.isLoading.set(true);
@@ -116,8 +126,8 @@ export class AccountRecoveryPage {
     this.remainingAttempts.set(null);
     this.lockedUntil.set(null);
 
-    const username = this.step1Form.value.username as string;
-    const { answer, password } = this.step2Form.value;
+    const username = this.step1Model().username;
+    const { answer, password } = this.step2Model();
     const { error, remaining, until } = await this.authService.resetPasswordWithRecovery(username, answer, password);
 
     if (!error) {

@@ -1,6 +1,6 @@
-import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, required } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,12 +12,17 @@ import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import { AuthBackgroundComponent } from '@app/shared/components/auth-background/auth-background.component';
 import type { SignInRequest } from '@app/shared/models';
-import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { getFieldErrorKey } from '@app/shared/utils/form-validation.utils';
+
+interface LoginFormValue {
+  username: string;
+  password: string;
+}
 
 @Component({
   selector: 'app-login',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     MatCardModule,
     MatFormFieldModule,
@@ -34,30 +39,30 @@ import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils'
 })
 export class LoginPage {
   private readonly authService = inject(AuthService);
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly hidePassword = signal(true);
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
-  protected readonly loginForm: FormGroup = this.fb.group({
-    username: ['', [Validators.required]],
-    password: ['', [Validators.required]],
+  protected readonly loginModel = signal<LoginFormValue>({ username: '', password: '' });
+
+  protected readonly loginForm = form(this.loginModel, path => {
+    required(path.username);
+    required(path.password);
   });
 
-  // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.loginForm, 'username', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.loginForm, 'password', this.destroyRef);
+  protected readonly getFieldErrorKey = getFieldErrorKey;
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
   }
 
-  protected async onSubmit(): Promise<void> {
-    if (this.loginForm.invalid || this.isLoading()) {
-      this.loginForm.markAllAsTouched();
+  protected async onSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (this.loginForm().invalid() || this.isLoading()) {
+      this.loginForm().markAsTouched();
       return;
     }
 
@@ -65,7 +70,7 @@ export class LoginPage {
     this.errorMessage.set(null);
 
     try {
-      const { username, password } = this.loginForm.value;
+      const { username, password } = this.loginModel();
 
       const request: SignInRequest = {
         username,
@@ -78,7 +83,6 @@ export class LoginPage {
         throw error;
       }
 
-      // Redirect based on role
       const role = this.authService.userProfile()?.role;
       if (role === 'super_admin') {
         await this.router.navigate(['/super-admin']);

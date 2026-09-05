@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>{{ 'guides.champion_slot' | translate: { n: data.position + 1 } }}</h2>
 
-<mat-dialog-content [formGroup]="form" class="dialog-content">
+<mat-dialog-content class="dialog-content">
   <!-- Champion selection -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>{{ 'guides.champion' | translate }}</mat-label>
-    <mat-select formControlName="champion_id">
+    <mat-select [formField]="championForm.champion_id" (selectionChange)="onChampionChange($event.value)">
       @for (champion of data.champions; track champion.id) {
         <mat-option [value]="champion.id">
           {{ champion.name }}
@@ -30,7 +30,7 @@
     <div class="two-col">
       <mat-form-field appearance="outline">
         <mat-label>{{ 'guides.skill' | translate }} 1</mat-label>
-        <mat-select formControlName="skill1_id">
+        <mat-select [formField]="championForm.skill1_id">
           <mat-option [value]="null">—</mat-option>
           @for (skill of availableSkillsSlot1(); track skill.id) {
             <mat-option [value]="skill.id">{{ skill.name }}</mat-option>
@@ -40,7 +40,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'guides.skill' | translate }} 2</mat-label>
-        <mat-select formControlName="skill2_id">
+        <mat-select [formField]="championForm.skill2_id">
           <mat-option [value]="null">—</mat-option>
           @for (skill of availableSkillsSlot2(); track skill.id) {
             <mat-option [value]="skill.id">{{ skill.name }}</mat-option>
@@ -58,7 +58,7 @@
     <div class="three-col">
       <mat-form-field appearance="outline">
         <mat-label>{{ 'superAdmin.gemType.strategy' | translate }}</mat-label>
-        <mat-select formControlName="gem_strategy_id">
+        <mat-select [formField]="championForm.gem_strategy_id">
           <mat-option [value]="null">—</mat-option>
           @for (gem of strategyGems(); track gem.id) {
             <mat-option [value]="gem.id">{{ gem.name }}</mat-option>
@@ -68,7 +68,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'superAdmin.gemType.hero' | translate }}</mat-label>
-        <mat-select formControlName="gem_hero_id">
+        <mat-select [formField]="championForm.gem_hero_id">
           <mat-option [value]="null">—</mat-option>
           @for (gem of heroGems(); track gem.id) {
             <mat-option [value]="gem.id">{{ gem.name }}</mat-option>
@@ -78,7 +78,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>{{ 'superAdmin.gemType.tactics' | translate }}</mat-label>
-        <mat-select formControlName="gem_tactics_id">
+        <mat-select [formField]="championForm.gem_tactics_id">
           <mat-option [value]="null">—</mat-option>
           @for (gem of tacticsGems(); track gem.id) {
             <mat-option [value]="gem.id">{{ gem.name }}</mat-option>
@@ -95,7 +95,7 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>{{ 'guides.ring' | translate }}</mat-label>
-      <mat-select formControlName="ring_id">
+      <mat-select [formField]="championForm.ring_id">
         <mat-option [value]="null">—</mat-option>
         @for (ring of availableRings(); track ring.id) {
           <mat-option [value]="ring.id">{{ ring.name }}</mat-option>
@@ -116,26 +116,53 @@
       {{ 'guides.traits' | translate }}
     </p>
 
-    @for (i of [1, 2, 3].slice(0, traitCount()); track i) {
+    <div class="trait-row">
+      <mat-form-field appearance="outline" class="flex-grow">
+        <mat-label>{{ 'guides.trait' | translate }} 1</mat-label>
+        <mat-select [formField]="championForm.trait1_id">
+          <mat-option [value]="null">—</mat-option>
+          @for (t of availableTraitsPerSlot()[0]; track t.id) {
+            <mat-option [value]="t.id">{{ t.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (traitCount() >= 2) {
       <div class="trait-row">
         <mat-form-field appearance="outline" class="flex-grow">
-          <mat-label>{{ 'guides.trait' | translate }} {{ i }}</mat-label>
-          <mat-select [formControlName]="'trait' + i + '_id'">
+          <mat-label>{{ 'guides.trait' | translate }} 2</mat-label>
+          <mat-select [formField]="championForm.trait2_id">
             <mat-option [value]="null">—</mat-option>
-            @for (t of availableTraitsPerSlot()[i - 1]; track t.id) {
+            @for (t of availableTraitsPerSlot()[1]; track t.id) {
               <mat-option [value]="t.id">{{ t.name }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
-        @if (i > 1) {
-          <button mat-icon-button type="button" (click)="removeTrait($any(i))" class="remove-trait-btn">
-            <mat-icon>remove_circle_outline</mat-icon>
-          </button>
-        }
+        <button mat-icon-button type="button" (click)="removeTrait(2)" class="remove-trait-btn">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
       </div>
     }
 
-    @if (traitCount() < 3) {
+    @if (traitCount() >= 3) {
+      <div class="trait-row">
+        <mat-form-field appearance="outline" class="flex-grow">
+          <mat-label>{{ 'guides.trait' | translate }} 3</mat-label>
+          <mat-select [formField]="championForm.trait3_id">
+            <mat-option [value]="null">—</mat-option>
+            @for (t of availableTraitsPerSlot()[2]; track t.id) {
+              <mat-option [value]="t.id">{{ t.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button type="button" (click)="removeTrait(3)" class="remove-trait-btn">
+          <mat-icon>remove_circle_outline</mat-icon>
+        </button>
+      </div>
+    }
+
+    @if (traitCount() < maxTraitCount) {
       <button mat-button type="button" (click)="addTrait()">
         <mat-icon>add</mat-icon>
         {{ 'guides.add_trait' | translate }}
@@ -150,7 +177,7 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>{{ 'guides.adornment' | translate }}</mat-label>
-      <mat-select formControlName="adornment_id">
+      <mat-select [formField]="championForm.ornament_id">
         <mat-option [value]="null">—</mat-option>
         @for (adornment of data.adornments; track adornment.id) {
           <mat-option [value]="adornment.id">{{ adornment.name }}</mat-option>
@@ -162,7 +189,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="cancel()">{{ 'common.cancel' | translate }}</button>
-  <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="confirm()">
+  <button mat-flat-button color="primary" [disabled]="championForm().invalid()" (click)="confirm()">
     {{ 'common.confirm' | translate }}
   </button>
 </mat-dialog-actions>

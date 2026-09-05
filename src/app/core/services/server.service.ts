@@ -203,7 +203,7 @@ export class ServerService {
       };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- intentional discard of server_id
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, sonarjs/no-unused-vars -- intentional discard of server_id
     const { server_id: _ignored, ...ruleWithoutServerId } = rule as CreatePointRuleRequest & {
       server_id?: string;
     };
@@ -252,7 +252,7 @@ export class ServerService {
 
     const { error: insertError } = await this.supabase.from('activity_point_rules').insert(
       rules.map(rule => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars -- intentional discard of server_id
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, sonarjs/no-unused-vars -- intentional discard of server_id
         const { server_id: _ignored, ...ruleWithoutServerId } = rule as CreatePointRuleRequest & {
           server_id?: string;
         };

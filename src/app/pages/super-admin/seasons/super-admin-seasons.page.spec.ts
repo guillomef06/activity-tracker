@@ -10,7 +10,6 @@ import { of } from 'rxjs';
 import { SuperAdminSeasonsPage } from './super-admin-seasons.page';
 import { SeasonService } from '@app/core/services/season.service';
 import { SnackbarService } from '@app/core/services';
-import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import type {
   CreateSeasonRequest,
   SeasonWithWeeks,
@@ -53,7 +52,6 @@ describe('SuperAdminSeasonsPage', () => {
     deleteSeason: ReturnType<typeof vi.fn>;
   };
   let snackbarMock: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
-  let progressBarMock: { withProgress: ReturnType<typeof vi.fn>; isLoading: () => boolean };
   let dialogMock: { open: ReturnType<typeof vi.fn> };
 
   const suggestedStart = new Date(Date.now() + 20 * DAY_MS);
@@ -74,11 +72,6 @@ describe('SuperAdminSeasonsPage', () => {
 
     snackbarMock = { success: vi.fn(), error: vi.fn() };
 
-    progressBarMock = {
-      withProgress: vi.fn().mockImplementation(async (fn: () => Promise<void>) => fn()),
-      isLoading: () => false,
-    };
-
     dialogMock = {
       open: vi.fn().mockReturnValue({ afterClosed: () => of(true) }),
     };
@@ -89,7 +82,6 @@ describe('SuperAdminSeasonsPage', () => {
         provideZonelessChangeDetection(),
         { provide: SeasonService, useValue: seasonServiceMock },
         { provide: SnackbarService, useValue: snackbarMock },
-        { provide: ProgressBarService, useValue: progressBarMock },
         { provide: MatDialog, useValue: dialogMock },
       ],
     })
@@ -106,8 +98,18 @@ describe('SuperAdminSeasonsPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load seasons on init', () => {
+  it('should load seasons via the seasons resource on init', () => {
     expect(seasonServiceMock.loadSeasons).toHaveBeenCalledOnce();
+    expect(component['seasons']()).toEqual(seasonsSignal());
+  });
+
+  it('should surface a load error through the seasons resource', async () => {
+    seasonServiceMock.loadSeasons.mockRejectedValueOnce(new Error('network down'));
+
+    component['seasonsResource'].reload();
+    await fixture.whenStable();
+
+    expect(component['seasonsResource'].error()).toBeDefined();
   });
 
   describe('Season status derivation', () => {
@@ -143,11 +145,21 @@ describe('SuperAdminSeasonsPage', () => {
       expect(component['suggestedStartDate']()).toEqual(suggestedStart);
     });
 
+    it('should be invalid until the name is filled in', () => {
+      component['openCreateWizard']();
+
+      expect(component['createForm']().valid()).toBe(false);
+
+      component['createModel'].update(model => ({ ...model, name: 'New Season' }));
+
+      expect(component['createForm']().valid()).toBe(true);
+    });
+
     it('should call createSeason with a correctly-shaped payload on happy path', async () => {
       component['openCreateWizard']();
-      component['createForm'].patchValue({ name: 'New Season', weekCount: 2 });
-      component['createWeekActivities'].at(0).setValue(['kvk prep']);
-      component['createWeekActivities'].at(1).setValue(['me overall', 'stellar dynasty']);
+      component['createModel'].set({ name: 'New Season', weekCount: 2 });
+      component['setCreateWeekActivityTypes'](0, ['kvk prep']);
+      component['setCreateWeekActivityTypes'](1, ['me overall', 'stellar dynasty']);
 
       await component['submitCreateSeason']();
 
@@ -169,13 +181,13 @@ describe('SuperAdminSeasonsPage', () => {
     it('should show a snackbar error and keep the wizard open with data intact on failure', async () => {
       seasonServiceMock.createSeason.mockResolvedValue({ season: null, error: 'Overlapping season' });
       component['openCreateWizard']();
-      component['createForm'].patchValue({ name: 'Broken Season', weekCount: 1 });
+      component['createModel'].set({ name: 'Broken Season', weekCount: 1 });
 
       await component['submitCreateSeason']();
 
       expect(snackbarMock.error).toHaveBeenCalledWith('Overlapping season');
       expect(component['showCreateWizard']()).toBe(true);
-      expect(component['createForm'].get('name')?.value).toBe('Broken Season');
+      expect(component['createModel']().name).toBe('Broken Season');
     });
   });
 
@@ -184,8 +196,10 @@ describe('SuperAdminSeasonsPage', () => {
       expect(component['canPickStartDate']()).toBe(false);
     });
 
-    it('should allow picking any start date when no season exists yet', () => {
+    it('should allow picking any start date when no season exists yet', async () => {
       seasonsSignal.set([]);
+      component['seasonsResource'].reload();
+      await fixture.whenStable();
 
       expect(component['canPickStartDate']()).toBe(true);
     });
@@ -245,9 +259,9 @@ describe('SuperAdminSeasonsPage', () => {
       component['startEdit'](season);
 
       expect(component['isLocked'](season.id)).toBe(true);
-      expect(component['editForm'].get('weekCount')?.disabled).toBe(true);
+      expect(component['editForm'].weekCount().disabled()).toBe(true);
 
-      component['editForm'].patchValue({ name: 'Renamed Season' });
+      component['editModel'].update(model => ({ ...model, name: 'Renamed Season' }));
       await component['saveEdit'](season);
 
       expect(seasonServiceMock.updateSeasonName).toHaveBeenCalledWith(season.id, 'Renamed Season');
@@ -263,9 +277,9 @@ describe('SuperAdminSeasonsPage', () => {
       await component['toggleExpand'](season);
       component['startEdit'](season);
 
-      expect(component['editForm'].get('weekCount')?.disabled).toBe(false);
+      expect(component['editForm'].weekCount().disabled()).toBe(false);
 
-      component['editWeekActivities'].at(0).setValue(['golden expedition']);
+      component['setEditWeekActivityTypes'](0, ['golden expedition']);
       await component['saveEdit'](season);
 
       const expectedRequest: UpdateSeasonStructureRequest = {

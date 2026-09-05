@@ -3,12 +3,7 @@
  */
 
 export type MgEventStatus =
-  | 'upcoming'
-  | 'registration_open'
-  | 'registration_closed'
-  | 'selection_published'
-  | 'ongoing'
-  | 'finished';
+  'upcoming' | 'registration_open' | 'registration_closed' | 'selection_published' | 'ongoing' | 'finished';
 
 export type MgAssignmentMode = 'automatic' | 'manual';
 export type MgSelectionType = 'selected' | 'ffa';
@@ -49,6 +44,8 @@ export interface MgRegistration {
   mg_event_id: string;
   user_id: string;
   registered_at: string;
+  desired_slot_order: number | null;
+  comment: string | null;
 }
 
 /**
@@ -59,6 +56,16 @@ export interface MgRegistrationWithUser extends MgRegistration {
     display_name: string;
     username: string;
   };
+}
+
+/**
+ * Payload used to register a player for an MG event: the desired slot
+ * (one of MG_SLOT_DEFAULTS' slotOrder values) is required so admins have a
+ * signal of player intent for manual seat selection; the comment is optional.
+ */
+export interface RegisterMgPlayerPayload {
+  desired_slot_order: number;
+  comment: string | null;
 }
 
 /**

@@ -45,7 +45,7 @@ describe('ActivityConflictComponent', () => {
 
   it('should render one list item per conflict', () => {
     const items = fixture.nativeElement.querySelectorAll('.conflict-item');
-    expect(items.length).toBe(2);
+    expect(items).toHaveLength(2);
   });
 
   it('should emit acknowledged when the acknowledge button is clicked', () => {
@@ -63,6 +63,6 @@ describe('ActivityConflictComponent', () => {
     fixture.detectChanges();
 
     const items = fixture.nativeElement.querySelectorAll('.conflict-item');
-    expect(items.length).toBe(0);
+    expect(items).toHaveLength(0);
   });
 });

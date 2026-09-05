@@ -13,6 +13,10 @@
           <mat-label>{{ 'common.name' | translate }}</mat-label>
           <input matInput [formField]="addForm.name" />
         </mat-form-field>
+        <mat-form-field appearance="outline" class="field-wide">
+          <mat-label>{{ 'common.description' | translate }}</mat-label>
+          <input matInput [formField]="addForm.description" />
+        </mat-form-field>
         <mat-form-field appearance="outline" class="field-narrow">
           <mat-label>{{ 'common.order' | translate }}</mat-label>
           <input matInput type="number" [formField]="addForm.sort_order" />
@@ -30,15 +34,21 @@
   }
 
   <div class="table-container">
-    <table mat-table [dataSource]="adornments()" class="data-table">
-      <ng-container matColumnDef="image">
-        <th mat-header-cell *matHeaderCellDef>{{ 'common.image' | translate }}</th>
+    <table mat-table [dataSource]="rings()" class="data-table">
+      <ng-container matColumnDef="icon">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.icon' | translate }}</th>
         <td mat-cell *matCellDef="let item">
-          @if (item.image_url) {
-            <img [src]="item.image_url" class="thumbnail" [alt]="item.name" />
-          } @else {
-            <mat-icon class="no-image-icon">image_not_supported</mat-icon>
-          }
+          <div class="thumbnail-cell">
+            @if (item.icon_url) {
+              <img [src]="item.icon_url" class="thumbnail" [alt]="item.name" />
+            } @else {
+              <mat-icon class="no-image-icon">panorama_fish_eye</mat-icon>
+            }
+            <label class="upload-label" [matTooltip]="'common.uploadImage' | translate">
+              <mat-icon class="upload-icon">upload</mat-icon>
+              <input type="file" accept="image/*" (change)="uploadIcon(item, $event)" class="hidden-input" />
+            </label>
+          </div>
         </td>
       </ng-container>
 
@@ -51,6 +61,19 @@
             </mat-form-field>
           } @else {
             <strong>{{ item.name }}</strong>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.description' | translate }}</th>
+        <td mat-cell *matCellDef="let item">
+          @if (editingId() === item.id) {
+            <mat-form-field appearance="outline" class="edit-field">
+              <input matInput [formField]="editForm.description" />
+            </mat-form-field>
+          } @else {
+            <span class="description-text">{{ item.description }}</span>
           }
         </td>
       </ng-container>
