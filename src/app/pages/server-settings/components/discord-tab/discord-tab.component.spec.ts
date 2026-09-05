@@ -108,19 +108,19 @@ describe('DiscordTabComponent', () => {
   });
 
   it('should have webhook form with required fields', () => {
-    expect(component['webhookForm'].get('channel_name')).toBeDefined();
-    expect(component['webhookForm'].get('webhook_url')).toBeDefined();
-    expect(component['webhookForm'].get('default_message')).toBeDefined();
+    expect(component['webhookForm'].channel_name).toBeDefined();
+    expect(component['webhookForm'].webhook_url).toBeDefined();
+    expect(component['webhookForm'].default_message).toBeDefined();
   });
 
   it('should not submit webhook form if invalid', async () => {
-    component['webhookForm'].reset();
+    component['webhookModel'].set({ channel_name: '', webhook_url: '', default_message: '' });
     await component['addWebhook']();
     expect(discordService.createWebhook).not.toHaveBeenCalled();
   });
 
   it('should add webhook with default_message on valid form submission', async () => {
-    component['webhookForm'].patchValue({
+    component['webhookModel'].set({
       channel_name: 'test-channel',
       webhook_url: 'https://discord.com/api/webhooks/123/abc',
       default_message: '⏰ GE Reminder',
@@ -137,7 +137,7 @@ describe('DiscordTabComponent', () => {
   });
 
   it('should add webhook with null default_message when field is empty', async () => {
-    component['webhookForm'].patchValue({
+    component['webhookModel'].set({
       channel_name: 'test-channel',
       webhook_url: 'https://discord.com/api/webhooks/123/abc',
       default_message: '',
@@ -149,12 +149,14 @@ describe('DiscordTabComponent', () => {
   });
 
   it('should validate webhook URL pattern', () => {
-    const urlControl = component['webhookForm'].get('webhook_url');
-    urlControl?.setValue('https://example.com/not-discord');
-    expect(urlControl?.valid).toBe(false);
+    component['webhookModel'].update(current => ({ ...current, webhook_url: 'https://example.com/not-discord' }));
+    expect(component['webhookForm'].webhook_url().valid()).toBe(false);
 
-    urlControl?.setValue('https://discord.com/api/webhooks/123/abc');
-    expect(urlControl?.valid).toBe(true);
+    component['webhookModel'].update(current => ({
+      ...current,
+      webhook_url: 'https://discord.com/api/webhooks/123/abc',
+    }));
+    expect(component['webhookForm'].webhook_url().valid()).toBe(true);
   });
 
   it('should pre-fill content with default_message when channel selected', () => {
@@ -163,7 +165,7 @@ describe('DiscordTabComponent', () => {
 
     component['onChannelSelected']('w1');
 
-    expect(component['messageForm'].get('content')?.value).toBe('⏰ Enter your GE ranking!');
+    expect(component['messageModel']().content).toBe('⏰ Enter your GE ranking!');
   });
 
   it('should update selectedWebhookId when channel selected', () => {
@@ -175,15 +177,15 @@ describe('DiscordTabComponent', () => {
   it('should clear content when channel without default_message is selected', () => {
     const webhookNoMessage: DiscordWebhook = { ...mockWebhook, id: 'w2', default_message: null };
     webhooksSignal.set([webhookNoMessage]);
-    component['messageForm'].patchValue({ content: 'previous content' });
+    component['messageModel'].update(current => ({ ...current, content: 'previous content' }));
 
     component['onChannelSelected']('w2');
 
-    expect(component['messageForm'].get('content')?.value).toBe('');
+    expect(component['messageModel']().content).toBe('');
   });
 
   it('should not send message if form is invalid', async () => {
-    component['messageForm'].reset();
+    component['messageModel'].set({ webhook_id: '', content: '' });
     await component['sendMessage']();
     expect(discordService.sendMessage).not.toHaveBeenCalled();
   });
@@ -192,7 +194,7 @@ describe('DiscordTabComponent', () => {
     webhooksSignal.set([mockWebhook]);
     fixture.detectChanges();
 
-    component['messageForm'].patchValue({
+    component['messageModel'].set({
       webhook_id: 'w1',
       content: 'Hello server!',
     });
@@ -208,17 +210,17 @@ describe('DiscordTabComponent', () => {
 
   it('should restore default_message in content after sending', async () => {
     webhooksSignal.set([mockWebhook]);
-    component['messageForm'].patchValue({ webhook_id: 'w1', content: 'Modified message' });
+    component['messageModel'].set({ webhook_id: 'w1', content: 'Modified message' });
 
     await component['sendMessage']();
 
-    expect(component['messageForm'].get('content')?.value).toBe('⏰ Enter your GE ranking!');
+    expect(component['messageModel']().content).toBe('⏰ Enter your GE ranking!');
   });
 
   it('should show error snackbar when send fails', async () => {
     discordService.sendMessage.mockResolvedValue({ error: new Error('Network error') });
     webhooksSignal.set([mockWebhook]);
-    component['messageForm'].patchValue({ webhook_id: 'w1', content: 'Hello!' });
+    component['messageModel'].set({ webhook_id: 'w1', content: 'Hello!' });
 
     await component['sendMessage']();
 
@@ -226,12 +228,11 @@ describe('DiscordTabComponent', () => {
   });
 
   it('should validate content max length', () => {
-    const contentControl = component['messageForm'].get('content');
-    contentControl?.setValue('a'.repeat(2001));
-    expect(contentControl?.valid).toBe(false);
+    component['messageModel'].update(current => ({ ...current, content: 'a'.repeat(2001) }));
+    expect(component['messageForm'].content().valid()).toBe(false);
 
-    contentControl?.setValue('Hello!');
-    expect(contentControl?.valid).toBe(true);
+    component['messageModel'].update(current => ({ ...current, content: 'Hello!' }));
+    expect(component['messageForm'].content().valid()).toBe(true);
   });
 
   describe('quickSend', () => {
@@ -240,8 +241,8 @@ describe('DiscordTabComponent', () => {
 
       component['quickSend'](mockWebhook);
 
-      expect(component['messageForm'].get('webhook_id')?.value).toBe('w1');
-      expect(component['messageForm'].get('content')?.value).toBe('⏰ Enter your GE ranking!');
+      expect(component['messageModel']().webhook_id).toBe('w1');
+      expect(component['messageModel']().content).toBe('⏰ Enter your GE ranking!');
       expect(component['selectedWebhookId']()).toBe('w1');
     });
   });
@@ -258,12 +259,12 @@ describe('DiscordTabComponent', () => {
       component['closeForm']();
       expect(component['isAddingChannel']()).toBe(false);
       expect(component['editingWebhook']()).toBeNull();
-      expect(component['webhookForm'].get('channel_name')?.value).toBe('');
+      expect(component['webhookModel']().channel_name).toBe('');
     });
 
     it('should close form after successful addWebhook', async () => {
       component['startAdd']();
-      component['webhookForm'].patchValue({
+      component['webhookModel'].set({
         channel_name: 'test',
         webhook_url: 'https://discord.com/api/webhooks/123/abc',
         default_message: '',
@@ -281,9 +282,9 @@ describe('DiscordTabComponent', () => {
 
       expect(component['editingWebhook']()).toEqual(mockWebhook);
       expect(component['isAddingChannel']()).toBe(false);
-      expect(component['webhookForm'].get('channel_name')?.value).toBe('general');
-      expect(component['webhookForm'].get('webhook_url')?.value).toBe('https://discord.com/api/webhooks/123/abc');
-      expect(component['webhookForm'].get('default_message')?.value).toBe('⏰ Enter your GE ranking!');
+      expect(component['webhookModel']().channel_name).toBe('general');
+      expect(component['webhookModel']().webhook_url).toBe('https://discord.com/api/webhooks/123/abc');
+      expect(component['webhookModel']().default_message).toBe('⏰ Enter your GE ranking!');
     });
 
     it('should clear editingWebhook and reset webhookForm on closeForm', () => {
@@ -291,12 +292,12 @@ describe('DiscordTabComponent', () => {
       component['closeForm']();
 
       expect(component['editingWebhook']()).toBeNull();
-      expect(component['webhookForm'].get('channel_name')?.value).toBe('');
+      expect(component['webhookModel']().channel_name).toBe('');
     });
 
     it('should not save if webhookForm is invalid', async () => {
       component['startEdit'](mockWebhook);
-      component['webhookForm'].get('channel_name')?.setValue('');
+      component['webhookModel'].update(current => ({ ...current, channel_name: '' }));
 
       await component['saveEdit']();
 
@@ -306,7 +307,11 @@ describe('DiscordTabComponent', () => {
     it('should call updateWebhook with channel_name and default_message on save', async () => {
       webhooksSignal.set([mockWebhook]);
       component['startEdit'](mockWebhook);
-      component['webhookForm'].patchValue({ channel_name: 'renamed', default_message: 'New msg' });
+      component['webhookModel'].update(current => ({
+        ...current,
+        channel_name: 'renamed',
+        default_message: 'New msg',
+      }));
 
       await component['saveEdit']();
 
@@ -321,7 +326,7 @@ describe('DiscordTabComponent', () => {
     it('should show error snackbar when updateWebhook fails', async () => {
       discordService.updateWebhook.mockResolvedValue({ error: new Error('DB error') });
       component['startEdit'](mockWebhook);
-      component['webhookForm'].patchValue({ channel_name: 'renamed', default_message: '' });
+      component['webhookModel'].update(current => ({ ...current, channel_name: 'renamed', default_message: '' }));
 
       await component['saveEdit']();
 
@@ -331,7 +336,7 @@ describe('DiscordTabComponent', () => {
     it('should set null default_message when field is empty on save', async () => {
       webhooksSignal.set([mockWebhook]);
       component['startEdit'](mockWebhook);
-      component['webhookForm'].patchValue({ channel_name: 'general', default_message: '' });
+      component['webhookModel'].update(current => ({ ...current, channel_name: 'general', default_message: '' }));
 
       await component['saveEdit']();
 
@@ -344,7 +349,7 @@ describe('DiscordTabComponent', () => {
     it('should route to saveEdit when handleFormSubmit called while editing', async () => {
       webhooksSignal.set([mockWebhook]);
       component['startEdit'](mockWebhook);
-      component['webhookForm'].patchValue({ channel_name: 'renamed', default_message: '' });
+      component['webhookModel'].update(current => ({ ...current, channel_name: 'renamed', default_message: '' }));
 
       await component['handleFormSubmit']();
 
@@ -354,7 +359,7 @@ describe('DiscordTabComponent', () => {
 
     it('should route to addWebhook when handleFormSubmit called without editing', async () => {
       component['startAdd']();
-      component['webhookForm'].patchValue({
+      component['webhookModel'].set({
         channel_name: 'new-channel',
         webhook_url: 'https://discord.com/api/webhooks/999/xyz',
         default_message: '',
@@ -373,43 +378,47 @@ describe('DiscordTabComponent', () => {
     });
 
     it('should be valid for daily frequency once webhook_id and message are filled', () => {
-      component['scheduleForm'].patchValue({
+      component['scheduleModel'].update(current => ({
+        ...current,
         webhook_id: 'w1',
         message: 'Reminder!',
         frequency: 'daily',
-      });
+      }));
 
       expect(component['isScheduleFormValid']).toBe(true);
     });
 
     it('should be invalid for weekly frequency when no day of week is checked', () => {
-      component['scheduleForm'].patchValue({
+      component['scheduleModel'].update(current => ({
+        ...current,
         webhook_id: 'w1',
         message: 'Reminder!',
         frequency: 'weekly',
-      });
+      }));
 
       expect(component['isScheduleFormValid']).toBe(false);
     });
 
     it('should be valid for weekly frequency once at least one day of week is checked', () => {
-      component['scheduleForm'].patchValue({
+      component['scheduleModel'].update(current => ({
+        ...current,
         webhook_id: 'w1',
         message: 'Reminder!',
         frequency: 'weekly',
-      });
-      component['scheduleForm'].controls.days_of_week.controls[0].setValue(true);
+        days_of_week: [true, false, false, false, false, false, false],
+      }));
 
       expect(component['isScheduleFormValid']).toBe(true);
     });
 
     it('should be valid for monthly frequency without checking days of week', () => {
-      component['scheduleForm'].patchValue({
+      component['scheduleModel'].update(current => ({
+        ...current,
         webhook_id: 'w1',
         message: 'Reminder!',
         frequency: 'monthly',
         day_of_month: 15,
-      });
+      }));
 
       expect(component['isScheduleFormValid']).toBe(true);
     });
@@ -421,20 +430,20 @@ describe('DiscordTabComponent', () => {
 
       expect(component['isAddingSchedule']()).toBe(true);
       expect(component['editingSchedule']()).toBeNull();
-      expect(component['scheduleForm'].get('webhook_id')?.value).toBe('');
-      expect(component['scheduleForm'].get('message')?.value).toBe('');
+      expect(component['scheduleModel']().webhook_id).toBe('');
+      expect(component['scheduleModel']().message).toBe('');
     });
 
     it('should hide the form and reset state on closeScheduleForm', () => {
       component['startAddSchedule']();
-      component['scheduleForm'].patchValue({ webhook_id: 'w1', message: 'Reminder!' });
+      component['scheduleModel'].update(current => ({ ...current, webhook_id: 'w1', message: 'Reminder!' }));
 
       component['closeScheduleForm']();
 
       expect(component['isAddingSchedule']()).toBe(false);
       expect(component['editingSchedule']()).toBeNull();
-      expect(component['scheduleForm'].get('webhook_id')?.value).toBe('');
-      expect(component['scheduleForm'].get('message')?.value).toBe('');
+      expect(component['scheduleModel']().webhook_id).toBe('');
+      expect(component['scheduleModel']().message).toBe('');
     });
 
     it('should reset all days_of_week checkboxes on closeScheduleForm', () => {
@@ -442,8 +451,7 @@ describe('DiscordTabComponent', () => {
 
       component['closeScheduleForm']();
 
-      const daysChecked = component['scheduleForm'].controls.days_of_week.controls.map(c => c.value);
-      expect(daysChecked).toEqual([false, false, false, false, false, false, false]);
+      expect(component['scheduleModel']().days_of_week).toEqual([false, false, false, false, false, false, false]);
     });
 
     it('should populate scheduleForm fields and check the matching days_of_week controls on startEditSchedule', () => {
@@ -451,14 +459,13 @@ describe('DiscordTabComponent', () => {
 
       expect(component['editingSchedule']()).toEqual(mockSchedule);
       expect(component['isAddingSchedule']()).toBe(false);
-      expect(component['scheduleForm'].get('webhook_id')?.value).toBe('w1');
-      expect(component['scheduleForm'].get('message')?.value).toBe('Reminder!');
-      expect(component['scheduleForm'].get('frequency')?.value).toBe('weekly');
-      expect(component['scheduleForm'].get('hour_utc')?.value).toBe(19);
+      expect(component['scheduleModel']().webhook_id).toBe('w1');
+      expect(component['scheduleModel']().message).toBe('Reminder!');
+      expect(component['scheduleModel']().frequency).toBe('weekly');
+      expect(component['scheduleModel']().hour_utc).toBe(19);
 
       // WEEK_DAYS order is [Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6, Sun=7]; schedule has days_of_week [2, 6]
-      const daysChecked = component['scheduleForm'].controls.days_of_week.controls.map(c => c.value);
-      expect(daysChecked).toEqual([false, true, false, false, false, true, false]);
+      expect(component['scheduleModel']().days_of_week).toEqual([false, true, false, false, false, true, false]);
     });
 
     it('should default day_of_month when schedule has none set', () => {
@@ -466,7 +473,7 @@ describe('DiscordTabComponent', () => {
 
       component['startEditSchedule'](scheduleNoDayOfMonth);
 
-      expect(component['scheduleForm'].get('day_of_month')?.value).toBe(1);
+      expect(component['scheduleModel']().day_of_month).toBe(1);
     });
   });
 
@@ -478,14 +485,14 @@ describe('DiscordTabComponent', () => {
 
     it('should create schedule with correctly-shaped request and close the form on success', async () => {
       component['startAddSchedule']();
-      component['scheduleForm'].patchValue({
+      component['scheduleModel'].update(current => ({
+        ...current,
         webhook_id: 'w1',
         message: 'Reminder!',
         frequency: 'weekly',
         hour_utc: 9,
-      });
-      component['scheduleForm'].controls.days_of_week.controls[1].setValue(true);
-      component['scheduleForm'].controls.days_of_week.controls[5].setValue(true);
+        days_of_week: [false, true, false, false, false, true, false],
+      }));
 
       await component['addSchedule']();
 
@@ -503,13 +510,14 @@ describe('DiscordTabComponent', () => {
 
     it('should build a monthly request with day_of_month and null days_of_week', async () => {
       component['startAddSchedule']();
-      component['scheduleForm'].patchValue({
+      component['scheduleModel'].update(current => ({
+        ...current,
         webhook_id: 'w1',
         message: 'Reminder!',
         frequency: 'monthly',
         day_of_month: 15,
         hour_utc: 9,
-      });
+      }));
 
       await component['addSchedule']();
 
@@ -521,7 +529,12 @@ describe('DiscordTabComponent', () => {
     it('should show error snackbar and keep the form open when createSchedule fails', async () => {
       discordScheduleService.createSchedule.mockResolvedValue({ error: new Error('DB error') });
       component['startAddSchedule']();
-      component['scheduleForm'].patchValue({ webhook_id: 'w1', message: 'Reminder!', frequency: 'daily' });
+      component['scheduleModel'].update(current => ({
+        ...current,
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'daily',
+      }));
 
       await component['addSchedule']();
 
@@ -533,7 +546,7 @@ describe('DiscordTabComponent', () => {
   describe('saveScheduleEdit', () => {
     it('should not call updateSchedule when form is invalid', async () => {
       component['startEditSchedule'](mockSchedule);
-      component['scheduleForm'].get('message')?.setValue('');
+      component['scheduleModel'].update(current => ({ ...current, message: '' }));
 
       await component['saveScheduleEdit']();
 
@@ -542,7 +555,7 @@ describe('DiscordTabComponent', () => {
 
     it('should update schedule with correctly-shaped request and close the form on success', async () => {
       component['startEditSchedule'](mockSchedule);
-      component['scheduleForm'].patchValue({ message: 'Updated reminder!' });
+      component['scheduleModel'].update(current => ({ ...current, message: 'Updated reminder!' }));
 
       await component['saveScheduleEdit']();
 
@@ -581,7 +594,12 @@ describe('DiscordTabComponent', () => {
 
     it('should route to addSchedule when not editing', async () => {
       component['startAddSchedule']();
-      component['scheduleForm'].patchValue({ webhook_id: 'w1', message: 'Reminder!', frequency: 'daily' });
+      component['scheduleModel'].update(current => ({
+        ...current,
+        webhook_id: 'w1',
+        message: 'Reminder!',
+        frequency: 'daily',
+      }));
 
       await component['handleScheduleFormSubmit']();
 

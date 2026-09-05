@@ -25,19 +25,25 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           cache: 'npm'
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run linter
+        id: lint
         run: npm run lint
 
       - name: Build project (development)
+        id: build
         run: npm run build:dev
 
       - name: Run unit tests
+        id: tests
         run: npm run test:ci
 
       - name: Comment PR
@@ -49,6 +55,7 @@ jobs:
             const emoji = status === 'success' ? '✅' : '❌';
             const message = `## ${emoji} PR Checks ${status === 'success' ? 'Passed' : 'Failed'}
             
+            **Lint:** ${{ steps.lint.outcome || 'N/A' }}
             **Build:** ${{ steps.build.outcome || 'N/A' }}
             **Tests:** ${{ steps.tests.outcome || 'N/A' }}
             

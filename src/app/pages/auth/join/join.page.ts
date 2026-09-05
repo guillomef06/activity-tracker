@@ -1,6 +1,6 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { from } from 'rxjs';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, required, minLength, maxLength, pattern } from '@angular/forms/signals';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,16 +16,36 @@ import { AuthBackgroundComponent } from '@app/shared/components/auth-background/
 import type { MemberSignUpRequest } from '@app/shared/models';
 import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
 import {
-  passwordMatchValidator,
-  createFieldErrorSignal,
-  createFieldValidSignal,
-  usernameAvailableValidator,
+  getFieldErrorKey,
+  validateUsernameAvailable,
+  validatePasswordsMatch,
 } from '@app/shared/utils/form-validation.utils';
+
+const TOKEN_MIN_LENGTH = 6;
+const USERNAME_MIN_LENGTH = 3;
+const USERNAME_MAX_LENGTH = 30;
+const DISPLAY_NAME_MIN_LENGTH = 2;
+const DISPLAY_NAME_MAX_LENGTH = 100;
+const PASSWORD_MIN_LENGTH = 6;
+const PASSWORD_MAX_LENGTH = 128;
+const RECOVERY_ANSWER_MIN_LENGTH = 2;
+const USERNAME_PATTERN = /^[a-zA-Z0-9_-]+$/;
+const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+
+interface JoinFormValue {
+  token: string;
+  username: string;
+  displayName: string;
+  password: string;
+  confirmPassword: string;
+  recoveryQuestionId: number | null;
+  recoveryAnswer: string;
+}
 
 @Component({
   selector: 'app-join',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     MatCardModule,
     MatFormFieldModule,
@@ -44,10 +64,8 @@ import {
 export class JoinPage implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly serverService = inject(ServerService);
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly recoveryQuestions = RECOVERY_QUESTIONS;
   protected readonly hidePassword = signal(true);
@@ -58,41 +76,51 @@ export class JoinPage implements OnInit {
   protected readonly serverName = signal<string | null>(null);
   protected readonly invitationToken = signal<string | null>(null);
 
-  protected readonly joinForm: FormGroup = this.fb.group(
-    {
-      token: ['', [Validators.required, Validators.minLength(6)]],
-      username: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(30),
-          Validators.pattern(/^[a-zA-Z0-9_-]+$/),
-        ],
-        [usernameAvailableValidator(u => from(this.authService.checkUsernameAvailable(u)))],
-      ],
-      displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(128),
-          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
-        ],
-      ],
-      confirmPassword: ['', [Validators.required]],
-      recoveryQuestionId: [null, [Validators.required]],
-      recoveryAnswer: ['', [Validators.required, Validators.minLength(2)]],
-    },
-    { validators: passwordMatchValidator }
-  );
+  protected readonly joinModel = signal<JoinFormValue>({
+    token: '',
+    username: '',
+    displayName: '',
+    password: '',
+    confirmPassword: '',
+    recoveryQuestionId: null,
+    recoveryAnswer: '',
+  });
+
+  protected readonly joinForm = form(this.joinModel, path => {
+    required(path.token);
+    minLength(path.token, TOKEN_MIN_LENGTH);
+
+    required(path.username);
+    minLength(path.username, USERNAME_MIN_LENGTH);
+    maxLength(path.username, USERNAME_MAX_LENGTH);
+    pattern(path.username, USERNAME_PATTERN);
+    validateUsernameAvailable(path.username, username => from(this.authService.checkUsernameAvailable(username)));
+
+    required(path.displayName);
+    minLength(path.displayName, DISPLAY_NAME_MIN_LENGTH);
+    maxLength(path.displayName, DISPLAY_NAME_MAX_LENGTH);
+
+    required(path.password);
+    minLength(path.password, PASSWORD_MIN_LENGTH);
+    maxLength(path.password, PASSWORD_MAX_LENGTH);
+    pattern(path.password, PASSWORD_PATTERN);
+
+    required(path.confirmPassword);
+    validatePasswordsMatch(path.password, path.confirmPassword);
+
+    required(path.recoveryQuestionId);
+    required(path.recoveryAnswer);
+    minLength(path.recoveryAnswer, RECOVERY_ANSWER_MIN_LENGTH);
+  });
+
+  protected readonly getFieldErrorKey = getFieldErrorKey;
+  protected readonly usernameErrorKeys: Record<string, string> = { pattern: 'auth.errors.usernameInvalidChars' };
+  protected readonly passwordErrorKeys: Record<string, string> = { pattern: 'auth.errors.passwordPattern' };
 
   ngOnInit(): void {
-    // Check if token is provided in query params
     const token = this.route.snapshot.queryParamMap.get('token');
     if (token) {
-      this.joinForm.patchValue({ token });
+      this.joinModel.update(value => ({ ...value, token }));
       this.validateToken(token);
     }
   }
@@ -105,28 +133,10 @@ export class JoinPage implements OnInit {
     this.hideConfirmPassword.update(value => !value);
   }
 
-  // Reactive error signals (automatically update when form state changes)
-  protected readonly tokenError = createFieldErrorSignal(this.joinForm, 'token', this.destroyRef);
-  protected readonly usernameError = createFieldErrorSignal(this.joinForm, 'username', this.destroyRef, undefined, {
-    pattern: 'auth.errors.usernameInvalidChars',
-  });
-  protected readonly displayNameError = createFieldErrorSignal(this.joinForm, 'displayName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.joinForm, 'password', this.destroyRef, undefined, {
-    pattern: 'auth.errors.passwordPattern',
-  });
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.joinForm, 'confirmPassword', this.destroyRef);
-  protected readonly confirmPasswordValid = createFieldValidSignal(this.joinForm, 'confirmPassword', this.destroyRef);
-  protected readonly recoveryQuestionIdError = createFieldErrorSignal(
-    this.joinForm,
-    'recoveryQuestionId',
-    this.destroyRef
-  );
-  protected readonly recoveryAnswerError = createFieldErrorSignal(this.joinForm, 'recoveryAnswer', this.destroyRef);
-
   protected async validateToken(token?: string): Promise<void> {
-    const tokenValue = token || this.joinForm.get('token')?.value;
+    const tokenValue = token ?? this.joinModel().token;
 
-    if (!tokenValue || tokenValue.length < 6) {
+    if (!tokenValue || tokenValue.length < TOKEN_MIN_LENGTH) {
       this.serverName.set(null);
       this.invitationToken.set(null);
       return;
@@ -157,9 +167,11 @@ export class JoinPage implements OnInit {
     }
   }
 
-  protected async onSubmit(): Promise<void> {
-    if (this.joinForm.invalid || this.joinForm.pending || this.isLoading()) {
-      this.joinForm.markAllAsTouched();
+  protected async onSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+
+    if (this.joinForm().invalid() || this.joinForm().pending() || this.isLoading()) {
+      this.joinForm().markAsTouched();
       return;
     }
 
@@ -167,21 +179,20 @@ export class JoinPage implements OnInit {
     this.errorMessage.set(null);
 
     try {
-      const { token, username, displayName, password, recoveryQuestionId, recoveryAnswer } = this.joinForm.value;
+      const { token, username, displayName, password, recoveryQuestionId, recoveryAnswer } = this.joinModel();
 
       const request: MemberSignUpRequest = {
         username,
         password,
         displayName,
         invitationToken: token,
-        recoveryQuestionId,
+        recoveryQuestionId: recoveryQuestionId as number,
         recoveryAnswer,
       };
 
       const { error } = await this.authService.signUpMember(request);
       if (error) throw error;
 
-      // Redirect to home
       await this.router.navigate(['/']);
     } catch (error: unknown) {
       console.error('Join error:', error);

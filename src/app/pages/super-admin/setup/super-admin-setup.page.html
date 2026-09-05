@@ -12,20 +12,20 @@
         <p>{{ 'auth.setupWarning' | translate }}</p>
       </div>
 
-      <form [formGroup]="setupForm" (ngSubmit)="onSubmit()">
+      <form novalidate (submit)="onSubmit($event)">
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>person</mat-icon>
           <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
-            formControlName="username"
+            [formField]="setupForm.username"
             type="text"
             autocomplete="username"
             [placeholder]="'auth.usernamePlaceholder' | translate"
           />
           <mat-hint>{{ 'auth.usernameHint' | translate }}</mat-hint>
-          @if (usernameError()) {
-            <mat-error>{{ usernameError() | translate }}</mat-error>
+          @if (setupForm.username().touched() && setupForm.username().invalid()) {
+            <mat-error>{{ getFieldErrorKey(setupForm.username().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -34,14 +34,14 @@
           <mat-label>{{ 'auth.displayName' | translate }}</mat-label>
           <input
             matInput
-            formControlName="displayName"
+            [formField]="setupForm.displayName"
             type="text"
             autocomplete="name"
             [placeholder]="'auth.displayNamePlaceholder' | translate"
           />
           <mat-hint>{{ 'auth.displayNameHint' | translate }}</mat-hint>
-          @if (displayNameError()) {
-            <mat-error>{{ displayNameError() | translate }}</mat-error>
+          @if (setupForm.displayName().touched() && setupForm.displayName().invalid()) {
+            <mat-error>{{ getFieldErrorKey(setupForm.displayName().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -50,7 +50,7 @@
           <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
-            formControlName="password"
+            [formField]="setupForm.password"
             [type]="hidePassword() ? 'password' : 'text'"
             autocomplete="new-password"
             [placeholder]="'auth.passwordPlaceholder' | translate"
@@ -66,8 +66,10 @@
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           <mat-hint>{{ 'auth.passwordHint' | translate }}</mat-hint>
-          @if (passwordError()) {
-            <mat-error>{{ passwordError() | translate }}</mat-error>
+          @if (setupForm.password().touched() && setupForm.password().invalid()) {
+            <mat-error>{{
+              getFieldErrorKey(setupForm.password().errors(), { pattern: 'auth.errors.passwordPattern' }) | translate
+            }}</mat-error>
           }
         </mat-form-field>
 
@@ -76,7 +78,7 @@
           <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
           <input
             matInput
-            formControlName="confirmPassword"
+            [formField]="setupForm.confirmPassword"
             [type]="hideConfirmPassword() ? 'password' : 'text'"
             autocomplete="new-password"
             [placeholder]="'auth.confirmPasswordPlaceholder' | translate"
@@ -91,8 +93,8 @@
           >
             <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (confirmPasswordError()) {
-            <mat-error>{{ confirmPasswordError() | translate }}</mat-error>
+          @if (setupForm.confirmPassword().touched() && setupForm.confirmPassword().invalid()) {
+            <mat-error>{{ getFieldErrorKey(setupForm.confirmPassword().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 

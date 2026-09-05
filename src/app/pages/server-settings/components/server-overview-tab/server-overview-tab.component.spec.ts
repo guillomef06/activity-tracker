@@ -59,26 +59,25 @@ describe('ServerOverviewTabComponent', () => {
 
   // Server form
   it('should have server form with name and tag fields', () => {
-    expect(component['serverForm']).toBeDefined();
-    expect(component['serverForm'].get('name')).toBeDefined();
-    expect(component['serverForm'].get('tag')).toBeDefined();
+    expect(component['serverForm'].name).toBeDefined();
+    expect(component['serverForm'].tag).toBeDefined();
   });
 
   it('should populate form when server input is set', () => {
-    expect(component['serverForm'].get('name')?.value).toBe('Test Server');
-    expect(component['serverForm'].get('tag')?.value).toBe('TST');
+    expect(component['serverForm'].name().value()).toBe('Test Server');
+    expect(component['serverForm'].tag().value()).toBe('TST');
   });
 
   it('should update form when server input changes', () => {
     fixture.componentRef.setInput('server', { ...mockServer, name: 'New Name', tag: null });
     fixture.detectChanges();
 
-    expect(component['serverForm'].get('name')?.value).toBe('New Name');
-    expect(component['serverForm'].get('tag')?.value).toBe('');
+    expect(component['serverForm'].name().value()).toBe('New Name');
+    expect(component['serverForm'].tag().value()).toBe('');
   });
 
   it('should call updateServer on submit', async () => {
-    component['serverForm'].patchValue({ name: 'Updated Server', tag: 'UPD' });
+    component['serverModel'].set({ name: 'Updated Server', tag: 'UPD' });
 
     await component['updateServer']();
 
@@ -90,13 +89,12 @@ describe('ServerOverviewTabComponent', () => {
 
   // Invitation form
   it('should have invitation form with durationDays field', () => {
-    expect(component['invitationForm']).toBeDefined();
-    expect(component['invitationForm'].get('durationDays')).toBeDefined();
-    expect(component['invitationForm'].get('durationDays')?.value).toBe(7);
+    expect(component['invitationForm'].durationDays).toBeDefined();
+    expect(component['invitationForm'].durationDays().value()).toBe(7);
   });
 
   it('should create invitation and copy link to clipboard', async () => {
-    component['invitationForm'].patchValue({ durationDays: 7 });
+    component['invitationModel'].set({ durationDays: 7 });
 
     await component['createInvitation']();
 
@@ -181,13 +179,12 @@ describe('ServerOverviewTabComponent', () => {
   });
 
   it('should show empty state when no members', () => {
-    expect(component['enrichedMembers']().length).toBe(0);
+    expect(component['enrichedMembers']()).toHaveLength(0);
   });
 
   // Discord invite form
   it('should have discordInviteForm with discord_invite_url field', () => {
-    expect(component['discordInviteForm']).toBeDefined();
-    expect(component['discordInviteForm'].get('discord_invite_url')).toBeDefined();
+    expect(component['discordInviteForm'].discord_invite_url).toBeDefined();
   });
 
   it('should patch discordInviteForm when server input has a discord_invite_url', () => {
@@ -197,18 +194,18 @@ describe('ServerOverviewTabComponent', () => {
     });
     fixture.detectChanges();
 
-    expect(component['discordInviteForm'].get('discord_invite_url')?.value).toBe('https://discord.gg/abc123');
+    expect(component['discordInviteForm'].discord_invite_url().value()).toBe('https://discord.gg/abc123');
   });
 
   it('should patch discordInviteForm to empty string when discord_invite_url is null', () => {
     fixture.componentRef.setInput('server', { ...mockServer, discord_invite_url: null });
     fixture.detectChanges();
 
-    expect(component['discordInviteForm'].get('discord_invite_url')?.value).toBe('');
+    expect(component['discordInviteForm'].discord_invite_url().value()).toBe('');
   });
 
   it('should call updateServer with discord_invite_url when saveDiscordInvite is called with a valid URL', async () => {
-    component['discordInviteForm'].patchValue({ discord_invite_url: 'https://discord.gg/abc' });
+    component['discordInviteModel'].set({ discord_invite_url: 'https://discord.gg/abc' });
 
     await component['saveDiscordInvite']();
 
@@ -216,7 +213,7 @@ describe('ServerOverviewTabComponent', () => {
   });
 
   it('should call updateServer with null when saveDiscordInvite is called with empty value', async () => {
-    component['discordInviteForm'].patchValue({ discord_invite_url: '' });
+    component['discordInviteModel'].set({ discord_invite_url: '' });
 
     await component['saveDiscordInvite']();
 
@@ -225,7 +222,7 @@ describe('ServerOverviewTabComponent', () => {
 
   it('should not call updateServer when discordInviteForm has an invalid URL', async () => {
     serverService.updateServer.mockClear();
-    component['discordInviteForm'].patchValue({ discord_invite_url: 'https://notdiscord.com/invite/abc' });
+    component['discordInviteModel'].set({ discord_invite_url: 'https://notdiscord.com/invite/abc' });
 
     await component['saveDiscordInvite']();
 
@@ -234,41 +231,32 @@ describe('ServerOverviewTabComponent', () => {
 
   // External link form
   it('should have externalLinkForm with label and url fields', () => {
-    expect(component['externalLinkForm']).toBeDefined();
-    expect(component['externalLinkForm'].get('label')).toBeDefined();
-    expect(component['externalLinkForm'].get('url')).toBeDefined();
+    expect(component['externalLinkForm'].label).toBeDefined();
+    expect(component['externalLinkForm'].url).toBeDefined();
   });
 
   it('should reject a url that does not start with https://', () => {
-    const urlControl = component['externalLinkForm'].get('url');
+    component['externalLinkModel'].update(current => ({ ...current, url: 'http://example.com' }));
 
-    urlControl?.setValue('http://example.com');
-
-    expect(urlControl?.valid).toBe(false);
+    expect(component['externalLinkForm'].url().valid()).toBe(false);
   });
 
   it('should accept a valid https:// url', () => {
-    const urlControl = component['externalLinkForm'].get('url');
+    component['externalLinkModel'].update(current => ({ ...current, url: 'https://example.com/wiki' }));
 
-    urlControl?.setValue('https://example.com/wiki');
-
-    expect(urlControl?.valid).toBe(true);
+    expect(component['externalLinkForm'].url().valid()).toBe(true);
   });
 
   it('should reject a label longer than 50 characters', () => {
-    const labelControl = component['externalLinkForm'].get('label');
+    component['externalLinkModel'].update(current => ({ ...current, label: 'a'.repeat(51) }));
 
-    labelControl?.setValue('a'.repeat(51));
-
-    expect(labelControl?.valid).toBe(false);
+    expect(component['externalLinkForm'].label().valid()).toBe(false);
   });
 
   it('should accept a label of 50 characters or fewer', () => {
-    const labelControl = component['externalLinkForm'].get('label');
+    component['externalLinkModel'].update(current => ({ ...current, label: 'a'.repeat(50) }));
 
-    labelControl?.setValue('a'.repeat(50));
-
-    expect(labelControl?.valid).toBe(true);
+    expect(component['externalLinkForm'].label().valid()).toBe(true);
   });
 
   it('should patch externalLinkForm when server input has external link fields set', () => {
@@ -279,8 +267,8 @@ describe('ServerOverviewTabComponent', () => {
     });
     fixture.detectChanges();
 
-    expect(component['externalLinkForm'].get('label')?.value).toBe('Wiki');
-    expect(component['externalLinkForm'].get('url')?.value).toBe('https://example.com/wiki');
+    expect(component['externalLinkForm'].label().value()).toBe('Wiki');
+    expect(component['externalLinkForm'].url().value()).toBe('https://example.com/wiki');
   });
 
   it('should patch externalLinkForm to empty strings when external link fields are null', () => {
@@ -291,8 +279,8 @@ describe('ServerOverviewTabComponent', () => {
     });
     fixture.detectChanges();
 
-    expect(component['externalLinkForm'].get('label')?.value).toBe('');
-    expect(component['externalLinkForm'].get('url')?.value).toBe('');
+    expect(component['externalLinkForm'].label().value()).toBe('');
+    expect(component['externalLinkForm'].url().value()).toBe('');
   });
 
   it('should call updateServer with trimmed label/url and emit serverUpdated on saveExternalLink success', async () => {
@@ -300,7 +288,7 @@ describe('ServerOverviewTabComponent', () => {
     // Leading whitespace is intentionally omitted from the url: the pattern validator anchors
     // at the start (`^https://`), so a leading space would make the form invalid before trim()
     // ever runs — same behavior as the pre-existing discordInviteForm pattern in this component.
-    component['externalLinkForm'].patchValue({ label: '  Wiki  ', url: 'https://example.com/wiki  ' });
+    component['externalLinkModel'].set({ label: '  Wiki  ', url: 'https://example.com/wiki  ' });
 
     await component['saveExternalLink']();
 
@@ -312,7 +300,7 @@ describe('ServerOverviewTabComponent', () => {
   });
 
   it('should call updateServer with both fields null when clearing the external link', async () => {
-    component['externalLinkForm'].patchValue({ label: '', url: '' });
+    component['externalLinkModel'].set({ label: '', url: '' });
 
     await component['saveExternalLink']();
 
@@ -324,7 +312,8 @@ describe('ServerOverviewTabComponent', () => {
 
   it('should not call updateServer when externalLinkForm is invalid', async () => {
     serverService.updateServer.mockClear();
-    component['externalLinkForm'].patchValue({ url: 'http://not-https.com' });
+    // eslint-disable-next-line sonarjs/no-clear-text-protocols -- intentionally non-https to test validation rejection
+    component['externalLinkModel'].update(current => ({ ...current, url: 'http://not-https.com' }));
 
     await component['saveExternalLink']();
 
@@ -334,7 +323,7 @@ describe('ServerOverviewTabComponent', () => {
   it('should show error snackbar and not emit serverUpdated when saveExternalLink fails', async () => {
     serverService.updateServer.mockResolvedValueOnce({ error: new Error('DB error') });
     const emitSpy = vi.spyOn(component.serverUpdated, 'emit');
-    component['externalLinkForm'].patchValue({ label: 'Wiki', url: 'https://example.com/wiki' });
+    component['externalLinkModel'].set({ label: 'Wiki', url: 'https://example.com/wiki' });
 
     await component['saveExternalLink']();
 

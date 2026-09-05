@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { ServerService, PARTIAL_REPLACE_FAILURE_PREFIX } from './server.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
@@ -69,6 +69,7 @@ describe('ServerService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
+          provideZonelessChangeDetection(),
           ServerService,
           { provide: SupabaseService, useValue: supabaseMock },
           { provide: AuthService, useValue: authMock },

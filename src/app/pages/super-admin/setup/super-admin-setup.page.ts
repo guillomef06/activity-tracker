@@ -1,6 +1,6 @@
-import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, required, minLength, maxLength, pattern } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,12 +10,27 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
-import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { getFieldErrorKey, validatePasswordsMatch } from '@app/shared/utils/form-validation.utils';
+
+const USERNAME_MIN_LENGTH = 3;
+const USERNAME_MAX_LENGTH = 30;
+const DISPLAY_NAME_MIN_LENGTH = 2;
+const DISPLAY_NAME_MAX_LENGTH = 100;
+const PASSWORD_MIN_LENGTH = 6;
+const PASSWORD_MAX_LENGTH = 128;
+const PASSWORD_COMPLEXITY_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+
+interface SetupFormValue {
+  username: string;
+  displayName: string;
+  password: string;
+  confirmPassword: string;
+}
 
 @Component({
   selector: 'app-super-admin-setup',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,32 +45,39 @@ import { passwordMatchValidator, createFieldErrorSignal } from '@app/shared/util
 })
 export class SuperAdminSetupPage {
   private readonly authService = inject(AuthService);
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly hidePassword = signal(true);
   protected readonly hideConfirmPassword = signal(true);
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
-  protected readonly setupForm: FormGroup = this.fb.group(
-    {
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(128),
-          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
-        ],
-      ],
-      confirmPassword: ['', [Validators.required]],
-    },
-    { validators: passwordMatchValidator }
-  );
+  protected readonly setupModel = signal<SetupFormValue>({
+    username: '',
+    displayName: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  protected readonly setupForm = form(this.setupModel, path => {
+    required(path.username);
+    minLength(path.username, USERNAME_MIN_LENGTH);
+    maxLength(path.username, USERNAME_MAX_LENGTH);
+
+    required(path.displayName);
+    minLength(path.displayName, DISPLAY_NAME_MIN_LENGTH);
+    maxLength(path.displayName, DISPLAY_NAME_MAX_LENGTH);
+
+    required(path.password);
+    minLength(path.password, PASSWORD_MIN_LENGTH);
+    maxLength(path.password, PASSWORD_MAX_LENGTH);
+    pattern(path.password, PASSWORD_COMPLEXITY_PATTERN, { message: 'auth.errors.passwordPattern' });
+
+    required(path.confirmPassword);
+    validatePasswordsMatch(path.password, path.confirmPassword);
+  });
+
+  protected readonly getFieldErrorKey = getFieldErrorKey;
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
@@ -65,17 +87,11 @@ export class SuperAdminSetupPage {
     this.hideConfirmPassword.update(value => !value);
   }
 
-  // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.setupForm, 'username', this.destroyRef);
-  protected readonly displayNameError = createFieldErrorSignal(this.setupForm, 'displayName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.setupForm, 'password', this.destroyRef, undefined, {
-    pattern: 'auth.errors.passwordPattern',
-  });
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.setupForm, 'confirmPassword', this.destroyRef);
+  protected async onSubmit(event: Event): Promise<void> {
+    event.preventDefault();
 
-  protected async onSubmit(): Promise<void> {
-    if (this.setupForm.invalid || this.isLoading()) {
-      this.setupForm.markAllAsTouched();
+    if (this.setupForm().invalid() || this.isLoading()) {
+      this.setupForm().markAsTouched();
       return;
     }
 
@@ -83,7 +99,7 @@ export class SuperAdminSetupPage {
     this.errorMessage.set(null);
 
     try {
-      const { username, displayName, password } = this.setupForm.value;
+      const { username, displayName, password } = this.setupModel();
 
       await this.authService.signUpSuperAdmin(username, password, displayName);
 

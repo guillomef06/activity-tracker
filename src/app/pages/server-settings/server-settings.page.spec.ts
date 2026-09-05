@@ -4,8 +4,10 @@ import { ServerSettingsPage } from './server-settings.page';
 import { ServerService } from '@app/core/services/server.service';
 import { SeasonService } from '@app/core/services/season.service';
 import { AuthService } from '@app/core/services/auth.service';
+import { DiscordService } from '@app/core/services/discord.service';
+import { DiscordScheduledMessageService } from '@app/core/services/discord-scheduled-message.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
@@ -44,6 +46,11 @@ describe('ServerSettingsPage', () => {
 
     const authServiceSpy = {
       userProfile: signal({ server_id: 'test-server-id' }),
+      // MgAdminTabComponent (rendered inside a tab on this page) calls these in its
+      // ngOnInit; without them it throws synchronously and pollutes other tests with
+      // an unhandled rejection (see mg-admin-tab.component.ts).
+      getServerId: vi.fn().mockReturnValue('test-server-id'),
+      getUserId: vi.fn().mockReturnValue('test-user-id'),
     };
 
     const seasonServiceSpy = {
@@ -55,14 +62,30 @@ describe('ServerSettingsPage', () => {
       suggestNextSeasonStartDate: vi.fn().mockReturnValue(new Date()),
     };
 
+    // DiscordTabComponent (rendered inside a tab on this page) calls these in its
+    // ngOnInit; without them the real services run and reject asynchronously, and by
+    // the time they settle the fixture from a previous test is already destroyed —
+    // same failure mode as the AuthService mocks above (see mg-admin-tab.component.ts).
+    const discordServiceSpy = {
+      webhooks: signal([]),
+      loadWebhooks: vi.fn().mockResolvedValue({ error: null }),
+    };
+
+    const discordScheduleServiceSpy = {
+      schedules: signal([]),
+      loadSchedules: vi.fn().mockResolvedValue({ error: null }),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ServerSettingsPage, TranslateModule.forRoot()],
       providers: [
         { provide: ServerService, useValue: serverServiceSpy },
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SeasonService, useValue: seasonServiceSpy },
+        { provide: DiscordService, useValue: discordServiceSpy },
+        { provide: DiscordScheduledMessageService, useValue: discordScheduleServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],

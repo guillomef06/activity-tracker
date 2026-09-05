@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { environment } from '../../../environments/environment';
 import { StorageService } from './storage.service';
 import type { SupportedLanguage } from './language.service';
@@ -25,18 +25,14 @@ export class ReleaseNotesService {
   private readonly http = inject(HttpClient);
   private readonly storageService = inject(StorageService);
 
-  private readonly _notes = signal<ReleaseNote[]>([]);
   private readonly _seenVersion = signal<string | null>(this.storageService.get<string>(SEEN_VERSION_KEY));
 
-  readonly notes = this._notes.asReadonly();
-  readonly hasUnseenNotes = computed(() => this._notes().length > 0 && this._seenVersion() !== environment.appVersion);
+  private readonly notesResource = rxResource({
+    stream: () => this.http.get<ReleaseNote[]>('assets/release-notes.json'),
+  });
 
-  constructor() {
-    this.http
-      .get<ReleaseNote[]>('assets/release-notes.json')
-      .pipe(takeUntilDestroyed())
-      .subscribe(notes => this._notes.set(notes));
-  }
+  readonly notes = computed(() => this.notesResource.value() ?? []);
+  readonly hasUnseenNotes = computed(() => this.notes().length > 0 && this._seenVersion() !== environment.appVersion);
 
   markAsSeen(): void {
     this.storageService.set(SEEN_VERSION_KEY, environment.appVersion);

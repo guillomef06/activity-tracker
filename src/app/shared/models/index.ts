@@ -75,6 +75,7 @@ export type {
   UpsertServerMgConfigRequest,
   ServerMgSlotConfig,
   UpsertMgSlotConfigRow,
+  RegisterMgPlayerPayload,
 } from './mg-event.model';
 
 // Guide models

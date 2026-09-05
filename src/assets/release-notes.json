@@ -1,5 +1,49 @@
 [
   {
+    "version": "1.7.1",
+    "date": "2026-09-05",
+    "entries": [
+      {
+        "type": "improvement",
+        "text": {
+          "en": "Upgraded the app to the latest Angular version for better performance and long-term stability",
+          "fr": "Mise à niveau de l'application vers la dernière version d'Angular pour de meilleures performances et une stabilité durable",
+          "es": "Actualización de la aplicación a la última versión de Angular para un mejor rendimiento y estabilidad a largo plazo",
+          "it": "Aggiornamento dell'app all'ultima versione di Angular per migliori prestazioni e stabilità a lungo termine",
+          "de": "App auf die neueste Angular-Version aktualisiert für bessere Leistung und langfristige Stabilität",
+          "tr": "Daha iyi performans ve uzun vadeli kararlılık için uygulama en son Angular sürümüne yükseltildi",
+          "pt": "Aplicação atualizada para a versão mais recente do Angular, para melhor desempenho e estabilidade a longo prazo",
+          "el": "Αναβάθμιση της εφαρμογής στην τελευταία έκδοση του Angular για καλύτερη απόδοση και μακροπρόθεσμη σταθερότητα",
+          "ko": "더 나은 성능과 장기적인 안정성을 위해 앱을 최신 Angular 버전으로 업그레이드했습니다",
+          "hi": "बेहतर प्रदर्शन और दीर्घकालिक स्थिरता के लिए ऐप को नवीनतम Angular संस्करण में अपग्रेड किया गया",
+          "zh": "将应用升级到最新的Angular版本，以获得更好的性能和长期稳定性",
+          "ku": "Sepan ji bo performansek çêtir û aramiya demdirêj hate rojanekirin bo guhertoya herî nû ya Angular",
+          "ar": "تم ترقية التطبيق إلى أحدث إصدار من Angular لتحسين الأداء والاستقرار على المدى الطويل",
+          "id": "Aplikasi ditingkatkan ke versi Angular terbaru untuk performa yang lebih baik dan stabilitas jangka panjang"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Mightiest Governor registration — players now pick their desired rank slot and can add an optional comment (200 characters max), giving admins clearer signal for manual seat selection",
+          "fr": "Inscription au Gouverneur le Plus Puissant — les joueurs indiquent désormais le palier de rang visé et peuvent ajouter un commentaire optionnel (200 caractères max), pour des sélections manuelles plus claires côté admins",
+          "es": "Inscripción al Gobernador Más Poderoso — los jugadores ahora indican el rango objetivo y pueden añadir un comentario opcional (200 caracteres máx.), dando a los admins una señal más clara para la selección manual",
+          "it": "Iscrizione al Governatore Più Potente — i giocatori ora indicano il rango obiettivo e possono aggiungere un commento facoltativo (200 caratteri max), offrendo agli admin un segnale più chiaro per la selezione manuale",
+          "de": "Anmeldung zum Mächtigsten Gouverneur — Spieler geben jetzt ihren gewünschten Rangplatz an und können einen optionalen Kommentar hinzufügen (max. 200 Zeichen), was Admins ein klareres Signal für die manuelle Auswahl gibt",
+          "tr": "En Güçlü Vali kaydı — oyuncular artık hedefledikleri sıralama dilimini belirtebiliyor ve isteğe bağlı bir yorum ekleyebiliyor (en fazla 200 karakter); bu, yöneticilere manuel seçim için daha net bir sinyal veriyor",
+          "pt": "Inscrição no Governador Mais Poderoso — os jogadores agora indicam a faixa de classificação desejada e podem adicionar um comentário opcional (máx. 200 caracteres), dando aos admins um sinal mais claro para a seleção manual",
+          "el": "Εγγραφή στον Ισχυρότερο Κυβερνήτη — οι παίκτες τώρα επιλέγουν την επιθυμητή θέση κατάταξης και μπορούν να προσθέσουν προαιρετικό σχόλιο (έως 200 χαρακτήρες), δίνοντας στους διαχειριστές σαφέστερη ένδειξη για τη χειροκίνητη επιλογή",
+          "ko": "최강 총독 등록 — 플레이어가 이제 원하는 순위 구간을 선택하고 선택적으로 댓글(최대 200자)을 남길 수 있어, 관리자가 수동 선발 시 더 명확한 정보를 얻을 수 있습니다",
+          "hi": "मजबूत गवर्नर पंजीकरण — खिलाड़ी अब अपनी वांछित रैंक श्रेणी चुन सकते हैं और एक वैकल्पिक टिप्पणी (अधिकतम 200 अक्षर) जोड़ सकते हैं, जिससे मैन्युअल चयन के लिए एडमिन को स्पष्ट जानकारी मिलती है",
+          "zh": "最强总督报名 — 玩家现在可以选择期望的排名档位，并添加可选备注（最多200字），让管理员在手动选拔时获得更清晰的信息",
+          "ku": "Qeydkirin ji bo Walîyê Herî Hêzdar — lîstikvan niha dikarin asta rêza xwe ya xwestî hilbijêrin û şîroveyek vebijarkî (herî zêde 200 karakter) zêde bikin, ku ji rêvebiran re nîşaneke zelaltir dide bo hilbijartina destan",
+          "ar": "التسجيل في الحاكم الأقوى — يمكن للاعبين الآن تحديد شريحة الترتيب المرغوبة وإضافة تعليق اختياري (200 حرف كحد أقصى)، مما يمنح المسؤولين إشارة أوضح للاختيار اليدوي",
+          "id": "Pendaftaran Gubernur Terkuat — pemain sekarang dapat memilih peringkat slot yang diinginkan dan menambahkan komentar opsional (maks. 200 karakter), memberikan sinyal yang lebih jelas bagi admin untuk seleksi manual"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.7.0",
     "date": "2026-09-04",
     "entries": [

@@ -354,7 +354,8 @@
     "deleteConfirm": "Apakah Anda yakin ingin menghapus \"{{name}}\"?",
     "uploadImage": "Unggah gambar",
     "next": "Lanjut",
-    "clear": "Hapus"
+    "clear": "Hapus",
+    "retry": "Coba lagi"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "Legion tersirat setiap minggu dan tidak dapat dihapus",
       "nameRequired": "Nama wajib diisi (maksimal 100 karakter)",
       "createFailed": "Gagal membuat musim",
+      "loadFailed": "Gagal memuat musim",
       "lockedTooltip": "Musim ini memiliki aktivitas yang tercatat dan strukturnya terkunci",
       "lockedHint": "Musim ini memiliki aktivitas yang tercatat. Hanya nama yang dapat diedit.",
       "deleteLockedTooltip": "Tidak dapat menghapus musim dengan aktivitas yang tercatat",
@@ -882,6 +884,12 @@
       "registerError": "Pendaftaran gagal. Silakan coba lagi.",
       "unregisterSuccess": "Pendaftaran Anda telah dibatalkan.",
       "unregisterError": "Gagal membatalkan pendaftaran. Silakan coba lagi.",
+      "positionLabel": "Posisi yang diinginkan",
+      "positionPlaceholder": "Pilih peringkat yang Anda targetkan",
+      "positionInvalid": "Pilih posisi yang valid.",
+      "medalsUnit": "medali",
+      "commentLabel": "Komentar (opsional)",
+      "commentPlaceholder": "Ada yang perlu diketahui admin? (opsional)",
       "fullFfaTitle": "FFA Penuh",
       "fullFfaDescription": "Tidak ada seleksi yang diterbitkan — acara ini terbuka untuk semua pemain."
     },
@@ -921,7 +929,9 @@
       },
       "registrations": {
         "title": "Pendaftaran",
-        "empty": "Belum ada pendaftaran."
+        "empty": "Belum ada pendaftaran.",
+        "position": "Posisi yang diinginkan",
+        "noPosition": "Belum ditentukan"
       },
       "selection": {
         "title": "Seleksi",

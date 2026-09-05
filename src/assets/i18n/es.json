@@ -354,7 +354,8 @@
     "deleteConfirm": "¿Estás seguro de que deseas eliminar \"{{name}}\"?",
     "uploadImage": "Subir imagen",
     "next": "Siguiente",
-    "clear": "Limpiar"
+    "clear": "Limpiar",
+    "retry": "Reintentar"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "La Legión está implícita cada semana y no se puede eliminar",
       "nameRequired": "El nombre es obligatorio (máximo 100 caracteres)",
       "createFailed": "Error al crear la temporada",
+      "loadFailed": "Error al cargar las temporadas",
       "lockedTooltip": "Esta temporada tiene actividad registrada y su estructura está bloqueada",
       "lockedHint": "Esta temporada tiene actividad registrada. Solo se puede editar el nombre.",
       "deleteLockedTooltip": "No se puede eliminar una temporada con actividad registrada",
@@ -882,6 +884,12 @@
       "registerError": "Error al inscribirse. Por favor, inténtalo de nuevo.",
       "unregisterSuccess": "Has cancelado tu inscripción.",
       "unregisterError": "Error al cancelar la inscripción. Por favor, inténtalo de nuevo.",
+      "positionLabel": "Posición deseada",
+      "positionPlaceholder": "Elige el rango al que aspiras",
+      "positionInvalid": "Selecciona una posición válida.",
+      "medalsUnit": "medallas",
+      "commentLabel": "Comentario (opcional)",
+      "commentPlaceholder": "¿Algo que los administradores deban saber? (opcional)",
       "fullFfaTitle": "FFA Total",
       "fullFfaDescription": "No se publicó ninguna selección — este evento está abierto a todos los jugadores."
     },
@@ -921,7 +929,9 @@
       },
       "registrations": {
         "title": "Inscripciones",
-        "empty": "No hay inscripciones todavía."
+        "empty": "No hay inscripciones todavía.",
+        "position": "Posición deseada",
+        "noPosition": "No especificada"
       },
       "selection": {
         "title": "Selección",

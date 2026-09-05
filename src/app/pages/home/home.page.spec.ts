@@ -4,7 +4,7 @@ import { HomePage } from './home.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { ActivityService } from '@core/services/activity.service';
 import { ServerService } from '@core/services/server.service';
 import { SeasonService } from '@core/services/season.service';
@@ -68,7 +68,7 @@ describe('HomePage', () => {
       providers: [
         provideAnimations(),
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         ActivityService,
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SupabaseService, useValue: supabaseServiceSpy },
@@ -122,6 +122,6 @@ describe('HomePage', () => {
     // mat-tab-group only renders the active tab content (first tab by default)
     expect(compiled.querySelector('app-activity-input')).toBeTruthy();
     // Check that 4 tab labels are rendered
-    expect(compiled.querySelectorAll('.mdc-tab').length).toBe(4);
+    expect(compiled.querySelectorAll('.mdc-tab')).toHaveLength(4);
   });
 });

@@ -6,19 +6,19 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <form novalidate (submit)="onSubmit($event)">
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>person</mat-icon>
           <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
-            formControlName="username"
+            [formField]="loginForm.username"
             type="text"
             autocomplete="username"
             [placeholder]="'auth.usernamePlaceholder' | translate"
           />
-          @if (usernameError()) {
-            <mat-error>{{ usernameError() | translate }}</mat-error>
+          @if (loginForm.username().touched() && loginForm.username().invalid()) {
+            <mat-error>{{ getFieldErrorKey(loginForm.username().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -27,7 +27,7 @@
           <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
-            formControlName="password"
+            [formField]="loginForm.password"
             [type]="hidePassword() ? 'password' : 'text'"
             autocomplete="current-password"
             [placeholder]="'auth.passwordPlaceholder' | translate"
@@ -42,8 +42,8 @@
           >
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (passwordError()) {
-            <mat-error>{{ passwordError() | translate }}</mat-error>
+          @if (loginForm.password().touched() && loginForm.password().invalid()) {
+            <mat-error>{{ getFieldErrorKey(loginForm.password().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 

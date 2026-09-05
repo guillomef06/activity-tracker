@@ -1,6 +1,5 @@
-import { Component, input, computed, signal, inject, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, input, computed, signal, inject, effect, untracked, ChangeDetectionStrategy } from '@angular/core';
+import { form, required, min, disabled, FormField } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -9,16 +8,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ActivityService, SnackbarService } from '@app/core/services';
 import { ServerService } from '@app/core/services/server.service';
 import { SeasonService } from '@app/core/services/season.service';
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
 import { getDateForWeeksAgo, getWeekStart, getWeekEnd } from '@app/shared/utils/date.util';
-import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { getFieldErrorKey } from '@app/shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
 import type { UserProfile } from '@app/shared/models';
+
+const DEFAULT_POSITION = 1;
+const MIN_POSITION = 1;
+const DEFAULT_PARTICIPATION_POINTS = 5;
 
 interface WeekOption {
   value: number;
@@ -26,10 +28,22 @@ interface WeekOption {
   dateRange: string;
 }
 
+interface RetroactiveFormModel {
+  member: string;
+  week: number;
+  activity: string;
+  position: number;
+  participated: boolean;
+}
+
+function defaultRetroactiveModel(): RetroactiveFormModel {
+  return { member: '', week: 0, activity: '', position: DEFAULT_POSITION, participated: false };
+}
+
 @Component({
   selector: 'app-retroactive-activities-tab',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -50,8 +64,6 @@ export class RetroactiveActivitiesTabComponent {
   private readonly seasonService = inject(SeasonService);
   private readonly translate = inject(TranslateService);
   private readonly snackbarService = inject(SnackbarService);
-  private readonly fb = inject(FormBuilder);
-  private readonly destroyRef = inject(DestroyRef);
 
   // Inputs
   members = input.required<UserProfile[]>();
@@ -59,51 +71,41 @@ export class RetroactiveActivitiesTabComponent {
   // Form state
   isSubmitting = signal<boolean>(false);
 
-  // Reactive form
-  retroactiveForm: FormGroup = this.fb.group({
-    member: ['', Validators.required],
-    week: [0, Validators.required],
-    activity: ['', Validators.required],
-    position: [1, [Validators.required, Validators.min(1)]],
-    participated: [false],
+  // Signal Forms model and field tree
+  protected readonly retroactiveModel = signal<RetroactiveFormModel>(defaultRetroactiveModel());
+  protected readonly retroactiveForm = form(this.retroactiveModel, path => {
+    required(path.member);
+    required(path.week);
+    required(path.activity);
+    disabled(path.activity, {
+      when: () => this.availableActivities().length === 0 || this.isBlockedForSelectedWeek(),
+    });
+    required(path.position);
+    min(path.position, MIN_POSITION);
+    disabled(path.position, { when: () => this.isBlockedForSelectedWeek() });
   });
-
-  // Convert form value changes to signals
-  private weekValue = toSignal(
-    this.retroactiveForm.get('week')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: 0 }
-  );
-
-  private activityValue = toSignal(
-    this.retroactiveForm.get('activity')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: '' }
-  );
-
-  private participatedValue = toSignal(
-    this.retroactiveForm.get('participated')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: false }
-  );
-
-  private positionValue = toSignal(
-    this.retroactiveForm.get('position')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: 1 }
-  );
 
   // Participation mode (reactive)
   isParticipationMode = computed(() => {
-    const type = this.activityValue();
+    const type = this.retroactiveModel().activity;
     return type ? this.serverService.isParticipationMode(type) : false;
   });
 
   participationPoints = computed(() => {
-    const type = this.activityValue();
-    return type ? this.serverService.getParticipationPoints(type) : 5;
+    const type = this.retroactiveModel().activity;
+    return type ? this.serverService.getParticipationPoints(type) : DEFAULT_PARTICIPATION_POINTS;
   });
 
   // Error signals for validation
-  protected readonly memberError = createFieldErrorSignal(this.retroactiveForm, 'member', this.destroyRef);
-  protected readonly activityError = createFieldErrorSignal(this.retroactiveForm, 'activity', this.destroyRef);
-  protected readonly positionError = createFieldErrorSignal(this.retroactiveForm, 'position', this.destroyRef);
+  protected readonly memberError = computed(() =>
+    this.retroactiveForm.member().touched() ? getFieldErrorKey(this.retroactiveForm.member().errors()) : ''
+  );
+  protected readonly activityError = computed(() =>
+    this.retroactiveForm.activity().touched() ? getFieldErrorKey(this.retroactiveForm.activity().errors()) : ''
+  );
+  protected readonly positionError = computed(() =>
+    this.retroactiveForm.position().touched() ? getFieldErrorKey(this.retroactiveForm.position().errors()) : ''
+  );
 
   // Computed values
   readonly scoringWeeks = computed(() => this.serverService.scoringWeeks());
@@ -139,40 +141,41 @@ export class RetroactiveActivitiesTabComponent {
    * filtering by alliance-level enable/disable. An empty array here is the sole
    * "no season configured for this date" signal per SeasonService contract.
    *
-   * Computeds derived from this one also explicitly read weekValue() themselves
-   * (rather than relying solely on this computed's output) so they still
-   * re-evaluate even if SeasonService ever returns a referentially-stable array
-   * across two different weeks.
+   * `equal: () => false` forces this to always be treated as "changed" on recompute —
+   * without it, a season service returning a referentially-stable array across two
+   * different weeks (e.g. a constant mock, or a real implementation caching by content)
+   * would make Angular's `computed()` skip notifying `isBlockedForSelectedWeek` and
+   * `availableActivities` below, leaving them stale after a week change.
    */
-  private readonly seasonActivityTypes = computed<ActivityType[]>(() => {
-    const targetDate = getWeekStart(getDateForWeeksAgo(this.weekValue() ?? 0));
-    return this.seasonService.getAvailableActivityTypesForDate(targetDate);
-  });
+  private readonly seasonActivityTypes = computed<ActivityType[]>(
+    () => {
+      const targetDate = getWeekStart(getDateForWeeksAgo(this.retroactiveModel().week));
+      return this.seasonService.getAvailableActivityTypesForDate(targetDate);
+    },
+    { equal: () => false }
+  );
 
   /**
    * True when no season covers the currently selected week — submission must be
    * totally blocked (not merely "no activities enabled") in this state.
    */
-  isBlockedForSelectedWeek = computed(() => {
-    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
-    return this.seasonActivityTypes().length === 0;
-  });
+  isBlockedForSelectedWeek = computed(() => this.seasonActivityTypes().length === 0);
 
-  availableActivities = computed(() => {
-    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
-    return this.seasonActivityTypes().filter((type: ActivityType) => this.serverService.isActivityEnabled(type.value));
-  });
+  availableActivities = computed(() =>
+    this.seasonActivityTypes().filter((type: ActivityType) => this.serverService.isActivityEnabled(type.value))
+  );
 
   calculatedPoints = computed(() => {
+    const model = this.retroactiveModel();
     if (this.isParticipationMode()) {
-      return this.activityValue() ? this.participationPoints() : 0;
+      return model.activity ? this.participationPoints() : 0;
     }
 
-    const activity = APP_CONSTANTS.ACTIVITY_TYPES.find((t: ActivityType) => t.value === this.activityValue());
+    const activity = APP_CONSTANTS.ACTIVITY_TYPES.find((t: ActivityType) => t.value === model.activity);
     if (!activity) return 0;
 
-    const pos = this.positionValue() ?? 1;
-    if (!pos || pos < 1) return 0;
+    const pos = model.position ?? DEFAULT_POSITION;
+    if (!pos || pos < MIN_POSITION) return 0;
 
     return Math.max(0, activity.points - (pos - 1));
   });
@@ -180,55 +183,52 @@ export class RetroactiveActivitiesTabComponent {
   canSubmit = computed(() => {
     if (this.isSubmitting()) return false;
     if (this.isBlockedForSelectedWeek()) return false;
-    const member = this.retroactiveForm.get('member')?.value;
-    const activity = this.activityValue();
-    if (!member || !activity) return false;
+    const model = this.retroactiveModel();
+    if (!model.member || !model.activity) return false;
     if (this.isParticipationMode()) {
-      return this.participatedValue();
+      return model.participated;
     }
-    return this.retroactiveForm.valid;
+    return this.retroactiveForm().valid();
   });
 
   constructor() {
-    // Clear activity and position when week changes
-    this.retroactiveForm
-      .get('week')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.retroactiveForm.patchValue(
-          {
-            activity: '',
-            position: 1,
-            participated: false,
-          },
-          { emitEvent: false }
-        );
+    // Clear activity and position when the selected week changes
+    effect(() => {
+      this.retroactiveForm.week().value();
+      untracked(() => {
+        this.retroactiveModel.update(current => ({
+          ...current,
+          activity: '',
+          position: DEFAULT_POSITION,
+          participated: false,
+        }));
       });
+    });
 
     // Reset participated when activity changes
-    this.retroactiveForm
-      .get('activity')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.retroactiveForm.get('participated')?.setValue(false);
+    effect(() => {
+      this.retroactiveForm.activity().value();
+      untracked(() => {
+        this.retroactiveModel.update(current => ({ ...current, participated: false }));
       });
+    });
   }
 
   async onSubmit(): Promise<void> {
     if (!this.canSubmit()) {
-      this.retroactiveForm.markAllAsTouched();
+      this.retroactiveForm().markAsTouched();
       return;
     }
 
     this.isSubmitting.set(true);
 
     try {
-      const formValue = this.retroactiveForm.value;
-      const activityDate = getDateForWeeksAgo(formValue.week);
+      const model = this.retroactiveModel();
+      const activityDate = getDateForWeeksAgo(model.week);
 
-      await this.activityService.addActivityForMember(formValue.member, {
-        activityType: formValue.activity,
-        position: this.isParticipationMode() ? null : formValue.position,
+      await this.activityService.addActivityForMember(model.member, {
+        activityType: model.activity,
+        position: this.isParticipationMode() ? null : model.position,
         points: this.isParticipationMode() ? this.participationPoints() : undefined,
         date: activityDate,
       });
@@ -236,11 +236,12 @@ export class RetroactiveActivitiesTabComponent {
       this.snackbarService.success(this.translate.instant('server.retroactive.success'));
 
       // Reset form keeping member and week
-      this.retroactiveForm.patchValue({
+      this.retroactiveModel.update(current => ({
+        ...current,
         activity: '',
-        position: 1,
+        position: DEFAULT_POSITION,
         participated: false,
-      });
+      }));
     } catch (error) {
       console.error('Error submitting retroactive activity:', error);
       this.snackbarService.error(this.translate.instant('server.retroactive.error'), 5000);
@@ -250,12 +251,6 @@ export class RetroactiveActivitiesTabComponent {
   }
 
   resetForm(): void {
-    this.retroactiveForm.reset({
-      member: '',
-      week: 0,
-      activity: '',
-      position: 1,
-      participated: false,
-    });
+    this.retroactiveModel.set(defaultRetroactiveModel());
   }
 }

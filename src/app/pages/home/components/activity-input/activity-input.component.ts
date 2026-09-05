@@ -1,5 +1,5 @@
-import { Component, inject, ChangeDetectionStrategy, signal, computed, DestroyRef } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { form, FormField, required, min, disabled } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivityService } from '@core/services/activity.service';
 import { AuthService } from '@core/services/auth.service';
 import { ServerService } from '@core/services/server.service';
@@ -16,7 +15,7 @@ import { SnackbarService } from '@core/services/snackbar.service';
 import { SeasonService } from '@core/services/season.service';
 import { ActivityType } from '@shared/constants/constants';
 import { PointCalculationResult } from '@shared/models';
-import { createFieldErrorSignal } from '@shared/utils/form-validation.utils';
+import { getFieldErrorKey } from '@shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@shared/components/loading-button/loading-button.component';
 import { DiscordInviteBannerComponent } from '@app/pages/home/components/discord-invite-banner/discord-invite-banner.component';
 import { ActivityConflictComponent } from '@app/pages/home/components/activity-conflict/activity-conflict.component';
@@ -28,10 +27,28 @@ interface WeekOption {
   dateRange: string;
 }
 
+interface ActivityFormModel {
+  week: number;
+  activityType: string;
+  position: number | null;
+  participated: boolean;
+}
+
+const DEFAULT_ACTIVITY_FORM_MODEL: ActivityFormModel = {
+  week: 0,
+  activityType: '',
+  position: null,
+  participated: false,
+};
+
+const MAX_WEEKS_LOOKBACK = 5;
+const MIN_POSITION = 1;
+const DEFAULT_PARTICIPATION_POINTS = 5;
+
 @Component({
   selector: 'app-activity-input',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -55,11 +72,8 @@ export class ActivityInputComponent {
   private readonly snackbarService = inject(SnackbarService);
   private readonly seasonService = inject(SeasonService);
   private readonly translate = inject(TranslateService);
-  private readonly fb = inject(FormBuilder);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly isSubmitting = signal<boolean>(false);
-  protected readonly calculatedPointsResult = signal<PointCalculationResult | null>(null);
   protected readonly conflictAcknowledged = signal<boolean>(false);
 
   // Explicitly reads activityService.activities (a Signal) to register the reactive dependency.
@@ -88,32 +102,27 @@ export class ActivityInputComponent {
     return Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
   });
 
-  protected readonly activityForm: FormGroup = this.fb.group({
-    week: [0, Validators.required],
-    activityType: ['', Validators.required],
-    position: [null, [Validators.required, Validators.min(1)]],
-    participated: [false],
+  protected readonly activityModel = signal<ActivityFormModel>(DEFAULT_ACTIVITY_FORM_MODEL);
+
+  protected readonly activityForm = form(this.activityModel, path => {
+    required(path.week);
+    required(path.activityType);
+    required(path.position);
+    min(path.position, MIN_POSITION);
+
+    // Only the conflict forced-edit-mode actually locks these fields at the form level,
+    // matching the original FormGroup's .disable()/.enable() contract. availableActivities
+    // being empty and isBlockedForSelectedWeek are presentation-only concerns (empty option
+    // list / banner) and must not exclude fields from validation.
+    disabled(path.week, { when: () => this.isInForcedEditMode() });
+    disabled(path.activityType, { when: () => this.isInForcedEditMode() });
+    disabled(path.position, { when: () => this.isBlockedForSelectedWeek() });
   });
 
-  private readonly weekValue = toSignal(
-    this.activityForm.get('week')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: 0 }
-  );
-
-  private readonly activityTypeValue = toSignal(
-    this.activityForm.get('activityType')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: '' }
-  );
-
-  private readonly participatedValue = toSignal(
-    this.activityForm.get('participated')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: false }
-  );
-
-  private readonly positionValue = toSignal(
-    this.activityForm.get('position')!.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)),
-    { initialValue: null as number | null }
-  );
+  private readonly weekValue = computed(() => this.activityModel().week);
+  private readonly activityTypeValue = computed(() => this.activityModel().activityType);
+  private readonly participatedValue = computed(() => this.activityModel().participated);
+  private readonly positionValue = computed(() => this.activityModel().position);
 
   protected readonly isParticipationMode = computed(() => {
     const type = this.activityTypeValue();
@@ -122,7 +131,15 @@ export class ActivityInputComponent {
 
   protected readonly participationPoints = computed(() => {
     const type = this.activityTypeValue();
-    return type ? this.serverService.getParticipationPoints(type) : 5;
+    return type ? this.serverService.getParticipationPoints(type) : DEFAULT_PARTICIPATION_POINTS;
+  });
+
+  protected readonly calculatedPointsResult = computed<PointCalculationResult | null>(() => {
+    if (this.isParticipationMode()) return null;
+    const type = this.activityTypeValue();
+    const position = this.positionValue();
+    if (!type || position === null || position <= 0) return null;
+    return this.serverService.calculatePoints(type, position);
   });
 
   protected readonly points = computed<number | null>(() => {
@@ -135,16 +152,16 @@ export class ActivityInputComponent {
   protected readonly canSubmit = computed(() => {
     if (this.isBlockedForSelectedWeek()) return false;
     const activityType = this.activityTypeValue();
-    if (!activityType || this.activityForm.get('week')?.invalid) return false;
+    if (!activityType || this.activityForm.week().invalid()) return false;
     if (this.isParticipationMode()) {
       return this.participatedValue();
     }
     const position = this.positionValue();
-    return position !== null && position >= 1;
+    return position !== null && position >= MIN_POSITION;
   });
 
-  protected readonly activityTypeError = createFieldErrorSignal(this.activityForm, 'activityType', this.destroyRef);
-  protected readonly positionError = createFieldErrorSignal(this.activityForm, 'position', this.destroyRef);
+  protected readonly activityTypeError = computed(() => getFieldErrorKey(this.activityForm.activityType().errors()));
+  protected readonly positionError = computed(() => getFieldErrorKey(this.activityForm.position().errors()));
   protected readonly discordInviteUrl = computed(() => this.serverService.server()?.discord_invite_url ?? null);
 
   protected readonly weekOptions = computed<WeekOption[]>(() => {
@@ -155,7 +172,7 @@ export class ActivityInputComponent {
     const weeksAgoLabel = this.translate.instant('server.retroactive.weeksAgo');
     const options: WeekOption[] = [];
 
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i <= MAX_WEEKS_LOOKBACK; i++) {
       const weekStart = getWeekStart(getDateForWeeksAgo(i));
       if (weekStart < earliestAllowedDate) break;
       const weekEnd = getWeekEnd(weekStart);
@@ -175,76 +192,61 @@ export class ActivityInputComponent {
    * The activity types the current season assigns to the selected week, before
    * filtering by alliance-level enable/disable. An empty array here is the sole
    * "no season configured for this date" signal per SeasonService contract.
-   *
-   * Computeds derived from this one also explicitly read weekValue() themselves
-   * (rather than relying solely on this computed's output) so they still
-   * re-evaluate even if SeasonService ever returns a referentially-stable array
-   * across two different weeks.
    */
   private readonly seasonActivityTypes = computed<ActivityType[]>(() => {
-    const targetDate = getWeekStart(getDateForWeeksAgo(this.weekValue() ?? 0));
+    const targetDate = getWeekStart(getDateForWeeksAgo(this.weekValue()));
     return this.seasonService.getAvailableActivityTypesForDate(targetDate);
   });
 
   /**
    * True when no season covers the currently selected week — submission must be
    * totally blocked (not merely "no activities enabled") in this state.
+   *
+   * Explicitly reads weekValue() itself (not solely through seasonActivityTypes()) so it
+   * still re-evaluates even if SeasonService ever returns a referentially-stable array
+   * across two different weeks — computed() only notifies dependents when the value it
+   * produces actually changes by reference, not merely because a dependency was read.
    */
   protected readonly isBlockedForSelectedWeek = computed(() => {
-    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
+    void this.weekValue();
     return this.seasonActivityTypes().length === 0;
   });
 
   protected readonly availableActivities = computed(() => {
-    void this.weekValue(); // register signal dependency — see seasonActivityTypes note above
+    void this.weekValue(); // register signal dependency — see isBlockedForSelectedWeek note above
     return this.seasonActivityTypes().filter(type => this.serverService.isActivityEnabled(type.value));
   });
 
-  constructor() {
-    this.activityForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      const type = this.activityForm.value.activityType;
-      const pos = this.activityForm.value.position;
-      if (type && pos > 0 && !this.isParticipationMode()) {
-        const result = this.serverService.calculatePoints(type, pos);
-        this.calculatedPointsResult.set(result);
-      } else {
-        this.calculatedPointsResult.set(null);
-      }
-    });
-
-    this.activityForm
-      .get('week')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        if (!this.isInForcedEditMode()) {
-          this.calculatedPointsResult.set(null);
-          this.activityForm.patchValue({ activityType: '', participated: false }, { emitEvent: false });
-          // Emit separately so positionValue signal is updated
-          this.activityForm.get('position')?.setValue(null);
-        }
-      });
-
-    this.activityForm
-      .get('activityType')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        if (!this.isInForcedEditMode()) {
-          this.activityForm.get('participated')?.setValue(false);
-          this.calculatedPointsResult.set(null);
-        }
-      });
+  /**
+   * Resets dependent fields when the user changes the selected week, unless the
+   * form is locked into forced-edit mode for an existing conflict.
+   */
+  protected onWeekChange(): void {
+    if (this.isInForcedEditMode()) return;
+    this.activityModel.update(current => ({ ...current, activityType: '', position: null, participated: false }));
   }
 
-  protected async onSubmit(): Promise<void> {
+  /**
+   * Resets the participation toggle when the activity type changes, unless the
+   * form is locked into forced-edit mode for an existing conflict.
+   */
+  protected onActivityTypeChange(): void {
+    if (this.isInForcedEditMode()) return;
+    this.activityModel.update(current => ({ ...current, participated: false }));
+  }
+
+  protected async onSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+
     if (!this.canSubmit()) {
-      this.activityForm.markAllAsTouched();
+      this.activityForm().markAsTouched();
       this.snackbarService.error(this.translate.instant('activityInput.fillAllFields'));
       return;
     }
 
     this.isSubmitting.set(true);
 
-    const formValue = this.activityForm.getRawValue();
+    const formValue = this.activityModel();
     const currentWeekStart = getWeekStart(new Date());
     const activityDate = new Date(currentWeekStart);
     activityDate.setUTCDate(currentWeekStart.getUTCDate() - formValue.week * 7);
@@ -270,17 +272,10 @@ export class ActivityInputComponent {
 
     // If the conflict is now resolved (signal becomes empty), return to normal mode.
     // The conflicts signal is re-evaluated after activities signal updates inside addActivity.
-    this.activityForm.patchValue({ activityType: '', position: null, participated: false });
-    this.activityForm.markAsUntouched();
-    this.activityForm.markAsPristine();
-    this.calculatedPointsResult.set(null);
+    // Fields locked by disabled() re-enable automatically once isInForcedEditMode recomputes to false.
+    this.activityModel.update(current => ({ ...current, activityType: '', position: null, participated: false }));
     this.conflictAcknowledged.set(false);
     this.isSubmitting.set(false);
-
-    // Re-enable all form controls in case they were locked during forced-edit mode
-    this.activityForm.get('week')?.enable({ emitEvent: false });
-    this.activityForm.get('activityType')?.enable({ emitEvent: false });
-    this.activityForm.get('position')?.enable({ emitEvent: false });
 
     this.snackbarService.success(this.translate.instant('activityInput.success'));
   }
@@ -288,30 +283,19 @@ export class ActivityInputComponent {
   /**
    * Called when the user clicks "J'ai compris" on the conflict card.
    * Transitions to forced-edit mode: pre-fills the form with the conflicting
-   * activity data and disables week/activityType/position so the user can only
-   * correct the position.
+   * activity data. week/activityType/position lock and unlock automatically
+   * via the schema's disabled() rules reacting to isInForcedEditMode.
    */
   protected onConflictAcknowledged(): void {
     const conflict = this.conflicts()[0];
     if (!conflict) return;
 
-    const weekIndex = this.conflictWeekIndex();
-
-    // Pre-fill form with the conflicting activity data
-    this.activityForm.patchValue(
-      {
-        week: weekIndex,
-        activityType: conflict.activityType,
-        position: conflict.position,
-        participated: false,
-      },
-      { emitEvent: true }
-    );
-
-    // Lock fields that identify the conflicting activity
-    this.activityForm.get('week')?.disable({ emitEvent: false });
-    this.activityForm.get('activityType')?.disable({ emitEvent: false });
-    this.activityForm.get('position')?.enable({ emitEvent: false });
+    this.activityModel.set({
+      week: this.conflictWeekIndex(),
+      activityType: conflict.activityType,
+      position: conflict.position,
+      participated: false,
+    });
 
     this.conflictAcknowledged.set(true);
   }
