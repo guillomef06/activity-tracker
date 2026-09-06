@@ -154,14 +154,14 @@ describe('ImportExcelTabComponent', () => {
     it('should return all rows when filter is "all"', () => {
       component['rows'].set([makeRow('legion'), makeRow('kvk-prep')]);
       component['activityFilter'].set('all');
-      expect(component['filteredRows']().length).toBe(2);
+      expect(component['filteredRows']()).toHaveLength(2);
     });
 
     it('should filter rows by activityType when filter is set', () => {
       component['rows'].set([makeRow('legion'), makeRow('kvk-prep')]);
       component['activityFilter'].set('legion');
       const filtered = component['filteredRows']();
-      expect(filtered.length).toBe(1);
+      expect(filtered).toHaveLength(1);
       expect(filtered[0].activityType).toBe('legion');
     });
   });
@@ -171,26 +171,26 @@ describe('ImportExcelTabComponent', () => {
   describe('rowsToInsert / rowsToUpdate / skippedRows', () => {
     it('should count ready rows as rowsToInsert', () => {
       component['rows'].set([makeRow('legion', 'ready')]);
-      expect(component['rowsToInsert']().length).toBe(1);
-      expect(component['rowsToUpdate']().length).toBe(0);
-      expect(component['skippedRows']().length).toBe(0);
+      expect(component['rowsToInsert']()).toHaveLength(1);
+      expect(component['rowsToUpdate']()).toHaveLength(0);
+      expect(component['skippedRows']()).toHaveLength(0);
     });
 
     it('should count willUpdate rows with includeUpdate=true as rowsToUpdate', () => {
       component['rows'].set([makeRow('legion', 'willUpdate', { includeUpdate: true })]);
-      expect(component['rowsToUpdate']().length).toBe(1);
-      expect(component['rowsToInsert']().length).toBe(0);
+      expect(component['rowsToUpdate']()).toHaveLength(1);
+      expect(component['rowsToInsert']()).toHaveLength(0);
     });
 
     it('should count willUpdate rows with includeUpdate=false as skipped', () => {
       component['rows'].set([makeRow('legion', 'willUpdate', { includeUpdate: false })]);
-      expect(component['skippedRows']().length).toBe(1);
-      expect(component['rowsToUpdate']().length).toBe(0);
+      expect(component['skippedRows']()).toHaveLength(1);
+      expect(component['rowsToUpdate']()).toHaveLength(0);
     });
 
     it('should count unmatched and invalid rows as skipped', () => {
       component['rows'].set([makeRow('legion', 'unmatched'), makeRow('kvk-prep', 'invalid')]);
-      expect(component['skippedRows']().length).toBe(2);
+      expect(component['skippedRows']()).toHaveLength(2);
     });
   });
 
@@ -316,7 +316,7 @@ describe('ImportExcelTabComponent', () => {
       await component['confirmImport']();
 
       const call = activityServiceSpy.batchImportActivities.mock.calls[0][0];
-      expect(call.length).toBe(2);
+      expect(call).toHaveLength(2);
     });
 
     it('should not call batchImportActivities when there is nothing to import', async () => {
@@ -363,7 +363,7 @@ describe('ImportExcelTabComponent', () => {
 
       const rows = component['buildSeasonReferenceRows']();
 
-      expect(rows.length).toBe(1);
+      expect(rows).toHaveLength(1);
       expect(rows[0][0]).toBe('server.import.noActiveSeasonReference');
     });
 
@@ -408,7 +408,7 @@ describe('ImportExcelTabComponent', () => {
       component['reset']();
 
       expect(component['step']()).toBe('upload');
-      expect(component['rows']().length).toBe(0);
+      expect(component['rows']()).toHaveLength(0);
       expect(component['activityFilter']()).toBe('all');
       expect(component['importResult']()).toBeNull();
     });

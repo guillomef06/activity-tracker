@@ -32,12 +32,15 @@ jobs:
         run: npm ci
 
       - name: Run linter
+        id: lint
         run: npm run lint
 
       - name: Build project (development)
+        id: build
         run: npm run build:dev
 
       - name: Run unit tests
+        id: tests
         run: npm run test:ci
 
       - name: Comment PR
@@ -49,6 +52,7 @@ jobs:
             const emoji = status === 'success' ? '✅' : '❌';
             const message = `## ${emoji} PR Checks ${status === 'success' ? 'Passed' : 'Failed'}
             
+            **Lint:** ${{ steps.lint.outcome || 'N/A' }}
             **Build:** ${{ steps.build.outcome || 'N/A' }}
             **Tests:** ${{ steps.tests.outcome || 'N/A' }}
             

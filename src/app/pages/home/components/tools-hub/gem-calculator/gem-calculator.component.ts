@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, input, output, signal, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, signal, computed, Signal } from '@angular/core';
 import { TitleCasePipe, DecimalPipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, required, min, max, FormField } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -46,6 +46,12 @@ const TROOP_STATS: Record<string, Record<number, TroopStats>> = {
     9: { attack: 367, defense: 275, health: 275 },
   },
 };
+
+const DEFAULT_TROOP_TYPE: TroopType = 'swordsmen';
+const DEFAULT_TROOP_TIER = 7;
+const MIN_LEGION_SIZE = 1;
+const MAX_LEGION_SIZE = 500_000;
+const MIN_BONUS = 0;
 
 // ---------------------------------------------------------------------------
 // Gem bonus tables
@@ -111,12 +117,36 @@ export interface GemResult {
   perUnitScoreAfter?: number;
 }
 
+interface GemCalculatorFormValue {
+  troopType: TroopType;
+  troopTier: number;
+  legionSize: number | null;
+  healthBonus: number;
+  mightAttack: number;
+  mightDefense: number;
+  gemType: GemType | '';
+  gemTier: number | null;
+  verbose: boolean;
+}
+
+const INITIAL_FORM_VALUE: GemCalculatorFormValue = {
+  troopType: DEFAULT_TROOP_TYPE,
+  troopTier: DEFAULT_TROOP_TIER,
+  legionSize: null,
+  healthBonus: MIN_BONUS,
+  mightAttack: MIN_BONUS,
+  mightDefense: MIN_BONUS,
+  gemType: '',
+  gemTier: null,
+  verbose: false,
+};
+
 @Component({
   selector: 'app-gem-calculator',
   imports: [
     TitleCasePipe,
     DecimalPipe,
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -136,84 +166,125 @@ export class GemCalculatorComponent {
   readonly showTitle = input<boolean>(false);
   readonly back = output<void>();
 
-  private readonly fb = inject(FormBuilder);
-
   protected readonly gemRarities = GEM_RARITIES;
   protected readonly troopTypes = TROOP_TYPES;
   protected readonly troopTiers = TROOP_TIERS;
 
   protected readonly result = signal<GemResult | null>(null);
 
-  protected readonly form = this.fb.group({
-    troopType: ['swordsmen' as TroopType, Validators.required],
-    troopTier: [7, Validators.required],
-    legionSize: [null as number | null, [Validators.required, Validators.min(1), Validators.max(500_000)]],
-    healthBonus: [0, [Validators.required, Validators.min(0)]],
-    mightAttack: [0, [Validators.required, Validators.min(0)]],
-    mightDefense: [0, [Validators.required, Validators.min(0)]],
-    gemType: ['' as GemType | '', Validators.required],
-    gemTier: [null as number | null, Validators.required],
-    verbose: [false],
+  protected readonly formModel = signal<GemCalculatorFormValue>({ ...INITIAL_FORM_VALUE });
+
+  protected readonly gemForm = form(this.formModel, schemaPath => {
+    required(schemaPath.troopType);
+    required(schemaPath.troopTier);
+
+    required(schemaPath.legionSize);
+    min(schemaPath.legionSize, MIN_LEGION_SIZE);
+    max(schemaPath.legionSize, MAX_LEGION_SIZE);
+
+    required(schemaPath.healthBonus);
+    min(schemaPath.healthBonus, MIN_BONUS);
+
+    required(schemaPath.mightAttack);
+    min(schemaPath.mightAttack, MIN_BONUS);
+
+    required(schemaPath.mightDefense);
+    min(schemaPath.mightDefense, MIN_BONUS);
+
+    required(schemaPath.gemType);
+    required(schemaPath.gemTier);
   });
 
+  protected readonly isVerbose: Signal<boolean> = computed(() => this.formModel().verbose);
+
+  protected onAnalyzeSubmit(event: Event): void {
+    event.preventDefault();
+    this.analyze();
+  }
+
   protected analyze(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (this.gemForm().invalid()) {
+      this.gemForm().markAsTouched();
       return;
     }
 
-    const v = this.form.getRawValue();
+    const v = this.formModel();
     const gemType = v.gemType as GemType;
-    const gemTier = v.gemTier!;
-    const legionSize = v.legionSize!;
-    const healthBonus = v.healthBonus ?? 0;
-    const mightAttack = v.mightAttack ?? 0;
-    const mightDefense = v.mightDefense ?? 0;
-    const troopStats = TROOP_STATS[v.troopType!]?.[v.troopTier!] ?? TROOP_STATS['swordsmen'][7];
+    const gemTier = v.gemTier as number;
+    const legionSize = v.legionSize as number;
+    const troopStats = TROOP_STATS[v.troopType][v.troopTier] ?? TROOP_STATS[DEFAULT_TROOP_TYPE][DEFAULT_TROOP_TIER];
 
-    const perUnitScoreBefore =
-      troopStats.attack * (1 + mightAttack / 100) +
-      troopStats.defense * (1 + mightDefense / 100) +
-      troopStats.health * (1 + healthBonus / 100);
+    const perUnitScoreBefore = this.computePerUnitScore(troopStats, v.mightAttack, v.mightDefense, v.healthBonus);
     const scoreBefore = legionSize * perUnitScoreBefore;
 
-    if (gemType === 'health') {
-      const rawValue = GEM_HEALTH_BONUS[gemTier] ?? 0;
-      const newHealthBonusPct = healthBonus + rawValue;
-      const perUnitScoreAfter =
-        troopStats.attack * (1 + mightAttack / 100) +
-        troopStats.defense * (1 + mightDefense / 100) +
-        troopStats.health * (1 + newHealthBonusPct / 100);
-      const scoreAfter = legionSize * perUnitScoreAfter;
+    this.result.set(
+      gemType === 'health'
+        ? this.computeHealthGemResult(troopStats, v, gemTier, legionSize, perUnitScoreBefore, scoreBefore)
+        : this.computeCapacityGemResult(gemTier, legionSize, perUnitScoreBefore, scoreBefore)
+    );
+  }
 
-      this.result.set({
-        gemType,
-        gemTier,
-        rawValue,
-        delta: scoreAfter - scoreBefore,
-        scoreBefore,
-        scoreAfter,
-        legionSize,
-        perUnitScoreBefore,
-        healthBonus,
-        newHealthBonusPct,
-        perUnitScoreAfter,
-      });
-    } else {
-      const rawValue = GEM_CAPACITY_BONUS[gemTier] ?? 0;
-      const scoreAfter = (legionSize + rawValue) * perUnitScoreBefore;
+  private computePerUnitScore(
+    troopStats: TroopStats,
+    mightAttack: number,
+    mightDefense: number,
+    healthBonusPct: number
+  ): number {
+    const PERCENT_DIVISOR = 100;
+    return (
+      troopStats.attack * (1 + mightAttack / PERCENT_DIVISOR) +
+      troopStats.defense * (1 + mightDefense / PERCENT_DIVISOR) +
+      troopStats.health * (1 + healthBonusPct / PERCENT_DIVISOR)
+    );
+  }
 
-      this.result.set({
-        gemType,
-        gemTier,
-        rawValue,
-        delta: rawValue * perUnitScoreBefore,
-        scoreBefore,
-        scoreAfter,
-        legionSize,
-        perUnitScoreBefore,
-      });
-    }
+  private computeHealthGemResult(
+    troopStats: TroopStats,
+    v: GemCalculatorFormValue,
+    gemTier: number,
+    legionSize: number,
+    perUnitScoreBefore: number,
+    scoreBefore: number
+  ): GemResult {
+    const rawValue = GEM_HEALTH_BONUS[gemTier] ?? 0;
+    const newHealthBonusPct = v.healthBonus + rawValue;
+    const perUnitScoreAfter = this.computePerUnitScore(troopStats, v.mightAttack, v.mightDefense, newHealthBonusPct);
+    const scoreAfter = legionSize * perUnitScoreAfter;
+
+    return {
+      gemType: 'health',
+      gemTier,
+      rawValue,
+      delta: scoreAfter - scoreBefore,
+      scoreBefore,
+      scoreAfter,
+      legionSize,
+      perUnitScoreBefore,
+      healthBonus: v.healthBonus,
+      newHealthBonusPct,
+      perUnitScoreAfter,
+    };
+  }
+
+  private computeCapacityGemResult(
+    gemTier: number,
+    legionSize: number,
+    perUnitScoreBefore: number,
+    scoreBefore: number
+  ): GemResult {
+    const rawValue = GEM_CAPACITY_BONUS[gemTier] ?? 0;
+    const scoreAfter = (legionSize + rawValue) * perUnitScoreBefore;
+
+    return {
+      gemType: 'capacity',
+      gemTier,
+      rawValue,
+      delta: rawValue * perUnitScoreBefore,
+      scoreBefore,
+      scoreAfter,
+      legionSize,
+      perUnitScoreBefore,
+    };
   }
 
   protected getRarityLabel(tier: number): string {
@@ -222,9 +293,5 @@ export class GemCalculatorComponent {
 
   protected getRarityColor(tier: number): string {
     return GEM_RARITIES.find(r => r.tier === tier)?.color ?? '#9e9e9e';
-  }
-
-  protected isVerbose(): boolean {
-    return this.form.get('verbose')?.value === true;
   }
 }

@@ -5,7 +5,7 @@ import { ServerService } from '@app/core/services/server.service';
 import { SeasonService } from '@app/core/services/season.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
@@ -44,6 +44,11 @@ describe('ServerSettingsPage', () => {
 
     const authServiceSpy = {
       userProfile: signal({ server_id: 'test-server-id' }),
+      // MgAdminTabComponent (rendered inside a tab on this page) calls these in its
+      // ngOnInit; without them it throws synchronously and pollutes other tests with
+      // an unhandled rejection (see mg-admin-tab.component.ts).
+      getServerId: vi.fn().mockReturnValue('test-server-id'),
+      getUserId: vi.fn().mockReturnValue('test-user-id'),
     };
 
     const seasonServiceSpy = {
@@ -62,7 +67,7 @@ describe('ServerSettingsPage', () => {
         { provide: AuthService, useValue: authServiceSpy },
         { provide: SeasonService, useValue: seasonServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],

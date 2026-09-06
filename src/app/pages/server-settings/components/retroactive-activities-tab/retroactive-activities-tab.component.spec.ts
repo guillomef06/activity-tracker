@@ -31,6 +31,14 @@ describe('RetroactiveActivitiesTabComponent', () => {
     suggestNextSeasonStartDate: ReturnType<typeof vi.fn>;
   };
 
+  const patchModel = (
+    partial: Partial<{ member: string; week: number; activity: string; position: number; participated: boolean }>
+  ): void => {
+    (
+      component as unknown as { retroactiveModel: { update: (fn: (c: unknown) => unknown) => void } }
+    ).retroactiveModel.update(current => ({ ...(current as object), ...partial }));
+  };
+
   beforeEach(async () => {
     activityServiceSpy = { addActivityForMember: vi.fn() };
     serverServiceSpy = {
@@ -80,10 +88,15 @@ describe('RetroactiveActivitiesTabComponent', () => {
   });
 
   it('should initialize with empty form values', () => {
-    expect(component['retroactiveForm'].get('member')?.value).toBe('');
-    expect(component['retroactiveForm'].get('week')?.value).toBe(0);
-    expect(component['retroactiveForm'].get('activity')?.value).toBe('');
-    expect(component['retroactiveForm'].get('position')?.value).toBe(1);
+    const model = (
+      component as unknown as {
+        retroactiveModel: () => { member: string; week: number; activity: string; position: number };
+      }
+    ).retroactiveModel();
+    expect(model.member).toBe('');
+    expect(model.week).toBe(0);
+    expect(model.activity).toBe('');
+    expect(model.position).toBe(1);
   });
 
   it('should generate 6 week options when scoringWeeks is 6', () => {
@@ -91,7 +104,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
     fixture.detectChanges();
 
     const weekOptions = component.weekOptions();
-    expect(weekOptions.length).toBe(6);
+    expect(weekOptions).toHaveLength(6);
     expect(weekOptions[0].value).toBe(0);
     expect(weekOptions[5].value).toBe(5);
   });
@@ -101,7 +114,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
     fixture.detectChanges();
 
     const weekOptions = component.weekOptions();
-    expect(weekOptions.length).toBe(12);
+    expect(weekOptions).toHaveLength(12);
     expect(weekOptions[0].value).toBe(0);
     expect(weekOptions[11].value).toBe(11);
   });
@@ -111,12 +124,12 @@ describe('RetroactiveActivitiesTabComponent', () => {
     fixture.detectChanges();
 
     const weekOptions = component.weekOptions();
-    expect(weekOptions.length).toBe(18);
+    expect(weekOptions).toHaveLength(18);
     expect(weekOptions[17].value).toBe(17);
   });
 
   it('should filter activities based on selected week cycle', () => {
-    component['retroactiveForm'].patchValue({ week: 0 });
+    patchModel({ week: 0 });
 
     const activities = component.availableActivities();
     expect(activities.length).toBeGreaterThan(0);
@@ -125,21 +138,21 @@ describe('RetroactiveActivitiesTabComponent', () => {
   it('should exclude disabled activities from availableActivities', () => {
     serverServiceSpy.isActivityEnabled.mockReturnValue(false);
     // Use week: 1 (different from initial 0) to force the computed signal to re-evaluate
-    component['retroactiveForm'].patchValue({ week: 1 });
+    patchModel({ week: 1 });
 
     const activities = component.availableActivities();
-    expect(activities.length).toBe(0);
+    expect(activities).toHaveLength(0);
   });
 
   it('should calculate points correctly', () => {
-    component['retroactiveForm'].patchValue({ activity: 'golden expedition', position: 1 });
+    patchModel({ activity: 'golden expedition', position: 1 });
 
     const points = component.calculatedPoints();
     expect(points).toBe(5); // Golden expedition base points
   });
 
   it('should disable submit when required fields are empty', () => {
-    component['retroactiveForm'].patchValue({ member: '', activity: '' });
+    patchModel({ member: '', activity: '' });
 
     expect(component.canSubmit()).toBe(false);
   });
@@ -147,7 +160,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
   it('should show success message after successful submission', async () => {
     activityServiceSpy.addActivityForMember.mockResolvedValue({ error: null });
 
-    component['retroactiveForm'].patchValue({ member: 'user1', activity: 'legion', position: 3 });
+    patchModel({ member: 'user1', activity: 'legion', position: 3 });
 
     await component.onSubmit();
 
@@ -157,28 +170,31 @@ describe('RetroactiveActivitiesTabComponent', () => {
   it('should reset activity and position after successful submission', async () => {
     activityServiceSpy.addActivityForMember.mockResolvedValue({ error: null });
 
-    component['retroactiveForm'].patchValue({ member: 'user1', activity: 'legion', position: 3 });
+    patchModel({ member: 'user1', activity: 'legion', position: 3 });
 
     await component.onSubmit();
 
-    expect(component['retroactiveForm'].get('activity')?.value).toBe('');
-    expect(component['retroactiveForm'].get('position')?.value).toBe(1);
+    const model = (
+      component as unknown as { retroactiveModel: () => { activity: string; position: number } }
+    ).retroactiveModel();
+    expect(model.activity).toBe('');
+    expect(model.position).toBe(1);
   });
 
   it('should reset all form fields when resetForm is called', () => {
-    component['retroactiveForm'].patchValue({
-      member: 'user1',
-      activity: 'legion',
-      position: 5,
-      week: 2,
-    });
+    patchModel({ member: 'user1', activity: 'legion', position: 5, week: 2 });
 
     component.resetForm();
 
-    expect(component['retroactiveForm'].get('member')?.value).toBe('');
-    expect(component['retroactiveForm'].get('activity')?.value).toBe('');
-    expect(component['retroactiveForm'].get('position')?.value).toBe(1);
-    expect(component['retroactiveForm'].get('week')?.value).toBe(0);
+    const model = (
+      component as unknown as {
+        retroactiveModel: () => { member: string; activity: string; position: number; week: number };
+      }
+    ).retroactiveModel();
+    expect(model.member).toBe('');
+    expect(model.activity).toBe('');
+    expect(model.position).toBe(1);
+    expect(model.week).toBe(0);
   });
 
   describe('season-driven blocked state', () => {
@@ -186,7 +202,7 @@ describe('RetroactiveActivitiesTabComponent', () => {
       const legionOnly = APP_CONSTANTS.ACTIVITY_TYPES.filter(t => t.value === 'legion');
       seasonServiceSpy.getAvailableActivityTypesForDate.mockReturnValue(legionOnly);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['retroactiveForm'].patchValue({ week: 2 });
+      patchModel({ week: 2 });
 
       expect(component.availableActivities()).toEqual(legionOnly);
       expect(component.isBlockedForSelectedWeek()).toBe(false);
@@ -195,10 +211,10 @@ describe('RetroactiveActivitiesTabComponent', () => {
     it('should block submission and expose isBlockedForSelectedWeek when no season covers the selected date', () => {
       seasonServiceSpy.getAvailableActivityTypesForDate.mockReturnValue([]);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['retroactiveForm'].patchValue({ member: 'user1', week: 2 });
+      patchModel({ member: 'user1', week: 2 });
 
       expect(component.isBlockedForSelectedWeek()).toBe(true);
-      expect(component.availableActivities().length).toBe(0);
+      expect(component.availableActivities()).toHaveLength(0);
       expect(component.canSubmit()).toBe(false);
     });
 
@@ -216,20 +232,20 @@ describe('RetroactiveActivitiesTabComponent', () => {
     it('should render the no-active-season banner and disable position input when blocked', () => {
       seasonServiceSpy.getAvailableActivityTypesForDate.mockReturnValue([]);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['retroactiveForm'].patchValue({ week: 2 });
+      patchModel({ week: 2 });
       fixture.detectChanges();
 
       const banner = fixture.nativeElement.querySelector('.no-season-banner');
       expect(banner).not.toBeNull();
 
-      const positionInput = fixture.nativeElement.querySelector('input[formcontrolname="position"]');
+      const positionInput = fixture.nativeElement.querySelector('input[type="number"]');
       expect(positionInput?.disabled).toBe(true);
     });
 
     it('should not render the no-active-season banner when a season covers the selected date', () => {
       seasonServiceSpy.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['retroactiveForm'].patchValue({ week: 2 });
+      patchModel({ week: 2 });
       fixture.detectChanges();
 
       const banner = fixture.nativeElement.querySelector('.no-season-banner');
@@ -240,10 +256,10 @@ describe('RetroactiveActivitiesTabComponent', () => {
       seasonServiceSpy.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
       serverServiceSpy.isActivityEnabled.mockReturnValue(false);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['retroactiveForm'].patchValue({ week: 2 });
+      patchModel({ week: 2 });
 
       expect(component.isBlockedForSelectedWeek()).toBe(false);
-      expect(component.availableActivities().length).toBe(0);
+      expect(component.availableActivities()).toHaveLength(0);
     });
   });
 });

@@ -1,8 +1,8 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { fromEvent } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { fromEvent, merge } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
 import { StorageService } from './storage.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,6 +12,12 @@ interface BeforeInstallPromptEvent extends Event {
   readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+// Phase 2B (Async Signals, see SPEC_ANGULAR_22_MIGRATION.md #4): this service exposes
+// browser event streams (online/offline, install prompt, SW updates), not fetched data,
+// so `resource()`/`rxResource()` don't fit — they target re-fetchable data sources, not
+// one-shot DOM/browser events. `online`/`offline` are pure state and become a `toSignal()`.
+// `beforeinstallprompt`/`appinstalled`/`versionUpdates` carry imperative side effects
+// beyond a signal `set()` (see inline comments below) and stay as `.subscribe()`.
 @Injectable({
   providedIn: 'root',
 })
@@ -24,12 +30,14 @@ export class PwaService {
   private readonly storageService = inject(StorageService);
   private readonly translate = inject(TranslateService);
 
-  private readonly _isOnline = signal<boolean>(navigator.onLine);
   private readonly _canInstall = signal<boolean>(false);
   private readonly _bannerDismissed = signal<boolean>(this.isBannerDismissed());
   private _deferredInstallPrompt: BeforeInstallPromptEvent | null = null;
 
-  readonly isOnline = this._isOnline.asReadonly();
+  readonly isOnline = toSignal(
+    merge(fromEvent(window, 'online').pipe(map(() => true)), fromEvent(window, 'offline').pipe(map(() => false))),
+    { initialValue: navigator.onLine }
+  );
   readonly canInstall = this._canInstall.asReadonly();
   readonly isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   private readonly isStandalone =
@@ -41,14 +49,9 @@ export class PwaService {
   );
 
   constructor() {
-    fromEvent(window, 'online')
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this._isOnline.set(true));
-
-    fromEvent(window, 'offline')
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this._isOnline.set(false));
-
+    // Not a toSignal candidate: beyond setting `_canInstall`, this stores the raw
+    // browser event (`_deferredInstallPrompt`, a plain field) for later use in
+    // `promptInstall()` and calls `preventDefault()` — an imperative side effect.
     fromEvent<BeforeInstallPromptEvent>(window, 'beforeinstallprompt')
       .pipe(takeUntilDestroyed())
       .subscribe(event => {
@@ -57,6 +60,8 @@ export class PwaService {
         this._canInstall.set(true);
       });
 
+    // Not a toSignal candidate: clears the imperative `_deferredInstallPrompt` field
+    // in addition to the signal set, so it's a side effect, not pure state.
     fromEvent(window, 'appinstalled')
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
@@ -64,6 +69,8 @@ export class PwaService {
         this._canInstall.set(false);
       });
 
+    // Not a toSignal candidate: this drives a one-shot snackbar side effect
+    // (with a reload callback), not a piece of exposed state.
     if (this.swUpdate.isEnabled) {
       this.swUpdate.versionUpdates
         .pipe(

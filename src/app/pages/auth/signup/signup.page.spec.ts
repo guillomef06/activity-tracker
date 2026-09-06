@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { SignupPage } from './signup.page';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -14,7 +14,7 @@ describe('SignupPage', () => {
 
   beforeEach(async () => {
     const authServiceSpy = {
-      signupAdmin: vi.fn(),
+      signUpAdmin: vi.fn(),
       checkUsernameAvailable: vi.fn().mockResolvedValue(true),
     };
 
@@ -23,7 +23,7 @@ describe('SignupPage', () => {
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],
@@ -34,14 +34,8 @@ describe('SignupPage', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should have a valid form with all required fields', () => {
-    expect(component['signupForm'].valid).toBe(false);
-
-    component['signupForm'].patchValue({
+  const fillValidForm = (): void => {
+    component['signupModel'].set({
       username: 'newadmin',
       password: 'SecurePassword123',
       confirmPassword: 'SecurePassword123',
@@ -50,33 +44,106 @@ describe('SignupPage', () => {
       recoveryQuestionId: 1,
       recoveryAnswer: 'Fluffy',
     });
+  };
 
-    // Form may be PENDING due to async username validator — invalid must be false
-    // meaning all sync validators pass (required, minLength, pattern, passwordMatch)
-    expect(component['signupForm'].invalid).toBe(false);
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should be invalid when all fields are empty', () => {
+    expect(component['signupForm']().valid()).toBe(false);
+  });
+
+  it('should become valid once all fields are filled correctly', async () => {
+    fillValidForm();
+
+    await vi.waitFor(() => {
+      expect(component['signupForm']().pending()).toBe(false);
+    });
+
+    expect(component['signupForm']().invalid()).toBe(false);
   });
 
   it('should be invalid without recovery question and answer', () => {
-    component['signupForm'].patchValue({
+    component['signupModel'].set({
       username: 'newadmin',
       password: 'SecurePassword123',
       confirmPassword: 'SecurePassword123',
       displayName: 'New Admin',
       serverName: 'Test Server',
+      recoveryQuestionId: null,
+      recoveryAnswer: '',
     });
 
-    expect(component['signupForm'].valid).toBe(false);
+    expect(component['signupForm']().valid()).toBe(false);
   });
 
-  it('should validate password match', () => {
-    component['signupForm'].patchValue({
+  it('should flag a password/confirmPassword mismatch', () => {
+    component['signupModel'].set({
       username: 'admin',
       password: 'Password123',
       confirmPassword: 'Different123',
       displayName: 'Admin',
       serverName: 'Server',
+      recoveryQuestionId: 1,
+      recoveryAnswer: 'Fluffy',
     });
 
-    expect(component['signupForm'].hasError('passwordMismatch')).toBe(true);
+    expect(
+      component['signupForm']
+        .confirmPassword()
+        .errors()
+        .some(error => error.kind === 'passwordMismatch')
+    ).toBe(true);
+  });
+
+  it('should reject a username with invalid characters', () => {
+    component['signupModel'].update(value => ({ ...value, username: 'invalid username!' }));
+
+    expect(
+      component['signupForm']
+        .username()
+        .errors()
+        .some(error => error.kind === 'pattern')
+    ).toBe(true);
+  });
+
+  it('should reject a password missing the required character classes', () => {
+    component['signupModel'].update(value => ({ ...value, password: 'alllowercase' }));
+
+    expect(
+      component['signupForm']
+        .password()
+        .errors()
+        .some(error => error.kind === 'pattern')
+    ).toBe(true);
+  });
+
+  it('should mark username as taken when the availability check resolves false', async () => {
+    const authServiceSpy = TestBed.inject(AuthService) as unknown as {
+      checkUsernameAvailable: ReturnType<typeof vi.fn>;
+    };
+    authServiceSpy.checkUsernameAvailable.mockResolvedValue(false);
+
+    component['signupModel'].update(value => ({ ...value, username: 'takenname' }));
+
+    await vi.waitFor(() => {
+      expect(
+        component['signupForm']
+          .username()
+          .errors()
+          .some(error => error.kind === 'usernameTaken')
+      ).toBe(true);
+    });
+  });
+
+  it('should not submit and should mark fields as touched when the form is invalid', async () => {
+    const submitEvent = new Event('submit');
+    const preventDefaultSpy = vi.spyOn(submitEvent, 'preventDefault');
+
+    await component['onSubmit'](submitEvent);
+
+    expect(preventDefaultSpy).toHaveBeenCalled();
+    expect(component['signupForm'].username().touched()).toBe(true);
   });
 });

@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi, Mocked } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { DiscordService } from './discord.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
@@ -37,6 +38,7 @@ describe('DiscordService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         DiscordService,
         { provide: SupabaseService, useValue: supabaseSpy },
         { provide: AuthService, useValue: authSpy },

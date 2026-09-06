@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { SeasonService } from './season.service';
 import { SupabaseService } from './supabase.service';
 
@@ -34,7 +35,11 @@ describe('SeasonService', () => {
     fromMock = vi.fn();
 
     TestBed.configureTestingModule({
-      providers: [SeasonService, { provide: SupabaseService, useValue: { from: fromMock } }],
+      providers: [
+        provideZonelessChangeDetection(),
+        SeasonService,
+        { provide: SupabaseService, useValue: { from: fromMock } },
+      ],
     });
 
     service = TestBed.inject(SeasonService);

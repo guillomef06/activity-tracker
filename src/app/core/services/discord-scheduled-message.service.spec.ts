@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi, Mocked } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { DiscordScheduledMessageService } from './discord-scheduled-message.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
@@ -52,6 +53,7 @@ describe('DiscordScheduledMessageService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         DiscordScheduledMessageService,
         { provide: SupabaseService, useValue: supabaseSpy },
         { provide: AuthService, useValue: authSpy },

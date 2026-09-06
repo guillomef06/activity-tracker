@@ -1,4 +1,4 @@
-import { provideZonelessChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { vi } from 'vitest';
@@ -8,8 +8,9 @@ import { DateAdapter, provideNativeDateAdapter } from '@angular/material/core';
 import { AppComponent } from './app.component';
 import { provideRouter } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ReleaseNotesService } from '@app/core/services/release-notes.service';
 
 const swUpdateMock = {
   isEnabled: false,
@@ -20,17 +21,31 @@ const dialogMock = {
   open: vi.fn().mockReturnValue({ afterClosed: () => new Subject() }),
 };
 
+/**
+ * `ReleaseNotesService` now loads via `rxResource`, which registers a pending
+ * task with Angular's stability tracking for the duration of its HTTP call.
+ * This spec doesn't exercise release-notes behavior, so it stubs the service
+ * outright rather than wiring up `HttpTestingController` flushing — avoids an
+ * unflushed mocked request leaving that pending task open, which hangs
+ * `fixture.whenStable()` in the datepicker-locale test below.
+ */
+const releaseNotesServiceMock = {
+  notes: signal([]),
+  hasUnseenNotes: signal(false),
+};
+
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent, TranslateModule.forRoot()],
       providers: [
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         TranslateService,
         { provide: SwUpdate, useValue: swUpdateMock },
         { provide: MatDialog, useValue: dialogMock },
+        { provide: ReleaseNotesService, useValue: releaseNotesServiceMock },
         provideNativeDateAdapter(),
         provideZonelessChangeDetection(),
       ],

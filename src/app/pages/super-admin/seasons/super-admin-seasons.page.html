@@ -6,12 +6,27 @@
         <mat-card-title>{{ 'superAdmin.seasons.title' | translate }}</mat-card-title>
         <mat-card-subtitle>{{ 'superAdmin.seasons.subtitle' | translate }}</mat-card-subtitle>
       </div>
-      <button mat-raised-button color="primary" (click)="openCreateWizard()" [disabled]="progressBar.isLoading()">
+      <button mat-raised-button color="primary" (click)="openCreateWizard()" [disabled]="seasonsResource.isLoading()">
         <mat-icon>add</mat-icon>
         {{ 'superAdmin.seasons.newSeason' | translate }}
       </button>
     </mat-card-header>
   </mat-card>
+
+  @if (seasonsResource.isLoading() && seasons().length === 0) {
+    <div class="loading-row">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  }
+
+  @if (seasonsResource.error()) {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <p>{{ 'superAdmin.seasons.loadFailed' | translate }}</p>
+        <button mat-button (click)="seasonsResource.reload()">{{ 'common.retry' | translate }}</button>
+      </mat-card-content>
+    </mat-card>
+  }
 
   <!-- ══════════════════════════════════════════════════════════
        Create wizard
@@ -21,12 +36,14 @@
       <mat-card-content>
         <mat-stepper linear>
           <!-- Step 1: name / start date / week count -->
-          <mat-step [stepControl]="createForm" [label]="'superAdmin.seasons.wizard.stepDetails' | translate">
-            <form [formGroup]="createForm" class="wizard-step-form">
+          <mat-step [label]="'superAdmin.seasons.wizard.stepDetails' | translate">
+            <form novalidate class="wizard-step-form">
               <mat-form-field appearance="outline">
                 <mat-label>{{ 'superAdmin.seasons.wizard.name' | translate }}</mat-label>
-                <input matInput formControlName="name" [maxlength]="nameMaxLength" />
-                <mat-error>{{ 'superAdmin.seasons.nameRequired' | translate }}</mat-error>
+                <input matInput [formField]="createForm.name" />
+                @if (createForm.name().touched() && createForm.name().invalid()) {
+                  <mat-error>{{ getFieldErrorKey(createForm.name().errors()) | translate }}</mat-error>
+                }
               </mat-form-field>
 
               @if (canPickStartDate()) {
@@ -52,11 +69,20 @@
 
               <mat-form-field appearance="outline">
                 <mat-label>{{ 'superAdmin.seasons.wizard.weekCount' | translate }}</mat-label>
-                <input matInput type="number" formControlName="weekCount" [min]="minWeekCount" [max]="maxWeekCount" />
+                <input matInput type="number" [formField]="createForm.weekCount" />
+                @if (createForm.weekCount().touched() && createForm.weekCount().invalid()) {
+                  <mat-error>{{ getFieldErrorKey(createForm.weekCount().errors()) | translate }}</mat-error>
+                }
               </mat-form-field>
 
               <div class="wizard-actions">
-                <button mat-raised-button color="primary" matStepperNext type="button" [disabled]="createForm.invalid">
+                <button
+                  mat-raised-button
+                  color="primary"
+                  matStepperNext
+                  type="button"
+                  [disabled]="createForm().invalid()"
+                >
                   {{ 'common.next' | translate }}
                 </button>
                 <button mat-button type="button" (click)="closeCreateWizard()">
@@ -69,12 +95,16 @@
           <!-- Step 2: per-week activity assignment -->
           <mat-step [label]="'superAdmin.seasons.wizard.stepWeeks' | translate">
             <div class="week-assignments">
-              @for (weekControl of createWeekActivities.controls; track $index) {
+              @for (weekActivityTypes of createWeekActivities(); track $index; let i = $index) {
                 <div class="week-row">
-                  <span class="week-label">{{ 'superAdmin.seasons.week' | translate: { number: $index + 1 } }}</span>
+                  <span class="week-label">{{ 'superAdmin.seasons.week' | translate: { number: i + 1 } }}</span>
                   <mat-form-field appearance="outline" class="week-select-field">
                     <mat-label>{{ 'superAdmin.seasons.activityTypes' | translate }}</mat-label>
-                    <mat-select multiple [formControl]="weekControl">
+                    <mat-select
+                      multiple
+                      [value]="weekActivityTypes"
+                      (valueChange)="setCreateWeekActivityTypes(i, $event)"
+                    >
                       @for (type of nonLegionActivityTypes; track type.value) {
                         <mat-option [value]="type.value">{{ type.labelKey | translate }}</mat-option>
                       }
@@ -101,7 +131,7 @@
             <div class="review-panel">
               <h3>{{ 'superAdmin.seasons.wizard.reviewTitle' | translate }}</h3>
               <p>
-                <strong>{{ 'common.name' | translate }}:</strong> {{ createForm.get('name')?.value }}
+                <strong>{{ 'common.name' | translate }}:</strong> {{ createModel().name }}
               </p>
               <p>
                 <strong>{{ 'superAdmin.seasons.wizard.startDate' | translate }}:</strong>
@@ -109,17 +139,17 @@
               </p>
               <p>
                 <strong>{{ 'superAdmin.seasons.wizard.weekCount' | translate }}:</strong>
-                {{ createForm.get('weekCount')?.value }}
+                {{ createModel().weekCount }}
               </p>
 
               <div class="week-summary">
-                @for (weekControl of createWeekActivities.controls; track $index) {
+                @for (weekActivityTypes of createWeekActivities(); track $index; let i = $index) {
                   <div class="week-row read-only">
                     <span class="week-label">
-                      {{ 'superAdmin.seasons.week' | translate: { number: $index + 1 } }}
+                      {{ 'superAdmin.seasons.week' | translate: { number: i + 1 } }}
                     </span>
                     <div class="week-chips">
-                      @for (activity of weekControl.value; track activity) {
+                      @for (activity of weekActivityTypes; track activity) {
                         <mat-chip>{{ activity | activityLabel }}</mat-chip>
                       }
                       <mat-chip class="legion-chip">{{ legionActivityType | activityLabel }}</mat-chip>
@@ -134,7 +164,7 @@
                   mat-raised-button
                   color="primary"
                   type="button"
-                  [disabled]="progressBar.isLoading()"
+                  [disabled]="seasonsResource.isLoading()"
                   (click)="submitCreateSeason()"
                 >
                   <mat-icon>save</mat-icon>
@@ -231,11 +261,13 @@
                     </button>
                   </div>
                 } @else {
-                  <form [formGroup]="editForm" class="edit-season-form">
+                  <form novalidate class="edit-season-form">
                     <mat-form-field appearance="outline">
                       <mat-label>{{ 'common.name' | translate }}</mat-label>
-                      <input matInput formControlName="name" [maxlength]="nameMaxLength" />
-                      <mat-error>{{ 'superAdmin.seasons.nameRequired' | translate }}</mat-error>
+                      <input matInput [formField]="editForm.name" />
+                      @if (editForm.name().touched() && editForm.name().invalid()) {
+                        <mat-error>{{ getFieldErrorKey(editForm.name().errors()) | translate }}</mat-error>
+                      }
                     </mat-form-field>
 
                     @if (isLocked(season.id)) {
@@ -246,24 +278,25 @@
                     } @else {
                       <mat-form-field appearance="outline" class="week-count-field">
                         <mat-label>{{ 'superAdmin.seasons.weekCount' | translate }}</mat-label>
-                        <input
-                          matInput
-                          type="number"
-                          formControlName="weekCount"
-                          [min]="minWeekCount"
-                          [max]="maxWeekCount"
-                        />
+                        <input matInput type="number" [formField]="editForm.weekCount" />
+                        @if (editForm.weekCount().touched() && editForm.weekCount().invalid()) {
+                          <mat-error>{{ getFieldErrorKey(editForm.weekCount().errors()) | translate }}</mat-error>
+                        }
                       </mat-form-field>
 
                       <div class="week-assignments">
-                        @for (weekControl of editWeekActivities.controls; track $index) {
+                        @for (weekActivityTypes of editWeekActivities(); track $index; let i = $index) {
                           <div class="week-row">
                             <span class="week-label">
-                              {{ 'superAdmin.seasons.week' | translate: { number: $index + 1 } }}
+                              {{ 'superAdmin.seasons.week' | translate: { number: i + 1 } }}
                             </span>
                             <mat-form-field appearance="outline" class="week-select-field">
                               <mat-label>{{ 'superAdmin.seasons.activityTypes' | translate }}</mat-label>
-                              <mat-select multiple [formControl]="weekControl">
+                              <mat-select
+                                multiple
+                                [value]="weekActivityTypes"
+                                (valueChange)="setEditWeekActivityTypes(i, $event)"
+                              >
                                 @for (type of nonLegionActivityTypes; track type.value) {
                                   <mat-option [value]="type.value">{{ type.labelKey | translate }}</mat-option>
                                 }
@@ -286,7 +319,7 @@
                         mat-raised-button
                         color="primary"
                         type="button"
-                        [disabled]="editForm.invalid"
+                        [disabled]="editForm().invalid()"
                         (click)="saveEdit(season)"
                       >
                         <mat-icon>save</mat-icon>

@@ -354,7 +354,8 @@
     "deleteConfirm": "دەتەوێت \"{{name}}\" بسڕیتەوە؟",
     "uploadImage": "وێنە بار بکە",
     "next": "دواتر",
-    "clear": "پاک بکەرەوە"
+    "clear": "پاک بکەرەوە",
+    "retry": "دووبارە هەوڵدانەوە"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "لەشکر هەموو هەفتەیەک بە شێوەیەکی نادیار بەردەستە و ناتوانرێت لابردرێت",
       "nameRequired": "ناو پێویستە (زۆرترین 100 پیت)",
       "createFailed": "دروستکردنی وەرز سەرکەوتوو نەبوو",
+      "loadFailed": "بارکردنی وەرزەکان سەرکەوتوو نەبوو",
       "lockedTooltip": "ئەم وەرزە چالاکی تۆمارکراوی هەیە و پێکهاتەکەی قوفڵدراوە",
       "lockedHint": "ئەم وەرزە چالاکی تۆمارکراوی هەیە. تەنها ناو دەکرێت دەستکاری بکرێت.",
       "deleteLockedTooltip": "ناتوانرێت وەرزێک بسڕدرێتەوە کە چالاکی تۆمارکراوی هەیە",
@@ -882,6 +884,12 @@
       "registerError": "Tescîl têk çû. Ji kerema xwe dîsa biceribîne.",
       "unregisterSuccess": "Tescîla te hat betalkirinê.",
       "unregisterError": "Betalkirina tescîlê têk çû. Ji kerema xwe dîsa biceribîne.",
+      "positionLabel": "Pozîsyona xwestî",
+      "positionPlaceholder": "Rêza ku hedef digirî hilbijêre",
+      "positionInvalid": "Pozîsyonek derbasdar hilbijêre.",
+      "medalsUnit": "medal",
+      "commentLabel": "Şîrove (vebijarkî)",
+      "commentPlaceholder": "Tiştek heye ku pêwîst e rêvebir bizanibin? (vebijarkî)",
       "fullFfaTitle": "FFA Tevahî",
       "fullFfaDescription": "Hiç hilbijartin nehat weşandin — ev bûyer ji hemû lîstikvan re vekirî ye."
     },
@@ -921,7 +929,9 @@
       },
       "registrations": {
         "title": "Tescîl",
-        "empty": "Hîna tescîl tunene."
+        "empty": "Hîna tescîl tunene.",
+        "position": "Pozîsyona xwestî",
+        "noPosition": "Nehatiye diyarkirin"
       },
       "selection": {
         "title": "Hilbijartî",

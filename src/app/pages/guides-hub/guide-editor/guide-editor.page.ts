@@ -1,7 +1,8 @@
-import { Component, inject, signal, computed, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject, signal, computed, effect, OnInit, ChangeDetectionStrategy, resource } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, required, maxLength, FormField } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +21,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GuideService } from '@app/core/services/guide.service';
 import { GuideAdminService } from '@app/core/services/guide-admin.service';
 import { AuthService, SnackbarService } from '@app/core/services';
-import { ProgressBarService } from '@app/core/services/progress-bar.service';
+import { getFieldErrorKey } from '@shared/utils/form-validation.utils';
 import { ChampionSlotComponent } from './components/champion-slot/champion-slot.component';
 import {
   ChampionConfiguratorDialogComponent,
@@ -37,6 +38,7 @@ import type {
   ChampionSlotConfig,
   ChampionPosition,
   GuideChampion,
+  GuideWithDetails,
 } from '@shared/models';
 
 const GUIDE_CATEGORIES: { value: GuideCategory; labelKey: string }[] = [
@@ -45,10 +47,39 @@ const GUIDE_CATEGORIES: { value: GuideCategory; labelKey: string }[] = [
   { value: 'general', labelKey: 'guides.categories.general' },
 ];
 
+const TITLE_MAX_LENGTH = 100;
+const DESCRIPTION_MAX_LENGTH = 2000;
+const DEFAULT_CATEGORY: GuideCategory = 'general';
+const CHAMPION_SLOT_COUNT = 3;
+
+interface GuideEditorFormValue {
+  basic: { title: string; category: GuideCategory };
+  content: { description: string };
+  review: { notes: string; is_published: boolean };
+}
+
+function buildInitialFormValue(): GuideEditorFormValue {
+  return {
+    basic: { title: '', category: DEFAULT_CATEGORY },
+    content: { description: '' },
+    review: { notes: '', is_published: false },
+  };
+}
+
+interface GuideReferenceData {
+  champions: Champion[];
+  skills: Skill[];
+  gems: Gem[];
+  temperaments: HorseTemperament[];
+  adornments: Adornment[];
+  rings: Ring[];
+  championSkillsMap: Map<string, Skill[]>;
+}
+
 @Component({
   selector: 'app-guide-editor',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -74,12 +105,10 @@ export class GuideEditorPage implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly fb = inject(FormBuilder);
   private readonly guideService = inject(GuideService);
   private readonly guideAdminService = inject(GuideAdminService);
   private readonly authService = inject(AuthService);
   private readonly snackbarService = inject(SnackbarService);
-  private readonly progressBarService = inject(ProgressBarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
 
@@ -89,35 +118,51 @@ export class GuideEditorPage implements OnInit {
 
   protected readonly isEditMode = signal(false);
   protected readonly guideId = signal<string | null>(null);
-  protected readonly isLoading = signal(false);
   protected readonly isSaving = signal(false);
 
-  // ─── Forms ─────────────────────────────────────────────────────────────────
+  // ─── Reference data & guide-for-edit — Resource API ─────────────────────────
 
-  protected readonly basicForm: FormGroup = this.fb.group({
-    title: ['', [Validators.required, Validators.maxLength(100)]],
-    category: ['general' as GuideCategory, Validators.required],
+  private readonly referenceDataResource = resource({
+    loader: () => this.loadReferenceData(),
   });
 
-  protected readonly contentForm: FormGroup = this.fb.group({
-    description: ['', Validators.maxLength(2000)],
+  private readonly guideResource = resource({
+    params: () => {
+      const id = this.guideId();
+      return id ? { id } : undefined;
+    },
+    loader: ({ params }) => this.guideService.getGuideById(params.id),
   });
 
-  protected readonly reviewForm: FormGroup = this.fb.group({
-    notes: ['', Validators.maxLength(2000)],
-    is_published: [false],
+  protected readonly isLoading = computed(
+    () => this.referenceDataResource.isLoading() || this.guideResource.isLoading()
+  );
+
+  private readonly champions = computed(() => this.referenceDataResource.value()?.champions ?? []);
+  private readonly skills = computed(() => this.referenceDataResource.value()?.skills ?? []);
+  private readonly gems = computed(() => this.referenceDataResource.value()?.gems ?? []);
+  private readonly temperaments = computed(() => this.referenceDataResource.value()?.temperaments ?? []);
+  private readonly adornments = computed(() => this.referenceDataResource.value()?.adornments ?? []);
+  private readonly rings = computed(() => this.referenceDataResource.value()?.rings ?? []);
+  private readonly championSkillsMap = computed(
+    () => this.referenceDataResource.value()?.championSkillsMap ?? new Map<string, Skill[]>()
+  );
+
+  // ─── Form ──────────────────────────────────────────────────────────────────
+
+  protected readonly formModel = signal<GuideEditorFormValue>(buildInitialFormValue());
+
+  protected readonly guideForm = form(this.formModel, schemaPath => {
+    required(schemaPath.basic.title);
+    maxLength(schemaPath.basic.title, TITLE_MAX_LENGTH);
+    required(schemaPath.basic.category);
+    maxLength(schemaPath.content.description, DESCRIPTION_MAX_LENGTH);
+    maxLength(schemaPath.review.notes, DESCRIPTION_MAX_LENGTH);
   });
 
-  protected readonly selectedCategory = signal<GuideCategory>('general');
+  protected readonly titleErrorKey = computed(() => getFieldErrorKey(this.guideForm.basic.title().errors()));
 
-  // ─── Form value signals (for computed derivations) ─────────────────────────
-
-  private readonly basicFormValue = toSignal(this.basicForm.valueChanges, {
-    initialValue: this.basicForm.value as { title: string; category: GuideCategory },
-  });
-  private readonly contentFormValue = toSignal(this.contentForm.valueChanges, {
-    initialValue: this.contentForm.value as { description: string },
-  });
+  protected readonly selectedCategory = computed(() => this.formModel().basic.category);
 
   // ─── Computed template helpers ─────────────────────────────────────────────
 
@@ -125,51 +170,36 @@ export class GuideEditorPage implements OnInit {
   protected readonly hasAtLeastOneChampion = computed(() => this.championSlots().some(s => s !== null));
   protected readonly filledSlotsCount = computed(() => this.championSlots().filter(s => s !== null).length);
   protected readonly guidePreview = computed(() => ({
-    title: (this.basicFormValue().title as string) ?? '',
+    title: this.formModel().basic.title,
     category: this.selectedCategory(),
-    description: (this.contentFormValue().description as string) ?? '',
+    description: this.formModel().content.description,
   }));
 
   // ─── Champion slots (formation only) ───────────────────────────────────────
 
-  protected readonly championSlots = signal<(ChampionSlotConfig | null)[]>([null, null, null]);
+  protected readonly championSlots = signal<(ChampionSlotConfig | null)[]>(
+    new Array<null>(CHAMPION_SLOT_COUNT).fill(null)
+  );
 
-  // ─── Reference data ────────────────────────────────────────────────────────
-
-  private readonly champions = signal<Champion[]>([]);
-  private readonly skills = signal<Skill[]>([]);
-  private readonly gems = signal<Gem[]>([]);
-  private readonly temperaments = signal<HorseTemperament[]>([]);
-  private readonly adornments = signal<Adornment[]>([]);
-  private readonly rings = signal<Ring[]>([]);
-
-  /** Skills indexed by champion ID — built once reference data is loaded */
-  private readonly championSkillsMap = signal<Map<string, Skill[]>>(new Map());
+  constructor() {
+    effect(() => {
+      const guide = this.guideResource.value();
+      if (this.guideResource.status() !== 'resolved' || guide === undefined) {
+        return;
+      }
+      this.handleGuideLoaded(guide);
+    });
+  }
 
   // ─── Lifecycle ─────────────────────────────────────────────────────────────
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.isEditMode.set(!!id);
     this.guideId.set(id);
-
-    this.basicForm
-      .get('category')!
-      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(val => this.selectedCategory.set(val as GuideCategory));
-
-    this.isLoading.set(true);
-    try {
-      await this.loadReferenceData();
-      if (id) {
-        await this.loadGuideForEdit(id);
-      }
-    } finally {
-      this.isLoading.set(false);
-    }
   }
 
-  private async loadReferenceData(): Promise<void> {
+  private async loadReferenceData(): Promise<GuideReferenceData> {
     const [champions, skills, gems, temperaments, adornments, rings] = await Promise.all([
       this.guideAdminService.getChampions(),
       this.guideAdminService.getSkills(),
@@ -179,14 +209,21 @@ export class GuideEditorPage implements OnInit {
       this.guideAdminService.getRings(),
     ]);
 
-    this.champions.set(champions.filter(c => c.is_active));
-    this.skills.set(skills.filter(s => s.is_active));
-    this.gems.set(gems.filter(g => g.is_active));
-    this.temperaments.set(temperaments);
-    this.adornments.set(adornments.filter(o => o.is_active));
-    this.rings.set(rings.filter(r => r.is_active));
+    const activeChampions = champions.filter(c => c.is_active);
+    const championSkillsMap = await this.buildChampionSkillsMap(activeChampions);
 
-    // Build champion → skills map
+    return {
+      champions: activeChampions,
+      skills: skills.filter(s => s.is_active),
+      gems: gems.filter(g => g.is_active),
+      temperaments,
+      adornments: adornments.filter(o => o.is_active),
+      rings: rings.filter(r => r.is_active),
+      championSkillsMap,
+    };
+  }
+
+  private async buildChampionSkillsMap(champions: Champion[]): Promise<Map<string, Skill[]>> {
     const map = new Map<string, Skill[]>();
     await Promise.all(
       champions.map(async c => {
@@ -194,12 +231,11 @@ export class GuideEditorPage implements OnInit {
         map.set(c.id, championSkills);
       })
     );
-    this.championSkillsMap.set(map);
+    return map;
   }
 
-  private async loadGuideForEdit(id: string): Promise<void> {
-    const guide = await this.guideService.getGuideById(id);
-    if (!guide) {
+  private handleGuideLoaded(guide: GuideWithDetails | null): void {
+    if (guide === null) {
       this.snackbarService.error(this.translate.instant('guides.errors.notFound'));
       void this.router.navigate(['/app/guides']);
       return;
@@ -211,13 +247,18 @@ export class GuideEditorPage implements OnInit {
       return;
     }
 
-    this.basicForm.patchValue({ title: guide.title, category: guide.category });
-    this.selectedCategory.set(guide.category);
-    this.contentForm.patchValue({ description: guide.description ?? '' });
-    this.reviewForm.patchValue({ notes: guide.description ?? '', is_published: guide.is_published });
+    this.populateFormFromGuide(guide);
+  }
+
+  private populateFormFromGuide(guide: GuideWithDetails): void {
+    this.formModel.set({
+      basic: { title: guide.title, category: guide.category },
+      content: { description: guide.description ?? '' },
+      review: { notes: guide.description ?? '', is_published: guide.is_published },
+    });
 
     if (guide.category === 'formation' && guide.guide_champions) {
-      const slots: (ChampionSlotConfig | null)[] = [null, null, null];
+      const slots: (ChampionSlotConfig | null)[] = new Array<null>(CHAMPION_SLOT_COUNT).fill(null);
       for (const gc of guide.guide_champions) {
         if (gc.champions) {
           slots[gc.position] = this.mapGuideChampionToSlotConfig(gc);
@@ -246,7 +287,7 @@ export class GuideEditorPage implements OnInit {
 
     return {
       position: gc.position,
-      champion: gc.champions!,
+      champion: gc.champions as Champion,
       skills,
       gems,
       traits,
@@ -262,7 +303,7 @@ export class GuideEditorPage implements OnInit {
 
     const usedRingIds = this.championSlots()
       .filter((s, i) => s !== null && i !== position)
-      .map(s => s!.ring?.id)
+      .map(s => s?.ring?.id)
       .filter((id): id is string => !!id);
 
     const dialogData: ChampionConfiguratorDialogData = {
@@ -316,64 +357,79 @@ export class GuideEditorPage implements OnInit {
   // ─── Save ──────────────────────────────────────────────────────────────────
 
   protected async save(): Promise<void> {
-    if (this.basicForm.invalid || this.isSaving()) return;
+    if (this.guideForm.basic().invalid() || this.isSaving()) return;
 
     this.isSaving.set(true);
     try {
-      const { title, category } = this.basicForm.value as { title: string; category: GuideCategory };
-      const description =
-        category !== 'formation' ? (this.contentForm.value as { description: string }).description || null : null;
-      const { notes, is_published } = this.reviewForm.value as {
-        notes: string;
-        is_published: boolean;
-      };
-
-      // Notes (step 3) take priority over description (step 2).
-      // For formation guides, description is forced to null; notes serve as the final description for all categories.
-      const finalDescription = notes || description;
-
-      let guideId = this.guideId();
-
-      if (this.isEditMode() && guideId) {
-        const { error } = await this.guideService.updateGuide(guideId, {
-          title,
-          description: finalDescription,
-          is_published,
-        });
-        if (error) {
-          this.snackbarService.error(this.translate.instant(error));
-          return;
-        }
-      } else {
-        const { guide, error } = await this.guideService.createGuide({
-          title,
-          category,
-          description: finalDescription,
-        });
-        if (error || !guide) {
-          this.snackbarService.error(this.translate.instant(error ?? 'guides.errors.unauthorized'));
-          return;
-        }
-        guideId = guide.id;
-      }
-
-      // Save champion slots for formation guides
-      if (category === 'formation') {
-        const filledSlots = this.championSlots().filter((s): s is ChampionSlotConfig => s !== null);
-        if (filledSlots.length > 0) {
-          const { error } = await this.guideService.saveGuideChampions(guideId!, filledSlots);
-          if (error) {
-            this.snackbarService.error(this.translate.instant(error));
-            return;
-          }
-        }
-      }
-
-      this.snackbarService.success(this.translate.instant('common.saved'));
-      void this.router.navigate(['/app/guides']);
+      await this.persistGuide();
     } finally {
       this.isSaving.set(false);
     }
+  }
+
+  private async persistGuide(): Promise<void> {
+    const { basic, content, review } = this.formModel();
+    const description = basic.category !== 'formation' ? content.description || null : null;
+    const finalDescription = review.notes || description;
+
+    const guideId = this.isEditMode()
+      ? await this.updateExistingGuide(basic.title, finalDescription, review.is_published)
+      : await this.createNewGuide(basic.title, basic.category, finalDescription);
+
+    if (guideId === null) return;
+
+    if (basic.category === 'formation' && !(await this.saveFormationChampions(guideId))) return;
+
+    this.snackbarService.success(this.translate.instant('common.saved'));
+    void this.router.navigate(['/app/guides']);
+  }
+
+  private async updateExistingGuide(
+    title: string,
+    description: string | null,
+    isPublished: boolean
+  ): Promise<string | null> {
+    const guideId = this.guideId();
+    if (guideId === null) {
+      this.snackbarService.error(this.translate.instant('guides.errors.unknown'));
+      return null;
+    }
+
+    const { error } = await this.guideService.updateGuide(guideId, {
+      title,
+      description,
+      is_published: isPublished,
+    });
+    if (error) {
+      this.snackbarService.error(this.translate.instant(error));
+      return null;
+    }
+    return guideId;
+  }
+
+  private async createNewGuide(
+    title: string,
+    category: GuideCategory,
+    description: string | null
+  ): Promise<string | null> {
+    const { guide, error } = await this.guideService.createGuide({ title, category, description });
+    if (error || !guide) {
+      this.snackbarService.error(this.translate.instant(error ?? 'guides.errors.unauthorized'));
+      return null;
+    }
+    return guide.id;
+  }
+
+  private async saveFormationChampions(guideId: string): Promise<boolean> {
+    const filledSlots = this.championSlots().filter((s): s is ChampionSlotConfig => s !== null);
+    if (filledSlots.length === 0) return true;
+
+    const { error } = await this.guideService.saveGuideChampions(guideId, filledSlots);
+    if (error) {
+      this.snackbarService.error(this.translate.instant(error));
+      return false;
+    }
+    return true;
   }
 
   protected cancel(): void {

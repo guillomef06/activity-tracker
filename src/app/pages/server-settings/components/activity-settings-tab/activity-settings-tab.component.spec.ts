@@ -70,25 +70,28 @@ describe('ActivitySettingsTabComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should have point rule form', () => {
-    expect(component['pointRuleForm']).toBeDefined();
-    expect(component['pointRuleForm'].get('activity_type')).toBeDefined();
-    expect(component['pointRuleForm'].get('range_size')).toBeDefined();
-    expect(component['pointRuleForm'].get('points')).toBeDefined();
-    expect(component['pointRuleForm'].get('decreased_next_range_points')).toBeDefined();
-  });
-
-  it('should generate point rules on valid submission', async () => {
-    component['pointRuleForm'].patchValue({
+  const patchValidGenerator = (): void => {
+    component['pointRuleModel'].set({
       activity_type: 'development',
       range_size: 10,
       points: 50,
       decreased_next_range_points: 10,
     });
+  };
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should have point rule form', () => {
+    expect(component['pointRuleForm'].activity_type).toBeDefined();
+    expect(component['pointRuleForm'].range_size).toBeDefined();
+    expect(component['pointRuleForm'].points).toBeDefined();
+    expect(component['pointRuleForm'].decreased_next_range_points).toBeDefined();
+  });
+
+  it('should generate point rules on valid submission', async () => {
+    patchValidGenerator();
 
     await component['generateRules']();
 
@@ -102,7 +105,7 @@ describe('ActivitySettingsTabComponent', () => {
   });
 
   it('should not submit when the generator form is invalid', async () => {
-    component['pointRuleForm'].patchValue({
+    component['pointRuleModel'].set({
       activity_type: '',
       range_size: 7,
       points: 50,
@@ -148,7 +151,7 @@ describe('ActivitySettingsTabComponent', () => {
       }))
     );
     const enabled = component['enabledActivityTypes']();
-    expect(enabled.length).toBe(0);
+    expect(enabled).toHaveLength(0);
   });
 
   it('should call setTiebreakerActivity with activityType when toggleTiebreakerActivity is called with checked=true', async () => {
@@ -232,7 +235,7 @@ describe('ActivitySettingsTabComponent', () => {
   describe('trancheePreview / generateTranches', () => {
     it('should compute contiguous decreasing tranches for a typical config', () => {
       // Arrange
-      component['pointRuleForm'].patchValue({
+      component['pointRuleModel'].set({
         activity_type: 'development',
         range_size: 10,
         points: 50,
@@ -257,7 +260,7 @@ describe('ActivitySettingsTabComponent', () => {
 
     it('should generate a single tranche when the decrease exhausts points after tranche 1', () => {
       // Arrange — points=10, decrease=20 => tranche 2 would be 10 - 1*20 = -10 <= 0, stop
-      component['pointRuleForm'].patchValue({
+      component['pointRuleModel'].set({
         activity_type: 'legion',
         range_size: 5,
         points: 10,
@@ -273,7 +276,7 @@ describe('ActivitySettingsTabComponent', () => {
 
     it('should return an empty preview when range_size is not a multiple of 5', () => {
       // Arrange
-      component['pointRuleForm'].patchValue({
+      component['pointRuleModel'].set({
         activity_type: 'legion',
         range_size: 7,
         points: 50,
@@ -285,7 +288,12 @@ describe('ActivitySettingsTabComponent', () => {
 
       // Assert
       expect(preview).toEqual([]);
-      expect(component['pointRuleForm'].get('range_size')?.hasError('multipleOf')).toBe(true);
+      expect(
+        component['pointRuleForm']
+          .range_size()
+          .errors()
+          .some(e => e.kind === 'multipleOf')
+      ).toBe(true);
     });
   });
 
@@ -294,7 +302,7 @@ describe('ActivitySettingsTabComponent', () => {
       // Arrange
       const rules = [buildRule({ id: 'r1', activity_type: 'development' })];
       serverService.getRulesForActivityType.mockImplementation(type => (type === 'development' ? rules : []));
-      component['pointRuleForm'].patchValue({ activity_type: 'development' });
+      component['pointRuleModel'].update(current => ({ ...current, activity_type: 'development' }));
 
       // Act
       const result = component['existingRulesForSelectedType']();
@@ -307,7 +315,7 @@ describe('ActivitySettingsTabComponent', () => {
     it('should be empty for an activity type with no existing rules', () => {
       // Arrange
       serverService.getRulesForActivityType.mockReturnValue([]);
-      component['pointRuleForm'].patchValue({ activity_type: 'legion' });
+      component['pointRuleModel'].update(current => ({ ...current, activity_type: 'legion' }));
 
       // Act
       const result = component['existingRulesForSelectedType']();
@@ -318,7 +326,7 @@ describe('ActivitySettingsTabComponent', () => {
 
     it('should be empty when no activity type is selected', () => {
       // Arrange
-      component['pointRuleForm'].patchValue({ activity_type: '' });
+      component['pointRuleModel'].update(current => ({ ...current, activity_type: '' }));
 
       // Act
       const result = component['existingRulesForSelectedType']();
@@ -384,15 +392,6 @@ describe('ActivitySettingsTabComponent', () => {
   });
 
   describe('generateRules() confirm-replace flow', () => {
-    const patchValidGenerator = (): void => {
-      component['pointRuleForm'].patchValue({
-        activity_type: 'development',
-        range_size: 10,
-        points: 50,
-        decreased_next_range_points: 10,
-      });
-    };
-
     it('should call replaceRulesForActivityType directly without opening a confirm dialog when there are no existing rules', async () => {
       // Arrange
       serverService.getRulesForActivityType.mockReturnValue([]);
@@ -450,15 +449,6 @@ describe('ActivitySettingsTabComponent', () => {
   });
 
   describe('submitTranches() outcomes (via generateRules())', () => {
-    const patchValidGenerator = (): void => {
-      component['pointRuleForm'].patchValue({
-        activity_type: 'development',
-        range_size: 10,
-        points: 50,
-        decreased_next_range_points: 10,
-      });
-    };
-
     beforeEach(() => {
       serverService.getRulesForActivityType.mockReturnValue([]);
     });
@@ -476,10 +466,10 @@ describe('ActivitySettingsTabComponent', () => {
       // Assert
       expect(successSpy).toHaveBeenCalled();
       expect(ruleCreatedSpy).toHaveBeenCalled();
-      expect(component['pointRuleForm'].get('activity_type')?.value).toBe('');
-      expect(component['pointRuleForm'].get('range_size')?.value).toBe(5);
-      expect(component['pointRuleForm'].get('points')?.value).toBe(10);
-      expect(component['pointRuleForm'].get('decreased_next_range_points')?.value).toBe(1);
+      expect(component['pointRuleModel']().activity_type).toBe('');
+      expect(component['pointRuleModel']().range_size).toBe(5);
+      expect(component['pointRuleModel']().points).toBe(10);
+      expect(component['pointRuleModel']().decreased_next_range_points).toBe(1);
     });
 
     it('should show the generic generateFailed snackbar on a plain (non-prefixed) error', async () => {
@@ -527,7 +517,7 @@ describe('ActivitySettingsTabComponent', () => {
 
       // Assert
       expect(ruleCreatedSpy).not.toHaveBeenCalled();
-      expect(component['pointRuleForm'].get('activity_type')?.value).toBe('development');
+      expect(component['pointRuleModel']().activity_type).toBe('development');
     });
 
     it('should set isSubmitting true during the call and reset to false on success', async () => {

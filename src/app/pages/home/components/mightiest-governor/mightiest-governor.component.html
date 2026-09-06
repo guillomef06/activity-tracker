@@ -45,7 +45,7 @@
       [selection]="selection()"
       [currentUserId]="currentUserId()"
       [isRegistering]="isRegistering()"
-      (register)="onRegister()"
+      (register)="onRegister($event)"
       (unregister)="onUnregister()"
     />
   }

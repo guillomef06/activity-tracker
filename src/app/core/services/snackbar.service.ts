@@ -2,6 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 
+// Phase 2B (Async Signals, see SPEC_ANGULAR_22_MIGRATION.md #4): evaluated and excluded —
+// this service is a pure imperative wrapper around MatSnackBar with no data/state signal
+// to expose. `ref.onAction().subscribe(...)` is a one-shot user-action callback, not a
+// state stream, so there is nothing to convert to `resource()`/`rxResource()`/`toSignal()`.
 @Injectable({
   providedIn: 'root',
 })

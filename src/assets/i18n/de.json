@@ -354,7 +354,8 @@
     "deleteConfirm": "Möchtest du \"{{name}}\" wirklich löschen?",
     "uploadImage": "Bild hochladen",
     "next": "Weiter",
-    "clear": "Leeren"
+    "clear": "Leeren",
+    "retry": "Wiederholen"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "Legion ist jede Woche implizit vorhanden und kann nicht entfernt werden",
       "nameRequired": "Name ist erforderlich (max. 100 Zeichen)",
       "createFailed": "Erstellen der Season fehlgeschlagen",
+      "loadFailed": "Laden der Seasons fehlgeschlagen",
       "lockedTooltip": "Diese Season hat erfasste Aktivitäten, ihre Struktur ist gesperrt",
       "lockedHint": "Diese Season hat erfasste Aktivitäten. Es kann nur der Name bearbeitet werden.",
       "deleteLockedTooltip": "Eine Season mit erfassten Aktivitäten kann nicht gelöscht werden",
@@ -882,6 +884,12 @@
       "registerError": "Anmeldung fehlgeschlagen. Bitte erneut versuchen.",
       "unregisterSuccess": "Abmeldung erfolgreich.",
       "unregisterError": "Abmeldung fehlgeschlagen. Bitte erneut versuchen.",
+      "positionLabel": "Gewünschte Position",
+      "positionPlaceholder": "Wählen Sie den angestrebten Rang",
+      "positionInvalid": "Wählen Sie eine gültige Position.",
+      "medalsUnit": "Medaillen",
+      "commentLabel": "Kommentar (optional)",
+      "commentPlaceholder": "Etwas, das die Admins wissen sollten? (optional)",
       "fullFfaTitle": "Volles FFA",
       "fullFfaDescription": "Keine Auswahl wurde veröffentlicht – dieses Event ist für alle Spieler offen."
     },
@@ -921,7 +929,9 @@
       },
       "registrations": {
         "title": "Anmeldungen",
-        "empty": "Noch keine Anmeldungen."
+        "empty": "Noch keine Anmeldungen.",
+        "position": "Gewünschte Position",
+        "noPosition": "Nicht angegeben"
       },
       "selection": {
         "title": "Auswahl",

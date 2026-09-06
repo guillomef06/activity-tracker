@@ -1,14 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { form, required, min, validate, applyEach, FormField } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,11 +17,13 @@ import { AuthService } from '@app/core/services/auth.service';
 import { ActivityService } from '@app/core/services/activity.service';
 import { ServerService } from '@app/core/services/server.service';
 import { SnackbarService } from '@app/core/services';
-import { buildMgSlotRows } from '@shared/utils/mg-slot.util';
+import { buildMgSlotRows, MgSlotRow } from '@shared/utils/mg-slot.util';
+import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
 import type {
   MgEvent,
   ServerMgConfig,
   ServerMgSlotConfig,
+  MgAssignmentMode,
   UpsertMgSlotConfigRow,
   MgRegistrationWithUser,
   MgSelectionWithUser,
@@ -37,17 +31,32 @@ import type {
   MgLeaderboardEntry,
 } from '@shared/models';
 
-export const targetRangeValidator: ValidatorFn = (group): ValidationErrors | null => {
-  const targetMin = group.get('targetMin')?.value;
-  const targetMax = group.get('targetMax')?.value;
-  return targetMax < targetMin ? { targetRange: true } : null;
-};
+const MIN_SLOT_VALUE = 0;
+const DEFAULT_CAPACITY: MgEventCapacity = 10;
+const DEFAULT_ASSIGNMENT_MODE: MgAssignmentMode = 'automatic';
+
+type MgEventCapacity = ServerMgConfig['capacity'];
+
+interface ConfigFormModel {
+  capacity: MgEventCapacity;
+  assignment_mode: MgAssignmentMode;
+  dkp_enabled: boolean;
+}
+
+interface SlotConfigFormModel {
+  rows: MgSlotRow[];
+}
+
+/** A registration row enriched with its precomputed desired-position rank label. */
+interface MgRegistrationRow extends MgRegistrationWithUser {
+  positionLabel: string | null;
+}
 
 @Component({
   selector: 'app-mg-admin-tab',
   imports: [
     DatePipe,
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -71,7 +80,6 @@ export class MgAdminTabComponent implements OnInit {
   private readonly serverService = inject(ServerService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly translate = inject(TranslateService);
-  private readonly fb = inject(FormBuilder);
 
   protected readonly isLoading = signal(false);
   protected readonly isSavingConfig = signal(false);
@@ -87,21 +95,38 @@ export class MgAdminTabComponent implements OnInit {
   protected readonly previewPayloads = signal<MgSelectionPayload[]>([]);
   protected readonly showPreview = signal(false);
 
-  protected readonly configForm: FormGroup = this.fb.group({
-    capacity: [10, Validators.required],
-    assignment_mode: ['automatic', Validators.required],
-    dkp_enabled: [false, Validators.required],
+  protected readonly configModel = signal<ConfigFormModel>({
+    capacity: DEFAULT_CAPACITY,
+    assignment_mode: DEFAULT_ASSIGNMENT_MODE,
+    dkp_enabled: false,
   });
 
-  protected readonly slotConfigForm: FormGroup = this.fb.group({
-    rows: this.fb.array<FormGroup>([]),
+  protected readonly slotConfigModel = signal<SlotConfigFormModel>({ rows: [] });
+
+  protected readonly configForm = form(this.configModel, path => {
+    required(path.capacity);
+    required(path.assignment_mode);
   });
 
-  protected get slotRows(): FormGroup[] {
-    return (this.slotConfigForm.get('rows') as FormArray).controls as FormGroup[];
+  protected readonly slotConfigForm = form(this.slotConfigModel, path => {
+    applyEach(path.rows, row => {
+      required(row.cost);
+      min(row.cost, MIN_SLOT_VALUE);
+      required(row.targetMin);
+      min(row.targetMin, MIN_SLOT_VALUE);
+      required(row.targetMax);
+      min(row.targetMax, MIN_SLOT_VALUE);
+      validate(row.targetMax, ({ value, valueOf }) =>
+        value() < valueOf(row.targetMin) ? { kind: 'targetRange' } : null
+      );
+    });
+  });
+
+  protected get slotRows(): MgSlotRow[] {
+    return this.slotConfigModel().rows;
   }
 
-  protected readonly isAutoMode = computed(() => this.configForm.get('assignment_mode')?.value === 'automatic');
+  protected readonly isAutoMode = computed(() => this.configModel().assignment_mode === 'automatic');
 
   protected readonly canPublish = computed(() => {
     const ev = this.mgEvent();
@@ -118,6 +143,19 @@ export class MgAdminTabComponent implements OnInit {
   );
 
   protected readonly ffaCount = computed(() => this.currentSelection().filter(s => s.selection_type === 'ffa').length);
+
+  /**
+   * Registrations enriched with a precomputed rank label, so the template never needs to
+   * call a method (project convention: no function calls in templates). `positionLabel` is
+   * null for pre-existing registrations that predate desired_slot_order (see
+   * supabase/41-mg-registration-position-comment.sql) — the template falls back gracefully.
+   */
+  protected readonly registrationRows = computed<MgRegistrationRow[]>(() =>
+    this.registrations().map(reg => ({
+      ...reg,
+      positionLabel: MG_SLOT_DEFAULTS.find(slot => slot.slotOrder === reg.desired_slot_order)?.rankLabel ?? null,
+    }))
+  );
 
   async ngOnInit(): Promise<void> {
     const serverId = this.authService.getServerId();
@@ -136,7 +174,7 @@ export class MgAdminTabComponent implements OnInit {
       this.slotConfig.set(slotConfig);
 
       if (config) {
-        this.configForm.patchValue({
+        this.configModel.set({
           capacity: config.capacity,
           assignment_mode: config.assignment_mode,
           dkp_enabled: config.dkp_enabled,
@@ -164,13 +202,16 @@ export class MgAdminTabComponent implements OnInit {
   }
 
   protected async saveConfig(): Promise<void> {
-    if (this.configForm.invalid) return;
+    if (this.configForm().invalid()) {
+      this.configForm().markAsTouched();
+      return;
+    }
     const serverId = this.authService.getServerId();
     if (!serverId) return;
 
     this.isSavingConfig.set(true);
     try {
-      const { error } = await this.mgEventService.saveServerConfig(serverId, this.configForm.value);
+      const { error } = await this.mgEventService.saveServerConfig(serverId, this.configModel());
       if (error) throw error;
       this.snackbarService.success(this.translate.instant('mg.admin.configSaved'));
       const config = await this.mgEventService.loadServerConfig(serverId);
@@ -183,37 +224,24 @@ export class MgAdminTabComponent implements OnInit {
   }
 
   private rebuildSlotConfigForm(config: readonly ServerMgSlotConfig[]): void {
-    const rows = buildMgSlotRows(config);
-    const rowsArray = this.fb.array<FormGroup>(
-      rows.map(row =>
-        this.fb.group(
-          {
-            slotOrder: [row.slotOrder],
-            rankLabel: [row.rankLabel],
-            medal: [row.medal],
-            cost: [row.cost, [Validators.required, Validators.min(0)]],
-            targetMin: [row.targetMin, [Validators.required, Validators.min(0)]],
-            targetMax: [row.targetMax, [Validators.required, Validators.min(0)]],
-          },
-          { validators: targetRangeValidator }
-        )
-      )
-    );
-    this.slotConfigForm.setControl('rows', rowsArray);
+    this.slotConfigModel.set({ rows: buildMgSlotRows(config) });
   }
 
   protected async saveSlotConfig(): Promise<void> {
-    if (this.slotConfigForm.invalid) return;
+    if (this.slotConfigForm().invalid()) {
+      this.slotConfigForm().markAsTouched();
+      return;
+    }
     const serverId = this.authService.getServerId();
     if (!serverId) return;
 
     this.isSavingSlotConfig.set(true);
     try {
       const rows: UpsertMgSlotConfigRow[] = this.slotRows.map(row => ({
-        slot_order: row.get('slotOrder')?.value,
-        cost: row.get('cost')?.value,
-        target_min: row.get('targetMin')?.value,
-        target_max: row.get('targetMax')?.value,
+        slot_order: row.slotOrder,
+        cost: row.cost,
+        target_min: row.targetMin,
+        target_max: row.targetMax,
       }));
       const { error } = await this.mgEventService.saveSlotConfig(serverId, rows);
       if (error) throw error;
@@ -229,7 +257,7 @@ export class MgAdminTabComponent implements OnInit {
 
   protected generatePreview(): void {
     const event = this.mgEvent();
-    const config = this.serverConfig() ?? { capacity: this.configForm.value.capacity };
+    const config = this.serverConfig() ?? { capacity: this.configModel().capacity };
     if (!event) return;
 
     const scores: MgLeaderboardEntry[] = this.activityService.getUserScores().map(us => ({
@@ -245,10 +273,12 @@ export class MgAdminTabComponent implements OnInit {
         mg_event_id: r.mg_event_id,
         user_id: r.user_id,
         registered_at: r.registered_at,
+        desired_slot_order: r.desired_slot_order,
+        comment: r.comment,
       })),
       scores,
       config.capacity,
-      buildMgSlotRows(this.slotConfig())
+      this.slotRows
     );
 
     this.previewPayloads.set(payloads);
@@ -283,11 +313,14 @@ export class MgAdminTabComponent implements OnInit {
     const event = this.mgEvent();
     if (!event) return;
 
+    const serverId = this.authService.getServerId();
+    if (!serverId) return;
+
     this.isPublishing.set(true);
     try {
       const { error } = await this.mgEventService.publishSelection(event.id);
       if (error) throw error;
-      const updated = await this.mgEventService.loadCurrentEvent(this.authService.getServerId()!);
+      const updated = await this.mgEventService.loadCurrentEvent(serverId);
       this.mgEvent.set(updated);
       this.snackbarService.success(this.translate.instant('mg.admin.selectionPublished'));
     } catch {
@@ -297,11 +330,7 @@ export class MgAdminTabComponent implements OnInit {
     }
   }
 
-  trackBySlotRow(_: number, row: FormGroup): number {
-    return row.get('slotOrder')?.value;
-  }
-
-  trackByReg(_: number, reg: MgRegistrationWithUser): string {
+  trackByReg(_: number, reg: MgRegistrationRow): string {
     return reg.id;
   }
 

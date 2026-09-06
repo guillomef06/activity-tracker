@@ -63,13 +63,13 @@
             </p>
           }
 
-          <form [formGroup]="webhookForm" (ngSubmit)="handleFormSubmit()" class="webhook-form">
+          <form (submit)="$event.preventDefault(); handleFormSubmit()" class="webhook-form">
             <div class="form-row">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{ 'discord.channelName' | translate }}</mat-label>
                 <input
                   matInput
-                  formControlName="channel_name"
+                  [formField]="webhookForm.channel_name"
                   [placeholder]="'discord.channelNamePlaceholder' | translate"
                 />
                 @if (channelNameError()) {
@@ -82,7 +82,7 @@
                   <mat-label>{{ 'discord.webhookUrl' | translate }}</mat-label>
                   <input
                     matInput
-                    formControlName="webhook_url"
+                    [formField]="webhookForm.webhook_url"
                     [placeholder]="'discord.webhookUrlPlaceholder' | translate"
                   />
                   <mat-hint>{{ 'discord.webhookUrlHint' | translate }}</mat-hint>
@@ -97,7 +97,7 @@
               <mat-label>{{ 'discord.defaultMessage' | translate }}</mat-label>
               <textarea
                 matInput
-                formControlName="default_message"
+                [formField]="webhookForm.default_message"
                 rows="3"
                 [placeholder]="'discord.defaultMessagePlaceholder' | translate"
               ></textarea>
@@ -112,7 +112,7 @@
                 <app-loading-button
                   type="submit"
                   [submitting]="isUpdatingWebhook()"
-                  [disabled]="webhookForm.invalid"
+                  [disabled]="webhookForm().invalid()"
                   [text]="'common.update' | translate"
                   icon="check"
                   color="primary"
@@ -121,7 +121,7 @@
                 <app-loading-button
                   type="submit"
                   [submitting]="isSubmittingWebhook()"
-                  [disabled]="webhookForm.invalid"
+                  [disabled]="webhookForm().invalid()"
                   [text]="'common.save' | translate"
                   icon="add"
                 />
@@ -152,10 +152,10 @@
       @if (webhooks().length === 0) {
         <p class="no-data">{{ 'discord.noChannelsForMessage' | translate }}</p>
       } @else {
-        <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="send-form">
+        <form (submit)="$event.preventDefault(); sendMessage()" class="send-form">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>{{ 'discord.selectChannel' | translate }}</mat-label>
-            <mat-select formControlName="webhook_id" (selectionChange)="onChannelSelected($event.value)">
+            <mat-select [formField]="messageForm.webhook_id" (selectionChange)="onChannelSelected($event.value)">
               @for (webhook of webhooks(); track webhook.id) {
                 <mat-option [value]="webhook.id">
                   <mat-icon>tag</mat-icon>
@@ -170,11 +170,11 @@
               <mat-label>{{ 'discord.messageContent' | translate }}</mat-label>
               <textarea
                 matInput
-                formControlName="content"
+                [formField]="messageForm.content"
                 rows="4"
                 [placeholder]="'discord.messageContentPlaceholder' | translate"
               ></textarea>
-              <mat-hint align="end">{{ messageForm.controls['content'].value?.length || 0 }} / 2000</mat-hint>
+              <mat-hint align="end">{{ messageForm.content().value()?.length || 0 }} / 2000</mat-hint>
               @if (messageContentError()) {
                 <mat-error>{{ messageContentError() | translate }}</mat-error>
               }
@@ -183,7 +183,7 @@
             <app-loading-button
               type="submit"
               [submitting]="isSendingMessage()"
-              [disabled]="messageForm.invalid"
+              [disabled]="messageForm().invalid()"
               [text]="'discord.sendMessage' | translate"
               icon="send"
               color="primary"
@@ -265,10 +265,10 @@
               </p>
             }
 
-            <form [formGroup]="scheduleForm" (ngSubmit)="handleScheduleFormSubmit()" class="schedule-form">
+            <form (submit)="$event.preventDefault(); handleScheduleFormSubmit()" class="schedule-form">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{ 'discord.selectChannel' | translate }}</mat-label>
-                <mat-select formControlName="webhook_id">
+                <mat-select [formField]="scheduleForm.webhook_id">
                   @for (webhook of webhooks(); track webhook.id) {
                     <mat-option [value]="webhook.id">
                       <mat-icon>tag</mat-icon>
@@ -282,11 +282,11 @@
                 <mat-label>{{ 'discord.messageContent' | translate }}</mat-label>
                 <textarea
                   matInput
-                  formControlName="message"
+                  [formField]="scheduleForm.message"
                   rows="3"
                   [placeholder]="'discord.messageContentPlaceholder' | translate"
                 ></textarea>
-                <mat-hint align="end">{{ scheduleForm.controls.message.value.length }} / 2000</mat-hint>
+                <mat-hint align="end">{{ scheduleForm.message().value().length }} / 2000</mat-hint>
                 @if (scheduleMessageError()) {
                   <mat-error>{{ scheduleMessageError() | translate }}</mat-error>
                 }
@@ -295,7 +295,7 @@
               <div class="form-row">
                 <mat-form-field appearance="outline" class="form-field">
                   <mat-label>{{ 'discord.schedule.frequency' | translate }}</mat-label>
-                  <mat-select formControlName="frequency">
+                  <mat-select [formField]="scheduleForm.frequency">
                     <mat-option value="daily">{{ 'discord.schedule.frequencyDaily' | translate }}</mat-option>
                     <mat-option value="weekly">{{ 'discord.schedule.frequencyWeekly' | translate }}</mat-option>
                     <mat-option value="monthly">{{ 'discord.schedule.frequencyMonthly' | translate }}</mat-option>
@@ -304,7 +304,7 @@
 
                 <mat-form-field appearance="outline" class="form-field">
                   <mat-label>{{ 'discord.schedule.hourUtc' | translate }}</mat-label>
-                  <mat-select formControlName="hour_utc">
+                  <mat-select [formField]="scheduleForm.hour_utc">
                     @for (hourOption of hourOptions; track hourOption.value) {
                       <mat-option [value]="hourOption.value">{{ hourOption.label }}</mat-option>
                     }
@@ -313,27 +313,21 @@
                 </mat-form-field>
               </div>
 
-              @if (scheduleForm.controls.frequency.value === 'weekly') {
-                <div class="days-of-week" formArrayName="days_of_week">
+              @if (scheduleForm.frequency().value() === 'weekly') {
+                <div class="days-of-week">
                   <span class="days-of-week__label">{{ 'discord.schedule.daysOfWeek' | translate }}</span>
                   <div class="days-of-week__options">
-                    @for (day of weekDays; track day.iso; let i = $index) {
-                      <mat-checkbox [formControlName]="i">{{ day.labelKey | translate }}</mat-checkbox>
+                    @for (day of scheduleForm.days_of_week; track day; let i = $index) {
+                      <mat-checkbox [formField]="day">{{ weekDays[i].labelKey | translate }}</mat-checkbox>
                     }
                   </div>
                 </div>
               }
 
-              @if (scheduleForm.controls.frequency.value === 'monthly') {
+              @if (scheduleForm.frequency().value() === 'monthly') {
                 <mat-form-field appearance="outline" class="form-field">
                   <mat-label>{{ 'discord.schedule.dayOfMonth' | translate }}</mat-label>
-                  <input
-                    matInput
-                    type="number"
-                    formControlName="day_of_month"
-                    [min]="minDayOfMonth"
-                    [max]="maxDayOfMonth"
-                  />
+                  <input matInput type="number" [formField]="scheduleForm.day_of_month" />
                   <mat-hint>{{ 'discord.schedule.dayOfMonthHint' | translate }}</mat-hint>
                   @if (scheduleDayOfMonthError()) {
                     <mat-error>{{ scheduleDayOfMonthError() | translate }}</mat-error>

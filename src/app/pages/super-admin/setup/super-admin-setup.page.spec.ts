@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { SuperAdminSetupPage } from './super-admin-setup.page';
 import { AuthService } from '@app/core/services/auth.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -13,14 +13,14 @@ describe('SuperAdminSetupPage', () => {
   let fixture: ComponentFixture<SuperAdminSetupPage>;
 
   beforeEach(async () => {
-    const authServiceSpy = { setupSuperAdmin: vi.fn() };
+    const authServiceSpy = { signUpSuperAdmin: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [SuperAdminSetupPage, TranslateModule.forRoot()],
       providers: [
         { provide: AuthService, useValue: authServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],
@@ -35,27 +35,60 @@ describe('SuperAdminSetupPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a valid form with required fields', () => {
-    expect(component['setupForm'].valid).toBe(false);
+  it('should be invalid when fields are empty', () => {
+    expect(component['setupForm']().valid()).toBe(false);
+  });
 
-    component['setupForm'].patchValue({
+  it('should become valid with a complete, matching, compliant submission', () => {
+    component['setupModel'].set({
       username: 'superadmin',
       password: 'SecurePassword123',
       confirmPassword: 'SecurePassword123',
       displayName: 'Super Administrator',
     });
 
-    expect(component['setupForm'].valid).toBe(true);
+    expect(component['setupForm']().valid()).toBe(true);
   });
 
-  it('should validate password match', () => {
-    component['setupForm'].patchValue({
+  it('should flag a password mismatch on confirmPassword', () => {
+    component['setupModel'].set({
       username: 'superadmin',
       password: 'Password123',
       confirmPassword: 'DifferentPassword123',
       displayName: 'Super Admin',
     });
 
-    expect(component['setupForm'].hasError('passwordMismatch')).toBe(true);
+    expect(
+      component['setupForm']
+        .confirmPassword()
+        .errors()
+        .some(error => error.kind === 'passwordMismatch')
+    ).toBe(true);
+  });
+
+  it('should reject a password missing complexity requirements', () => {
+    component['setupModel'].set({
+      username: 'superadmin',
+      password: 'alllowercase',
+      confirmPassword: 'alllowercase',
+      displayName: 'Super Admin',
+    });
+
+    expect(
+      component['setupForm']
+        .password()
+        .errors()
+        .some(error => error.kind === 'pattern')
+    ).toBe(true);
+  });
+
+  it('should not submit and should mark fields as touched when the form is invalid', async () => {
+    const submitEvent = new Event('submit');
+    const preventDefaultSpy = vi.spyOn(submitEvent, 'preventDefault');
+
+    await component['onSubmit'](submitEvent);
+
+    expect(preventDefaultSpy).toHaveBeenCalled();
+    expect(component['setupForm'].username().touched()).toBe(true);
   });
 });

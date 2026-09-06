@@ -53,7 +53,7 @@ describe('PackValueResultComponent', () => {
 
   it('should render breakdown items', () => {
     const items = fixture.nativeElement.querySelectorAll('.breakdown-item');
-    expect(items.length).toBe(2);
+    expect(items).toHaveLength(2);
   });
 
   it('should display the tier icon from tierDef', () => {

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import type { MgRegistration, MgLeaderboardEntry, MgSelectionPayload, ServerMgSlotConfig } from '@shared/models';
 import { MgEventService } from './mg-event.service';
 import { SupabaseService } from './supabase.service';
@@ -45,6 +46,8 @@ const makeReg = (userId: string): MgRegistration => ({
   mg_event_id: 'event-1',
   user_id: userId,
   registered_at: new Date().toISOString(),
+  desired_slot_order: null,
+  comment: null,
 });
 
 const makeScore = (userId: string, total: number): MgLeaderboardEntry => ({
@@ -138,6 +141,7 @@ describe('MgEventService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         MgEventService,
         { provide: SupabaseService, useValue: { from: fromMock } },
         {
@@ -218,6 +222,57 @@ describe('MgEventService', () => {
 
       // Act
       const result = await service.saveSlotConfig('server-1', rows);
+
+      // Assert
+      expect(result.error).toEqual({ message: 'constraint violation' });
+    });
+  });
+
+  // ============================================
+  describe('registerPlayer', () => {
+    it('should insert a registration row with desired_slot_order and comment', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['insert'] = vi.fn().mockResolvedValue({ error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.registerPlayer('event-1', 'user-1', {
+        desired_slot_order: 3,
+        comment: 'Aiming for top 5',
+      });
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(chain['insert']).toHaveBeenCalledWith({
+        mg_event_id: 'event-1',
+        user_id: 'user-1',
+        desired_slot_order: 3,
+        comment: 'Aiming for top 5',
+      });
+    });
+
+    it('should pass a null comment through unchanged', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['insert'] = vi.fn().mockResolvedValue({ error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      await service.registerPlayer('event-1', 'user-1', { desired_slot_order: 1, comment: null });
+
+      // Assert
+      expect(chain['insert']).toHaveBeenCalledWith(expect.objectContaining({ desired_slot_order: 1, comment: null }));
+    });
+
+    it('should pass through the Supabase error on failure', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['insert'] = vi.fn().mockResolvedValue({ error: { message: 'constraint violation' } });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.registerPlayer('event-1', 'user-1', { desired_slot_order: 5, comment: null });
 
       // Assert
       expect(result.error).toEqual({ message: 'constraint violation' });

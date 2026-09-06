@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -42,6 +43,7 @@ describe('AdornmentsTabComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AdornmentsTabComponent, TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         provideNoopAnimations(),
         { provide: GuideAdminService, useValue: guideAdminSpy },
         { provide: SnackbarService, useValue: snackbarSpy },
@@ -74,12 +76,27 @@ describe('AdornmentsTabComponent', () => {
 
   it('should save edited adornment', async () => {
     component['startEdit'](mockAdornment);
-    component['editForm'].patchValue({ name: 'Updated', sort_order: 2 });
+    component['editModel'].set({ name: 'Updated', sort_order: 2 });
 
     await component['save'](mockAdornment);
 
     expect(guideAdminSpy.updateAdornment).toHaveBeenCalledWith('o1', expect.objectContaining({ name: 'Updated' }));
     expect(snackbarSpy.success).toHaveBeenCalled();
+  });
+
+  it('should reject an empty name in the edit form', () => {
+    component['startEdit'](mockAdornment);
+    component['editModel'].set({ name: '', sort_order: 2 });
+
+    expect(component['editForm']().valid()).toBe(false);
+  });
+
+  it('should require the add form name and sort order', () => {
+    expect(component['addForm']().valid()).toBe(false);
+
+    component['addModel'].set({ name: 'New Adornment', sort_order: 3 });
+
+    expect(component['addForm']().valid()).toBe(true);
   });
 
   it('should delete adornment after confirmation', async () => {

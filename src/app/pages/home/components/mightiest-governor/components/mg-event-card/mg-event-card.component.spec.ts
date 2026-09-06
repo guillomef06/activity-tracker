@@ -1,4 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideZonelessChangeDetection } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { MgEventCardComponent } from './mg-event-card.component';
 import type { MgEvent, MgRegistration, MgSelectionWithUser } from '@shared/models';
 
 // Pure computed logic tests (no DOM)
@@ -19,6 +24,8 @@ const makeRegistration = (): MgRegistration => ({
   mg_event_id: 'ev-1',
   user_id: 'user-1',
   registered_at: new Date().toISOString(),
+  desired_slot_order: 3,
+  comment: null,
 });
 
 const makeSelection = (userId: string, rank: number): MgSelectionWithUser => ({
@@ -49,7 +56,16 @@ describe('MgEventCardComponent logic', () => {
   });
 
   it('showWaiting only for registration_closed', () => {
-    expect('registration_closed').toBe('registration_closed');
+    const statuses: MgEvent['status'][] = [
+      'upcoming',
+      'registration_open',
+      'registration_closed',
+      'selection_published',
+      'ongoing',
+      'finished',
+    ];
+    const waiting = statuses.filter(s => s === 'registration_closed');
+    expect(waiting).toHaveLength(1);
   });
 
   it('showSelection for selection_published, ongoing, finished', () => {
@@ -100,5 +116,170 @@ describe('MgEventCardComponent logic', () => {
     const ev = makeEvent('registration_open');
     expect(ev.status).toBe('registration_open');
     expect(ev.selection_published_at).toBeNull();
+  });
+});
+
+describe('MgEventCardComponent registration form', () => {
+  let component: MgEventCardComponent;
+  let fixture: ComponentFixture<MgEventCardComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MgEventCardComponent, TranslateModule.forRoot()],
+      providers: [provideAnimations(), provideZonelessChangeDetection()],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(MgEventCardComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('mgEvent', makeEvent('registration_open'));
+    fixture.componentRef.setInput('currentUserId', 'user-1');
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should not emit register when no position is selected', () => {
+    // Arrange
+    const emitSpy = vi.spyOn(component.register, 'emit');
+
+    // Act
+    component.onRegister();
+
+    // Assert
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
+
+  it('should mark the form as touched when submitted while invalid', () => {
+    // Act
+    component.onRegister();
+
+    // Assert
+    expect(component['registrationForm'].desired_slot_order().touched()).toBe(true);
+  });
+
+  it('should reject a desired_slot_order outside the known MG_SLOT_DEFAULTS values', () => {
+    // Arrange
+    component['registrationModel'].set({ desired_slot_order: 99, comment: '' });
+
+    // Assert
+    expect(
+      component['registrationForm']
+        .desired_slot_order()
+        .errors()
+        .some(e => e.kind === 'positionInvalid')
+    ).toBe(true);
+  });
+
+  it('should emit register with the selected position and trimmed comment', () => {
+    // Arrange
+    const emitSpy = vi.spyOn(component.register, 'emit');
+    component['registrationModel'].set({ desired_slot_order: 6, comment: '  Aiming top 10  ' });
+
+    // Act
+    component.onRegister();
+
+    // Assert
+    expect(emitSpy).toHaveBeenCalledWith({ desired_slot_order: 6, comment: 'Aiming top 10' });
+  });
+
+  it('should emit a null comment when the comment field is left blank', () => {
+    // Arrange
+    const emitSpy = vi.spyOn(component.register, 'emit');
+    component['registrationModel'].set({ desired_slot_order: 1, comment: '   ' });
+
+    // Act
+    component.onRegister();
+
+    // Assert
+    expect(emitSpy).toHaveBeenCalledWith({ desired_slot_order: 1, comment: null });
+  });
+
+  it('should reject a comment longer than 200 characters', () => {
+    // Arrange
+    component['registrationModel'].set({ desired_slot_order: 1, comment: 'a'.repeat(201) });
+
+    // Assert
+    expect(
+      component['registrationForm']
+        .comment()
+        .errors()
+        .some(e => e.kind === 'maxLength')
+    ).toBe(true);
+  });
+
+  it('should not emit register when the comment exceeds 200 characters even with a valid position', () => {
+    // Arrange
+    const emitSpy = vi.spyOn(component.register, 'emit');
+    component['registrationModel'].set({ desired_slot_order: 1, comment: 'a'.repeat(201) });
+
+    // Act
+    component.onRegister();
+
+    // Assert
+    expect(emitSpy).not.toHaveBeenCalled();
+  });
+
+  it('should mark the comment field as touched when submit is blocked by an over-length comment', () => {
+    // Arrange
+    component['registrationModel'].set({ desired_slot_order: 1, comment: 'a'.repeat(201) });
+
+    // Act
+    component.onRegister();
+
+    // Assert
+    expect(component['registrationForm'].comment().touched()).toBe(true);
+  });
+
+  it('should update the live character-count hint as the comment field changes', () => {
+    // Arrange
+    const getHintText = () => fixture.nativeElement.querySelector('mat-hint')?.textContent?.trim();
+
+    // Act & Assert — initial state
+    expect(getHintText()).toBe('0 / 200');
+
+    // Act
+    component['registrationModel'].set({ desired_slot_order: null, comment: 'Aiming for top 10' });
+    fixture.detectChanges();
+
+    // Assert
+    expect(getHintText()).toBe('18 / 200');
+  });
+
+  it('should show the registration form and hide the unregister button when not registered', () => {
+    // Assert
+    expect(fixture.nativeElement.querySelector('form.registration-form')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.btn-danger')).toBeNull();
+  });
+
+  it('should hide the registration form and show the unregister button when already registered', () => {
+    // Arrange
+    fixture.componentRef.setInput('registration', {
+      id: 'reg-1',
+      mg_event_id: 'ev-1',
+      user_id: 'user-1',
+      registered_at: new Date().toISOString(),
+      desired_slot_order: 3,
+      comment: null,
+    });
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    expect(fixture.nativeElement.querySelector('form.registration-form')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.btn-danger')).toBeTruthy();
+  });
+
+  it('should hide the whole registration section when the event is not in registration_open status', () => {
+    // Arrange
+    fixture.componentRef.setInput('mgEvent', makeEvent('registration_closed'));
+
+    // Act
+    fixture.detectChanges();
+
+    // Assert
+    expect(fixture.nativeElement.querySelector('.registration-section')).toBeNull();
   });
 });

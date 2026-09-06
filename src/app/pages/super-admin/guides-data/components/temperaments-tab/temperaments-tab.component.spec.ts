@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -43,6 +44,7 @@ describe('TemperamentsTabComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TemperamentsTabComponent, TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         provideNoopAnimations(),
         { provide: GuideAdminService, useValue: guideAdminSpy },
         { provide: SnackbarService, useValue: snackbarSpy },
@@ -69,7 +71,7 @@ describe('TemperamentsTabComponent', () => {
 
   it('should add a temperament', async () => {
     component['showAddForm'].set(true);
-    component['addForm'].setValue({ name: 'Brave', description: 'desc', sort_order: 1 });
+    component['addModel'].set({ name: 'Brave', description: 'desc', sort_order: 1 });
 
     await component['add']();
 
@@ -79,16 +81,22 @@ describe('TemperamentsTabComponent', () => {
 
   it('should show error when add fails', async () => {
     guideAdminSpy.createHorseTemperament.mockResolvedValue({ temperament: null, error: 'Error' });
-    component['addForm'].setValue({ name: 'Brave', description: '', sort_order: 1 });
+    component['addModel'].set({ name: 'Brave', description: '', sort_order: 1 });
 
     await component['add']();
 
     expect(snackbarSpy.error).toHaveBeenCalled();
   });
 
+  it('should reject an empty name in the add form', () => {
+    component['addModel'].set({ name: '', description: '', sort_order: 1 });
+
+    expect(component['addForm']().valid()).toBe(false);
+  });
+
   it('should save edited temperament', async () => {
     component['startEdit'](mockTemperament);
-    component['editForm'].patchValue({ name: 'Updated', description: 'desc', sort_order: 2 });
+    component['editModel'].set({ name: 'Updated', description: 'desc', sort_order: 2 });
 
     await component['save'](mockTemperament);
 

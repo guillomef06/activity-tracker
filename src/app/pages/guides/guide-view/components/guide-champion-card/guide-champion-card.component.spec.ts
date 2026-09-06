@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { GuideChampionCardComponent } from './guide-champion-card.component';
 import { TranslateModule } from '@ngx-translate/core';
 import type { GuideChampion } from '@shared/models';
@@ -25,6 +26,7 @@ describe('GuideChampionCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GuideChampionCardComponent, TranslateModule.forRoot()],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GuideChampionCardComponent);

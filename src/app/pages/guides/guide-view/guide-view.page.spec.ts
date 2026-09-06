@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { GuideViewPage } from './guide-view.page';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -62,6 +63,7 @@ describe('GuideViewPage', () => {
     await TestBed.configureTestingModule({
       imports: [GuideViewPage, TranslateModule.forRoot(), NoopAnimationsModule],
       providers: [
+        provideZonelessChangeDetection(),
         provideRouter([]),
         { provide: GuideService, useValue: guideServiceMock },
         { provide: VoterTokenService, useValue: voterTokenMock },

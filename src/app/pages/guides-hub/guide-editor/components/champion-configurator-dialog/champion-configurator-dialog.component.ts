@@ -1,7 +1,5 @@
-import { Component, inject, signal, computed, OnInit, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
-import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { form, required, FormField } from '@angular/forms/signals';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +18,10 @@ import type {
   ChampionPosition,
 } from '@shared/models';
 
-interface FormValues {
+const MIN_TRAIT_COUNT = 1;
+const MAX_TRAIT_COUNT = 3;
+
+interface ChampionConfiguratorFormValue {
   champion_id: string;
   skill1_id: string | null;
   skill2_id: string | null;
@@ -33,6 +34,22 @@ interface FormValues {
   ornament_id: string | null;
   ring_id: string | null;
 }
+
+const INITIAL_FORM_VALUE: ChampionConfiguratorFormValue = {
+  champion_id: '',
+  skill1_id: null,
+  skill2_id: null,
+  gem_strategy_id: null,
+  gem_hero_id: null,
+  gem_tactics_id: null,
+  trait1_id: null,
+  trait2_id: null,
+  trait3_id: null,
+  ornament_id: null,
+  ring_id: null,
+};
+
+type TraitSlot = 1 | 2 | 3;
 
 export interface ChampionConfiguratorDialogData {
   position: ChampionPosition;
@@ -52,7 +69,7 @@ export interface ChampionConfiguratorDialogData {
 @Component({
   selector: 'app-champion-configurator-dialog',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -65,34 +82,21 @@ export interface ChampionConfiguratorDialogData {
   styleUrl: './champion-configurator-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChampionConfiguratorDialogComponent implements OnInit {
+export class ChampionConfiguratorDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<ChampionConfiguratorDialogComponent>);
   readonly data: ChampionConfiguratorDialogData = inject(MAT_DIALOG_DATA);
-  private readonly fb = inject(FormBuilder);
-  private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly form: FormGroup = this.fb.group({
-    champion_id: ['', Validators.required],
-    skill1_id: [null],
-    skill2_id: [null],
-    gem_strategy_id: [null],
-    gem_hero_id: [null],
-    gem_tactics_id: [null],
-    trait1_id: [null],
-    trait2_id: [null],
-    trait3_id: [null],
-    ornament_id: [null],
-    ring_id: [null],
+  protected readonly formModel = signal<ChampionConfiguratorFormValue>(this.buildInitialFormValue());
+
+  protected readonly championForm = form(this.formModel, schemaPath => {
+    required(schemaPath.champion_id);
   });
 
-  /** Reactive signal of the entire form value — drives all filtered lists */
-  private readonly formValues = toSignal(this.form.valueChanges, {
-    initialValue: this.form.value as FormValues,
-  });
+  protected readonly maxTraitCount = MAX_TRAIT_COUNT;
 
-  protected readonly traitCount = signal(1);
+  protected readonly traitCount = signal<number>(this.countFilledTraits());
 
-  protected readonly selectedChampionId = signal<string>('');
+  protected readonly selectedChampionId = computed(() => this.formModel().champion_id);
 
   /** All skills available for the selected champion */
   private readonly allAvailableSkills = computed(() => {
@@ -104,12 +108,12 @@ export class ChampionConfiguratorDialogComponent implements OnInit {
   // ─── Filtered skills (each slot excludes the other slot's selection) ────────
 
   protected readonly availableSkillsSlot1 = computed(() => {
-    const used = this.formValues().skill2_id;
+    const used = this.formModel().skill2_id;
     return this.allAvailableSkills().filter(s => s.id !== used);
   });
 
   protected readonly availableSkillsSlot2 = computed(() => {
-    const used = this.formValues().skill1_id;
+    const used = this.formModel().skill1_id;
     return this.allAvailableSkills().filter(s => s.id !== used);
   });
 
@@ -122,7 +126,7 @@ export class ChampionConfiguratorDialogComponent implements OnInit {
   // ─── Filtered traits (each slot excludes the other slots' selections) ───────
 
   protected readonly availableTraitsPerSlot = computed(() => {
-    const v = this.formValues();
+    const v = this.formModel();
     const selected = [v.trait1_id, v.trait2_id, v.trait3_id];
     return [0, 1, 2].map(i => {
       const usedByOthers = new Set(selected.filter((id, j) => j !== i && id !== null));
@@ -137,62 +141,60 @@ export class ChampionConfiguratorDialogComponent implements OnInit {
     return this.data.rings.filter(r => !usedByOthers.has(r.id));
   });
 
-  // ─── Lifecycle ──────────────────────────────────────────────────────────────
-
-  ngOnInit(): void {
+  private buildInitialFormValue(): ChampionConfiguratorFormValue {
     const existing = this.data.existing;
-    if (existing) {
-      // gems are stored as slot1=strategy, slot2=hero, slot3=tactics
-      const gemByType = (type: string) => existing.gems.find(g => g?.type === type)?.id ?? null;
-
-      this.form.patchValue({
-        champion_id: existing.champion.id,
-        skill1_id: existing.skills[0]?.id ?? null,
-        skill2_id: existing.skills[1]?.id ?? null,
-        gem_strategy_id: gemByType('strategy'),
-        gem_hero_id: gemByType('hero'),
-        gem_tactics_id: gemByType('tactics'),
-        trait1_id: existing.traits[0]?.id ?? null,
-        trait2_id: existing.traits[1]?.id ?? null,
-        trait3_id: existing.traits[2]?.id ?? null,
-        ornament_id: existing.adornment?.id ?? null,
-        ring_id: existing.ring?.id ?? null,
-      });
-      this.selectedChampionId.set(existing.champion.id);
-
-      const filledTraits = existing.traits.filter(t => t !== null).length;
-      this.traitCount.set(Math.max(1, filledTraits));
+    if (!existing) {
+      return { ...INITIAL_FORM_VALUE };
     }
 
-    this.form
-      .get('champion_id')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((id: string) => {
-        this.selectedChampionId.set(id);
-        this.form.patchValue({ skill1_id: null, skill2_id: null });
-      });
+    const gemByType = (type: string): string | null => existing.gems.find(g => g?.type === type)?.id ?? null;
+
+    return {
+      champion_id: existing.champion.id,
+      skill1_id: existing.skills[0]?.id ?? null,
+      skill2_id: existing.skills[1]?.id ?? null,
+      gem_strategy_id: gemByType('strategy'),
+      gem_hero_id: gemByType('hero'),
+      gem_tactics_id: gemByType('tactics'),
+      trait1_id: existing.traits[0]?.id ?? null,
+      trait2_id: existing.traits[1]?.id ?? null,
+      trait3_id: existing.traits[2]?.id ?? null,
+      ornament_id: existing.adornment?.id ?? null,
+      ring_id: existing.ring?.id ?? null,
+    };
+  }
+
+  private countFilledTraits(): number {
+    const filledTraits = this.data.existing?.traits.filter(t => t !== null).length ?? 0;
+    return Math.max(MIN_TRAIT_COUNT, filledTraits);
+  }
+
+  // ─── Champion selection ──────────────────────────────────────────────────────
+
+  protected onChampionChange(championId: string): void {
+    this.formModel.update(current => ({ ...current, champion_id: championId, skill1_id: null, skill2_id: null }));
   }
 
   // ─── Trait slot management ──────────────────────────────────────────────────
 
   protected addTrait(): void {
-    if (this.traitCount() < 3) {
+    if (this.traitCount() < MAX_TRAIT_COUNT) {
       this.traitCount.update(n => n + 1);
     }
   }
 
-  protected removeTrait(slot: 1 | 2 | 3): void {
+  protected removeTrait(slot: TraitSlot): void {
     const key = `trait${slot}_id` as 'trait1_id' | 'trait2_id' | 'trait3_id';
-    this.form.patchValue({ [key]: null });
-    this.traitCount.update(n => Math.max(1, n - 1));
+    this.formModel.update(current => ({ ...current, [key]: null }));
+    this.traitCount.update(n => Math.max(MIN_TRAIT_COUNT, n - 1));
   }
 
   // ─── Confirm ────────────────────────────────────────────────────────────────
 
   protected confirm(): void {
-    if (this.form.invalid) return;
+    if (this.championForm().invalid()) return;
 
-    const v = this.form.value as FormValues;
+    const v = this.formModel();
 
     const champion = this.data.champions.find(c => c.id === v.champion_id);
     if (!champion) return;

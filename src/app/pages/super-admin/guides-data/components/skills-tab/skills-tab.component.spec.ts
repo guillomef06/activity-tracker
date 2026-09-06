@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -37,7 +38,7 @@ describe('SkillsTabComponent', () => {
       createSkill: vi.fn().mockResolvedValue({ skill: mockSkill, error: null }),
       updateSkill: vi.fn().mockResolvedValue({ error: null }),
       deleteSkill: vi.fn().mockResolvedValue({ error: null }),
-      uploadSkillImage: vi.fn().mockResolvedValue({ url: 'http://img.url/icon.png', error: null }),
+      uploadSkillImage: vi.fn().mockResolvedValue({ url: 'https://img.url/icon.png', error: null }),
     };
     snackbarSpy = { success: vi.fn(), error: vi.fn() };
     dialogSpy = { open: vi.fn().mockReturnValue({ afterClosed: () => of(true) }) };
@@ -45,6 +46,7 @@ describe('SkillsTabComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SkillsTabComponent, TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         provideNoopAnimations(),
         { provide: GuideAdminService, useValue: guideAdminSpy },
         { provide: SnackbarService, useValue: snackbarSpy },
@@ -70,7 +72,7 @@ describe('SkillsTabComponent', () => {
   });
 
   it('should add a skill', async () => {
-    component['addForm'].setValue({ name: 'Slash', description: 'desc', sort_order: 1 });
+    component['addModel'].set({ name: 'Slash', description: 'desc', sort_order: 1 });
 
     await component['add']();
 
@@ -80,7 +82,7 @@ describe('SkillsTabComponent', () => {
 
   it('should save edited skill', async () => {
     component['startEdit'](mockSkill);
-    component['editForm'].patchValue({ name: 'Updated', description: 'desc', sort_order: 2 });
+    component['editModel'].set({ name: 'Updated', description: 'desc', sort_order: 2 });
 
     await component['save'](mockSkill);
 
@@ -104,7 +106,7 @@ describe('SkillsTabComponent', () => {
   it('should show error when service fails', async () => {
     guideAdminSpy.updateSkill.mockResolvedValue({ error: 'Server error' });
     component['startEdit'](mockSkill);
-    component['editForm'].patchValue({ name: 'X', description: '', sort_order: 0 });
+    component['editModel'].set({ name: 'X', description: '', sort_order: 0 });
 
     await component['save'](mockSkill);
 

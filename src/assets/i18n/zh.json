@@ -354,7 +354,8 @@
     "deleteConfirm": "确定要删除\"{{name}}\"吗？",
     "uploadImage": "上传图片",
     "next": "下一步",
-    "clear": "清除"
+    "clear": "清除",
+    "retry": "重试"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "军团每周都隐式存在，无法移除",
       "nameRequired": "名称为必填项（最多 100 个字符）",
       "createFailed": "创建赛季失败",
+      "loadFailed": "加载赛季失败",
       "lockedTooltip": "该赛季已记录活动，其结构已锁定",
       "lockedHint": "该赛季已记录活动。只能编辑名称。",
       "deleteLockedTooltip": "无法删除已记录活动的赛季",
@@ -882,6 +884,12 @@
       "registerError": "报名失败，请重试。",
       "unregisterSuccess": "已取消报名。",
       "unregisterError": "取消报名失败，请重试。",
+      "positionLabel": "期望位置",
+      "positionPlaceholder": "选择你目标的排名",
+      "positionInvalid": "请选择有效的位置。",
+      "medalsUnit": "枚奖牌",
+      "commentLabel": "备注（可选）",
+      "commentPlaceholder": "有什么需要告诉管理员的吗？（可选）",
       "fullFfaTitle": "完全FFA",
       "fullFfaDescription": "未发布任何选拔名单 — 本活动对所有玩家开放。"
     },
@@ -921,7 +929,9 @@
       },
       "registrations": {
         "title": "报名情况",
-        "empty": "暂无报名。"
+        "empty": "暂无报名。",
+        "position": "期望位置",
+        "noPosition": "未填写"
       },
       "selection": {
         "title": "入选名单",

@@ -6,13 +6,13 @@
 
     <mat-card-content>
       @if (step() === 1) {
-        <form [formGroup]="step1Form" (ngSubmit)="onStep1Submit()">
+        <form novalidate (submit)="onStep1Submit($event)">
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matIconPrefix>person</mat-icon>
             <mat-label>{{ 'auth.username' | translate }}</mat-label>
             <input
               matInput
-              formControlName="username"
+              [formField]="step1Form.username"
               type="text"
               autocomplete="username"
               [placeholder]="'recovery.page.step1.usernamePlaceholder' | translate"
@@ -37,13 +37,18 @@
       }
 
       @if (step() === 2) {
-        <p class="question-label">{{ currentQuestion?.key | translate }}</p>
+        <p class="question-label">{{ currentQuestion()?.key | translate }}</p>
 
-        <form [formGroup]="step2Form" (ngSubmit)="onStep2Submit()">
+        <form novalidate (submit)="onStep2Submit($event)">
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matIconPrefix>help_outline</mat-icon>
             <mat-label>{{ 'recovery.page.step2.answerPlaceholder' | translate }}</mat-label>
-            <input matInput formControlName="answer" [type]="hideAnswer() ? 'password' : 'text'" autocomplete="off" />
+            <input
+              matInput
+              [formField]="step2Form.answer"
+              [type]="hideAnswer() ? 'password' : 'text'"
+              autocomplete="off"
+            />
             <button mat-icon-button matSuffix type="button" (click)="toggleHideAnswer()">
               <mat-icon>{{ hideAnswer() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
@@ -52,13 +57,13 @@
           <mat-form-field
             appearance="outline"
             class="full-width"
-            [class.field-valid]="step2Form.get('password')?.valid && step2Form.get('password')?.dirty"
+            [class.field-valid]="step2Form.password().valid() && step2Form.password().dirty()"
           >
             <mat-icon matIconPrefix>lock</mat-icon>
             <mat-label>{{ 'recovery.page.step2.newPassword' | translate }}</mat-label>
             <input
               matInput
-              formControlName="password"
+              [formField]="step2Form.password"
               [type]="hidePassword() ? 'password' : 'text'"
               autocomplete="new-password"
             />
@@ -66,25 +71,31 @@
               <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
             <mat-hint>{{ 'auth.passwordHint' | translate }}</mat-hint>
-            @if (passwordError()) {
-              <mat-error>{{ passwordError() | translate }}</mat-error>
+            @if (step2Form.password().touched() && step2Form.password().invalid()) {
+              <mat-error>{{
+                getFieldErrorKey(step2Form.password().errors(), passwordErrorKeys) | translate
+              }}</mat-error>
             }
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width" [class.field-valid]="confirmPasswordValid()">
+          <mat-form-field
+            appearance="outline"
+            class="full-width"
+            [class.field-valid]="step2Form.confirmPassword().valid() && step2Form.confirmPassword().dirty()"
+          >
             <mat-icon matIconPrefix>lock_outline</mat-icon>
             <mat-label>{{ 'recovery.page.step2.confirmPassword' | translate }}</mat-label>
             <input
               matInput
-              formControlName="confirmPassword"
+              [formField]="step2Form.confirmPassword"
               [type]="hideConfirmPassword() ? 'password' : 'text'"
               autocomplete="new-password"
             />
             <button mat-icon-button matSuffix type="button" (click)="toggleHideConfirmPassword()">
               <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            @if (confirmPasswordError()) {
-              <mat-error>{{ confirmPasswordError() | translate }}</mat-error>
+            @if (step2Form.confirmPassword().touched() && step2Form.confirmPassword().invalid()) {
+              <mat-error>{{ getFieldErrorKey(step2Form.confirmPassword().errors()) | translate }}</mat-error>
             }
           </mat-form-field>
 

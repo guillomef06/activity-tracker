@@ -1,9 +1,17 @@
-import { Component, inject, signal, computed, ChangeDetectionStrategy, DestroyRef, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  effect,
+  resource,
+  untracked,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { switchMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,7 +42,7 @@ import type { GuideChampion, GuideWithDetails } from '@shared/models';
   styleUrl: './guide-view.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GuideViewPage implements OnInit {
+export class GuideViewPage {
   private readonly guideService = inject(GuideService);
   private readonly voterTokenService = inject(VoterTokenService);
   private readonly route = inject(ActivatedRoute);
@@ -43,11 +51,19 @@ export class GuideViewPage implements OnInit {
   private readonly metaService = inject(Meta);
   private readonly snackbarService = inject(SnackbarService);
   private readonly translate = inject(TranslateService);
-  private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly guide = signal<GuideWithDetails | null>(null);
-  protected readonly isLoading = signal(true);
-  protected readonly notFound = signal(false);
+  private readonly slug = toSignal(this.route.paramMap.pipe(map(params => params.get('slug') ?? '')), {
+    initialValue: '',
+  });
+
+  private readonly guideResource = resource({
+    params: () => this.slug(),
+    loader: ({ params }) => this.guideService.getGuideBySlug(params),
+  });
+
+  protected readonly guide = computed<GuideWithDetails | null>(() => this.guideResource.value() ?? null);
+  protected readonly isLoading = this.guideResource.isLoading;
+  protected readonly notFound = computed(() => !this.isLoading() && this.guide() === null);
   protected readonly hasUpvoted = signal(false);
 
   private readonly voterToken = this.voterTokenService.getVoterToken();
@@ -60,35 +76,20 @@ export class GuideViewPage implements OnInit {
 
   protected readonly upvoteCount = signal(0);
 
-  ngOnInit(): void {
-    this.route.paramMap
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        switchMap(params => {
-          const slug = params.get('slug') ?? '';
-          this.isLoading.set(true);
-          this.notFound.set(false);
-          return this.guideService.getGuideBySlug(slug);
-        }),
-        catchError(() => {
-          this.notFound.set(true);
-          this.isLoading.set(false);
-          return of(null);
-        })
-      )
-      .subscribe(result => {
-        if (!result) {
-          this.notFound.set(true);
-          this.isLoading.set(false);
-          return;
-        }
-        this.guide.set(result);
-        this.upvoteCount.set(result.upvotes_count);
-        this.isLoading.set(false);
-        this.updateMeta(result);
-        void this.checkUpvoted(result.id);
-      });
-  }
+  /**
+   * Reacts to a newly loaded guide: syncs page metadata and the current
+   * voter's upvote state. Runs outside the reactive graph via `untracked`
+   * since these are one-off side effects, not derived state.
+   */
+  private readonly onGuideLoaded = effect(() => {
+    const result = this.guide();
+    if (!result) return;
+    untracked(() => {
+      this.upvoteCount.set(result.upvotes_count);
+      this.updateMeta(result);
+      void this.checkUpvoted(result.id);
+    });
+  });
 
   private updateMeta(guide: GuideWithDetails): void {
     this.titleService.setTitle(`${guide.title} — ${this.translate.instant('guides.title')}`);
