@@ -317,7 +317,14 @@ export class ActivityService {
     const oldestWeekStart = getDateForWeeksAgo(scoringWeeks - 1);
 
     const recentActivities = activities.filter(activity => new Date(activity.date) >= oldestWeekStart);
+    const userScores = this.buildUserScores(recentActivities, tiebreaker, scoringWeeks);
 
+    this.annotatePositionConflicts(userScores);
+
+    return userScores.sort((a, b) => this.compareByScoreDesc(a, b));
+  }
+
+  private buildUserScores(recentActivities: Activity[], tiebreaker: string | null, scoringWeeks: number): UserScore[] {
     const userMap = new Map<string, Activity[]>();
     recentActivities.forEach(activity => {
       const userActivities = userMap.get(activity.userId) || [];
@@ -339,32 +346,43 @@ export class ActivityService {
       });
     });
 
-    // Détection des conflits de position entre utilisateurs (même activité, même semaine, même position)
+    return userScores;
+  }
+
+  /**
+   * Détection des conflits de position entre utilisateurs (même activité, même semaine, même position).
+   * Annote WeeklyScore.conflictingPositions en mutant userScores en place.
+   */
+  private annotatePositionConflicts(userScores: UserScore[]): void {
     const weeksCount = userScores[0]?.weeklyScores.length ?? 0;
     for (let weekIdx = 0; weekIdx < weeksCount; weekIdx++) {
-      const positionMap = new Map<string, Set<string>>();
-      for (const userScore of userScores) {
-        const week = userScore.weeklyScores[weekIdx];
-        if (!week) continue;
-        for (const act of week.activities) {
-          if (act.position === null) continue; // participation mode, pas de conflit
-          const key = act.activityType + '|' + act.position;
-          if (!positionMap.has(key)) positionMap.set(key, new Set());
-          positionMap.get(key)!.add(act.userId);
-        }
-      }
-      const conflicts = new Set<string>();
-      for (const [key, userIds] of positionMap.entries()) {
-        if (userIds.size > 1) conflicts.add(key);
-      }
+      const conflicts = this.findConflictingPositions(userScores, weekIdx);
       for (const userScore of userScores) {
         if (userScore.weeklyScores[weekIdx]) {
           userScore.weeklyScores[weekIdx].conflictingPositions = conflicts;
         }
       }
     }
+  }
 
-    return userScores.sort((a, b) => this.compareByScoreDesc(a, b));
+  private findConflictingPositions(userScores: UserScore[], weekIdx: number): Set<string> {
+    const positionMap = new Map<string, Set<string>>();
+    for (const userScore of userScores) {
+      const week = userScore.weeklyScores[weekIdx];
+      if (!week) continue;
+      for (const act of week.activities) {
+        if (act.position === null) continue; // participation mode, pas de conflit
+        const key = act.activityType + '|' + act.position;
+        if (!positionMap.has(key)) positionMap.set(key, new Set());
+        positionMap.get(key)!.add(act.userId);
+      }
+    }
+
+    const conflicts = new Set<string>();
+    for (const [key, userIds] of positionMap.entries()) {
+      if (userIds.size > 1) conflicts.add(key);
+    }
+    return conflicts;
   }
 
   /**

@@ -18,7 +18,7 @@ import { SeasonService } from '@app/core/services/season.service';
 import { APP_CONSTANTS, ActivityType } from '@app/shared/constants/constants';
 import { getWeekStart } from '@app/shared/utils/date.util';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
-import type { UserProfile, SeasonWithWeeks } from '@app/shared/models';
+import type { Activity, UserProfile, SeasonWithWeeks } from '@app/shared/models';
 
 const LEGION_ACTIVITY_TYPE = 'legion';
 
@@ -210,113 +210,142 @@ export class ImportExcelTabComponent {
 
     const rows: ImportRow[] = rawRows
       .filter(r => r['player_name'] ?? r['activity_type'])
-      .map((r, i) => {
-        const rawPlayerName = String(r['player_name'] ?? '').trim();
-        const activityType = String(r['activity_type'] ?? '')
-          .trim()
-          .toLowerCase();
-        const rawPosition = String(r['position'] ?? '').trim();
-        const rawEventDate = String(r['event_date'] ?? '').trim();
-
-        // Match player
-        const matchedMember =
-          members.find(
-            m =>
-              m.display_name.toLowerCase() === rawPlayerName.toLowerCase() ||
-              m.username.toLowerCase() === rawPlayerName.toLowerCase()
-          ) ?? null;
-
-        // Validate activity type
-        const activityDef = APP_CONSTANTS.ACTIVITY_TYPES.find((t: ActivityType) => t.value === activityType);
-        const activityEnabled = activityDef ? this.serverService.isActivityEnabled(activityType) : false;
-
-        // Parse date (SheetJS returns Date objects when cellDates: true)
-        let eventDate: Date | null = null;
-        const rawDate = r['event_date'];
-        if (rawDate instanceof Date && !isNaN(rawDate.getTime())) {
-          eventDate = rawDate;
-        } else if (typeof rawDate === 'string' && rawDate.trim()) {
-          const parsed = new Date(rawDate.trim());
-          if (!isNaN(parsed.getTime())) eventDate = parsed;
-        } else if (typeof rawDate === 'number') {
-          // Excel date serial fallback
-          const parsed = XLSX.SSF.parse_date_code(rawDate);
-          if (parsed) {
-            eventDate = new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d));
-          }
-        }
-
-        const weekStart = eventDate ? getWeekStart(eventDate) : null;
-
-        // Validation
-        let validationError: string | null = null;
-        if (!activityDef) {
-          validationError = 'invalid_activity';
-        } else if (!activityEnabled) {
-          validationError = 'disabled_activity';
-        } else if (!eventDate) {
-          validationError = 'invalid_date';
-        }
-
-        // Participation / position
-        const isParticipation = activityDef ? this.serverService.isParticipationMode(activityType) : false;
-        let position: number | null = null;
-        if (!isParticipation && !validationError) {
-          const posNum = typeof r['position'] === 'number' ? r['position'] : parseInt(rawPosition, 10);
-          if (isNaN(posNum) || posNum < 1) {
-            validationError = 'invalid_position';
-          } else {
-            position = posNum;
-          }
-        }
-
-        // Points
-        let points = 0;
-        if (activityDef && !validationError) {
-          points = isParticipation
-            ? this.serverService.getParticipationPoints(activityType)
-            : Math.max(0, activityDef.points - ((position ?? 1) - 1));
-        }
-
-        // Week display
-        const weeksAgo: number | null = weekStart
-          ? Math.round((currentWeekStart.getTime() - weekStart.getTime()) / (7 * 24 * 60 * 60 * 1000))
-          : null;
-
-        // Existing entry detection
-        let isExisting = false;
-        if (matchedMember && weekStart && activityDef && !validationError) {
-          isExisting = activities.some(
-            a =>
-              a.userId === matchedMember.id &&
-              a.activityType === activityType &&
-              getWeekStart(a.date).getTime() === weekStart.getTime()
-          );
-        }
-
-        const row: Omit<ImportRow, 'status'> = {
-          rowIndex: i,
-          rawPlayerName,
-          activityType,
-          activityLabelKey: activityDef?.labelKey ?? null,
-          rawPosition,
-          rawEventDate,
-          matchedMember,
-          eventDate,
-          weekStart,
-          weeksAgo,
-          position,
-          points,
-          isExisting,
-          includeUpdate: false,
-          validationError,
-        };
-
-        return { ...row, status: this.buildStatus(row) };
-      });
+      .map((r, i) => this.parseRow(r, i, members, activities, currentWeekStart));
 
     this.rows.set(rows);
     this.step.set('preview');
+  }
+
+  private parseRow(
+    r: Record<string, unknown>,
+    rowIndex: number,
+    members: UserProfile[],
+    activities: Activity[],
+    currentWeekStart: Date
+  ): ImportRow {
+    const rawPlayerName = String(r['player_name'] ?? '').trim();
+    const activityType = String(r['activity_type'] ?? '')
+      .trim()
+      .toLowerCase();
+    const rawPosition = String(r['position'] ?? '').trim();
+    const rawEventDate = String(r['event_date'] ?? '').trim();
+
+    const matchedMember = this.matchMember(rawPlayerName, members);
+    const activityDef = APP_CONSTANTS.ACTIVITY_TYPES.find((t: ActivityType) => t.value === activityType);
+    const activityEnabled = activityDef ? this.serverService.isActivityEnabled(activityType) : false;
+
+    const eventDate = this.parseEventDate(r['event_date']);
+    const weekStart = eventDate ? getWeekStart(eventDate) : null;
+
+    let validationError = this.validateRowFields(activityDef, activityEnabled, eventDate);
+
+    const isParticipation = activityDef ? this.serverService.isParticipationMode(activityType) : false;
+    let position: number | null = null;
+    if (!isParticipation && !validationError) {
+      const resolved = this.resolvePosition(r['position'], rawPosition);
+      position = resolved.position;
+      validationError = resolved.error;
+    }
+
+    const points =
+      activityDef && !validationError
+        ? this.calculateRowPoints(isParticipation, activityType, activityDef, position)
+        : 0;
+
+    const weeksAgo: number | null = weekStart
+      ? Math.round((currentWeekStart.getTime() - weekStart.getTime()) / (7 * 24 * 60 * 60 * 1000))
+      : null;
+
+    const isExisting =
+      matchedMember && weekStart && activityDef && !validationError
+        ? this.checkIsExisting(activities, matchedMember.id, activityType, weekStart)
+        : false;
+
+    const row: Omit<ImportRow, 'status'> = {
+      rowIndex,
+      rawPlayerName,
+      activityType,
+      activityLabelKey: activityDef?.labelKey ?? null,
+      rawPosition,
+      rawEventDate,
+      matchedMember,
+      eventDate,
+      weekStart,
+      weeksAgo,
+      position,
+      points,
+      isExisting,
+      includeUpdate: false,
+      validationError,
+    };
+
+    return { ...row, status: this.buildStatus(row) };
+  }
+
+  private matchMember(rawPlayerName: string, members: UserProfile[]): UserProfile | null {
+    return (
+      members.find(
+        m =>
+          m.display_name.toLowerCase() === rawPlayerName.toLowerCase() ||
+          m.username.toLowerCase() === rawPlayerName.toLowerCase()
+      ) ?? null
+    );
+  }
+
+  /** Parses an event date cell. SheetJS returns Date objects when cellDates: true; falls back to string/serial parsing. */
+  private parseEventDate(rawDate: unknown): Date | null {
+    if (rawDate instanceof Date && !isNaN(rawDate.getTime())) {
+      return rawDate;
+    }
+    if (typeof rawDate === 'string' && rawDate.trim()) {
+      const parsed = new Date(rawDate.trim());
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+    if (typeof rawDate === 'number') {
+      const parsed = XLSX.SSF.parse_date_code(rawDate);
+      return parsed ? new Date(Date.UTC(parsed.y, parsed.m - 1, parsed.d)) : null;
+    }
+    return null;
+  }
+
+  private validateRowFields(
+    activityDef: ActivityType | undefined,
+    activityEnabled: boolean,
+    eventDate: Date | null
+  ): string | null {
+    if (!activityDef) return 'invalid_activity';
+    if (!activityEnabled) return 'disabled_activity';
+    if (!eventDate) return 'invalid_date';
+    return null;
+  }
+
+  private resolvePosition(
+    rawPositionValue: unknown,
+    rawPosition: string
+  ): { position: number | null; error: string | null } {
+    const posNum = typeof rawPositionValue === 'number' ? rawPositionValue : parseInt(rawPosition, 10);
+    if (isNaN(posNum) || posNum < 1) {
+      return { position: null, error: 'invalid_position' };
+    }
+    return { position: posNum, error: null };
+  }
+
+  private calculateRowPoints(
+    isParticipation: boolean,
+    activityType: string,
+    activityDef: ActivityType,
+    position: number | null
+  ): number {
+    return isParticipation
+      ? this.serverService.getParticipationPoints(activityType)
+      : Math.max(0, activityDef.points - ((position ?? 1) - 1));
+  }
+
+  private checkIsExisting(activities: Activity[], userId: string, activityType: string, weekStart: Date): boolean {
+    return activities.some(
+      a =>
+        a.userId === userId && a.activityType === activityType && getWeekStart(a.date).getTime() === weekStart.getTime()
+    );
   }
 
   private buildStatus(row: Omit<ImportRow, 'status'>): ImportRow['status'] {

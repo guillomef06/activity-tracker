@@ -1,6 +1,6 @@
-import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { from } from 'rxjs';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, required, minLength, maxLength, pattern } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,16 +15,37 @@ import { AuthBackgroundComponent } from '@app/shared/components/auth-background/
 import type { AdminSignUpRequest } from '@app/shared/models';
 import { RECOVERY_QUESTIONS } from '@app/shared/constants/recovery-questions.constants';
 import {
-  passwordMatchValidator,
-  createFieldErrorSignal,
-  createFieldValidSignal,
-  usernameAvailableValidator,
+  getFieldErrorKey,
+  validateUsernameAvailable,
+  validatePasswordsMatch,
 } from '@app/shared/utils/form-validation.utils';
+
+const USERNAME_MIN_LENGTH = 3;
+const USERNAME_MAX_LENGTH = 30;
+const DISPLAY_NAME_MIN_LENGTH = 2;
+const DISPLAY_NAME_MAX_LENGTH = 100;
+const SERVER_NAME_MIN_LENGTH = 3;
+const SERVER_NAME_MAX_LENGTH = 100;
+const PASSWORD_MIN_LENGTH = 6;
+const PASSWORD_MAX_LENGTH = 128;
+const RECOVERY_ANSWER_MIN_LENGTH = 2;
+const USERNAME_PATTERN = /^[a-zA-Z0-9_-]+$/;
+const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+
+interface SignupFormValue {
+  username: string;
+  displayName: string;
+  serverName: string;
+  password: string;
+  confirmPassword: string;
+  recoveryQuestionId: number | null;
+  recoveryAnswer: string;
+}
 
 @Component({
   selector: 'app-signup',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     MatCardModule,
     MatFormFieldModule,
@@ -42,9 +63,7 @@ import {
 })
 export class SignupPage {
   private readonly authService = inject(AuthService);
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly recoveryQuestions = RECOVERY_QUESTIONS;
   protected readonly hidePassword = signal(true);
@@ -52,35 +71,47 @@ export class SignupPage {
   protected readonly isLoading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
-  protected readonly signupForm: FormGroup = this.fb.group(
-    {
-      username: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(30),
-          Validators.pattern(/^[a-zA-Z0-9_-]+$/),
-        ],
-        [usernameAvailableValidator(u => from(this.authService.checkUsernameAvailable(u)))],
-      ],
-      displayName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      serverName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(128),
-          Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/),
-        ],
-      ],
-      confirmPassword: ['', [Validators.required]],
-      recoveryQuestionId: [null, [Validators.required]],
-      recoveryAnswer: ['', [Validators.required, Validators.minLength(2)]],
-    },
-    { validators: passwordMatchValidator }
-  );
+  protected readonly signupModel = signal<SignupFormValue>({
+    username: '',
+    displayName: '',
+    serverName: '',
+    password: '',
+    confirmPassword: '',
+    recoveryQuestionId: null,
+    recoveryAnswer: '',
+  });
+
+  protected readonly signupForm = form(this.signupModel, path => {
+    required(path.username);
+    minLength(path.username, USERNAME_MIN_LENGTH);
+    maxLength(path.username, USERNAME_MAX_LENGTH);
+    pattern(path.username, USERNAME_PATTERN);
+    validateUsernameAvailable(path.username, username => from(this.authService.checkUsernameAvailable(username)));
+
+    required(path.displayName);
+    minLength(path.displayName, DISPLAY_NAME_MIN_LENGTH);
+    maxLength(path.displayName, DISPLAY_NAME_MAX_LENGTH);
+
+    required(path.serverName);
+    minLength(path.serverName, SERVER_NAME_MIN_LENGTH);
+    maxLength(path.serverName, SERVER_NAME_MAX_LENGTH);
+
+    required(path.password);
+    minLength(path.password, PASSWORD_MIN_LENGTH);
+    maxLength(path.password, PASSWORD_MAX_LENGTH);
+    pattern(path.password, PASSWORD_PATTERN);
+
+    required(path.confirmPassword);
+    validatePasswordsMatch(path.password, path.confirmPassword);
+
+    required(path.recoveryQuestionId);
+    required(path.recoveryAnswer);
+    minLength(path.recoveryAnswer, RECOVERY_ANSWER_MIN_LENGTH);
+  });
+
+  protected readonly getFieldErrorKey = getFieldErrorKey;
+  protected readonly usernameErrorKeys: Record<string, string> = { pattern: 'auth.errors.usernameInvalidChars' };
+  protected readonly passwordErrorKeys: Record<string, string> = { pattern: 'auth.errors.passwordPattern' };
 
   protected togglePasswordVisibility(): void {
     this.hidePassword.update(value => !value);
@@ -90,27 +121,11 @@ export class SignupPage {
     this.hideConfirmPassword.update(value => !value);
   }
 
-  // Reactive error signals (automatically update when form state changes)
-  protected readonly usernameError = createFieldErrorSignal(this.signupForm, 'username', this.destroyRef, undefined, {
-    pattern: 'auth.errors.usernameInvalidChars',
-  });
-  protected readonly displayNameError = createFieldErrorSignal(this.signupForm, 'displayName', this.destroyRef);
-  protected readonly serverNameError = createFieldErrorSignal(this.signupForm, 'serverName', this.destroyRef);
-  protected readonly passwordError = createFieldErrorSignal(this.signupForm, 'password', this.destroyRef, undefined, {
-    pattern: 'auth.errors.passwordPattern',
-  });
-  protected readonly confirmPasswordError = createFieldErrorSignal(this.signupForm, 'confirmPassword', this.destroyRef);
-  protected readonly confirmPasswordValid = createFieldValidSignal(this.signupForm, 'confirmPassword', this.destroyRef);
-  protected readonly recoveryQuestionIdError = createFieldErrorSignal(
-    this.signupForm,
-    'recoveryQuestionId',
-    this.destroyRef
-  );
-  protected readonly recoveryAnswerError = createFieldErrorSignal(this.signupForm, 'recoveryAnswer', this.destroyRef);
+  protected async onSubmit(event: Event): Promise<void> {
+    event.preventDefault();
 
-  protected async onSubmit(): Promise<void> {
-    if (this.signupForm.invalid || this.signupForm.pending || this.isLoading()) {
-      this.signupForm.markAllAsTouched();
+    if (this.signupForm().invalid() || this.signupForm().pending() || this.isLoading()) {
+      this.signupForm().markAsTouched();
       return;
     }
 
@@ -118,20 +133,19 @@ export class SignupPage {
     this.errorMessage.set(null);
 
     try {
-      const { username, displayName, serverName, password, recoveryQuestionId, recoveryAnswer } = this.signupForm.value;
+      const { username, displayName, serverName, password, recoveryQuestionId, recoveryAnswer } = this.signupModel();
 
       const request: AdminSignUpRequest = {
         username,
         password,
         displayName,
         serverName,
-        recoveryQuestionId,
+        recoveryQuestionId: recoveryQuestionId as number,
         recoveryAnswer,
       };
 
       await this.authService.signUpAdmin(request);
 
-      // Redirect to dashboard
       await this.router.navigate(['/dashboard']);
     } catch (error: unknown) {
       console.error('Signup error:', error);

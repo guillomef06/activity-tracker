@@ -24,9 +24,10 @@ describe('GemCalculatorComponent', () => {
   });
 
   it('should initialize form with defaults', () => {
-    expect(component['form'].get('troopType')?.value).toBe('swordsmen');
-    expect(component['form'].get('troopTier')?.value).toBe(7);
-    expect(component['form'].get('verbose')?.value).toBe(false);
+    const value = component['formModel']();
+    expect(value.troopType).toBe('swordsmen');
+    expect(value.troopTier).toBe(7);
+    expect(value.verbose).toBe(false);
   });
 
   it('should not compute result when form is invalid', () => {
@@ -34,8 +35,13 @@ describe('GemCalculatorComponent', () => {
     expect(component['result']()).toBeNull();
   });
 
+  it('should mark the form as touched when analyze is called on an invalid form', () => {
+    component['analyze']();
+    expect(component['gemForm']().touched()).toBe(true);
+  });
+
   it('should compute health gem score', () => {
-    component['form'].patchValue({
+    component['formModel'].set({
       troopType: 'swordsmen',
       troopTier: 7,
       legionSize: 100000,
@@ -44,18 +50,19 @@ describe('GemCalculatorComponent', () => {
       mightDefense: 0,
       gemType: 'health',
       gemTier: 6, // Mythic: 1.53%
+      verbose: false,
     });
     component['analyze']();
     const res = component['result']();
     expect(res).not.toBeNull();
-    expect(res!.gemType).toBe('health');
-    expect(res!.rawValue).toBe(1.53);
+    expect(res?.gemType).toBe('health');
+    expect(res?.rawValue).toBe(1.53);
     // delta = 100_000 × 146 × (1.53 / 100) = 223_380
-    expect(res!.delta).toBeCloseTo(223_380, 0);
+    expect(res?.delta).toBeCloseTo(223_380, 0);
   });
 
   it('should compute capacity gem score', () => {
-    component['form'].patchValue({
+    component['formModel'].set({
       troopType: 'swordsmen',
       troopTier: 7,
       legionSize: 100000,
@@ -64,15 +71,16 @@ describe('GemCalculatorComponent', () => {
       mightDefense: 0,
       gemType: 'capacity',
       gemTier: 5, // Legendary: 500 units
+      verbose: false,
     });
     component['analyze']();
     const res = component['result']();
     expect(res).not.toBeNull();
-    expect(res!.gemType).toBe('capacity');
-    expect(res!.rawValue).toBe(500);
+    expect(res?.gemType).toBe('capacity');
+    expect(res?.rawValue).toBe(500);
     // perUnitScore = 146 + 194 + 146 = 486  (swordsmen T7, no bonuses)
     // delta = 500 × 486 = 243_000
-    expect(res!.delta).toBeCloseTo(243_000, 0);
+    expect(res?.delta).toBeCloseTo(243_000, 0);
   });
 
   it('should emit back event when showBack is true', async () => {

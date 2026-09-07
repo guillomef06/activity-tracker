@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { WritableSignal } from '@angular/core';
+import { WritableSignal, provideZonelessChangeDetection } from '@angular/core';
 import { AuthService } from './auth.service';
 import { SupabaseService } from './supabase.service';
 import { Router } from '@angular/router';
@@ -46,6 +46,7 @@ describe('AuthService — recovery methods', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         AuthService,
         { provide: SupabaseService, useValue: supabaseMock },
         { provide: Router, useValue: { navigate: vi.fn() } },
@@ -131,6 +132,7 @@ describe('AuthService — account update methods', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         AuthService,
         { provide: SupabaseService, useValue: supabaseMock },
         { provide: Router, useValue: { navigate: vi.fn() } },

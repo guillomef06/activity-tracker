@@ -55,7 +55,7 @@ describe('MightiestGovernorComponent', () => {
   });
 
   it('should have 10 slots', () => {
-    expect(component.slots().length).toBe(10);
+    expect(component.slots()).toHaveLength(10);
   });
 
   it('should have rank 1 cost 150 and medal 100', () => {
@@ -131,5 +131,69 @@ describe('MightiestGovernorComponent', () => {
     fixture.detectChanges();
 
     expect(component.slots()[0].cost).toBe(999);
+  });
+
+  describe('onRegister', () => {
+    it('should forward the payload to mgEventService.registerPlayer with the event and user ids', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      fixture = TestBed.createComponent(MightiestGovernorComponent);
+      component = fixture.componentInstance;
+      await component.ngOnInit();
+      fixture.detectChanges();
+
+      // Act
+      await (
+        component as unknown as {
+          onRegister: (payload: { desired_slot_order: number; comment: string | null }) => Promise<void>;
+        }
+      ).onRegister({ desired_slot_order: 4, comment: 'Targeting rank 4' });
+
+      // Assert
+      expect(mockMgEventService.registerPlayer).toHaveBeenCalledWith('event-1', 'user-1', {
+        desired_slot_order: 4,
+        comment: 'Targeting rank 4',
+      });
+    });
+
+    it('should show an error snackbar when registration fails', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      mockMgEventService.registerPlayer.mockResolvedValueOnce({ error: new Error('failed') });
+      fixture = TestBed.createComponent(MightiestGovernorComponent);
+      component = fixture.componentInstance;
+      await component.ngOnInit();
+      fixture.detectChanges();
+
+      // Act
+      await (
+        component as unknown as {
+          onRegister: (payload: { desired_slot_order: number; comment: string | null }) => Promise<void>;
+        }
+      ).onRegister({ desired_slot_order: 1, comment: null });
+
+      // Assert
+      expect(mockSnackbarService.error).toHaveBeenCalled();
+    });
   });
 });

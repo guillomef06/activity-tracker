@@ -354,7 +354,8 @@
     "deleteConfirm": "\"{{name}}\" silmek istediğinizden emin misiniz?",
     "uploadImage": "Görsel yükle",
     "next": "İleri",
-    "clear": "Temizle"
+    "clear": "Temizle",
+    "retry": "Tekrar dene"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "Lejyon her hafta zımnen mevcuttur ve kaldırılamaz",
       "nameRequired": "İsim zorunludur (en fazla 100 karakter)",
       "createFailed": "Sezon oluşturulamadı",
+      "loadFailed": "Sezonlar yüklenemedi",
       "lockedTooltip": "Bu sezonda kaydedilmiş etkinlik var ve yapısı kilitli",
       "lockedHint": "Bu sezonda kaydedilmiş etkinlik var. Sadece isim düzenlenebilir.",
       "deleteLockedTooltip": "Kaydedilmiş etkinliği olan bir sezon silinemez",
@@ -882,6 +884,12 @@
       "registerError": "Kayıt başarısız. Lütfen tekrar deneyin.",
       "unregisterSuccess": "Kaydınız iptal edildi.",
       "unregisterError": "Kayıt iptali başarısız. Lütfen tekrar deneyin.",
+      "positionLabel": "İstenen pozisyon",
+      "positionPlaceholder": "Hedeflediğiniz sıralamayı seçin",
+      "positionInvalid": "Geçerli bir pozisyon seçin.",
+      "medalsUnit": "madalya",
+      "commentLabel": "Yorum (isteğe bağlı)",
+      "commentPlaceholder": "Yöneticilerin bilmesi gereken bir şey var mı? (isteğe bağlı)",
       "fullFfaTitle": "Tam FFA",
       "fullFfaDescription": "Hiçbir seçim yayınlanmadı — bu etkinlik tüm oyunculara açıktır."
     },
@@ -921,7 +929,9 @@
       },
       "registrations": {
         "title": "Kayıtlar",
-        "empty": "Henüz kayıt yok."
+        "empty": "Henüz kayıt yok.",
+        "position": "İstenen pozisyon",
+        "noPosition": "Belirtilmemiş"
       },
       "selection": {
         "title": "Seçim",

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { AuthBackgroundComponent } from './auth-background.component';
 
 describe('AuthBackgroundComponent', () => {
@@ -8,6 +9,7 @@ describe('AuthBackgroundComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AuthBackgroundComponent],
+      providers: [provideZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AuthBackgroundComponent);

@@ -7,7 +7,13 @@ import { MgEventService } from '@app/core/services/mg-event.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { SnackbarService } from '@app/core/services';
 import { MgEventCardComponent } from './components/mg-event-card/mg-event-card.component';
-import type { MgEvent, MgRegistration, MgSelectionWithUser, ServerMgSlotConfig } from '@shared/models';
+import type {
+  MgEvent,
+  MgRegistration,
+  MgSelectionWithUser,
+  RegisterMgPlayerPayload,
+  ServerMgSlotConfig,
+} from '@shared/models';
 import { buildMgSlotRows } from '@shared/utils/mg-slot.util';
 
 interface GovernorSlot {
@@ -83,14 +89,14 @@ export class MightiestGovernorComponent implements OnInit {
     }
   }
 
-  protected async onRegister(): Promise<void> {
+  protected async onRegister(payload: RegisterMgPlayerPayload): Promise<void> {
     const event = this.mgEvent();
     const userId = this.authService.getUserId();
     if (!event || !userId) return;
 
     this.isRegistering.set(true);
     try {
-      const { error } = await this.mgEventService.registerPlayer(event.id, userId);
+      const { error } = await this.mgEventService.registerPlayer(event.id, userId, payload);
       if (error) throw error;
       const reg = await this.mgEventService.loadUserRegistration(event.id, userId);
       this.registration.set(reg);

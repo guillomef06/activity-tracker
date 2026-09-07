@@ -6,20 +6,20 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="joinForm" (ngSubmit)="onSubmit()">
+      <form novalidate (submit)="onSubmit($event)">
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>vpn_key</mat-icon>
           <mat-label>{{ 'auth.invitationToken' | translate }}</mat-label>
           <input
             matInput
-            formControlName="token"
+            [formField]="joinForm.token"
             type="text"
             [placeholder]="'auth.tokenPlaceholder' | translate"
             (blur)="validateToken()"
           />
           <mat-hint>{{ 'auth.tokenHint' | translate }}</mat-hint>
-          @if (tokenError()) {
-            <mat-error>{{ tokenError() | translate }}</mat-error>
+          @if (joinForm.token().touched() && joinForm.token().invalid()) {
+            <mat-error>{{ getFieldErrorKey(joinForm.token().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -38,14 +38,14 @@
           <mat-label>{{ 'auth.username' | translate }}</mat-label>
           <input
             matInput
-            formControlName="username"
+            [formField]="joinForm.username"
             type="text"
             autocomplete="username"
             [placeholder]="'auth.usernamePlaceholder' | translate"
           />
           <mat-hint>{{ 'auth.usernameHint' | translate }}</mat-hint>
-          @if (usernameError()) {
-            <mat-error>{{ usernameError() | translate }}</mat-error>
+          @if (joinForm.username().touched() && joinForm.username().invalid()) {
+            <mat-error>{{ getFieldErrorKey(joinForm.username().errors(), usernameErrorKeys) | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -54,27 +54,27 @@
           <mat-label>{{ 'auth.displayName' | translate }}</mat-label>
           <input
             matInput
-            formControlName="displayName"
+            [formField]="joinForm.displayName"
             type="text"
             autocomplete="name"
             [placeholder]="'auth.displayNamePlaceholder' | translate"
           />
           <mat-hint>{{ 'auth.displayNameHint' | translate }}</mat-hint>
-          @if (displayNameError()) {
-            <mat-error>{{ displayNameError() | translate }}</mat-error>
+          @if (joinForm.displayName().touched() && joinForm.displayName().invalid()) {
+            <mat-error>{{ getFieldErrorKey(joinForm.displayName().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field
           appearance="outline"
           class="full-width"
-          [class.field-valid]="joinForm.get('password')?.valid && joinForm.get('password')?.dirty"
+          [class.field-valid]="joinForm.password().valid() && joinForm.password().dirty()"
         >
           <mat-icon matIconPrefix>lock</mat-icon>
           <mat-label>{{ 'auth.password' | translate }}</mat-label>
           <input
             matInput
-            formControlName="password"
+            [formField]="joinForm.password"
             [type]="hidePassword() ? 'password' : 'text'"
             autocomplete="new-password"
             [placeholder]="'auth.passwordPlaceholder' | translate"
@@ -90,17 +90,21 @@
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           <mat-hint>{{ 'auth.passwordHint' | translate }}</mat-hint>
-          @if (passwordError()) {
-            <mat-error>{{ passwordError() | translate }}</mat-error>
+          @if (joinForm.password().touched() && joinForm.password().invalid()) {
+            <mat-error>{{ getFieldErrorKey(joinForm.password().errors(), passwordErrorKeys) | translate }}</mat-error>
           }
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width" [class.field-valid]="confirmPasswordValid()">
+        <mat-form-field
+          appearance="outline"
+          class="full-width"
+          [class.field-valid]="joinForm.confirmPassword().valid() && joinForm.confirmPassword().dirty()"
+        >
           <mat-icon matIconPrefix>lock_outline</mat-icon>
           <mat-label>{{ 'auth.confirmPassword' | translate }}</mat-label>
           <input
             matInput
-            formControlName="confirmPassword"
+            [formField]="joinForm.confirmPassword"
             [type]="hideConfirmPassword() ? 'password' : 'text'"
             autocomplete="new-password"
             [placeholder]="'auth.confirmPasswordPlaceholder' | translate"
@@ -115,21 +119,21 @@
           >
             <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-          @if (confirmPasswordError()) {
-            <mat-error>{{ confirmPasswordError() | translate }}</mat-error>
+          @if (joinForm.confirmPassword().touched() && joinForm.confirmPassword().invalid()) {
+            <mat-error>{{ getFieldErrorKey(joinForm.confirmPassword().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>help_outline</mat-icon>
           <mat-label>{{ 'auth.signupForm.recoveryQuestion' | translate }}</mat-label>
-          <mat-select formControlName="recoveryQuestionId">
+          <mat-select [formField]="joinForm.recoveryQuestionId">
             @for (q of recoveryQuestions; track q.id) {
               <mat-option [value]="q.id">{{ q.key | translate }}</mat-option>
             }
           </mat-select>
-          @if (recoveryQuestionIdError()) {
-            <mat-error>{{ recoveryQuestionIdError() | translate }}</mat-error>
+          @if (joinForm.recoveryQuestionId().touched() && joinForm.recoveryQuestionId().invalid()) {
+            <mat-error>{{ getFieldErrorKey(joinForm.recoveryQuestionId().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -138,14 +142,14 @@
           <mat-label>{{ 'auth.signupForm.recoveryAnswer' | translate }}</mat-label>
           <input
             matInput
-            formControlName="recoveryAnswer"
+            [formField]="joinForm.recoveryAnswer"
             type="password"
             autocomplete="off"
             [placeholder]="'auth.signupForm.recoveryAnswer' | translate"
           />
           <mat-hint>{{ 'auth.signupForm.recoveryAnswerHint' | translate }}</mat-hint>
-          @if (recoveryAnswerError()) {
-            <mat-error>{{ recoveryAnswerError() | translate }}</mat-error>
+          @if (joinForm.recoveryAnswer().touched() && joinForm.recoveryAnswer().invalid()) {
+            <mat-error>{{ getFieldErrorKey(joinForm.recoveryAnswer().errors()) | translate }}</mat-error>
           }
         </mat-form-field>
 
@@ -161,7 +165,7 @@
           [text]="'auth.joinTitle' | translate"
           [loadingText]="'auth.joining' | translate"
           [submitting]="isLoading()"
-          [disabled]="joinForm.invalid || joinForm.pending"
+          [disabled]="joinForm().invalid() || joinForm().pending()"
           buttonClass="submit-button"
         />
 

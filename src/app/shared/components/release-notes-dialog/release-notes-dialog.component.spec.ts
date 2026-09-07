@@ -73,7 +73,7 @@ describe('ReleaseNotesDialogComponent', () => {
   it('should display notes entries', async () => {
     await createComponent();
     const entries = fixture.nativeElement.querySelectorAll('.entry');
-    expect(entries.length).toBe(2);
+    expect(entries).toHaveLength(2);
   });
 
   it('should display entry text in current language (en)', async () => {

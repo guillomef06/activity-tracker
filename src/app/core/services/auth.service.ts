@@ -4,6 +4,8 @@ import { User, AuthError } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
 import { UserProfile, AdminSignUpRequest, MemberSignUpRequest, SignInRequest } from '@shared/models';
 
+type AuthResultError = AuthError | Error | null;
+
 /**
  * Authentication Service
  * Manages user authentication, signup, and session state using Supabase Auth
@@ -122,7 +124,7 @@ export class AuthService {
   /**
    * Admin signup - Create account and new server
    */
-  async signUpAdmin(data: AdminSignUpRequest): Promise<{ error: AuthError | Error | null }> {
+  async signUpAdmin(data: AdminSignUpRequest): Promise<{ error: AuthResultError }> {
     try {
       const email = this.generateEmailFromUsername(data.username);
 
@@ -189,11 +191,7 @@ export class AuthService {
    * Super Admin signup - Create super admin account (no server)
    * WARNING: This should only be used for initial setup!
    */
-  async signUpSuperAdmin(
-    username: string,
-    password: string,
-    displayName: string
-  ): Promise<{ error: AuthError | Error | null }> {
+  async signUpSuperAdmin(username: string, password: string, displayName: string): Promise<{ error: AuthResultError }> {
     try {
       const email = this.generateEmailFromUsername(username);
 
@@ -242,7 +240,7 @@ export class AuthService {
   /**
    * Member signup - Join existing server via invitation token
    */
-  async signUpMember(data: MemberSignUpRequest): Promise<{ error: AuthError | Error | null }> {
+  async signUpMember(data: MemberSignUpRequest): Promise<{ error: AuthResultError }> {
     try {
       const { data: tokenData, error: tokenError } = await this.supabase
         .from('invitation_tokens')

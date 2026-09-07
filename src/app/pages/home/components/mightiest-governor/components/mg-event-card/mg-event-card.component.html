@@ -34,10 +34,48 @@
         </p>
 
         @if (!isRegistered()) {
-          <button mat-flat-button color="primary" [disabled]="isRegistering()" (click)="onRegister()">
-            <mat-icon>how_to_reg</mat-icon>
-            {{ 'mg.registration.register' | translate }}
-          </button>
+          <form class="registration-form" (submit)="$event.preventDefault(); onRegister()">
+            <mat-form-field appearance="outline" class="registration-field">
+              <mat-label>{{ 'mg.registration.positionLabel' | translate }}</mat-label>
+              <mat-select
+                [formField]="registrationForm.desired_slot_order"
+                [placeholder]="'mg.registration.positionPlaceholder' | translate"
+              >
+                @for (slot of slotOptions; track slot.slotOrder) {
+                  <mat-option [value]="slot.slotOrder">
+                    {{ slot.rankLabel }} ({{ slot.medal }} {{ 'mg.registration.medalsUnit' | translate }})
+                  </mat-option>
+                }
+              </mat-select>
+              @if (positionError()) {
+                <mat-error>{{ positionError() | translate }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="registration-field">
+              <mat-label>{{ 'mg.registration.commentLabel' | translate }}</mat-label>
+              <textarea
+                matInput
+                [formField]="registrationForm.comment"
+                rows="2"
+                [placeholder]="'mg.registration.commentPlaceholder' | translate"
+              ></textarea>
+              <mat-hint align="end">{{ registrationForm.comment().value().length }} / {{ commentMaxLength }}</mat-hint>
+              @if (commentError()) {
+                <mat-error>{{ commentError() | translate }}</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="isRegistering() || registrationForm().invalid()"
+            >
+              <mat-icon>how_to_reg</mat-icon>
+              {{ 'mg.registration.register' | translate }}
+            </button>
+          </form>
         } @else {
           <button mat-stroked-button class="btn-danger" [disabled]="isRegistering()" (click)="onUnregister()">
             <mat-icon>person_remove</mat-icon>

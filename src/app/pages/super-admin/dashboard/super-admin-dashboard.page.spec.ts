@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { SuperAdminDashboardPage } from './super-admin-dashboard.page';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -40,7 +40,7 @@ describe('SuperAdminDashboardPage', () => {
       providers: [
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],

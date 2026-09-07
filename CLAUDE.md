@@ -8,7 +8,7 @@ Users input activities, management views scores on rolling 6-week basis.
 
 ## ⚠️ DEFINITION OF DONE — OBLIGATOIRE AVANT TOUTE FIN DE TÂCHE
 
-**Claude ne peut pas déclarer une tâche terminée sans avoir effectué ces étapes dans l'ordre :**
+**Une tâche n'est pas terminée sans avoir effectué ces étapes dans l'ordre :**
 
 1. [ ] **Tests mis à jour** — tout fichier modifié ou créé a son `.spec.ts` correspondant à jour
 2. [ ] **`DEVELOPMENT_STATUS.md` mis à jour** — feature marquée comme complète, nouveaux fichiers listés, limitations connues notées
@@ -59,6 +59,7 @@ Users input activities, management views scores on rolling 6-week basis.
 ### Architecture
 - Use **standalone components exclusively** (no NgModules)
 - Prefer **Angular Signals** over RxJS for state management
+- Use `resource()` (own async loader) or `rxResource()` (wraps an Observable-returning service method) for reactive data fetching — loading/error/value state comes for free. Keep RxJS/`toSignal()` only for genuine event or side-effect streams that don't fit a load/reload model (browser events, notification queues) — document the choice with a short comment when a file could plausibly go either way
 - Use `inject()` function for dependency injection
 - Leverage control flow: `@if`, `@for`, `@switch` (not `*ngIf`, `*ngFor`, `*ngSwitch`)
 - Use `input()` and `output()` for component inputs/outputs
@@ -85,12 +86,12 @@ Users input activities, management views scores on rolling 6-week basis.
 - Implement proper error handling with `catchError`
 
 ## Forms
-- Use **Reactive Forms** (not template-driven)
-- Wrap inputs in `<mat-form-field>`
-- Use Material form components (`mat-input`, `mat-select`, etc.)
-- Implement proper validation (sync/async)
-- Use FormBuilder for cleaner creation
-- Handle form state (pristine, dirty, touched)
+- Use **Signal Forms** (`@angular/forms/signals`) — not Reactive Forms, not template-driven
+- Build with `form(signal({...}), (path) => { ... })`; register validators (`required`, `email`, `minLength`, custom/cross-field via `validate()`/`validateAsync()`) inside the schema function
+- Bind inputs with `[formField]="myForm.fieldName"`, wrapped in `<mat-form-field>` — `mat-select`/`mat-slide-toggle` (ControlValueAccessor) work natively with `[formField]`, no compatibility layer needed
+- Field state (`field().touched()`, `field().errors()`, `field().valid()`, `field().dirty()`) is already signal-based — read it directly in a `computed()`, never bridge it through `toSignal()`
+- Shared validators and the error-key → i18n mapping live in `src/app/shared/utils/form-validation.utils.ts` — reuse them instead of duplicating validation logic per component
+- Use `<mat-error>` for validation, `<mat-hint>` for helper text
 
 ## Mobile-First Design
 - Start with 320px breakpoint, scale up

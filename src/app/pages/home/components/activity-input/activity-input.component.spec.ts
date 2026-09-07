@@ -12,6 +12,10 @@ import { vi } from 'vitest';
 import { PositionConflict } from '@shared/models';
 import { APP_CONSTANTS } from '@shared/constants/constants';
 
+function submitEvent(): Event {
+  return new Event('submit', { cancelable: true });
+}
+
 describe('ActivityInputComponent', () => {
   let component: ActivityInputComponent;
   let fixture: ComponentFixture<ActivityInputComponent>;
@@ -84,22 +88,22 @@ describe('ActivityInputComponent', () => {
   });
 
   it('should initialize the form with default values', () => {
-    const form = component['activityForm'];
-    expect(form.get('week')?.value).toBe(0);
-    expect(form.get('activityType')?.value).toBe('');
-    expect(form.get('position')?.value).toBeNull();
-    expect(form.get('participated')?.value).toBe(false);
+    const model = component['activityModel']();
+    expect(model.week).toBe(0);
+    expect(model.activityType).toBe('');
+    expect(model.position).toBeNull();
+    expect(model.participated).toBe(false);
   });
 
   it('should not submit when form is invalid', async () => {
-    await component['onSubmit']();
+    await component['onSubmit'](submitEvent());
     expect(mockActivityService.addActivity).not.toHaveBeenCalled();
   });
 
   it('should call addActivity on valid submission in position mode', async () => {
     mockServerService.isParticipationMode.mockReturnValue(false);
-    component['activityForm'].patchValue({ activityType: 'kvk-prep', position: 3 });
-    await component['onSubmit']();
+    component['activityModel'].update(v => ({ ...v, activityType: 'kvk-prep', position: 3 }));
+    await component['onSubmit'](submitEvent());
     expect(mockActivityService.addActivity).toHaveBeenCalled();
   });
 
@@ -108,13 +112,13 @@ describe('ActivityInputComponent', () => {
     mockServerService.isParticipationMode.mockReturnValue(false);
 
     // Act — user selects activity type before entering a position
-    component['activityForm'].get('activityType')?.setValue('primordial conflict');
+    component['activityModel'].update(v => ({ ...v, activityType: 'primordial conflict' }));
 
     // Assert — canSubmit is false while position is still null
     expect(component['canSubmit']()).toBe(false);
 
     // Act — user types their rank
-    component['activityForm'].get('position')?.setValue(50);
+    component['activityModel'].update(v => ({ ...v, position: 50 }));
 
     // Assert — canSubmit now re-evaluates and returns true
     expect(component['canSubmit']()).toBe(true);
@@ -123,14 +127,14 @@ describe('ActivityInputComponent', () => {
   it('should exclude disabled activities from availableActivities', () => {
     mockServerService.isActivityEnabled.mockReturnValue(false);
     // Change week to force the computed signal to re-evaluate
-    component['activityForm'].patchValue({ week: 1 });
-    expect(component['availableActivities']().length).toBe(0);
+    component['activityModel'].update(v => ({ ...v, week: 1 }));
+    expect(component['availableActivities']()).toHaveLength(0);
   });
 
   it('should include enabled activities in availableActivities', () => {
     mockServerService.isActivityEnabled.mockReturnValue(true);
-    // Change week to force the computed signal to re-evaluate with updated mock
-    component['activityForm'].patchValue({ week: 1 });
+    // Change week to force the computed signal to re-evaluate
+    component['activityModel'].update(v => ({ ...v, week: 1 }));
     expect(component['availableActivities']().length).toBeGreaterThan(0);
   });
 
@@ -173,7 +177,7 @@ describe('ActivityInputComponent', () => {
 
       const options = c['weekOptions']();
 
-      expect(options.length).toBe(1);
+      expect(options).toHaveLength(1);
       expect(options[0].value).toBe(0);
     });
 
@@ -182,7 +186,7 @@ describe('ActivityInputComponent', () => {
 
       const options = c['weekOptions']();
 
-      expect(options.length).toBe(2);
+      expect(options).toHaveLength(2);
       expect(options[0].value).toBe(0);
       expect(options[1].value).toBe(1);
     });
@@ -209,7 +213,7 @@ describe('ActivityInputComponent', () => {
       mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(legionOnly);
       mockServerService.isActivityEnabled.mockReturnValue(true);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['activityForm'].patchValue({ week: 2 });
+      component['activityModel'].update(v => ({ ...v, week: 2 }));
 
       const activities = component['availableActivities']();
 
@@ -220,30 +224,29 @@ describe('ActivityInputComponent', () => {
     it('should block submission and expose isBlockedForSelectedWeek when no season covers the selected date', () => {
       mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue([]);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['activityForm'].patchValue({ week: 2 });
+      component['activityModel'].update(v => ({ ...v, week: 2 }));
 
       expect(component['isBlockedForSelectedWeek']()).toBe(true);
-      expect(component['availableActivities']().length).toBe(0);
+      expect(component['availableActivities']()).toHaveLength(0);
       expect(component['canSubmit']()).toBe(false);
     });
 
     it('should render the no-active-season banner and disable position input when blocked', () => {
       mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue([]);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['activityForm'].patchValue({ week: 2 });
+      component['activityModel'].update(v => ({ ...v, week: 2 }));
       fixture.detectChanges();
 
       const banner = fixture.nativeElement.querySelector('.no-season-banner');
       expect(banner).not.toBeNull();
 
-      const positionInput = fixture.nativeElement.querySelector('input[formcontrolname="position"]');
-      expect(positionInput?.disabled).toBe(true);
+      expect(component['activityForm'].position().disabled()).toBe(true);
     });
 
     it('should not render the no-active-season banner when a season covers the selected date', () => {
       mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['activityForm'].patchValue({ week: 2 });
+      component['activityModel'].update(v => ({ ...v, week: 2 }));
       fixture.detectChanges();
 
       const banner = fixture.nativeElement.querySelector('.no-season-banner');
@@ -254,10 +257,10 @@ describe('ActivityInputComponent', () => {
       mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
       mockServerService.isActivityEnabled.mockReturnValue(false);
       // Use week: 2 (different from the default 0) to force the computed signal to re-evaluate
-      component['activityForm'].patchValue({ week: 2 });
+      component['activityModel'].update(v => ({ ...v, week: 2 }));
 
       expect(component['isBlockedForSelectedWeek']()).toBe(false);
-      expect(component['availableActivities']().length).toBe(0);
+      expect(component['availableActivities']()).toHaveLength(0);
     });
   });
 
@@ -326,12 +329,12 @@ describe('ActivityInputComponent', () => {
       fixture.detectChanges();
 
       // Assert form values match conflict
-      const form = component['activityForm'];
-      expect(form.get('activityType')?.value).toBe(mockConflict.activityType);
-      expect(form.get('position')?.value).toBe(mockConflict.position);
+      const model = component['activityModel']();
+      expect(model.activityType).toBe(mockConflict.activityType);
+      expect(model.position).toBe(mockConflict.position);
     });
 
-    it('should disable week and activityType controls in forced-edit mode', () => {
+    it('should disable week and activityType fields in forced-edit mode', () => {
       // Arrange
       mockActivityService.getConflictsForCurrentUser.mockReturnValue([mockConflict]);
       triggerConflictRefresh();
@@ -342,9 +345,9 @@ describe('ActivityInputComponent', () => {
       fixture.detectChanges();
 
       // Assert
-      expect(component['activityForm'].get('week')?.disabled).toBe(true);
-      expect(component['activityForm'].get('activityType')?.disabled).toBe(true);
-      expect(component['activityForm'].get('position')?.disabled).toBe(false);
+      expect(component['activityForm'].week().disabled()).toBe(true);
+      expect(component['activityForm'].activityType().disabled()).toBe(true);
+      expect(component['activityForm'].position().disabled()).toBe(false);
     });
 
     it('should set isInForcedEditMode to true after acknowledging with active conflict', () => {
@@ -360,7 +363,7 @@ describe('ActivityInputComponent', () => {
       expect(component['isInForcedEditMode']()).toBe(true);
     });
 
-    it('should re-enable all controls and reset to creation mode after successful submit', async () => {
+    it('should re-enable all fields and reset to creation mode after successful submit', async () => {
       // Arrange — start with a conflict, acknowledge it
       mockActivityService.getConflictsForCurrentUser.mockReturnValue([mockConflict]);
       triggerConflictRefresh();
@@ -374,16 +377,74 @@ describe('ActivityInputComponent', () => {
 
       // Provide a valid submittable form state (position mode)
       mockServerService.isParticipationMode.mockReturnValue(false);
-      component['activityForm'].patchValue({ activityType: 'kvk prep', position: 5 });
+      component['activityModel'].update(v => ({ ...v, activityType: 'kvk prep', position: 5 }));
 
       // Act
-      await component['onSubmit']();
+      await component['onSubmit'](submitEvent());
       fixture.detectChanges();
 
-      // Assert — controls re-enabled, conflictAcknowledged reset
-      expect(component['activityForm'].get('week')?.enabled).toBe(true);
-      expect(component['activityForm'].get('activityType')?.enabled).toBe(true);
+      // Assert — fields re-enabled, conflictAcknowledged reset
+      expect(component['activityForm'].week().disabled()).toBe(false);
+      expect(component['activityForm'].activityType().disabled()).toBe(false);
       expect(component['conflictAcknowledged']()).toBe(false);
+    });
+  });
+
+  describe('field reset side effects', () => {
+    it('should reset activityType, position and participated when week changes outside forced-edit mode', () => {
+      component['activityModel'].update(v => ({ ...v, activityType: 'legion', position: 7, participated: true }));
+
+      component['onWeekChange']();
+
+      const model = component['activityModel']();
+      expect(model.activityType).toBe('');
+      expect(model.position).toBeNull();
+      expect(model.participated).toBe(false);
+    });
+
+    it('should not reset fields on week change while in forced-edit mode', () => {
+      mockActivityService.getConflictsForCurrentUser.mockReturnValue([
+        {
+          activityId: 'act-1',
+          activityType: 'kvk prep',
+          position: 3,
+          date: new Date('2026-05-05'),
+          conflictingDisplayName: 'Rival',
+        },
+      ]);
+      activitiesRefreshSignal.update(v => v + 1);
+      component['onConflictAcknowledged']();
+
+      component['onWeekChange']();
+
+      const model = component['activityModel']();
+      expect(model.activityType).toBe('kvk prep');
+      expect(model.position).toBe(3);
+    });
+
+    it('should reset participated when activityType changes outside forced-edit mode', () => {
+      component['activityModel'].update(v => ({ ...v, participated: true }));
+
+      component['onActivityTypeChange']();
+
+      expect(component['activityModel']().participated).toBe(false);
+    });
+  });
+
+  describe('validation error signals', () => {
+    it('should expose a required error kind on activityType when empty', () => {
+      component['activityForm'].activityType().markAsTouched();
+      expect(component['activityTypeError']()).toBe('errors.required');
+    });
+
+    it('should expose a required error kind on position when empty', () => {
+      component['activityForm'].position().markAsTouched();
+      expect(component['positionError']()).toBe('errors.required');
+    });
+
+    it('should clear the activityType error once a value is set', () => {
+      component['activityModel'].update(v => ({ ...v, activityType: 'legion' }));
+      expect(component['activityTypeError']()).toBe('');
     });
   });
 });

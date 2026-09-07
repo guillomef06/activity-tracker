@@ -30,6 +30,17 @@
   padding: 0.5rem 0;
 }
 
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-start;
+
+  .registration-field {
+    width: 100%;
+  }
+}
+
 .deadline-text {
   display: flex;
   align-items: center;
