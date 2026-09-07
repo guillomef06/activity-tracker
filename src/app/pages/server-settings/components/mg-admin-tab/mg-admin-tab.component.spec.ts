@@ -3,14 +3,13 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MgAdminTabComponent, targetRangeValidator } from './mg-admin-tab.component';
+import { MgAdminTabComponent } from './mg-admin-tab.component';
 import { MgEventService } from '@app/core/services/mg-event.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { ActivityService } from '@app/core/services/activity.service';
 import { ServerService } from '@app/core/services/server.service';
 import { SnackbarService } from '@app/core/services';
+import type { MgSlotRow } from '@shared/utils/mg-slot.util';
 
 const mockMgEventService = {
   loadCurrentEvent: vi.fn().mockResolvedValue(null),
@@ -50,7 +49,7 @@ describe('MgAdminTabComponent', () => {
     vi.clearAllMocks();
 
     await TestBed.configureTestingModule({
-      imports: [MgAdminTabComponent, TranslateModule.forRoot(), ReactiveFormsModule],
+      imports: [MgAdminTabComponent, TranslateModule.forRoot()],
       providers: [
         provideAnimations(),
         provideZonelessChangeDetection(),
@@ -73,14 +72,12 @@ describe('MgAdminTabComponent', () => {
   });
 
   it('should initialize with default config form values', () => {
-    const form = (
-      component as unknown as {
-        configForm: { value: { capacity: number; assignment_mode: string; dkp_enabled: boolean } };
-      }
-    ).configForm;
-    expect(form.value.capacity).toBe(10);
-    expect(form.value.assignment_mode).toBe('automatic');
-    expect(form.value.dkp_enabled).toBe(false);
+    const model = (
+      component as unknown as { configModel: () => { capacity: number; assignment_mode: string; dkp_enabled: boolean } }
+    ).configModel();
+    expect(model.capacity).toBe(10);
+    expect(model.assignment_mode).toBe('automatic');
+    expect(model.dkp_enabled).toBe(false);
   });
 
   it('should call loadCurrentEvent and loadServerConfig on init', () => {
@@ -116,8 +113,8 @@ describe('MgAdminTabComponent', () => {
       await component.ngOnInit();
       fixture.detectChanges();
 
-      const form = (component as unknown as { configForm: { value: { dkp_enabled: boolean } } }).configForm;
-      expect(form.value.dkp_enabled).toBe(true);
+      const model = (component as unknown as { configModel: () => { dkp_enabled: boolean } }).configModel();
+      expect(model.dkp_enabled).toBe(true);
     });
 
     it('should pass the resolved slot rows to generateAutoSelectionPayload', async () => {
@@ -151,7 +148,7 @@ describe('MgAdminTabComponent', () => {
   });
 
   describe('slot configuration', () => {
-    const getSlotRows = (): FormGroup[] => (component as unknown as { slotRows: FormGroup[] }).slotRows;
+    const getSlotRows = (): MgSlotRow[] => (component as unknown as { slotRows: MgSlotRow[] }).slotRows;
 
     it('should call loadSlotConfig on init', () => {
       expect(mockMgEventService.loadSlotConfig).toHaveBeenCalledWith('server-1');
@@ -159,9 +156,9 @@ describe('MgAdminTabComponent', () => {
 
     it('should build 10 rows from defaults when no server override exists', () => {
       const rows = getSlotRows();
-      expect(rows.length).toBe(10);
-      expect(rows[0].get('cost')?.value).toBe(150);
-      expect(rows[0].get('rankLabel')?.value).toBe('1');
+      expect(rows).toHaveLength(10);
+      expect(rows[0].cost).toBe(150);
+      expect(rows[0].rankLabel).toBe('1');
     });
 
     it('should rebuild the form array from loaded server config overrides', async () => {
@@ -184,34 +181,57 @@ describe('MgAdminTabComponent', () => {
       fixture.detectChanges();
 
       const rows = getSlotRows();
-      expect(rows[0].get('cost')?.value).toBe(999);
+      expect(rows[0].cost).toBe(999);
     });
 
     it('should be valid when targetMax is greater than or equal to targetMin', () => {
-      const group = new FormGroup(
-        {
-          targetMin: new FormControl(10),
-          targetMax: new FormControl(10),
-        },
-        { validators: targetRangeValidator }
-      );
-      expect(group.errors).toBeNull();
+      const slotConfigModel = (
+        component as unknown as {
+          slotConfigModel: { update: (fn: (c: { rows: MgSlotRow[] }) => { rows: MgSlotRow[] }) => void };
+        }
+      ).slotConfigModel;
+      slotConfigModel.update(current => ({
+        rows: current.rows.map((row, i) => (i === 0 ? { ...row, targetMin: 10, targetMax: 10 } : row)),
+      }));
+
+      const slotConfigForm = (
+        component as unknown as { slotConfigForm: { rows: { targetMax: () => { valid: () => boolean } }[] } }
+      ).slotConfigForm;
+      expect(slotConfigForm.rows[0].targetMax().valid()).toBe(true);
     });
 
     it('should be invalid when targetMax is less than targetMin', () => {
-      const group = new FormGroup(
-        {
-          targetMin: new FormControl(20),
-          targetMax: new FormControl(10),
-        },
-        { validators: targetRangeValidator }
-      );
-      expect(group.hasError('targetRange')).toBe(true);
+      const slotConfigModel = (
+        component as unknown as {
+          slotConfigModel: { update: (fn: (c: { rows: MgSlotRow[] }) => { rows: MgSlotRow[] }) => void };
+        }
+      ).slotConfigModel;
+      slotConfigModel.update(current => ({
+        rows: current.rows.map((row, i) => (i === 0 ? { ...row, targetMin: 20, targetMax: 10 } : row)),
+      }));
+
+      const slotConfigForm = (
+        component as unknown as {
+          slotConfigForm: { rows: { targetMax: () => { errors: () => { kind: string }[] } }[] };
+        }
+      ).slotConfigForm;
+      expect(
+        slotConfigForm.rows[0]
+          .targetMax()
+          .errors()
+          .some(e => e.kind === 'targetRange')
+      ).toBe(true);
     });
 
     it('should not call saveSlotConfig when the form is invalid', async () => {
-      const rows = getSlotRows();
-      rows[0].get('cost')?.setValue(-1);
+      const slotConfigModel = (
+        component as unknown as {
+          slotConfigModel: { update: (fn: (c: { rows: MgSlotRow[] }) => { rows: MgSlotRow[] }) => void };
+        }
+      ).slotConfigModel;
+      slotConfigModel.update(current => ({
+        rows: current.rows.map((row, i) => (i === 0 ? { ...row, cost: -1 } : row)),
+      }));
 
       await (component as unknown as { saveSlotConfig: () => Promise<void> }).saveSlotConfig();
 
@@ -234,6 +254,172 @@ describe('MgAdminTabComponent', () => {
       await (component as unknown as { saveSlotConfig: () => Promise<void> }).saveSlotConfig();
 
       expect(mockSnackbarService.error).toHaveBeenCalled();
+    });
+  });
+
+  describe('registrationRows', () => {
+    const makeRegistration = (desiredSlotOrder: number | null) => ({
+      id: 'reg-1',
+      mg_event_id: 'event-1',
+      user_id: 'user-1',
+      registered_at: '2026-01-01T00:00:00Z',
+      desired_slot_order: desiredSlotOrder,
+      comment: null,
+      user_profiles: { display_name: 'Alice', username: 'alice' },
+    });
+
+    const getRegistrationRows = (): { positionLabel: string | null }[] =>
+      (component as unknown as { registrationRows: () => { positionLabel: string | null }[] }).registrationRows();
+
+    it('should resolve a known slot_order to its rank label', () => {
+      (component as unknown as { registrations: { set: (v: unknown[]) => void } }).registrations.set([
+        makeRegistration(1),
+      ]);
+      expect(getRegistrationRows()[0].positionLabel).toBe('1');
+    });
+
+    it('should resolve a grouped slot_order to its range label', () => {
+      (component as unknown as { registrations: { set: (v: unknown[]) => void } }).registrations.set([
+        makeRegistration(6),
+      ]);
+      expect(getRegistrationRows()[0].positionLabel).toBe('6-7');
+    });
+
+    it('should return null when desired_slot_order is null (pre-existing registration)', () => {
+      (component as unknown as { registrations: { set: (v: unknown[]) => void } }).registrations.set([
+        makeRegistration(null),
+      ]);
+      expect(getRegistrationRows()[0].positionLabel).toBeNull();
+    });
+
+    it('should return null for an out-of-range slot_order', () => {
+      (component as unknown as { registrations: { set: (v: unknown[]) => void } }).registrations.set([
+        makeRegistration(99),
+      ]);
+      expect(getRegistrationRows()[0].positionLabel).toBeNull();
+    });
+  });
+
+  describe('registrations list rendering', () => {
+    /**
+     * `fixture.detectChanges()` triggers Angular's own `ngOnInit` invocation on a fresh
+     * fixture, and the component's async loading chain (Promise.all + activityService.initialize)
+     * needs more than a single microtask tick to settle — `fixture.whenStable()` alone does not
+     * wait for it in this zoneless setup, so a couple of macrotask ticks are flushed explicitly.
+     */
+    const flushAsyncNgOnInit = async (): Promise<void> => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
+    };
+
+    it('should display the desired position and comment for a registration', async () => {
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      mockMgEventService.loadRegistrations.mockResolvedValueOnce([
+        {
+          id: 'reg-1',
+          mg_event_id: 'event-1',
+          user_id: 'user-1',
+          registered_at: '2026-01-01T00:00:00Z',
+          desired_slot_order: 2,
+          comment: 'Aiming for top spots',
+          user_profiles: { display_name: 'Alice', username: 'alice' },
+        },
+      ]);
+
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flushAsyncNgOnInit();
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).toContain('Aiming for top spots');
+    });
+
+    it('should show a graceful fallback for a pre-existing registration with no desired position', async () => {
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      mockMgEventService.loadRegistrations.mockResolvedValueOnce([
+        {
+          id: 'reg-1',
+          mg_event_id: 'event-1',
+          user_id: 'user-1',
+          registered_at: '2026-01-01T00:00:00Z',
+          desired_slot_order: null,
+          comment: null,
+          user_profiles: { display_name: 'Alice', username: 'alice' },
+        },
+      ]);
+
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flushAsyncNgOnInit();
+      fixture.detectChanges();
+
+      const rows = (
+        component as unknown as { registrationRows: () => { positionLabel: string | null }[] }
+      ).registrationRows();
+      expect(rows[0].positionLabel).toBeNull();
+
+      // The template must not render a literal "null" or "undefined" — it falls back to the
+      // translated "no position" copy instead (mg.admin.registrations.noPosition).
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.textContent).not.toContain('null');
+      expect(compiled.textContent).not.toContain('undefined');
+    });
+
+    it('should not render the comment element when the registration has no comment', async () => {
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      mockMgEventService.loadRegistrations.mockResolvedValueOnce([
+        {
+          id: 'reg-1',
+          mg_event_id: 'event-1',
+          user_id: 'user-1',
+          registered_at: '2026-01-01T00:00:00Z',
+          desired_slot_order: 2,
+          comment: null,
+          user_profiles: { display_name: 'Alice', username: 'alice' },
+        },
+      ]);
+
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flushAsyncNgOnInit();
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.registration-comment')).toBeNull();
     });
   });
 });

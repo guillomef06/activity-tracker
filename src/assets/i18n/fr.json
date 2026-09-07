@@ -354,7 +354,8 @@
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ?",
     "uploadImage": "Uploader l'image",
     "next": "Suivant",
-    "clear": "Effacer"
+    "clear": "Effacer",
+    "retry": "Réessayer"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "La Légion est implicite chaque semaine et ne peut pas être retirée",
       "nameRequired": "Le nom est requis (100 caractères max)",
       "createFailed": "Échec de la création de la saison",
+      "loadFailed": "Échec du chargement des saisons",
       "lockedTooltip": "Cette saison a des activités enregistrées et sa structure est verrouillée",
       "lockedHint": "Cette saison a des activités enregistrées. Seul le nom peut être modifié.",
       "deleteLockedTooltip": "Impossible de supprimer une saison avec des activités enregistrées",
@@ -554,7 +556,13 @@
       "registerSuccess": "Inscription confirmée.",
       "registerError": "Échec de l'inscription. Veuillez réessayer.",
       "unregisterSuccess": "Vous avez été désinscrit.",
-      "unregisterError": "Échec de la désinscription. Veuillez réessayer."
+      "unregisterError": "Échec de la désinscription. Veuillez réessayer.",
+      "positionLabel": "Position souhaitée",
+      "positionPlaceholder": "Choisissez le rang visé",
+      "positionInvalid": "Sélectionnez une position valide.",
+      "medalsUnit": "médailles",
+      "commentLabel": "Commentaire (optionnel)",
+      "commentPlaceholder": "Une précision pour les admins ? (optionnel)"
     },
     "admin": {
       "loadError": "Impossible de charger les données MG.",
@@ -588,7 +596,9 @@
       "slotConfigSaveError": "Échec de l'enregistrement de la configuration des créneaux.",
       "registrations": {
         "title": "Inscriptions",
-        "empty": "Aucune inscription pour le moment."
+        "empty": "Aucune inscription pour le moment.",
+        "position": "Position souhaitée",
+        "noPosition": "Non renseignée"
       },
       "selection": {
         "title": "Sélection",

@@ -1,6 +1,6 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, required, minLength } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,20 +16,27 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
-import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { getFieldErrorKey } from '@app/shared/utils/form-validation.utils';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import { InfiniteScrollDirective } from '@app/shared/directives/infinite-scroll/infinite-scroll.directive';
 import type { UserProfile } from '@app/shared/models';
 import { firstValueFrom } from 'rxjs';
 
+const DISPLAY_NAME_MIN_LENGTH = 2;
+
 interface UserWithServer extends UserProfile {
   server_name: string | null;
+}
+
+interface UserEditFormValue {
+  display_name: string;
+  role: string;
 }
 
 @Component({
   selector: 'app-super-admin-users',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -50,12 +57,10 @@ interface UserWithServer extends UserProfile {
 })
 export class SuperAdminUsersPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
-  private readonly fb = inject(FormBuilder);
   private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   protected readonly progressBarService = inject(ProgressBarService);
-  private readonly destroyRef = inject(DestroyRef);
 
   private readonly PAGE_SIZE = 20;
 
@@ -65,15 +70,14 @@ export class SuperAdminUsersPage implements OnInit {
   private lastCursor: string | null = null;
   protected readonly displayedColumns: string[] = ['displayName', 'username', 'role', 'server', 'createdAt', 'actions'];
 
-  protected readonly editForm: FormGroup = this.fb.group({
-    id: [''],
-    display_name: ['', [Validators.required, Validators.minLength(2)]],
-    role: ['', [Validators.required]],
+  protected readonly editModel = signal<UserEditFormValue>({ display_name: '', role: '' });
+  protected readonly editForm = form(this.editModel, path => {
+    required(path.display_name);
+    minLength(path.display_name, DISPLAY_NAME_MIN_LENGTH);
+    required(path.role);
   });
 
-  // Error signals for validation
-  protected readonly displayNameError = createFieldErrorSignal(this.editForm, 'display_name', this.destroyRef);
-  protected readonly roleError = createFieldErrorSignal(this.editForm, 'role', this.destroyRef);
+  protected readonly getFieldErrorKey = getFieldErrorKey;
 
   protected readonly editingId = signal<string | null>(null);
   protected readonly roles = ['super_admin', 'admin', 'member'];
@@ -140,34 +144,30 @@ export class SuperAdminUsersPage implements OnInit {
 
   protected startEdit(user: UserProfile): void {
     this.editingId.set(user.id);
-    this.editForm.patchValue({
-      id: user.id,
-      display_name: user.display_name,
-      role: user.role,
-    });
+    this.editModel.set({ display_name: user.display_name, role: user.role });
   }
 
   protected cancelEdit(): void {
     this.editingId.set(null);
-    this.editForm.reset();
+    this.editModel.set({ display_name: '', role: '' });
   }
 
   protected async saveEdit(): Promise<void> {
-    if (this.editForm.invalid) {
+    const id = this.editingId();
+    if (this.editForm().invalid() || !id) {
       return;
     }
 
     await this.progressBarService.withProgress(async () => {
       try {
-        const { id, display_name, role } = this.editForm.value;
+        const { display_name, role } = this.editModel();
 
         const { error } = await this.supabase.client.from('user_profiles').update({ display_name, role }).eq('id', id);
 
         if (error) throw error;
 
         this.snackbarService.success(this.translate.instant('superAdmin.users.updated'));
-        this.editingId.set(null);
-        this.editForm.reset();
+        this.cancelEdit();
         await this.loadUsers();
       } catch (error) {
         console.error('Error updating user:', error);

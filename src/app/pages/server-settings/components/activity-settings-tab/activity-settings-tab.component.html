@@ -141,11 +141,11 @@
       </h3>
       <p class="section-hint">{{ 'server.settings.pointRules.generatorHint' | translate }}</p>
 
-      <form [formGroup]="pointRuleForm" (ngSubmit)="generateRules()" class="point-rule-form">
+      <form (submit)="$event.preventDefault(); generateRules()" class="point-rule-form">
         <mat-form-field appearance="outline">
           <mat-label>{{ 'server.settings.pointRules.activityType' | translate }}</mat-label>
           <mat-icon matIconPrefix>category</mat-icon>
-          <mat-select formControlName="activity_type">
+          <mat-select [formField]="pointRuleForm.activity_type">
             @for (type of enabledActivityTypes(); track type.value) {
               <mat-option [value]="type.value">
                 {{ type.labelKey | translate }}
@@ -160,7 +160,7 @@
         <mat-form-field appearance="outline">
           <mat-icon matIconPrefix>straighten</mat-icon>
           <mat-label>{{ 'server.settings.pointRules.rangeSize' | translate }}</mat-label>
-          <input matInput type="number" formControlName="range_size" min="5" step="5" />
+          <input matInput type="number" [formField]="pointRuleForm.range_size" />
           @if (rangeSizeError()) {
             <mat-error>{{ rangeSizeError() | translate }}</mat-error>
           } @else {
@@ -171,7 +171,7 @@
         <mat-form-field appearance="outline">
           <mat-icon matIconPrefix>star</mat-icon>
           <mat-label>{{ 'server.settings.pointRules.points' | translate }}</mat-label>
-          <input matInput type="number" formControlName="points" min="1" />
+          <input matInput type="number" [formField]="pointRuleForm.points" />
           @if (pointsError()) {
             <mat-error>{{ pointsError() | translate }}</mat-error>
           }
@@ -180,7 +180,7 @@
         <mat-form-field appearance="outline">
           <mat-icon matIconPrefix>trending_down</mat-icon>
           <mat-label>{{ 'server.settings.pointRules.decreasedNextRangePoints' | translate }}</mat-label>
-          <input matInput type="number" formControlName="decreased_next_range_points" min="1" />
+          <input matInput type="number" [formField]="pointRuleForm.decreased_next_range_points" />
           @if (decreasedNextRangePointsError()) {
             <mat-error>{{ decreasedNextRangePointsError() | translate }}</mat-error>
           } @else {
@@ -241,7 +241,7 @@
           [text]="'server.settings.pointRules.generate' | translate"
           [loadingText]="'common.saving' | translate"
           [submitting]="isSubmitting()"
-          [disabled]="pointRuleForm.invalid || isLoading()"
+          [disabled]="pointRuleForm().invalid() || isLoading()"
         />
       </form>
     </div>

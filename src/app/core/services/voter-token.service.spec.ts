@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { VoterTokenService } from './voter-token.service';
 import { StorageService } from './storage.service';
 
@@ -19,7 +20,11 @@ describe('VoterTokenService', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [VoterTokenService, { provide: StorageService, useValue: storageServiceMock }],
+      providers: [
+        provideZonelessChangeDetection(),
+        VoterTokenService,
+        { provide: StorageService, useValue: storageServiceMock },
+      ],
     });
 
     service = TestBed.inject(VoterTokenService);

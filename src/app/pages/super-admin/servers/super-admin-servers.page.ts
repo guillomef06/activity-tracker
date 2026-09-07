@@ -1,6 +1,6 @@
-import { Component, inject, signal, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, required, minLength, maxLength } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,10 +14,14 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
-import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { getFieldErrorKey } from '@app/shared/utils/form-validation.utils';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import type { Server } from '@app/shared/models';
 import { firstValueFrom } from 'rxjs';
+
+const SERVER_NAME_MIN_LENGTH = 3;
+const SERVER_NAME_MAX_LENGTH = 100;
+const SERVER_TAG_LENGTH = 3;
 
 interface ServerWithStats extends Server {
   member_count: number;
@@ -28,10 +32,15 @@ interface ServerRow extends Server {
   user_profiles: { display_name: string | null; role: string }[];
 }
 
+interface ServerEditFormValue {
+  name: string;
+  tag: string;
+}
+
 @Component({
   selector: 'app-super-admin-servers',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -49,25 +58,24 @@ interface ServerRow extends Server {
 })
 export class SuperAdminServersPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
-  private readonly fb = inject(FormBuilder);
   private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
   protected readonly progressBarService = inject(ProgressBarService);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly servers = signal<ServerWithStats[]>([]);
   protected readonly displayedColumns: string[] = ['name', 'tag', 'admin', 'members', 'createdAt', 'actions'];
 
-  protected readonly editForm: FormGroup = this.fb.group({
-    id: [''],
-    name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-    tag: ['', [Validators.minLength(3), Validators.maxLength(3)]],
+  protected readonly editModel = signal<ServerEditFormValue>({ name: '', tag: '' });
+  protected readonly editForm = form(this.editModel, path => {
+    required(path.name);
+    minLength(path.name, SERVER_NAME_MIN_LENGTH);
+    maxLength(path.name, SERVER_NAME_MAX_LENGTH);
+    minLength(path.tag, SERVER_TAG_LENGTH);
+    maxLength(path.tag, SERVER_TAG_LENGTH);
   });
 
-  // Error signals for validation
-  protected readonly nameError = createFieldErrorSignal(this.editForm, 'name', this.destroyRef);
-  protected readonly tagError = createFieldErrorSignal(this.editForm, 'tag', this.destroyRef);
+  protected readonly getFieldErrorKey = getFieldErrorKey;
 
   protected readonly editingId = signal<string | null>(null);
 
@@ -103,26 +111,23 @@ export class SuperAdminServersPage implements OnInit {
 
   protected startEdit(server: Server): void {
     this.editingId.set(server.id);
-    this.editForm.patchValue({
-      id: server.id,
-      name: server.name,
-      tag: server.tag ?? '',
-    });
+    this.editModel.set({ name: server.name, tag: server.tag ?? '' });
   }
 
   protected cancelEdit(): void {
     this.editingId.set(null);
-    this.editForm.reset();
+    this.editModel.set({ name: '', tag: '' });
   }
 
   protected async saveEdit(): Promise<void> {
-    if (this.editForm.invalid) {
+    const id = this.editingId();
+    if (this.editForm().invalid() || !id) {
       return;
     }
 
     await this.progressBarService.withProgress(async () => {
       try {
-        const { id, name, tag } = this.editForm.value;
+        const { name, tag } = this.editModel();
 
         const { error } = await this.supabase.client
           .from('servers')
@@ -132,8 +137,7 @@ export class SuperAdminServersPage implements OnInit {
         if (error) throw error;
 
         this.snackbarService.success(this.translate.instant('superAdmin.servers.updated'));
-        this.editingId.set(null);
-        this.editForm.reset();
+        this.cancelEdit();
         await this.loadServers();
       } catch (error) {
         console.error('Error updating server:', error);

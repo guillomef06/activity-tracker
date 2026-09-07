@@ -1,7 +1,9 @@
 /**
  * Generate a unique ID using timestamp and random string
+ * Non-cryptographic use: only needs to avoid accidental collisions, not resist prediction.
  */
 export function generateId(): string {
+  // eslint-disable-next-line sonarjs/pseudo-random
   return `${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }
 
@@ -19,7 +21,9 @@ export function createUserIdFromName(name: string): string {
 
 /**
  * Generate a short random ID (8 characters)
+ * Non-cryptographic use: only needs to avoid accidental collisions, not resist prediction.
  */
 export function generateShortId(): string {
+  // eslint-disable-next-line sonarjs/pseudo-random
   return Math.random().toString(36).substring(2, 10);
 }

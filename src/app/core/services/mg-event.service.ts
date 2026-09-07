@@ -12,6 +12,7 @@ import type {
   UpsertServerMgConfigRequest,
   ServerMgSlotConfig,
   UpsertMgSlotConfigRow,
+  RegisterMgPlayerPayload,
 } from '@shared/models';
 import { resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
 import { getWeekStart, getWeekEnd } from '@shared/utils/date.util';
@@ -102,8 +103,17 @@ export class MgEventService {
     return (data ?? []) as MgRegistrationWithUser[];
   }
 
-  async registerPlayer(mgEventId: string, userId: string): Promise<{ error: unknown }> {
-    const { error } = await this.supabase.from('mg_registrations').insert({ mg_event_id: mgEventId, user_id: userId });
+  async registerPlayer(
+    mgEventId: string,
+    userId: string,
+    payload: RegisterMgPlayerPayload
+  ): Promise<{ error: unknown }> {
+    const { error } = await this.supabase.from('mg_registrations').insert({
+      mg_event_id: mgEventId,
+      user_id: userId,
+      desired_slot_order: payload.desired_slot_order,
+      comment: payload.comment,
+    });
     return { error };
   }
 

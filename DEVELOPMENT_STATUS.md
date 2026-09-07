@@ -1,16 +1,19 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 4 septembre 2026
+**Dernière mise à jour:** 6 septembre 2026
 
 ## 📋 Résumé
 
-Application Angular 21 de gestion d'activités avec backend Supabase et système multi-serveur. Mobile-first, déployée sur GitHub Pages.
+Application Angular 22 de gestion d'activités avec backend Supabase et système multi-serveur. Mobile-first, déployée sur GitHub Pages.
 
 ---
 
 ## ✅ Fonctionnalités Complétées
 
 ### Infrastructure
+- Upgrade Angular 21 → 22 (montée de version pure, aucun changement de comportement)
+- Zoneless change detection activé (`provideZonelessChangeDetection()` dans `app.config.ts`, `zone.js` retiré des polyfills et de `package.json`) : possible grâce à `OnPush` partout + app 100% signal-driven (prérequis Signal Forms / Resource API déjà en place)
+- Builders `serve` et `extract-i18n` migrés de `@angular-devkit/build-angular` (déprécié) vers `@angular/build` dans `angular.json`, suite à la dépréciation du support Webpack d'Angular
 - Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `discord_scheduled_messages`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
 - Authentification par username uniquement (email généré en interne `username@app.tracker`)
 - RLS configuré avec helper functions `SECURITY DEFINER`
@@ -95,6 +98,14 @@ Application Angular 21 de gestion d'activités avec backend Supabase et système
   - `MgEventService.loadCostDeductions(serverId, sinceDate)` : requête `mg_selections` jointe à `mg_events` (`!inner`), filtrée sur `selection_published_at IS NOT NULL` (explicite côté client — les admins contournent la RLS de visibilité via leur policy "manage", donc on ne peut pas compter sur RLS seule), somme par `user_id`.
   - `ActivityService.applyMgDeductions(scores, deductions)` : fusionne les déductions sur `getUserScores()` et retrie (`compareByScoreDesc`, extrait de l'ancien tri inline pour être réutilisé). `HomePage` orchestre le tout (charge `server_mg_config`, ne fetch les déductions que si `dkp_enabled`).
   - i18n : `dashboard.mgDeductionTooltip`, `mg.admin.config.dkpEnabled`/`dkpEnabledHint` ajoutés en/fr uniquement (hors périmètre pour les autres locales, même précédent que la feature slot-config). Le texte de `mightiestGovernor.notice` ("under development") a été mis à jour dans les 14 locales existantes puisqu'il n'était plus exact.
+- **Position souhaitée + commentaire à l'inscription** ✅ : un joueur qui s'inscrit à un event MG précise désormais quel rang (1-10, mêmes valeurs que `MG_SLOT_DEFAULTS.slotOrder`) il vise, plus un commentaire libre optionnel (200 caractères max) — donne aux admins un signal d'intention pour la sélection manuelle des sièges (`assignment_mode = 'manual'`), qui n'affichait auparavant qu'une liste brute de pseudos.
+  - Migration `41-mg-registration-position-comment.sql` (non appliquée en prod — même précédent que les migrations 33/36 ci-dessus) : `mg_registrations.desired_slot_order` (`SMALLINT`, nullable, `CHECK BETWEEN 1 AND 10`) et `mg_registrations.comment` (`TEXT`, nullable, `CHECK char_length <= 200`). Nullable pour ne jamais casser les inscriptions déjà existantes sur un event déjà ouvert. Aucun changement RLS nécessaire (les 5 policies existantes de `26-mg-event.sql` ne restreignent aucune colonne).
+  - Modèles (`mg-event.model.ts`) : `MgRegistration`/`MgRegistrationWithUser` +`desired_slot_order`/+`comment` ; nouveau `RegisterMgPlayerPayload` ({ desired_slot_order, comment }), exporté depuis `models/index.ts`.
+  - `MgEventService.registerPlayer(mgEventId, userId, payload)` : signature étendue avec le payload, insère les deux nouvelles colonnes.
+  - `MgEventCardComponent` (`mightiest-governor/components/mg-event-card`) : formulaire Signal Forms (`@angular/forms/signals`) ajouté avant le bouton "Register" — `mat-select` de position (options = `MG_SLOT_DEFAULTS`, `required` + validation de membership contre les `slotOrder` connus) et `textarea` de commentaire (`maxLength(200)`, hint `X / 200` façon `discord-tab`). `register` passe de `output<void>()` à `output<RegisterMgPlayerPayload>()` ; `onRegister()` valide/`markAsTouched()` avant d'émettre.
+  - `MightiestGovernorComponent.onRegister(payload)` relaie le payload à `registerPlayer()`.
+  - `MgAdminTabComponent` : nouveau `computed()` `registrationRows` (registrations enrichies d'un `positionLabel` précalculé — jamais d'appel de méthode dans le template) ; la liste des inscriptions admin affiche désormais la position souhaitée (fallback gracieux "Not specified" pour les inscriptions pré-existantes sans `desired_slot_order`) et le commentaire s'il existe.
+  - i18n : `mg.registration.positionLabel`/`positionPlaceholder`/`positionInvalid`/`medalsUnit`/`commentLabel`/`commentPlaceholder` + `mg.admin.registrations.position`/`noPosition` ajoutés dans les **14 locales** (contrairement aux features slot-config/DKP ci-dessus qui n'avaient que en/fr/it/es).
 
 ### Seasons (calendrier d'activités dynamique)
 
@@ -138,12 +149,13 @@ Pages publiques (`/guides`, `/guides/:slug`) routées via `PublicLayoutComponent
 - **Seasons — wizard fond opaque** : `mat-stepper` masquait le glass-effect du `mat-card` englobant — fix CSS scoped (`--mat-stepper-container-color: transparent`)
 - **`mat-datepicker` — premier jour de la semaine** : `MAT_DATE_LOCALE` absent forçait tous les calendriers à démarrer un dimanche — fix global via `DateAdapter.setLocale()` synchronisé sur `LanguageService.currentLanguage()`
 - **Seasons — "must be a Monday" sur un lundi cliqué** : décalage UTC/local dans `mat-datepicker` (minuit local vs validation UTC) — fix par ré-ancrage à minuit UTC dans `onStartDateChange()`
+- **Nettoyage lint (65 warnings sonarjs → 0)** : `ActivityService.getUserScores()` et `ImportExcelTabComponent.parseRows()` découpés en méthodes privées plus petites (complexité cognitive) ; règle `sonarjs/no-hardcoded-passwords` désactivée pour `*.spec.ts` (faux positifs sur mots de passe de test) ; usages `Math.random()` non-sécurité (`id-generator.util.ts`, `guide.service.ts` slug suffix) annotés `eslint-disable` justifié ; reste (assertions `toHaveLength`, type alias, regex, tests dupliqués/paramétrés) corrigé au fil de l'eau
 
 ---
 
 ## ⚙️ Architecture
 
-- Standalone components, Signals, OnPush, Reactive Forms
+- Standalone components, Signals, OnPush, Signal Forms (`@angular/forms/signals`), Resource API pour le data-fetching
 - Smart/dumb pattern : pages (smart) + components (dumb)
 - Lazy loading sur toutes les routes
 - Guards : `authGuard`, `adminGuard`, `superAdminGuard`, `guestGuard`

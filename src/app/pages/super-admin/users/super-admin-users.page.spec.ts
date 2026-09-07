@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { SuperAdminUsersPage } from './super-admin-users.page';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -41,7 +41,7 @@ describe('SuperAdminUsersPage', () => {
       providers: [
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],
@@ -56,11 +56,42 @@ describe('SuperAdminUsersPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have edit form with required fields', () => {
+  it('should have an edit form with display_name and role fields', () => {
     expect(component['editForm']).toBeDefined();
-    expect(component['editForm'].get('id')).toBeDefined();
-    expect(component['editForm'].get('display_name')).toBeDefined();
-    expect(component['editForm'].get('role')).toBeDefined();
+    expect(component['editForm'].display_name).toBeDefined();
+    expect(component['editForm'].role).toBeDefined();
+  });
+
+  it('should be invalid when display_name and role are empty', () => {
+    expect(component['editForm']().valid()).toBe(false);
+  });
+
+  it('should become valid once display_name and role are filled', () => {
+    component['editModel'].set({ display_name: 'Jane Doe', role: 'member' });
+
+    expect(component['editForm']().valid()).toBe(true);
+  });
+
+  it('should require display_name to be at least 2 characters', () => {
+    component['editModel'].set({ display_name: 'J', role: 'member' });
+
+    expect(
+      component['editForm']
+        .display_name()
+        .errors()
+        .some(error => error.kind === 'minLength')
+    ).toBe(true);
+  });
+
+  it('should require a role', () => {
+    component['editModel'].set({ display_name: 'Jane Doe', role: '' });
+
+    expect(
+      component['editForm']
+        .role()
+        .errors()
+        .some(error => error.kind === 'required')
+    ).toBe(true);
   });
 
   it('should display correct columns', () => {

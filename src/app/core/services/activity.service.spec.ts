@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { signal } from '@angular/core';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { ActivityService } from './activity.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
@@ -65,6 +65,7 @@ describe('ActivityService', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         ActivityService,
         { provide: SupabaseService, useValue: supabaseMock },
         { provide: AuthService, useValue: authMock },
@@ -103,6 +104,7 @@ describe('ActivityService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
+          provideZonelessChangeDetection(),
           ActivityService,
           { provide: SupabaseService, useValue: scopedSupabaseMock },
           { provide: AuthService, useValue: scopedAuthMock },
@@ -366,6 +368,7 @@ describe('ActivityService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
+          provideZonelessChangeDetection(),
           ActivityService,
           { provide: SupabaseService, useValue: supabaseWithUpsert },
           { provide: AuthService, useValue: adminAuthMock },
@@ -454,6 +457,7 @@ describe('ActivityService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
+          provideZonelessChangeDetection(),
           ActivityService,
           { provide: SupabaseService, useValue: supabaseWithDelete },
           {
@@ -525,6 +529,7 @@ describe('ActivityService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
+          provideZonelessChangeDetection(),
           ActivityService,
           { provide: SupabaseService, useValue: supabaseWithDelete },
           {
@@ -651,6 +656,7 @@ describe('ActivityService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
+          provideZonelessChangeDetection(),
           ActivityService,
           { provide: SupabaseService, useValue: supabaseWithDelete },
           {
@@ -795,6 +801,7 @@ describe('ActivityService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
+          provideZonelessChangeDetection(),
           ActivityService,
           { provide: SupabaseService, useValue: supabaseMock },
           { provide: AuthService, useValue: authMockForConflict },

@@ -354,7 +354,8 @@
     "deleteConfirm": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟",
     "uploadImage": "رفع صورة",
     "next": "التالي",
-    "clear": "مسح"
+    "clear": "مسح",
+    "retry": "إعادة المحاولة"
   },
   "superAdmin": {
     "dashboard": {
@@ -436,6 +437,7 @@
       "legionAlwaysAvailableHint": "الفيلق ضمني كل أسبوع ولا يمكن إزالته",
       "nameRequired": "الاسم مطلوب (100 حرف كحد أقصى)",
       "createFailed": "فشل إنشاء الموسم",
+      "loadFailed": "فشل تحميل المواسم",
       "lockedTooltip": "هذا الموسم يحتوي على نشاط مسجَّل وبنيته مقفلة",
       "lockedHint": "هذا الموسم يحتوي على نشاط مسجَّل. يمكن تعديل الاسم فقط.",
       "deleteLockedTooltip": "لا يمكن حذف موسم يحتوي على نشاط مسجَّل",
@@ -882,6 +884,12 @@
       "registerError": "فشل التسجيل. يرجى المحاولة مجدداً.",
       "unregisterSuccess": "تم إلغاء تسجيلك.",
       "unregisterError": "فشل إلغاء التسجيل. يرجى المحاولة مجدداً.",
+      "positionLabel": "المركز المطلوب",
+      "positionPlaceholder": "اختر الرتبة التي تستهدفها",
+      "positionInvalid": "اختر مركزاً صالحاً.",
+      "medalsUnit": "ميدالية",
+      "commentLabel": "تعليق (اختياري)",
+      "commentPlaceholder": "هل هناك ما يجب أن يعرفه المشرفون؟ (اختياري)",
       "fullFfaTitle": "FFA كامل",
       "fullFfaDescription": "لم يتم نشر أي تحديد — هذا الحدث مفتوح لجميع اللاعبين."
     },
@@ -921,7 +929,9 @@
       },
       "registrations": {
         "title": "التسجيلات",
-        "empty": "لا توجد تسجيلات حتى الآن."
+        "empty": "لا توجد تسجيلات حتى الآن.",
+        "position": "المركز المطلوب",
+        "noPosition": "غير محدد"
       },
       "selection": {
         "title": "الاختيار",

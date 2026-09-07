@@ -1,5 +1,5 @@
-import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
-import { FormBuilder, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal, computed, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { form, required, maxLength, pattern, min, max, FormField } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -15,10 +15,11 @@ import { DiscordScheduledMessageService } from '@app/core/services/discord-sched
 import { SnackbarService } from '@app/core/services';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import { LoadingButtonComponent } from '@app/shared/components/loading-button/loading-button.component';
-import { createFieldErrorSignal } from '@app/shared/utils/form-validation.utils';
+import { getFieldErrorKey } from '@app/shared/utils/form-validation.utils';
 import type { DiscordWebhook, DiscordScheduledMessage, DiscordScheduleFrequency } from '@app/shared/models';
 
 const MESSAGE_MAX_LENGTH = 2000;
+const CHANNEL_NAME_MAX_LENGTH = 100;
 const MIN_DAY_OF_MONTH = 1;
 const MAX_DAY_OF_MONTH = 28;
 const MIN_HOUR_UTC = 0;
@@ -26,6 +27,7 @@ const MAX_HOUR_UTC = 23;
 const DEFAULT_HOUR_UTC = 19;
 const DEFAULT_DAY_OF_MONTH = 1;
 const HOURS_IN_DAY = 24;
+const WEBHOOK_URL_PATTERN = /^https:\/\/discord(app)?\.com\/api\/webhooks\/.+/;
 
 /** ISO 8601 day-of-week order (1=Mon ... 7=Sun), matching the `days_of_week` column. */
 const WEEK_DAYS: readonly { iso: number; labelKey: string }[] = [
@@ -37,6 +39,26 @@ const WEEK_DAYS: readonly { iso: number; labelKey: string }[] = [
   { iso: 6, labelKey: 'discord.schedule.dayShort.sat' },
   { iso: 7, labelKey: 'discord.schedule.dayShort.sun' },
 ];
+
+interface WebhookFormModel {
+  channel_name: string;
+  webhook_url: string;
+  default_message: string;
+}
+
+interface MessageFormModel {
+  webhook_id: string;
+  content: string;
+}
+
+interface ScheduleFormModel {
+  webhook_id: string;
+  message: string;
+  frequency: DiscordScheduleFrequency;
+  days_of_week: boolean[];
+  day_of_month: number;
+  hour_utc: number;
+}
 
 interface ScheduleViewModel {
   schedule: DiscordScheduledMessage;
@@ -54,10 +76,21 @@ function formatHourUtc(hour: number): string {
   return `${hour.toString().padStart(2, '0')}:00`;
 }
 
+function emptyScheduleModel(): ScheduleFormModel {
+  return {
+    webhook_id: '',
+    message: '',
+    frequency: 'daily',
+    days_of_week: WEEK_DAYS.map(() => false),
+    day_of_month: DEFAULT_DAY_OF_MONTH,
+    hour_utc: DEFAULT_HOUR_UTC,
+  };
+}
+
 @Component({
   selector: 'app-discord-tab',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -76,20 +109,15 @@ function formatHourUtc(hour: number): string {
 export class DiscordTabComponent implements OnInit {
   private readonly discordService = inject(DiscordService);
   private readonly discordScheduleService = inject(DiscordScheduledMessageService);
-  private readonly fb = inject(FormBuilder);
-  private readonly nnfb = inject(NonNullableFormBuilder);
   private readonly snackbarService = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
   private readonly translate = inject(TranslateService);
-  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly hourOptions: readonly HourOption[] = Array.from({ length: HOURS_IN_DAY }, (_, hour) => ({
     value: hour,
     label: formatHourUtc(hour),
   }));
   protected readonly weekDays = WEEK_DAYS;
-  protected readonly minDayOfMonth = MIN_DAY_OF_MONTH;
-  protected readonly maxDayOfMonth = MAX_DAY_OF_MONTH;
 
   protected readonly webhooks = this.discordService.webhooks;
   protected readonly isLoading = signal(false);
@@ -115,49 +143,56 @@ export class DiscordTabComponent implements OnInit {
     }))
   );
 
-  protected readonly webhookForm: FormGroup = this.fb.group({
-    channel_name: ['', [Validators.required, Validators.maxLength(100)]],
-    webhook_url: ['', [Validators.required, Validators.pattern(/^https:\/\/discord(app)?\.com\/api\/webhooks\/.+/)]],
-    default_message: ['', Validators.maxLength(MESSAGE_MAX_LENGTH)],
+  protected readonly webhookModel = signal<WebhookFormModel>({
+    channel_name: '',
+    webhook_url: '',
+    default_message: '',
+  });
+  protected readonly messageModel = signal<MessageFormModel>({ webhook_id: '', content: '' });
+  protected readonly scheduleModel = signal<ScheduleFormModel>(emptyScheduleModel());
+
+  protected readonly webhookForm = form(this.webhookModel, path => {
+    required(path.channel_name);
+    maxLength(path.channel_name, CHANNEL_NAME_MAX_LENGTH);
+    required(path.webhook_url);
+    pattern(path.webhook_url, WEBHOOK_URL_PATTERN);
+    maxLength(path.default_message, MESSAGE_MAX_LENGTH);
   });
 
-  protected readonly messageForm: FormGroup = this.fb.group({
-    webhook_id: ['', Validators.required],
-    content: ['', [Validators.required, Validators.maxLength(MESSAGE_MAX_LENGTH)]],
+  protected readonly messageForm = form(this.messageModel, path => {
+    required(path.webhook_id);
+    required(path.content);
+    maxLength(path.content, MESSAGE_MAX_LENGTH);
   });
 
-  protected readonly scheduleForm = this.nnfb.group({
-    webhook_id: this.nnfb.control('', Validators.required),
-    message: this.nnfb.control('', [Validators.required, Validators.maxLength(MESSAGE_MAX_LENGTH)]),
-    frequency: this.nnfb.control<DiscordScheduleFrequency>('daily', Validators.required),
-    days_of_week: this.nnfb.array(WEEK_DAYS.map(() => this.nnfb.control(false))),
-    day_of_month: this.nnfb.control(DEFAULT_DAY_OF_MONTH, [
-      Validators.min(MIN_DAY_OF_MONTH),
-      Validators.max(MAX_DAY_OF_MONTH),
-    ]),
-    hour_utc: this.nnfb.control(DEFAULT_HOUR_UTC, [
-      Validators.required,
-      Validators.min(MIN_HOUR_UTC),
-      Validators.max(MAX_HOUR_UTC),
-    ]),
+  protected readonly scheduleForm = form(this.scheduleModel, path => {
+    required(path.webhook_id);
+    required(path.message);
+    maxLength(path.message, MESSAGE_MAX_LENGTH);
+    required(path.frequency);
+    min(path.day_of_month, MIN_DAY_OF_MONTH);
+    max(path.day_of_month, MAX_DAY_OF_MONTH);
+    required(path.hour_utc);
+    min(path.hour_utc, MIN_HOUR_UTC);
+    max(path.hour_utc, MAX_HOUR_UTC);
   });
 
-  protected readonly channelNameError = createFieldErrorSignal(this.webhookForm, 'channel_name', this.destroyRef);
-  protected readonly webhookUrlError = createFieldErrorSignal(
-    this.webhookForm,
-    'webhook_url',
-    this.destroyRef,
-    undefined,
-    {
-      pattern: 'discord.errors.invalidWebhookUrl',
-    }
+  protected readonly channelNameError = computed(() =>
+    this.webhookForm.channel_name().touched() ? getFieldErrorKey(this.webhookForm.channel_name().errors()) : ''
   );
-  protected readonly messageContentError = createFieldErrorSignal(this.messageForm, 'content', this.destroyRef);
-  protected readonly scheduleMessageError = createFieldErrorSignal(this.scheduleForm, 'message', this.destroyRef);
-  protected readonly scheduleDayOfMonthError = createFieldErrorSignal(
-    this.scheduleForm,
-    'day_of_month',
-    this.destroyRef
+  protected readonly webhookUrlError = computed(() =>
+    this.webhookForm.webhook_url().touched()
+      ? getFieldErrorKey(this.webhookForm.webhook_url().errors(), { pattern: 'discord.errors.invalidWebhookUrl' })
+      : ''
+  );
+  protected readonly messageContentError = computed(() =>
+    this.messageForm.content().touched() ? getFieldErrorKey(this.messageForm.content().errors()) : ''
+  );
+  protected readonly scheduleMessageError = computed(() =>
+    this.scheduleForm.message().touched() ? getFieldErrorKey(this.scheduleForm.message().errors()) : ''
+  );
+  protected readonly scheduleDayOfMonthError = computed(() =>
+    this.scheduleForm.day_of_month().touched() ? getFieldErrorKey(this.scheduleForm.day_of_month().errors()) : ''
   );
 
   /**
@@ -166,9 +201,9 @@ export class DiscordTabComponent implements OnInit {
    * rather than from a signal, and OnPush re-checks this component on every form input event.
    */
   protected get isScheduleFormValid(): boolean {
-    if (this.scheduleForm.invalid) return false;
-    if (this.scheduleForm.controls.frequency.value === 'weekly') {
-      return this.scheduleForm.controls.days_of_week.controls.some(control => control.value);
+    if (this.scheduleForm().invalid()) return false;
+    if (this.scheduleModel().frequency === 'weekly') {
+      return this.scheduleModel().days_of_week.some(checked => checked);
     }
     return true;
   }
@@ -206,13 +241,13 @@ export class DiscordTabComponent implements OnInit {
   protected startAdd(): void {
     this.editingWebhook.set(null);
     this.isAddingChannel.set(true);
-    this.webhookForm.reset({ channel_name: '', webhook_url: '', default_message: '' });
+    this.webhookModel.set({ channel_name: '', webhook_url: '', default_message: '' });
   }
 
   protected closeForm(): void {
     this.isAddingChannel.set(false);
     this.editingWebhook.set(null);
-    this.webhookForm.reset({ channel_name: '', webhook_url: '', default_message: '' });
+    this.webhookModel.set({ channel_name: '', webhook_url: '', default_message: '' });
   }
 
   protected async handleFormSubmit(): Promise<void> {
@@ -224,14 +259,18 @@ export class DiscordTabComponent implements OnInit {
   }
 
   protected async addWebhook(): Promise<void> {
-    if (this.webhookForm.invalid) return;
+    if (this.webhookForm().invalid()) {
+      this.webhookForm().markAsTouched();
+      return;
+    }
 
     this.isSubmittingWebhook.set(true);
     try {
+      const { channel_name, webhook_url, default_message } = this.webhookModel();
       const { error } = await this.discordService.createWebhook({
-        channel_name: this.webhookForm.value.channel_name.trim(),
-        webhook_url: this.webhookForm.value.webhook_url.trim(),
-        default_message: this.webhookForm.value.default_message?.trim() || null,
+        channel_name: channel_name.trim(),
+        webhook_url: webhook_url.trim(),
+        default_message: default_message?.trim() || null,
       });
       if (error) throw error;
 
@@ -248,7 +287,7 @@ export class DiscordTabComponent implements OnInit {
   protected startEdit(webhook: DiscordWebhook): void {
     this.isAddingChannel.set(false);
     this.editingWebhook.set(webhook);
-    this.webhookForm.patchValue({
+    this.webhookModel.set({
       channel_name: webhook.channel_name,
       webhook_url: webhook.webhook_url,
       default_message: webhook.default_message ?? '',
@@ -257,13 +296,17 @@ export class DiscordTabComponent implements OnInit {
 
   protected async saveEdit(): Promise<void> {
     const webhook = this.editingWebhook();
-    if (this.webhookForm.invalid || !webhook) return;
+    if (this.webhookForm().invalid() || !webhook) {
+      this.webhookForm().markAsTouched();
+      return;
+    }
 
     this.isUpdatingWebhook.set(true);
     try {
+      const { channel_name, default_message } = this.webhookModel();
       const { error } = await this.discordService.updateWebhook(webhook.id, {
-        channel_name: this.webhookForm.value.channel_name.trim(),
-        default_message: this.webhookForm.value.default_message?.trim() || null,
+        channel_name: channel_name.trim(),
+        default_message: default_message?.trim() || null,
       });
       if (error) throw error;
 
@@ -278,7 +321,7 @@ export class DiscordTabComponent implements OnInit {
   }
 
   protected quickSend(webhook: DiscordWebhook): void {
-    this.messageForm.patchValue({ webhook_id: webhook.id });
+    this.messageModel.update(current => ({ ...current, webhook_id: webhook.id }));
     this.onChannelSelected(webhook.id);
   }
 
@@ -304,7 +347,7 @@ export class DiscordTabComponent implements OnInit {
       }
       if (this.selectedWebhookId() === webhook.id) {
         this.selectedWebhookId.set('');
-        this.messageForm.patchValue({ webhook_id: '', content: '' });
+        this.messageModel.set({ webhook_id: '', content: '' });
       }
     } catch (error) {
       console.error('Error deleting webhook:', error);
@@ -316,17 +359,20 @@ export class DiscordTabComponent implements OnInit {
     this.selectedWebhookId.set(webhookId);
     const webhook = this.webhooks().find(w => w.id === webhookId);
     if (webhook?.default_message) {
-      this.messageForm.patchValue({ content: webhook.default_message });
-      this.messageForm.get('content')?.markAsDirty();
+      this.messageModel.update(current => ({ ...current, content: webhook.default_message ?? '' }));
+      this.messageForm.content().markAsTouched();
     } else {
-      this.messageForm.patchValue({ content: '' });
+      this.messageModel.update(current => ({ ...current, content: '' }));
     }
   }
 
   protected async sendMessage(): Promise<void> {
-    if (this.messageForm.invalid) return;
+    if (this.messageForm().invalid()) {
+      this.messageForm().markAsTouched();
+      return;
+    }
 
-    const { webhook_id, content } = this.messageForm.value as { webhook_id: string; content: string };
+    const { webhook_id, content } = this.messageModel();
     const webhook = this.webhooks().find(w => w.id === webhook_id);
     if (!webhook) return;
 
@@ -336,8 +382,7 @@ export class DiscordTabComponent implements OnInit {
       if (error) throw error;
 
       this.snackbarService.success(this.translate.instant('discord.messageSent'));
-      this.messageForm.patchValue({ content: webhook.default_message ?? '' });
-      this.messageForm.get('content')?.markAsPristine();
+      this.messageModel.update(current => ({ ...current, content: webhook.default_message ?? '' }));
     } catch (error) {
       console.error('Error sending discord message:', error);
       this.snackbarService.error(this.translate.instant('discord.messageSendFailed'));
@@ -359,29 +404,20 @@ export class DiscordTabComponent implements OnInit {
   }
 
   private resetScheduleForm(): void {
-    this.scheduleForm.reset({
-      webhook_id: '',
-      message: '',
-      frequency: 'daily',
-      day_of_month: DEFAULT_DAY_OF_MONTH,
-      hour_utc: DEFAULT_HOUR_UTC,
-    });
-    this.scheduleForm.controls.days_of_week.controls.forEach(control => control.setValue(false));
+    this.scheduleModel.set(emptyScheduleModel());
   }
 
   protected startEditSchedule(schedule: DiscordScheduledMessage): void {
     this.isAddingSchedule.set(false);
     this.editingSchedule.set(schedule);
-    this.scheduleForm.patchValue({
+    const selectedDays = new Set(schedule.days_of_week ?? []);
+    this.scheduleModel.set({
       webhook_id: schedule.webhook_id,
       message: schedule.message,
       frequency: schedule.frequency,
+      days_of_week: WEEK_DAYS.map(day => selectedDays.has(day.iso)),
       day_of_month: schedule.day_of_month ?? DEFAULT_DAY_OF_MONTH,
       hour_utc: schedule.hour_utc,
-    });
-    const selectedDays = new Set(schedule.days_of_week ?? []);
-    this.scheduleForm.controls.days_of_week.controls.forEach((control, index) => {
-      control.setValue(selectedDays.has(WEEK_DAYS[index].iso));
     });
   }
 
@@ -438,7 +474,7 @@ export class DiscordTabComponent implements OnInit {
     day_of_month: number | null;
     hour_utc: number;
   } {
-    const value = this.scheduleForm.getRawValue();
+    const value = this.scheduleModel();
     const frequency = value.frequency;
 
     return {

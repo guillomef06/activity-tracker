@@ -429,8 +429,10 @@ export class GuideService {
       .trim()
       .replace(/[\s-]+/g, '-') // collapse spaces/hyphens to single hyphen
       .slice(0, 80)
-      .replace(/-+$/, ''); // trim trailing hyphens
+      .replace(/-$/, ''); // trim trailing hyphen (consecutive hyphens already collapsed above)
 
+    // Non-cryptographic use: only needs to reduce accidental slug collisions, not resist prediction.
+    // eslint-disable-next-line sonarjs/pseudo-random
     const suffix = Math.floor(Math.random() * 0xffff)
       .toString(16)
       .padStart(4, '0');

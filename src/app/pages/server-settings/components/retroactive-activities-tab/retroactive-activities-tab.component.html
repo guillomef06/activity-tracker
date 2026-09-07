@@ -17,12 +17,12 @@
 
   <mat-card class="form-card">
     <mat-card-content>
-      <form [formGroup]="retroactiveForm" (ngSubmit)="onSubmit()">
+      <form (submit)="$event.preventDefault(); onSubmit()">
         <!-- Member Selection -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>person</mat-icon>
           <mat-label>{{ 'server.retroactive.selectMember' | translate }}</mat-label>
-          <mat-select formControlName="member">
+          <mat-select [formField]="retroactiveForm.member">
             @for (member of members(); track member.id) {
               <mat-option [value]="member.id">
                 {{ member.display_name || member.username }}
@@ -39,7 +39,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>calendar_today</mat-icon>
           <mat-label>{{ 'server.retroactive.selectWeek' | translate }}</mat-label>
-          <mat-select formControlName="week">
+          <mat-select [formField]="retroactiveForm.week">
             @for (week of weekOptions(); track week.value) {
               <mat-option [value]="week.value"> {{ week.label }} - {{ week.dateRange }} </mat-option>
             }
@@ -51,10 +51,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-icon matIconPrefix>category</mat-icon>
           <mat-label>{{ 'server.retroactive.selectActivity' | translate }}</mat-label>
-          <mat-select
-            formControlName="activity"
-            [disabled]="availableActivities().length === 0 || isBlockedForSelectedWeek()"
-          >
+          <mat-select [formField]="retroactiveForm.activity">
             @if (availableActivities().length === 0) {
               <mat-option disabled>
                 {{ 'server.retroactive.noActivities' | translate }}
@@ -75,7 +72,7 @@
         <!-- Position Input OR Participation Toggle -->
         @if (isParticipationMode()) {
           <div class="participation-section">
-            <mat-slide-toggle formControlName="participated">
+            <mat-slide-toggle [formField]="retroactiveForm.participated">
               {{ 'activityInput.participated' | translate }}
             </mat-slide-toggle>
           </div>
@@ -83,13 +80,7 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-icon matIconPrefix>emoji_events</mat-icon>
             <mat-label>{{ 'server.retroactive.position' | translate }}</mat-label>
-            <input
-              matInput
-              type="number"
-              formControlName="position"
-              [attr.disabled]="isBlockedForSelectedWeek() ? true : null"
-              min="1"
-            />
+            <input matInput type="number" [formField]="retroactiveForm.position" />
             <mat-hint>{{ 'server.retroactive.positionHint' | translate }}</mat-hint>
             @if (positionError()) {
               <mat-error>{{ positionError() | translate }}</mat-error>

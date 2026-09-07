@@ -4,11 +4,11 @@
     <mat-card-title>{{ 'server.settings.serverInfo' | translate }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="serverForm" (ngSubmit)="updateServer()">
+    <form (submit)="$event.preventDefault(); updateServer()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-icon matIconPrefix>groups</mat-icon>
         <mat-label>{{ 'server.settings.serverName' | translate }}</mat-label>
-        <input matInput formControlName="name" type="text" />
+        <input matInput [formField]="serverForm.name" type="text" />
         @if (nameError()) {
           <mat-error>{{ nameError() | translate }}</mat-error>
         }
@@ -17,7 +17,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-icon matIconPrefix>tag</mat-icon>
         <mat-label>{{ 'server.settings.serverTag' | translate }}</mat-label>
-        <input matInput formControlName="tag" type="text" maxlength="3" />
+        <input matInput [formField]="serverForm.tag" type="text" />
         <mat-hint>{{ 'server.settings.serverTagHint' | translate }}</mat-hint>
         @if (tagError()) {
           <mat-error>{{ tagError() | translate }}</mat-error>
@@ -30,7 +30,7 @@
         [text]="'server.settings.updateName' | translate"
         [loadingText]="'common.saving' | translate"
         [submitting]="isServerSubmitting()"
-        [disabled]="serverForm.invalid"
+        [disabled]="serverForm().invalid()"
       />
     </form>
   </mat-card-content>
@@ -43,13 +43,13 @@
     <mat-card-subtitle>{{ 'server.settings.discordInvite.subtitle' | translate }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="discordInviteForm" (ngSubmit)="saveDiscordInvite()">
+    <form (submit)="$event.preventDefault(); saveDiscordInvite()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-icon matIconPrefix>link</mat-icon>
         <mat-label>{{ 'server.settings.discordInvite.label' | translate }}</mat-label>
         <input
           matInput
-          formControlName="discord_invite_url"
+          [formField]="discordInviteForm.discord_invite_url"
           type="url"
           [placeholder]="'server.settings.discordInvite.placeholder' | translate"
         />
@@ -65,7 +65,7 @@
         [text]="'server.settings.updateName' | translate"
         [loadingText]="'common.saving' | translate"
         [submitting]="isDiscordInviteSubmitting()"
-        [disabled]="discordInviteForm.invalid"
+        [disabled]="discordInviteForm().invalid()"
       />
     </form>
   </mat-card-content>
@@ -78,15 +78,14 @@
     <mat-card-subtitle>{{ 'server.settings.externalLink.subtitle' | translate }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="externalLinkForm" (ngSubmit)="saveExternalLink()">
+    <form (submit)="$event.preventDefault(); saveExternalLink()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-icon matIconPrefix>label</mat-icon>
         <mat-label>{{ 'server.settings.externalLink.labelField' | translate }}</mat-label>
         <input
           matInput
-          formControlName="label"
+          [formField]="externalLinkForm.label"
           type="text"
-          maxlength="50"
           [placeholder]="'server.settings.externalLink.labelPlaceholder' | translate"
         />
         @if (externalLinkLabelError()) {
@@ -99,7 +98,7 @@
         <mat-label>{{ 'server.settings.externalLink.urlField' | translate }}</mat-label>
         <input
           matInput
-          formControlName="url"
+          [formField]="externalLinkForm.url"
           type="url"
           [placeholder]="'server.settings.externalLink.urlPlaceholder' | translate"
         />
@@ -115,7 +114,7 @@
         [text]="'server.settings.updateName' | translate"
         [loadingText]="'common.saving' | translate"
         [submitting]="isExternalLinkSubmitting()"
-        [disabled]="externalLinkForm.invalid"
+        [disabled]="externalLinkForm().invalid()"
       />
     </form>
   </mat-card-content>
@@ -127,11 +126,11 @@
     <mat-card-title>{{ 'server.settings.invitationManagement' | translate }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="invitationForm" (ngSubmit)="createInvitation()" class="invitation-form">
+    <form (submit)="$event.preventDefault(); createInvitation()" class="invitation-form">
       <mat-form-field appearance="outline">
         <mat-icon matIconPrefix>schedule</mat-icon>
         <mat-label>{{ 'server.settings.invitationDuration' | translate }}</mat-label>
-        <input matInput formControlName="durationDays" type="number" min="1" max="365" />
+        <input matInput [formField]="invitationForm.durationDays" type="number" />
         <mat-hint>{{ 'server.settings.durationHint' | translate }}</mat-hint>
         @if (durationDaysError()) {
           <mat-error>{{ durationDaysError() | translate }}</mat-error>
@@ -144,7 +143,7 @@
         [text]="'server.settings.createInvitation' | translate"
         [loadingText]="'common.saving' | translate"
         [submitting]="isInvitationSubmitting()"
-        [disabled]="invitationForm.invalid"
+        [disabled]="invitationForm().invalid()"
         buttonClass="create-invitation-btn"
       />
     </form>

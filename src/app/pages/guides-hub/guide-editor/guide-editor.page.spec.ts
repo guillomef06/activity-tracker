@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { GuideEditorPage } from './guide-editor.page';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, Router } from '@angular/router';
@@ -69,6 +70,7 @@ describe('GuideEditorPage', () => {
     await TestBed.configureTestingModule({
       imports: [GuideEditorPage, TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         provideAnimationsAsync(),
         provideRouter([]),
         { provide: GuideService, useValue: guideServiceSpy },
@@ -88,6 +90,14 @@ describe('GuideEditorPage', () => {
     fixture.detectChanges();
   }
 
+  /** Sets the edit-mode guide id and waits for the guide resource to resolve. */
+  async function loadGuideForEdit(id: string): Promise<void> {
+    component['guideId'].set(id);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+  }
+
   afterEach(() => TestBed.resetTestingModule());
 
   it('should create', async () => {
@@ -102,25 +112,23 @@ describe('GuideEditorPage', () => {
 
   it('should have invalid basic form initially when title is empty', async () => {
     await createComponent();
-    expect(component['basicForm'].invalid).toBe(true);
+    expect(component['guideForm'].basic().invalid()).toBe(true);
   });
 
   it('should show formation slots when category is formation', async () => {
     await createComponent();
-    component['basicForm'].patchValue({ category: 'formation' });
+    component['formModel'].update(m => ({ ...m, basic: { ...m.basic, category: 'formation' } }));
     fixture.detectChanges();
     expect(component['isFormationCategory']()).toBe(true);
   });
 
-  describe('loadGuideForEdit — unauthorized access', () => {
+  describe('guide resource — loading for edit', () => {
     it('should redirect and show error when current user is not the guide author', async () => {
       // Arrange — guide belongs to 'u1', logged-in user is 'u2'
       await createComponent({ getGuideById: vi.fn().mockResolvedValue({ ...MOCK_GUIDE, author_id: 'u1' }) }, 'u2');
-      component['guideId'].set('g1');
-      component['isEditMode'].set(true);
 
       // Act
-      await component['loadGuideForEdit']('g1');
+      await loadGuideForEdit('g1');
 
       // Assert
       expect(snackbarSpy.error).toHaveBeenCalled();
@@ -132,11 +140,11 @@ describe('GuideEditorPage', () => {
       await createComponent({ getGuideById: vi.fn().mockResolvedValue({ ...MOCK_GUIDE, author_id: 'u1' }) }, 'u1');
 
       // Act
-      await component['loadGuideForEdit']('g1');
+      await loadGuideForEdit('g1');
 
       // Assert
       expect(snackbarSpy.error).not.toHaveBeenCalled();
-      expect(component['basicForm'].get('title')?.value).toBe('Test guide');
+      expect(component['formModel']().basic.title).toBe('Test guide');
     });
 
     it('should redirect with not-found error when guide does not exist', async () => {
@@ -144,11 +152,33 @@ describe('GuideEditorPage', () => {
       await createComponent({ getGuideById: vi.fn().mockResolvedValue(null) });
 
       // Act
-      await component['loadGuideForEdit']('unknown-id');
+      await loadGuideForEdit('unknown-id');
 
       // Assert
       expect(snackbarSpy.error).toHaveBeenCalled();
       expect(routerSpy.navigate).toHaveBeenCalledWith(['/app/guides']);
+    });
+  });
+
+  describe('save', () => {
+    it('should not save when the basic form is invalid', async () => {
+      await createComponent();
+
+      await component['save']();
+
+      expect(guideServiceSpy.createGuide).not.toHaveBeenCalled();
+    });
+
+    it('should create a new guide when the form is valid', async () => {
+      await createComponent();
+      component['formModel'].update(m => ({ ...m, basic: { title: 'My guide', category: 'general' } }));
+
+      await component['save']();
+
+      expect(guideServiceSpy.createGuide).toHaveBeenCalledWith(
+        expect.objectContaining({ title: 'My guide', category: 'general' })
+      );
+      expect(snackbarSpy.success).toHaveBeenCalled();
     });
   });
 });

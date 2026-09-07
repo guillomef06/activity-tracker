@@ -151,6 +151,25 @@
     font-size: 0.8rem;
   }
 
+  &.registration-row {
+    flex-wrap: wrap;
+  }
+
+  .desired-position {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+  }
+
+  .registration-comment {
+    flex-basis: 100%;
+    padding-left: 1.75rem;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
   mat-chip {
     font-size: 0.7rem;
     height: 1.4rem;

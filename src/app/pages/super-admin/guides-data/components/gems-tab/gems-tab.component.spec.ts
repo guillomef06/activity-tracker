@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -44,6 +45,7 @@ describe('GemsTabComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GemsTabComponent, TranslateModule.forRoot()],
       providers: [
+        provideZonelessChangeDetection(),
         provideNoopAnimations(),
         { provide: GuideAdminService, useValue: guideAdminSpy },
         { provide: SnackbarService, useValue: snackbarSpy },
@@ -76,8 +78,12 @@ describe('GemsTabComponent', () => {
     expect(component['filteredGems']()).toEqual([tacticGem]);
   });
 
+  it('should be invalid when the add form name is empty', () => {
+    expect(component['addForm']().valid()).toBe(false);
+  });
+
   it('should add a gem', async () => {
-    component['addForm'].setValue({ name: 'Fire Gem', type: 'hero' });
+    component['addModel'].set({ name: 'Fire Gem', type: 'hero' });
 
     await component['add']();
 
@@ -87,7 +93,7 @@ describe('GemsTabComponent', () => {
 
   it('should save edited gem', async () => {
     component['startEdit'](mockGem);
-    component['editForm'].patchValue({ name: 'Updated', type: 'tactics' });
+    component['editModel'].set({ name: 'Updated', type: 'tactics' });
 
     await component['save'](mockGem);
 

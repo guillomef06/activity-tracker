@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { SuperAdminServersPage } from './super-admin-servers.page';
 import { SupabaseService } from '@app/core/services/supabase.service';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -48,7 +48,7 @@ describe('SuperAdminServersPage', () => {
       providers: [
         { provide: SupabaseService, useValue: supabaseServiceSpy },
         provideRouter([]),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideAnimations(),
         provideZonelessChangeDetection(),
       ],
@@ -63,10 +63,48 @@ describe('SuperAdminServersPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have edit form', () => {
+  it('should have an edit form with name and tag fields', () => {
     expect(component['editForm']).toBeDefined();
-    expect(component['editForm'].get('id')).toBeDefined();
-    expect(component['editForm'].get('name')).toBeDefined();
+    expect(component['editForm'].name).toBeDefined();
+    expect(component['editForm'].tag).toBeDefined();
+  });
+
+  it('should be invalid when name is empty', () => {
+    expect(component['editForm']().valid()).toBe(false);
+  });
+
+  it('should become valid once a name of sufficient length is set', () => {
+    component['editModel'].set({ name: 'Realm of Kings', tag: '' });
+
+    expect(component['editForm']().valid()).toBe(true);
+  });
+
+  it('should require the name to be at least 3 characters', () => {
+    component['editModel'].set({ name: 'Ab', tag: '' });
+
+    expect(
+      component['editForm']
+        .name()
+        .errors()
+        .some(error => error.kind === 'minLength')
+    ).toBe(true);
+  });
+
+  it('should reject a tag that is not exactly 3 characters', () => {
+    component['editModel'].set({ name: 'Realm of Kings', tag: 'AB' });
+
+    expect(
+      component['editForm']
+        .tag()
+        .errors()
+        .some(error => error.kind === 'minLength')
+    ).toBe(true);
+  });
+
+  it('should accept a 3-character tag', () => {
+    component['editModel'].set({ name: 'Realm of Kings', tag: 'RoK' });
+
+    expect(component['editForm']().valid()).toBe(true);
   });
 
   it('should display correct columns', () => {
