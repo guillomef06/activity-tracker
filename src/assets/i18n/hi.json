@@ -435,7 +435,6 @@
       "activityTypes": "गतिविधि प्रकार",
       "legionAlwaysAvailable": "सेना हमेशा उपलब्ध",
       "legionAlwaysAvailableHint": "सेना हर सप्ताह अंतर्निहित है और इसे हटाया नहीं जा सकता",
-      "nameRequired": "नाम आवश्यक है (अधिकतम 100 वर्ण)",
       "createFailed": "सीज़न बनाने में विफल",
       "loadFailed": "सीज़न लोड करने में विफल",
       "lockedTooltip": "इस सीज़न में गतिविधि दर्ज की जा चुकी है और इसकी संरचना लॉक है",
@@ -931,7 +930,8 @@
         "title": "पंजीकरण",
         "empty": "अभी तक कोई पंजीकरण नहीं।",
         "position": "वांछित स्थान",
-        "noPosition": "निर्दिष्ट नहीं"
+        "noPosition": "निर्दिष्ट नहीं",
+        "totalScore": "कुल स्कोर"
       },
       "selection": {
         "title": "चयन",

@@ -14,7 +14,7 @@ const mockUserScores: UserScore[] = [
   {
     userId: 'u1',
     displayName: 'Alice',
-    sixWeekTotal: 120,
+    totalScore: 120,
     weeklyScores: [
       {
         weekStart: new Date('2024-01-01'),

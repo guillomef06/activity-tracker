@@ -435,7 +435,6 @@
       "activityTypes": "활동 유형",
       "legionAlwaysAvailable": "군단은 항상 사용 가능",
       "legionAlwaysAvailableHint": "군단은 매주 암묵적으로 포함되며 제거할 수 없습니다",
-      "nameRequired": "이름은 필수입니다 (최대 100자)",
       "createFailed": "시즌 생성 실패",
       "loadFailed": "시즌 로드 실패",
       "lockedTooltip": "이 시즌에는 기록된 활동이 있어 구조가 잠겨 있습니다",
@@ -931,7 +930,8 @@
         "title": "등록 현황",
         "empty": "아직 등록자가 없습니다.",
         "position": "희망 순위",
-        "noPosition": "지정되지 않음"
+        "noPosition": "지정되지 않음",
+        "totalScore": "총 점수"
       },
       "selection": {
         "title": "선발",

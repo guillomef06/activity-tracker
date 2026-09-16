@@ -435,7 +435,6 @@
       "activityTypes": "Jenis aktivitas",
       "legionAlwaysAvailable": "Legion selalu tersedia",
       "legionAlwaysAvailableHint": "Legion tersirat setiap minggu dan tidak dapat dihapus",
-      "nameRequired": "Nama wajib diisi (maksimal 100 karakter)",
       "createFailed": "Gagal membuat musim",
       "loadFailed": "Gagal memuat musim",
       "lockedTooltip": "Musim ini memiliki aktivitas yang tercatat dan strukturnya terkunci",
@@ -931,7 +930,8 @@
         "title": "Pendaftaran",
         "empty": "Belum ada pendaftaran.",
         "position": "Posisi yang diinginkan",
-        "noPosition": "Belum ditentukan"
+        "noPosition": "Belum ditentukan",
+        "totalScore": "Skor total"
       },
       "selection": {
         "title": "Seleksi",
