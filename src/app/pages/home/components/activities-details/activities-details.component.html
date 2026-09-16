@@ -23,7 +23,7 @@
               -{{ userScore.mgDeduction }}
             </span>
           }
-          <mat-chip class="score-chip">{{ userScore.sixWeekTotal }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
+          <mat-chip class="score-chip">{{ userScore.totalScore }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
           <button mat-icon-button class="expand-button">
             <mat-icon>{{ selectedUserId() === userScore.userId ? 'expand_less' : 'expand_more' }}</mat-icon>
           </button>

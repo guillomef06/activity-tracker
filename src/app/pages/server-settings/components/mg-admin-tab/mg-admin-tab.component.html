@@ -155,9 +155,11 @@
             <div class="registration-list">
               @for (reg of registrationRows(); track trackByReg($index, reg)) {
                 <div class="list-row registration-row">
-                  <mat-icon class="list-icon">person</mat-icon>
-                  <span>{{ reg.user_profiles.display_name }}</span>
-                  <span class="username">{{ reg.user_profiles.username }}</span>
+                  <span class="displayname">{{ reg.user_profiles.display_name }}</span>
+                  <span class="total-score">
+                    {{ 'mg.admin.registrations.totalScore' | translate }}:
+                    {{ reg.totalScore ?? 0 }}
+                  </span>
                   <span class="desired-position">
                     {{ 'mg.admin.registrations.position' | translate }}:
                     {{ reg.positionLabel ?? ('mg.admin.registrations.noPosition' | translate) }}

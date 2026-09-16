@@ -435,7 +435,6 @@
       "activityTypes": "جۆرەکانی چالاکی",
       "legionAlwaysAvailable": "لەشکر هەمیشە بەردەستە",
       "legionAlwaysAvailableHint": "لەشکر هەموو هەفتەیەک بە شێوەیەکی نادیار بەردەستە و ناتوانرێت لابردرێت",
-      "nameRequired": "ناو پێویستە (زۆرترین 100 پیت)",
       "createFailed": "دروستکردنی وەرز سەرکەوتوو نەبوو",
       "loadFailed": "بارکردنی وەرزەکان سەرکەوتوو نەبوو",
       "lockedTooltip": "ئەم وەرزە چالاکی تۆمارکراوی هەیە و پێکهاتەکەی قوفڵدراوە",
@@ -931,7 +930,8 @@
         "title": "Tescîl",
         "empty": "Hîna tescîl tunene.",
         "position": "Pozîsyona xwestî",
-        "noPosition": "Nehatiye diyarkirin"
+        "noPosition": "Nehatiye diyarkirin",
+        "totalScore": "Xala giştî"
       },
       "selection": {
         "title": "Hilbijartî",

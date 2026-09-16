@@ -435,7 +435,6 @@
       "activityTypes": "活动类型",
       "legionAlwaysAvailable": "军团始终可用",
       "legionAlwaysAvailableHint": "军团每周都隐式存在，无法移除",
-      "nameRequired": "名称为必填项（最多 100 个字符）",
       "createFailed": "创建赛季失败",
       "loadFailed": "加载赛季失败",
       "lockedTooltip": "该赛季已记录活动，其结构已锁定",
@@ -931,7 +930,8 @@
         "title": "报名情况",
         "empty": "暂无报名。",
         "position": "期望位置",
-        "noPosition": "未填写"
+        "noPosition": "未填写",
+        "totalScore": "总积分"
       },
       "selection": {
         "title": "入选名单",

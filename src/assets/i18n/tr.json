@@ -435,7 +435,6 @@
       "activityTypes": "Etkinlik türleri",
       "legionAlwaysAvailable": "Lejyon her zaman mevcut",
       "legionAlwaysAvailableHint": "Lejyon her hafta zımnen mevcuttur ve kaldırılamaz",
-      "nameRequired": "İsim zorunludur (en fazla 100 karakter)",
       "createFailed": "Sezon oluşturulamadı",
       "loadFailed": "Sezonlar yüklenemedi",
       "lockedTooltip": "Bu sezonda kaydedilmiş etkinlik var ve yapısı kilitli",
@@ -931,7 +930,8 @@
         "title": "Kayıtlar",
         "empty": "Henüz kayıt yok.",
         "position": "İstenen pozisyon",
-        "noPosition": "Belirtilmemiş"
+        "noPosition": "Belirtilmemiş",
+        "totalScore": "Toplam puan"
       },
       "selection": {
         "title": "Seçim",

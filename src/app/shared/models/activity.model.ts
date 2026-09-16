@@ -69,7 +69,7 @@ export interface UserScore {
   userId: string;
   displayName: string;
   weeklyScores: WeeklyScore[];
-  sixWeekTotal: number;
+  totalScore: number;
   /** Points deducted for MG event selections (DKP). Undefined/0 = no deduction. */
   mgDeduction?: number;
 }
