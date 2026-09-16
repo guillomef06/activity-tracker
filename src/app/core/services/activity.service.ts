@@ -336,13 +336,13 @@ export class ActivityService {
     userMap.forEach((activities, userId) => {
       const displayName = activities[0]?.displayName || 'Unknown';
       const weeklyScores = this.calculateWeeklyScores(activities, tiebreaker, scoringWeeks);
-      const sixWeekTotal = weeklyScores.reduce((sum, week) => sum + week.totalPoints, 0);
+      const totalScore = weeklyScores.reduce((sum, week) => sum + week.totalPoints, 0);
 
       userScores.push({
         userId,
         displayName,
         weeklyScores,
-        sixWeekTotal,
+        totalScore,
       });
     });
 
@@ -396,13 +396,13 @@ export class ActivityService {
     return scores
       .map(s => {
         const mgDeduction = deductions.get(s.userId) ?? 0;
-        return { ...s, mgDeduction, sixWeekTotal: s.sixWeekTotal - mgDeduction };
+        return { ...s, mgDeduction, totalScore: s.totalScore - mgDeduction };
       })
       .sort((a, b) => this.compareByScoreDesc(a, b));
   }
 
   private compareByScoreDesc(a: UserScore, b: UserScore): number {
-    const diff = b.sixWeekTotal - a.sixWeekTotal;
+    const diff = b.totalScore - a.totalScore;
     if (diff !== 0) return diff;
 
     const tiebreaker = this.serverService.server()?.tiebreaker_activity_type;

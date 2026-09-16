@@ -122,7 +122,7 @@ describe('ActivityService', () => {
   });
 
   describe('getUserScores() tiebreaker', () => {
-    it('should exclude tiebreaker activity points from totalPoints and sixWeekTotal', () => {
+    it('should exclude tiebreaker activity points from totalPoints and totalScore', () => {
       // Arrange
       serverServiceMock.server.set({
         id: '1',
@@ -167,7 +167,7 @@ describe('ActivityService', () => {
 
       // Assert — stellar glory (10 pts) must be excluded from totals
       const alice = scores.find(u => u.userId === 'a')!;
-      expect(alice.sixWeekTotal).toBe(20);
+      expect(alice.totalScore).toBe(20);
       expect(alice.weeklyScores.find(w => w.activities.length > 0)?.totalPoints).toBe(20);
       // The tiebreaker activity is still present in the activities list (for display)
       expect(alice.weeklyScores.find(w => w.activities.length > 0)?.activities).toHaveLength(2);
@@ -206,14 +206,14 @@ describe('ActivityService', () => {
 
       // Assert — all points counted
       const alice = scores.find(u => u.userId === 'a')!;
-      expect(alice.sixWeekTotal).toBe(30);
+      expect(alice.totalScore).toBe(30);
     });
 
-    it('should sort by tiebreaker activity points when sixWeekTotal is equal', () => {
+    it('should sort by tiebreaker activity points when totalScore is equal', () => {
       const userA: UserScore = {
         userId: 'a',
         displayName: 'Alice',
-        sixWeekTotal: 30,
+        totalScore: 30,
         weeklyScores: makeWeeklyScores([
           [{ activityType: 'legion', points: 20, position: 1, userId: 'a' }],
           [{ activityType: 'stellar glory', points: 10, position: null, userId: 'a' }],
@@ -222,7 +222,7 @@ describe('ActivityService', () => {
       const userB: UserScore = {
         userId: 'b',
         displayName: 'Bob',
-        sixWeekTotal: 30,
+        totalScore: 30,
         weeklyScores: makeWeeklyScores([
           [{ activityType: 'legion', points: 10, position: 3, userId: 'b' }],
           [{ activityType: 'stellar glory', points: 20, position: null, userId: 'b' }],
@@ -246,7 +246,7 @@ describe('ActivityService', () => {
 
       // Replicate the sort logic from ActivityService.getUserScores()
       const sorted = [userA, userB].sort((a, b) => {
-        const diff = b.sixWeekTotal - a.sixWeekTotal;
+        const diff = b.totalScore - a.totalScore;
         if (diff !== 0) return diff;
 
         const tiebreaker = serverServiceMock.server()?.tiebreaker_activity_type ?? null;
@@ -270,11 +270,11 @@ describe('ActivityService', () => {
     it('should keep original order when no tiebreaker is configured', () => {
       serverServiceMock.server.set(null);
 
-      const userA: UserScore = { userId: 'a', displayName: 'Alice', sixWeekTotal: 30, weeklyScores: [] };
-      const userB: UserScore = { userId: 'b', displayName: 'Bob', sixWeekTotal: 30, weeklyScores: [] };
+      const userA: UserScore = { userId: 'a', displayName: 'Alice', totalScore: 30, weeklyScores: [] };
+      const userB: UserScore = { userId: 'b', displayName: 'Bob', totalScore: 30, weeklyScores: [] };
 
       const sorted = [userA, userB].sort((a, b) => {
-        const diff = b.sixWeekTotal - a.sixWeekTotal;
+        const diff = b.totalScore - a.totalScore;
         if (diff !== 0) return diff;
 
         const tiebreaker = serverServiceMock.server()?.tiebreaker_activity_type ?? null;
@@ -289,11 +289,11 @@ describe('ActivityService', () => {
   });
 
   describe('applyMgDeductions', () => {
-    it('should subtract the deduction from sixWeekTotal and expose it as mgDeduction', () => {
+    it('should subtract the deduction from totalScore and expose it as mgDeduction', () => {
       // Arrange
       const scores: UserScore[] = [
-        { userId: 'a', displayName: 'Alice', sixWeekTotal: 100, weeklyScores: [] },
-        { userId: 'b', displayName: 'Bob', sixWeekTotal: 50, weeklyScores: [] },
+        { userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] },
+        { userId: 'b', displayName: 'Bob', totalScore: 50, weeklyScores: [] },
       ];
       const deductions = new Map([['a', 30]]);
 
@@ -303,17 +303,17 @@ describe('ActivityService', () => {
       // Assert
       const alice = result.find(u => u.userId === 'a')!;
       const bob = result.find(u => u.userId === 'b')!;
-      expect(alice.sixWeekTotal).toBe(70);
+      expect(alice.totalScore).toBe(70);
       expect(alice.mgDeduction).toBe(30);
-      expect(bob.sixWeekTotal).toBe(50);
+      expect(bob.totalScore).toBe(50);
       expect(bob.mgDeduction).toBe(0);
     });
 
     it('should re-sort when a deduction changes the ranking', () => {
       // Arrange
       const scores: UserScore[] = [
-        { userId: 'a', displayName: 'Alice', sixWeekTotal: 100, weeklyScores: [] },
-        { userId: 'b', displayName: 'Bob', sixWeekTotal: 90, weeklyScores: [] },
+        { userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] },
+        { userId: 'b', displayName: 'Bob', totalScore: 90, weeklyScores: [] },
       ];
       const deductions = new Map([['a', 50]]); // Alice drops to 50, below Bob's 90
 
@@ -327,13 +327,13 @@ describe('ActivityService', () => {
 
     it('should leave users absent from the deductions map untouched', () => {
       // Arrange
-      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', sixWeekTotal: 100, weeklyScores: [] }];
+      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] }];
 
       // Act
       const result = service.applyMgDeductions(scores, new Map());
 
       // Assert
-      expect(result[0].sixWeekTotal).toBe(100);
+      expect(result[0].totalScore).toBe(100);
       expect(result[0].mgDeduction).toBe(0);
     });
   });

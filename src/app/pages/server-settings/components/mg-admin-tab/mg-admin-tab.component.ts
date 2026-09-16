@@ -47,9 +47,10 @@ interface SlotConfigFormModel {
   rows: MgSlotRow[];
 }
 
-/** A registration row enriched with its precomputed desired-position rank label. */
+/** A registration row enriched with its precomputed desired-position rank label and total score. */
 interface MgRegistrationRow extends MgRegistrationWithUser {
   positionLabel: string | null;
+  totalScore: number | null;
 }
 
 @Component({
@@ -144,16 +145,24 @@ export class MgAdminTabComponent implements OnInit {
 
   protected readonly ffaCount = computed(() => this.currentSelection().filter(s => s.selection_type === 'ffa').length);
 
+  /** userId -> current leaderboard total score, for enriching registrationRows below. */
+  private readonly totalScoreByUserId = computed<Map<string, number>>(
+    () => new Map(this.activityService.getUserScores().map(us => [us.userId, us.totalScore]))
+  );
+
   /**
-   * Registrations enriched with a precomputed rank label, so the template never needs to
-   * call a method (project convention: no function calls in templates). `positionLabel` is
-   * null for pre-existing registrations that predate desired_slot_order (see
-   * supabase/41-mg-registration-position-comment.sql) — the template falls back gracefully.
+   * Registrations enriched with a precomputed rank label and total score, so the template
+   * never needs to call a method (project convention: no function calls in templates).
+   * `positionLabel` is null for pre-existing registrations that predate desired_slot_order
+   * (see supabase/41-mg-registration-position-comment.sql) — the template falls back
+   * gracefully. `totalScore` is null when the user has no activity in the current scoring
+   * window (buildUserScores only includes users with recorded activities).
    */
   protected readonly registrationRows = computed<MgRegistrationRow[]>(() =>
     this.registrations().map(reg => ({
       ...reg,
       positionLabel: MG_SLOT_DEFAULTS.find(slot => slot.slotOrder === reg.desired_slot_order)?.rankLabel ?? null,
+      totalScore: this.totalScoreByUserId().get(reg.user_id) ?? null,
     }))
   );
 
@@ -263,7 +272,7 @@ export class MgAdminTabComponent implements OnInit {
     const scores: MgLeaderboardEntry[] = this.activityService.getUserScores().map(us => ({
       user_id: us.userId,
       display_name: us.displayName,
-      total_points: us.sixWeekTotal,
+      total_points: us.totalScore,
     }));
 
     const payloads = this.mgEventService.generateAutoSelectionPayload(

@@ -435,7 +435,6 @@
       "activityTypes": "Tipi di attività",
       "legionAlwaysAvailable": "Legione sempre disponibile",
       "legionAlwaysAvailableHint": "La Legione è implicita ogni settimana e non può essere rimossa",
-      "nameRequired": "Il nome è obbligatorio (massimo 100 caratteri)",
       "createFailed": "Creazione della stagione non riuscita",
       "loadFailed": "Caricamento delle stagioni non riuscito",
       "lockedTooltip": "Questa stagione ha attività registrate e la sua struttura è bloccata",
@@ -931,7 +930,8 @@
         "title": "Iscrizioni",
         "empty": "Nessuna iscrizione al momento.",
         "position": "Posizione desiderata",
-        "noPosition": "Non specificata"
+        "noPosition": "Non specificata",
+        "totalScore": "Punteggio totale"
       },
       "selection": {
         "title": "Selezione",

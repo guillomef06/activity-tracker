@@ -435,7 +435,6 @@
       "activityTypes": "Activity types",
       "legionAlwaysAvailable": "Legion always available",
       "legionAlwaysAvailableHint": "Legion is implicit every week and cannot be removed",
-      "nameRequired": "Name is required (max 100 characters)",
       "createFailed": "Failed to create season",
       "loadFailed": "Failed to load seasons",
       "lockedTooltip": "This season has logged activity and its structure is locked",
@@ -598,7 +597,8 @@
         "title": "Registrations",
         "empty": "No registrations yet.",
         "position": "Desired position",
-        "noPosition": "Not specified"
+        "noPosition": "Not specified",
+        "totalScore": "Total score"
       },
       "selection": {
         "title": "Selection",

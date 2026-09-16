@@ -268,8 +268,12 @@ describe('MgAdminTabComponent', () => {
       user_profiles: { display_name: 'Alice', username: 'alice' },
     });
 
-    const getRegistrationRows = (): { positionLabel: string | null }[] =>
-      (component as unknown as { registrationRows: () => { positionLabel: string | null }[] }).registrationRows();
+    const getRegistrationRows = (): { positionLabel: string | null; totalScore: number | null }[] =>
+      (
+        component as unknown as {
+          registrationRows: () => { positionLabel: string | null; totalScore: number | null }[];
+        }
+      ).registrationRows();
 
     it('should resolve a known slot_order to its rank label', () => {
       (component as unknown as { registrations: { set: (v: unknown[]) => void } }).registrations.set([
@@ -297,6 +301,24 @@ describe('MgAdminTabComponent', () => {
         makeRegistration(99),
       ]);
       expect(getRegistrationRows()[0].positionLabel).toBeNull();
+    });
+
+    it("should resolve the registrant's total score from activityService.getUserScores()", () => {
+      mockActivityService.getUserScores.mockReturnValueOnce([
+        { userId: 'user-1', displayName: 'Alice', weeklyScores: [], totalScore: 42 },
+      ]);
+      (component as unknown as { registrations: { set: (v: unknown[]) => void } }).registrations.set([
+        makeRegistration(1),
+      ]);
+      expect(getRegistrationRows()[0].totalScore).toBe(42);
+    });
+
+    it('should return null when the registrant has no score in the current scoring window', () => {
+      mockActivityService.getUserScores.mockReturnValueOnce([]);
+      (component as unknown as { registrations: { set: (v: unknown[]) => void } }).registrations.set([
+        makeRegistration(1),
+      ]);
+      expect(getRegistrationRows()[0].totalScore).toBeNull();
     });
   });
 
@@ -386,6 +408,78 @@ describe('MgAdminTabComponent', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       expect(compiled.textContent).not.toContain('null');
       expect(compiled.textContent).not.toContain('undefined');
+    });
+
+    it("should display the registrant's total score", async () => {
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      mockMgEventService.loadRegistrations.mockResolvedValueOnce([
+        {
+          id: 'reg-1',
+          mg_event_id: 'event-1',
+          user_id: 'user-1',
+          registered_at: '2026-01-01T00:00:00Z',
+          desired_slot_order: 2,
+          comment: null,
+          user_profiles: { display_name: 'Alice', username: 'alice' },
+        },
+      ]);
+      mockActivityService.getUserScores.mockReturnValueOnce([
+        { userId: 'user-1', displayName: 'Alice', weeklyScores: [], totalScore: 55 },
+      ]);
+
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flushAsyncNgOnInit();
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.total-score')?.textContent).toContain('55');
+    });
+
+    it('should default the total score to 0 when the registrant has no score in the current scoring window', async () => {
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      mockMgEventService.loadRegistrations.mockResolvedValueOnce([
+        {
+          id: 'reg-1',
+          mg_event_id: 'event-1',
+          user_id: 'user-1',
+          registered_at: '2026-01-01T00:00:00Z',
+          desired_slot_order: 2,
+          comment: null,
+          user_profiles: { display_name: 'Alice', username: 'alice' },
+        },
+      ]);
+      mockActivityService.getUserScores.mockReturnValueOnce([]);
+
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flushAsyncNgOnInit();
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.total-score')?.textContent).toContain('0');
     });
 
     it('should not render the comment element when the registration has no comment', async () => {

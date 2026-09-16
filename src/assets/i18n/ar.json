@@ -435,7 +435,6 @@
       "activityTypes": "أنواع الأنشطة",
       "legionAlwaysAvailable": "الفيلق متاح دائمًا",
       "legionAlwaysAvailableHint": "الفيلق ضمني كل أسبوع ولا يمكن إزالته",
-      "nameRequired": "الاسم مطلوب (100 حرف كحد أقصى)",
       "createFailed": "فشل إنشاء الموسم",
       "loadFailed": "فشل تحميل المواسم",
       "lockedTooltip": "هذا الموسم يحتوي على نشاط مسجَّل وبنيته مقفلة",
@@ -931,7 +930,8 @@
         "title": "التسجيلات",
         "empty": "لا توجد تسجيلات حتى الآن.",
         "position": "المركز المطلوب",
-        "noPosition": "غير محدد"
+        "noPosition": "غير محدد",
+        "totalScore": "النتيجة الإجمالية"
       },
       "selection": {
         "title": "الاختيار",
