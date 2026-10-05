@@ -295,6 +295,7 @@
     "error": "Échec de la soumission de l'activité",
     "participated": "J'ai participé cette semaine",
     "fillAllFields": "Veuillez remplir tous les champs requis",
+    "weekChanged": "Une nouvelle semaine a commencé. Veuillez resélectionner la semaine et l'activité.",
     "noActiveSeason": "Aucune saison n'est actuellement configurée pour cette date. Veuillez contacter un administrateur."
   },
   "activities": {

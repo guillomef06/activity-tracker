@@ -295,6 +295,7 @@
     "error": "Failed to submit activity",
     "participated": "I participated this week",
     "fillAllFields": "Please fill in all required fields",
+    "weekChanged": "A new week has started. Please re-select the week and activity.",
     "noActiveSeason": "No season is currently configured for this date. Please contact an administrator."
   },
   "activities": {

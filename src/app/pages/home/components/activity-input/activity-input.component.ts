@@ -1,4 +1,5 @@
-import { Component, inject, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, inject, ChangeDetectionStrategy, signal, computed, DestroyRef } from '@angular/core';
 import { form, FormField, required, min, disabled } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +20,7 @@ import { getFieldErrorKey } from '@shared/utils/form-validation.utils';
 import { LoadingButtonComponent } from '@shared/components/loading-button/loading-button.component';
 import { DiscordInviteBannerComponent } from '@app/pages/home/components/discord-invite-banner/discord-invite-banner.component';
 import { ActivityConflictComponent } from '@app/pages/home/components/activity-conflict/activity-conflict.component';
-import { getWeekStart, getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
+import { getWeekStart, getWeekEnd, getNextWeekStart } from '@shared/utils/date.util';
 
 interface WeekOption {
   value: number;
@@ -42,6 +43,9 @@ const DEFAULT_ACTIVITY_FORM_MODEL: ActivityFormModel = {
 };
 
 const MAX_WEEKS_LOOKBACK = 5;
+const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+// Fire just after the reset so the timer never wakes up a hair before Monday 00:00 UTC.
+const RESET_TIMER_MARGIN_MS = 1000;
 const MIN_POSITION = 1;
 const DEFAULT_PARTICIPATION_POINTS = 5;
 
@@ -72,6 +76,17 @@ export class ActivityInputComponent {
   private readonly snackbarService = inject(SnackbarService);
   private readonly seasonService = inject(SeasonService);
   private readonly translate = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject(DOCUMENT);
+
+  /**
+   * Monday 00:00 UTC of the current week, as a signal. Every week-relative computed derives
+   * from it (instead of calling new Date()), so the form follows the weekly reset even when
+   * the page stays open across it — a plain computed() would otherwise keep serving last
+   * week's activity list for the new "current week".
+   */
+  private readonly currentWeekStartMs = signal<number>(getWeekStart(new Date()).getTime());
+  private resetTimerId: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly isSubmitting = signal<boolean>(false);
   protected readonly conflictAcknowledged = signal<boolean>(false);
@@ -96,10 +111,9 @@ export class ActivityInputComponent {
   protected readonly conflictWeekIndex = computed<number>(() => {
     const conflict = this.conflicts()[0];
     if (!conflict) return 0;
-    const currentWeekStart = getWeekStart(new Date());
     const conflictWeekStart = getWeekStart(conflict.date);
-    const diffMs = currentWeekStart.getTime() - conflictWeekStart.getTime();
-    return Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
+    const diffMs = this.currentWeekStartMs() - conflictWeekStart.getTime();
+    return Math.round(diffMs / MS_PER_WEEK);
   });
 
   protected readonly activityModel = signal<ActivityFormModel>(DEFAULT_ACTIVITY_FORM_MODEL);
@@ -173,7 +187,7 @@ export class ActivityInputComponent {
     const options: WeekOption[] = [];
 
     for (let i = 0; i <= MAX_WEEKS_LOOKBACK; i++) {
-      const weekStart = getWeekStart(getDateForWeeksAgo(i));
+      const weekStart = this.weekStartFor(i);
       if (weekStart < earliestAllowedDate) break;
       const weekEnd = getWeekEnd(weekStart);
       const dateRange = `${weekStart.toLocaleDateString('en-US', { timeZone: 'UTC' })} - ${weekEnd.toLocaleDateString('en-US', { timeZone: 'UTC' })}`;
@@ -194,7 +208,7 @@ export class ActivityInputComponent {
    * "no season configured for this date" signal per SeasonService contract.
    */
   private readonly seasonActivityTypes = computed<ActivityType[]>(() => {
-    const targetDate = getWeekStart(getDateForWeeksAgo(this.weekValue()));
+    const targetDate = this.weekStartFor(this.weekValue());
     return this.seasonService.getAvailableActivityTypesForDate(targetDate);
   });
 
@@ -217,6 +231,56 @@ export class ActivityInputComponent {
     return this.seasonActivityTypes().filter(type => this.serverService.isActivityEnabled(type.value));
   });
 
+  constructor() {
+    this.scheduleResetRefresh();
+    this.document.addEventListener('visibilitychange', this.onVisibilityChange);
+    this.destroyRef.onDestroy(() => {
+      this.document.removeEventListener('visibilitychange', this.onVisibilityChange);
+      if (this.resetTimerId !== null) clearTimeout(this.resetTimerId);
+    });
+  }
+
+  /** Monday 00:00 UTC of the week `weeksAgo` weeks before the current one (0 = current week). */
+  private weekStartFor(weeksAgo: number): Date {
+    return new Date(this.currentWeekStartMs() - weeksAgo * MS_PER_WEEK);
+  }
+
+  /**
+   * Re-reads the clock and, if the weekly reset has passed, moves the current week forward and
+   * clears the selection that was made against the previous week.
+   * @returns true when the week changed
+   */
+  private refreshCurrentWeek(): boolean {
+    const nowWeekStartMs = getWeekStart(new Date()).getTime();
+    if (nowWeekStartMs === this.currentWeekStartMs()) return false;
+
+    this.currentWeekStartMs.set(nowWeekStartMs);
+    this.resetSelectionAfterWeekChange();
+    return true;
+  }
+
+  private resetSelectionAfterWeekChange(): void {
+    if (this.isInForcedEditMode()) {
+      // The conflict's date is fixed; only its week offset moved.
+      this.activityModel.update(current => ({ ...current, week: this.conflictWeekIndex() }));
+      return;
+    }
+    this.activityModel.update(current => ({ ...current, activityType: '', position: null, participated: false }));
+  }
+
+  private scheduleResetRefresh(): void {
+    const msUntilReset = getNextWeekStart(new Date()).getTime() - Date.now();
+    this.resetTimerId = setTimeout(() => {
+      this.refreshCurrentWeek();
+      this.scheduleResetRefresh();
+    }, msUntilReset + RESET_TIMER_MARGIN_MS);
+  }
+
+  // Timers are suspended while a mobile PWA is backgrounded, so also re-check when it comes back.
+  private readonly onVisibilityChange = (): void => {
+    if (this.document.visibilityState === 'visible') this.refreshCurrentWeek();
+  };
+
   /**
    * Resets dependent fields when the user changes the selected week, unless the
    * form is locked into forced-edit mode for an existing conflict.
@@ -238,6 +302,14 @@ export class ActivityInputComponent {
   protected async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
 
+    // Last line of defense: the reset may have passed without the timer/visibility refresh
+    // running (suspended PWA, throttled timer). The selection was made against the old week,
+    // so it must not be submitted against the new one.
+    if (this.refreshCurrentWeek()) {
+      this.snackbarService.error(this.translate.instant('activityInput.weekChanged'));
+      return;
+    }
+
     if (!this.canSubmit()) {
       this.activityForm().markAsTouched();
       this.snackbarService.error(this.translate.instant('activityInput.fillAllFields'));
@@ -247,9 +319,7 @@ export class ActivityInputComponent {
     this.isSubmitting.set(true);
 
     const formValue = this.activityModel();
-    const currentWeekStart = getWeekStart(new Date());
-    const activityDate = new Date(currentWeekStart);
-    activityDate.setUTCDate(currentWeekStart.getUTCDate() - formValue.week * 7);
+    const activityDate = this.weekStartFor(formValue.week);
 
     const { error } = this.isParticipationMode()
       ? await this.activityService.addActivity({

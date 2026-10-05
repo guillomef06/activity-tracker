@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { getDateForWeeksAgo, getWeekStart, getWeekEnd, getWeekIndexInRange } from './date.util';
+import { getDateForWeeksAgo, getWeekStart, getWeekEnd, getWeekIndexInRange, getNextWeekStart } from './date.util';
 
 describe('Date Utility Functions', () => {
   describe('getWeekStart', () => {
@@ -52,6 +52,67 @@ describe('Date Utility Functions', () => {
 
       expect(result.getUTCDay()).toBe(0); // Sunday
       expect(result.getUTCDate()).toBe(10); // May 10, 2026
+    });
+  });
+
+  describe('week boundaries (Monday 00:00 UTC reset)', () => {
+    it('should keep Sunday 23:59:59.999 UTC in the ending week', () => {
+      const result = getWeekStart(new Date('2026-10-04T23:59:59.999Z'));
+
+      expect(result.toISOString()).toBe('2026-09-28T00:00:00.000Z');
+    });
+
+    it('should start a new week at exactly Monday 00:00:00.000 UTC', () => {
+      const result = getWeekStart(new Date('2026-10-05T00:00:00.000Z'));
+
+      expect(result.toISOString()).toBe('2026-10-05T00:00:00.000Z');
+    });
+
+    it('should end the week at Sunday 23:59:59.999 UTC, one millisecond before the next week', () => {
+      const result = getWeekEnd(new Date('2026-10-01T10:00:00Z'));
+
+      expect(result.toISOString()).toBe('2026-10-04T23:59:59.999Z');
+    });
+
+    it('should not be shifted by a late-evening instant that is already Monday in UTC+ timezones', () => {
+      // Sunday 22:30 UTC is already Monday 00:30 in UTC+2 — the reset is UTC only
+      const result = getWeekStart(new Date('2026-10-04T22:30:00Z'));
+
+      expect(result.toISOString()).toBe('2026-09-28T00:00:00.000Z');
+    });
+
+    it('should cross month and year boundaries correctly', () => {
+      const result = getWeekStart(new Date('2027-01-01T12:00:00Z')); // Friday
+
+      expect(result.toISOString()).toBe('2026-12-28T00:00:00.000Z');
+    });
+
+    it('should stay on UTC midnight across a DST change', () => {
+      const result = getWeekStart(new Date('2026-10-26T12:00:00Z')); // week after EU DST end
+
+      expect(result.toISOString()).toBe('2026-10-26T00:00:00.000Z');
+    });
+  });
+
+  describe('getNextWeekStart', () => {
+    it('should return the next Monday 00:00 UTC for a mid-week date', () => {
+      const result = getNextWeekStart(new Date('2026-10-01T10:00:00Z'));
+
+      expect(result.toISOString()).toBe('2026-10-05T00:00:00.000Z');
+    });
+
+    it('should return the following Monday when the date is exactly a Monday midnight', () => {
+      const result = getNextWeekStart(new Date('2026-10-05T00:00:00.000Z'));
+
+      expect(result.toISOString()).toBe('2026-10-12T00:00:00.000Z');
+    });
+
+    it('should return the reset one millisecond away on Sunday 23:59:59.999 UTC', () => {
+      const date = new Date('2026-10-04T23:59:59.999Z');
+
+      const result = getNextWeekStart(date);
+
+      expect(result.getTime() - date.getTime()).toBe(1);
     });
   });
 

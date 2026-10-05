@@ -295,6 +295,7 @@
     "error": "활동 제출 실패",
     "participated": "이번 주에 참가했습니다",
     "fillAllFields": "필수 필드를 모두 입력해 주세요",
+    "weekChanged": "새로운 주가 시작되었습니다. 주와 활동을 다시 선택해 주세요.",
     "noActiveSeason": "이 날짜에 대해 현재 설정된 시즌이 없습니다. 관리자에게 문의해 주세요."
   },
   "activities": {
