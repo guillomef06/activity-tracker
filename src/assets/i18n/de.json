@@ -295,6 +295,7 @@
     "error": "Aktivität konnte nicht eingereicht werden",
     "participated": "Ich habe diese Woche teilgenommen",
     "fillAllFields": "Bitte alle Pflichtfelder ausfüllen",
+    "weekChanged": "Eine neue Woche hat begonnen. Bitte Woche und Aktivität erneut auswählen.",
     "noActiveSeason": "Für dieses Datum ist derzeit keine Season konfiguriert. Bitte wende dich an einen Administrator."
   },
   "activities": {

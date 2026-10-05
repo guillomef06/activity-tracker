@@ -295,6 +295,7 @@
     "error": "Invio dell'attività non riuscito",
     "participated": "Ho partecipato questa settimana",
     "fillAllFields": "Si prega di compilare tutti i campi obbligatori",
+    "weekChanged": "È iniziata una nuova settimana. Seleziona di nuovo la settimana e l'attività.",
     "noActiveSeason": "Nessuna stagione è attualmente configurata per questa data. Contatta un amministratore."
   },
   "activities": {

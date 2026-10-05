@@ -295,6 +295,7 @@
     "error": "提交活动失败",
     "participated": "我本周参加了",
     "fillAllFields": "请填写所有必填字段",
+    "weekChanged": "新的一周已经开始。请重新选择周和活动。",
     "noActiveSeason": "此日期当前未配置任何赛季。请联系管理员。"
   },
   "activities": {

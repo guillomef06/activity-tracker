@@ -52,6 +52,16 @@ export function getWeekEnd(date: Date): Date {
 }
 
 /**
+ * Get the instant the next week starts (next Monday 00:00 UTC) — i.e. the weekly reset.
+ * Always strictly after `date`, even when `date` is exactly a Monday midnight.
+ */
+export function getNextWeekStart(date: Date): Date {
+  const result = getWeekStart(date);
+  result.setUTCDate(result.getUTCDate() + 7);
+  return result;
+}
+
+/**
  * Get a date representing a specific number of weeks in the past
  * Returns the Monday (start) of that week
  * @param weeksAgo - 0 = current week, 1 = last week, 2 = 2 weeks ago, etc.

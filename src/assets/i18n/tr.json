@@ -295,6 +295,7 @@
     "error": "Aktivite gönderilemedi",
     "participated": "Bu hafta katıldım",
     "fillAllFields": "Lütfen tüm zorunlu alanları doldurun",
+    "weekChanged": "Yeni bir hafta başladı. Lütfen haftayı ve etkinliği yeniden seçin.",
     "noActiveSeason": "Bu tarih için şu anda yapılandırılmış bir sezon yok. Lütfen bir yönetici ile iletişime geçin."
   },
   "activities": {
