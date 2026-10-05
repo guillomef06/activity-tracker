@@ -12,6 +12,45 @@ import { vi } from 'vitest';
 import { PositionConflict } from '@shared/models';
 import { APP_CONSTANTS } from '@shared/constants/constants';
 
+// Node reads TZ at runtime; @types/node is not part of the spec tsconfig.
+declare const process: { env: Record<string, string | undefined> };
+
+// UTC-12 → UTC+14, with half-hour offset (Kolkata) and DST zones (Los Angeles, New York, Paris, Auckland).
+const TIMEZONES = [
+  'Etc/GMT+12',
+  'America/Los_Angeles',
+  'America/New_York',
+  'UTC',
+  'Europe/Paris',
+  'Asia/Kolkata',
+  'Asia/Tokyo',
+  'Pacific/Auckland',
+  'Pacific/Kiritimati',
+];
+
+const RESET_SCENARIOS = [
+  {
+    resetDate: '2026-10-05',
+    previousWeekStart: '2026-09-28',
+    currentWeekRange: '10/5/2026',
+    previousWeekRange: '9/28/2026',
+  },
+  // Europe leaves DST the night before this reset (Oct 25)
+  {
+    resetDate: '2026-10-26',
+    previousWeekStart: '2026-10-19',
+    currentWeekRange: '10/26/2026',
+    previousWeekRange: '10/19/2026',
+  },
+  // The US leaves DST the day before this reset (Nov 1)
+  {
+    resetDate: '2026-11-02',
+    previousWeekStart: '2026-10-26',
+    currentWeekRange: '11/2/2026',
+    previousWeekRange: '10/26/2026',
+  },
+];
+
 function submitEvent(): Event {
   return new Event('submit', { cancelable: true });
 }
@@ -152,17 +191,21 @@ describe('ActivityInputComponent', () => {
     expect(component['discordInviteUrl']()).toBe('https://discord.gg/test');
   });
 
-  describe('weekOptions date restriction (season earliest allowed date Apr 27, 2026)', () => {
-    // Each test creates a fresh component AFTER setting the fake time,
-    // because weekOptions is a computed() evaluated on first access.
-    function createComponentAt(isoDate: string): ActivityInputComponent {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date(isoDate));
-      const localFixture = TestBed.createComponent(ActivityInputComponent);
-      localFixture.detectChanges();
-      return localFixture.componentInstance;
-    }
+  // Each test creates a fresh component AFTER setting the fake time,
+  // because the week-relative computeds are evaluated from the clock at construction.
+  function createFixtureAt(isoDate: string): ComponentFixture<ActivityInputComponent> {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(isoDate));
+    const localFixture = TestBed.createComponent(ActivityInputComponent);
+    localFixture.detectChanges();
+    return localFixture;
+  }
 
+  function createComponentAt(isoDate: string): ActivityInputComponent {
+    return createFixtureAt(isoDate).componentInstance;
+  }
+
+  describe('weekOptions date restriction (season earliest allowed date Apr 27, 2026)', () => {
     beforeEach(() => {
       mockSeasonService.getEarliestAllowedDate.mockReturnValue(new Date('2026-04-27T00:00:00Z'));
     });
@@ -261,6 +304,298 @@ describe('ActivityInputComponent', () => {
 
       expect(component['isBlockedForSelectedWeek']()).toBe(false);
       expect(component['availableActivities']()).toHaveLength(0);
+    });
+  });
+
+  describe('weekly reset boundary (Monday 00:00 UTC)', () => {
+    const SUNDAY_BEFORE_RESET = '2026-10-04T23:59:00Z';
+    const MONDAY_AFTER_RESET = '2026-10-05T00:01:00Z';
+    const RESET_INSTANT = new Date('2026-10-05T00:00:00Z');
+    const LEGION_ONLY = APP_CONSTANTS.ACTIVITY_TYPES.filter(t => t.value === 'legion');
+    const LEGION_AND_DESERT = APP_CONSTANTS.ACTIVITY_TYPES.filter(
+      t => t.value === 'legion' || t.value === 'desolate desert'
+    );
+
+    // Desolate Desert is scheduled only for the week of Sep 28 → Oct 4; the week of Oct 5 has legion only.
+    function useDesertLastWeekOnlySchedule(): void {
+      mockSeasonService.getAvailableActivityTypesForDate.mockImplementation((date: Date) =>
+        date < RESET_INSTANT ? LEGION_AND_DESERT : LEGION_ONLY
+      );
+    }
+
+    beforeEach(() => {
+      mockActivityService.addActivity.mockClear();
+      mockServerService.isParticipationMode.mockReturnValue(false);
+      mockServerService.isActivityEnabled.mockReturnValue(true);
+      useDesertLastWeekOnlySchedule();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      mockSeasonService.getAvailableActivityTypesForDate.mockReset();
+      mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
+    });
+
+    it('should offer desolate desert on the last second before the reset', () => {
+      // Arrange
+      const c = createComponentAt(SUNDAY_BEFORE_RESET);
+
+      // Act
+      const types = c['availableActivities']().map(t => t.value);
+
+      // Assert
+      expect(types).toContain('desolate desert');
+    });
+
+    it('should not offer desolate desert for the current week once the reset has passed', () => {
+      // Arrange
+      const c = createComponentAt(MONDAY_AFTER_RESET);
+
+      // Act
+      const types = c['availableActivities']().map(t => t.value);
+
+      // Assert
+      expect(types).not.toContain('desolate desert');
+    });
+
+    it('should offer desolate desert for last week once the reset has passed', () => {
+      // Arrange
+      const c = createComponentAt(MONDAY_AFTER_RESET);
+      c['activityModel'].update(v => ({ ...v, week: 1 }));
+
+      // Act
+      const types = c['availableActivities']().map(t => t.value);
+
+      // Assert
+      expect(types).toContain('desolate desert');
+    });
+
+    it('should drop desolate desert from availableActivities when the reset passes while the page stays open', () => {
+      // Arrange — page opened on Sunday night, desert is legitimately available
+      const c = createComponentAt(SUNDAY_BEFORE_RESET);
+      expect(c['availableActivities']().map(t => t.value)).toContain('desolate desert');
+
+      // Act — the clock crosses Monday 00:00 UTC and the reset timer fires
+      vi.advanceTimersByTime(2 * 60 * 1000);
+
+      // Assert
+      expect(c['availableActivities']().map(t => t.value)).not.toContain('desolate desert');
+    });
+
+    it('should clear the selected activity when the reset passes while the page stays open', () => {
+      // Arrange
+      const c = createComponentAt(SUNDAY_BEFORE_RESET);
+      c['activityModel'].update(v => ({ ...v, activityType: 'desolate desert', position: 3 }));
+
+      // Act
+      vi.advanceTimersByTime(2 * 60 * 1000);
+
+      // Assert
+      expect(c['activityModel']().activityType).toBe('');
+      expect(c['activityModel']().position).toBeNull();
+    });
+
+    it('should refresh the week when a backgrounded page becomes visible again after the reset', () => {
+      // Arrange — timers do not fire while a PWA is suspended: move the clock without running them
+      const c = createComponentAt(SUNDAY_BEFORE_RESET);
+      vi.setSystemTime(new Date(MONDAY_AFTER_RESET));
+      expect(c['availableActivities']().map(t => t.value)).toContain('desolate desert');
+
+      // Act
+      document.dispatchEvent(new Event('visibilitychange'));
+
+      // Assert
+      expect(c['availableActivities']().map(t => t.value)).not.toContain('desolate desert');
+    });
+
+    it('should reschedule the reset timer so that a second reset is also handled', () => {
+      // Arrange
+      const c = createComponentAt(SUNDAY_BEFORE_RESET);
+      vi.advanceTimersByTime(2 * 60 * 1000); // first reset (Oct 5)
+
+      // Act — a full week later the next reset (Oct 12) passes
+      vi.advanceTimersByTime(7 * 24 * 60 * 60 * 1000);
+
+      // Assert — "last week" now maps to Oct 5, so the current week starts Oct 12
+      expect(c['weekOptions']()[0].dateRange.startsWith('10/12/2026')).toBe(true);
+    });
+
+    it('should refuse to submit and not call addActivity when the reset passed unnoticed since the selection', async () => {
+      // Arrange — user picked "current week" + desert on Sunday night; the clock then moves past the reset
+      // without any timer/visibility callback running
+      const c = createComponentAt(SUNDAY_BEFORE_RESET);
+      c['activityModel'].update(v => ({ ...v, week: 0, activityType: 'desolate desert', position: 3 }));
+      vi.setSystemTime(new Date(MONDAY_AFTER_RESET));
+
+      // Act
+      await c['onSubmit'](submitEvent());
+
+      // Assert — desert must never be recorded against the new week (Oct 5)
+      expect(mockActivityService.addActivity).not.toHaveBeenCalled();
+      expect(mockSnackbarService.error).toHaveBeenCalledWith('activityInput.weekChanged');
+    });
+
+    it('should stop the reset timer and the visibility listener when the component is destroyed', () => {
+      // Arrange
+      const localFixture = createFixtureAt(SUNDAY_BEFORE_RESET);
+      const c = localFixture.componentInstance;
+      const weekStartBefore = c['currentWeekStartMs']();
+
+      // Act
+      localFixture.destroy();
+      vi.advanceTimersByTime(2 * 60 * 1000); // would fire the reset timer if it were still alive
+      document.dispatchEvent(new Event('visibilitychange')); // would refresh if the listener were still attached
+
+      // Assert
+      expect(c['currentWeekStartMs']()).toBe(weekStartBefore);
+    });
+
+    it('should submit with the Monday 00:00 UTC of the selected week', async () => {
+      // Arrange
+      const c = createComponentAt(MONDAY_AFTER_RESET);
+      c['activityModel'].update(v => ({ ...v, week: 1, activityType: 'desolate desert', position: 3 }));
+
+      // Act
+      await c['onSubmit'](submitEvent());
+
+      // Assert
+      const [request] = mockActivityService.addActivity.mock.calls[0];
+      expect((request.date as Date).toISOString()).toBe('2026-09-28T00:00:00.000Z');
+    });
+  });
+
+  // The reset is Monday 00:00 UTC for everyone, whatever the device timezone: the same instant must
+  // produce the same outcome from UTC-12 to UTC+14, including around DST changes. Node reads TZ at
+  // runtime, so each case switches the process timezone before the component is created.
+  describe.each(TIMEZONES)('submit around the weekly reset with the device in %s', timezone => {
+    describe.each(RESET_SCENARIOS)('reset of $resetDate', scenario => {
+      const resetMs = Date.parse(`${scenario.resetDate}T00:00:00Z`);
+      const oneMinuteBeforeReset = new Date(resetMs - 60_000).toISOString();
+      const oneMinuteAfterReset = new Date(resetMs + 60_000).toISOString();
+      const exactlyAtReset = new Date(resetMs).toISOString();
+      const previousWeekStartIso = `${scenario.previousWeekStart}T00:00:00.000Z`;
+      const resetIso = `${scenario.resetDate}T00:00:00.000Z`;
+      const LEGION = APP_CONSTANTS.ACTIVITY_TYPES.filter(t => t.value === 'legion');
+      const LEGION_AND_DESERT = APP_CONSTANTS.ACTIVITY_TYPES.filter(
+        t => t.value === 'legion' || t.value === 'desolate desert'
+      );
+      let originalTimezone: string | undefined;
+
+      function submittedDesertDates(): string[] {
+        return mockActivityService.addActivity.mock.calls
+          .map(([request]) => request)
+          .filter(request => request.activityType === 'desolate desert')
+          .map(request => (request.date as Date).toISOString());
+      }
+
+      beforeEach(() => {
+        originalTimezone = process.env['TZ'];
+        process.env['TZ'] = timezone;
+        mockActivityService.addActivity.mockClear();
+        mockSnackbarService.error.mockClear();
+        mockServerService.isParticipationMode.mockReturnValue(false);
+        mockServerService.isActivityEnabled.mockReturnValue(true);
+        // Desolate Desert is scheduled for the week that ends at the reset only
+        mockSeasonService.getAvailableActivityTypesForDate.mockImplementation((date: Date) =>
+          date.getTime() < resetMs ? LEGION_AND_DESERT : LEGION
+        );
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+        if (originalTimezone === undefined) delete process.env['TZ'];
+        else process.env['TZ'] = originalTimezone;
+        mockSeasonService.getAvailableActivityTypesForDate.mockReset();
+        mockSeasonService.getAvailableActivityTypesForDate.mockReturnValue(APP_CONSTANTS.ACTIVITY_TYPES);
+      });
+
+      it('should date a current-week submit on the ending week one minute before the reset', async () => {
+        // Arrange
+        const c = createComponentAt(oneMinuteBeforeReset);
+        c['activityModel'].update(v => ({ ...v, week: 0, activityType: 'desolate desert', position: 3 }));
+
+        // Act
+        await c['onSubmit'](submitEvent());
+
+        // Assert
+        expect(submittedDesertDates()).toEqual([previousWeekStartIso]);
+      });
+
+      it('should not offer desolate desert for the current week at the exact reset instant', () => {
+        // Arrange
+        const c = createComponentAt(exactlyAtReset);
+
+        // Act
+        const types = c['availableActivities']().map(t => t.value);
+
+        // Assert
+        expect(types).not.toContain('desolate desert');
+      });
+
+      it('should date a last-week submit on the ended week once the reset has passed', async () => {
+        // Arrange
+        const c = createComponentAt(oneMinuteAfterReset);
+        c['activityModel'].update(v => ({ ...v, week: 1, activityType: 'desolate desert', position: 3 }));
+
+        // Act
+        await c['onSubmit'](submitEvent());
+
+        // Assert
+        expect(submittedDesertDates()).toEqual([previousWeekStartIso]);
+      });
+
+      it('should show the same week ranges whatever the timezone', () => {
+        // Arrange
+        const before = createComponentAt(oneMinuteBeforeReset)['weekOptions']();
+        const after = createComponentAt(oneMinuteAfterReset)['weekOptions']();
+
+        // Assert
+        expect(before[0].dateRange.startsWith(`${scenario.previousWeekRange} - `)).toBe(true);
+        expect(after[0].dateRange.startsWith(`${scenario.currentWeekRange} - `)).toBe(true);
+        expect(after[1].dateRange.startsWith(`${scenario.previousWeekRange} - `)).toBe(true);
+      });
+
+      it('should refuse a submit prepared before the reset and never date desolate desert in the new week', async () => {
+        // Arrange — selection made before the reset, clock moved past it without any callback running
+        const c = createComponentAt(oneMinuteBeforeReset);
+        c['activityModel'].update(v => ({ ...v, week: 0, activityType: 'desolate desert', position: 3 }));
+        vi.setSystemTime(new Date(oneMinuteAfterReset));
+
+        // Act
+        await c['onSubmit'](submitEvent());
+
+        // Assert
+        expect(submittedDesertDates()).not.toContain(resetIso);
+        expect(mockActivityService.addActivity).not.toHaveBeenCalled();
+        expect(mockSnackbarService.error).toHaveBeenCalledWith('activityInput.weekChanged');
+      });
+
+      it('should let the user re-select last week and submit after the page crossed the reset', async () => {
+        // Arrange — page open across the reset, the timer fires and clears the stale selection
+        const c = createComponentAt(oneMinuteBeforeReset);
+        c['activityModel'].update(v => ({ ...v, week: 0, activityType: 'desolate desert', position: 3 }));
+        vi.advanceTimersByTime(2 * 60_000);
+        expect(c['activityModel']().activityType).toBe('');
+
+        // Act
+        c['activityModel'].update(v => ({ ...v, week: 1, activityType: 'desolate desert', position: 3 }));
+        await c['onSubmit'](submitEvent());
+
+        // Assert
+        expect(submittedDesertDates()).toEqual([previousWeekStartIso]);
+      });
+
+      it('should refresh a backgrounded page across the reset when it becomes visible again', () => {
+        // Arrange — timers are suspended: move the clock without running them
+        const c = createComponentAt(oneMinuteBeforeReset);
+        vi.setSystemTime(new Date(oneMinuteAfterReset));
+
+        // Act
+        document.dispatchEvent(new Event('visibilitychange'));
+
+        // Assert
+        expect(c['availableActivities']().map(t => t.value)).not.toContain('desolate desert');
+      });
     });
   });
 

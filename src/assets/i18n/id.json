@@ -295,6 +295,7 @@
     "error": "Gagal mengirim aktivitas",
     "participated": "Saya berpartisipasi minggu ini",
     "fillAllFields": "Harap isi semua kolom yang diperlukan",
+    "weekChanged": "Minggu baru telah dimulai. Silakan pilih ulang minggu dan aktivitas.",
     "noActiveSeason": "Tidak ada musim yang saat ini dikonfigurasi untuk tanggal ini. Silakan hubungi administrator."
   },
   "activities": {

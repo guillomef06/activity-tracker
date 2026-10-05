@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 6 septembre 2026
+**Dernière mise à jour:** 5 octobre 2026
 
 ## 📋 Résumé
 
@@ -141,6 +141,7 @@ Pages publiques (`/guides`, `/guides/:slug`) routées via `PublicLayoutComponent
 ## 🐛 Corrections Notables
 
 - **Join token invalide** : RLS `servers` bloquait les anon → RPC `validate_invitation_token` SECURITY DEFINER
+- **Reset hebdomadaire (lundi 00:00 UTC) — saisie d'activité** : un onglet/PWA resté ouvert à travers le reset continuait d'afficher les activités de la semaine écoulée pour la « semaine courante » (`computed()` mémoïsé, la date n'était recalculée qu'au submit) → possibilité d'enregistrer p.ex. Desolate Desert dans la nouvelle semaine. `ActivityInputComponent` dérive désormais toutes ses dates d'un signal `currentWeekStartMs`, rafraîchi (1) par un timer armé sur le prochain lundi 00:00 UTC, (2) au retour de l'onglet (`visibilitychange`, timers suspendus sur PWA en arrière-plan), (3) en garde finale au submit (refus + message `activityInput.weekChanged`, sélection réinitialisée). Ajout `getNextWeekStart()` dans `date.util.ts`. Garde-fou côté base : trigger migration 42 (voir Limitations Connues). Tests : frontières de semaine dans `date.util.spec.ts`, scénarios « page ouverte avant/après reset » dans `activity-input.component.spec.ts`, rejoués pour 9 fuseaux (UTC-12 → UTC+14, demi-heure Kolkata, zones DST) × 3 resets (dont 2 collés à un changement d'heure Europe/US) via `process.env.TZ` modifié au runtime
 - **UTC dates** : normalisation timezone dans `date.util.ts` (impact import Excel + activity input)
 - **Password rules** : validation regex renforcée (join/signup)
 - **Recovery answer** : fix vérification lors du reset
@@ -172,6 +173,7 @@ Pages publiques (`/guides`, `/guides/:slug`) routées via `PublicLayoutComponent
 
 - Rate limiting account recovery : repose sur RPCs custom, non couvert par le rate limit Supabase Auth natif
 - Dialog "Mon Compte" → onglet Préférences : thème et notifications (champs DB existants) pas encore exposés
+- **Reset hebdomadaire / trigger `activities`** (migration `42-activity-week-schedule-check.sql`, appliquée en prod le 5 octobre 2026) : le trigger refuse toute écriture dont la date n'est pas un lundi 00:00:00 UTC, est dans une semaine future, hors season, ou dont le type n'est ni `legion` ni planifié cette semaine-là — admins, rétroactif et import Excel inclus (aucune limite dans le passé). Non rétroactif, mais les 2 lignes prod incohérentes existantes (Desolate Desert du 5/10 saisi à 00:39 UTC, « me overall » du 14/09) ont été supprimées le 5 octobre 2026 : plus aucune ligne hors planning, hors season ou non normalisée. Un import Excel batch est un seul upsert : une ligne refusée rejette tout le lot. Le script `supabase/tests/42-activity-week-schedule-check.test.sql` (branche/base vide uniquement) n'a pas été exécuté faute de branche (plan Supabase Free)
 - **Seasons** : triggers SQL non couverts par des tests automatisés (pas de harnais pgTAP), validés par revue manuelle uniquement
 - **Seasons** : `SeasonService.updateSeasonStructure()` non transactionnel (3 appels séquentiels, pas de compensation si échec partiel) — risque faible, à durcir via RPC atomique si besoin
 - **Seasons** : `CHECK` sur `activity_type` codé en dur — toute évolution du catalogue nécessite une migration de suivi
