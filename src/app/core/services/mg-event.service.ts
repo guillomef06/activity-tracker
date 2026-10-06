@@ -16,6 +16,7 @@ import type {
 } from '@shared/models';
 import { resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
 import { getWeekStart, getWeekEnd } from '@shared/utils/date.util';
+import type { FifoSpend } from '@shared/utils/mg-dkp.util';
 
 @Injectable({
   providedIn: 'root',
@@ -213,17 +214,25 @@ export class MgEventService {
   }
 
   /**
-   * Sums DKP deductions (mg_selections.cost) per user for the given server,
-   * scoped to the same rolling window as the leaderboard (`sinceDate`).
-   * A deduction only counts once the calendar week containing its MG
-   * event's start_date has fully ended — mirrors how activities "expire"
-   * out of the rolling total, so a deduction never appears mid-event.
+   * Loads DKP spends (mg_selections.cost) per user for the given server, as raw
+   * per-spend rows for FIFO attribution against earning weeks (the sum + expiry
+   * is resolved downstream by computeFifoDeductions, not here).
+   *
+   * `sinceDate` bounds the scan to events whose week could still touch the
+   * current rolling window. Each spend is stamped with the Monday 00:00 UTC of
+   * its MG event's week (`eventWeekStartMs`) — the week its cost is charged
+   * against.
+   *
+   * A spend only counts once the calendar week containing its event's
+   * start_date has fully ended — mirrors how activities "expire" out of the
+   * rolling total, so a deduction never appears mid-event.
+   *
    * Requires `selection_published_at` to be set: mg_selections RLS already
    * hides unpublished rows from regular members, but admins bypass that via
    * their "manage" policy, so this filter is applied explicitly rather than
    * relying on RLS alone.
    */
-  async loadCostDeductions(serverId: string, sinceDate: Date): Promise<Map<string, number>> {
+  async loadSpends(serverId: string, sinceDate: Date): Promise<FifoSpend[]> {
     const { data, error } = await this.supabase
       .from('mg_selections')
       .select('user_id, cost, mg_events!inner(start_date, server_id, selection_published_at)')
@@ -233,8 +242,8 @@ export class MgEventService {
       .gte('mg_events.start_date', sinceDate.toISOString().slice(0, 10));
 
     if (error) {
-      console.error('Error loading MG cost deductions:', error);
-      return new Map();
+      console.error('Error loading MG spends:', error);
+      return [];
     }
 
     const rows = (data ?? []) as unknown as {
@@ -244,15 +253,20 @@ export class MgEventService {
     }[];
 
     const now = new Date();
-    const deductions = new Map<string, number>();
+    const spends: FifoSpend[] = [];
     for (const row of rows) {
-      const eventWeekEnd = getWeekEnd(getWeekStart(new Date(row.mg_events.start_date)));
+      const eventWeekStart = getWeekStart(new Date(row.mg_events.start_date));
+      const eventWeekEnd = getWeekEnd(eventWeekStart);
       if (eventWeekEnd >= now) continue;
 
-      deductions.set(row.user_id, (deductions.get(row.user_id) ?? 0) + row.cost);
+      spends.push({
+        userId: row.user_id,
+        eventWeekStartMs: eventWeekStart.getTime(),
+        cost: row.cost,
+      });
     }
 
-    return deductions;
+    return spends;
   }
 
   async loadUserRegistration(mgEventId: string, userId: string): Promise<MgRegistration | null> {
