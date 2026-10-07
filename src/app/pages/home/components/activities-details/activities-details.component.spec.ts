@@ -162,4 +162,52 @@ describe('ActivitiesDetailsComponent', () => {
     // Assert
     expect(mockSnackbarService.error).toHaveBeenCalled();
   });
+
+  describe('season total sorting', () => {
+    // Alice has the higher current total; Bob has the higher season total.
+    const current = (): UserScore[] => [
+      { userId: 'u1', displayName: 'Alice', totalScore: 120, seasonTotal: 300, weeklyScores: [] },
+      { userId: 'u2', displayName: 'Bob', totalScore: 90, seasonTotal: 500, weeklyScores: [] },
+    ];
+
+    it('should default to the "current" sort key and preserve the parent order', () => {
+      fixture.componentRef.setInput('userScores', current());
+      fixture.detectChanges();
+
+      expect(component['sortKey']()).toBe('current');
+      expect(component['rankedScores']().map(u => u.userId)).toEqual(['u1', 'u2']);
+    });
+
+    it('should re-rank by seasonTotal descending when the season sort key is selected', () => {
+      fixture.componentRef.setInput('userScores', current());
+      component['setSortKey']('season');
+      fixture.detectChanges();
+
+      // Bob (500) now outranks Alice (300).
+      expect(component['rankedScores']().map(u => u.userId)).toEqual(['u2', 'u1']);
+    });
+
+    it('should expose hasSeasonTotals=false when no user has a season total', () => {
+      fixture.componentRef.setInput('userScores', [
+        { userId: 'u1', displayName: 'Alice', totalScore: 120, weeklyScores: [] },
+      ]);
+      fixture.detectChanges();
+
+      expect(component['hasSeasonTotals']()).toBe(false);
+    });
+
+    it('should show the sort toggle and a season chip only when season totals exist', () => {
+      const compiled = fixture.nativeElement as HTMLElement;
+
+      // mockUserScores (default) has no seasonTotal → no toggle, no season chip.
+      expect(compiled.querySelector('.sort-toggle')).toBeNull();
+      expect(compiled.querySelector('.season-chip')).toBeNull();
+
+      fixture.componentRef.setInput('userScores', current());
+      fixture.detectChanges();
+
+      expect(compiled.querySelector('.sort-toggle')).toBeTruthy();
+      expect(compiled.querySelector('.season-chip')?.textContent).toContain('300');
+    });
+  });
 });

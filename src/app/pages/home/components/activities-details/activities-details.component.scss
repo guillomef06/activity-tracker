@@ -8,11 +8,20 @@
 
 .scores-header {
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 
   h2 {
     margin: 0;
     font-size: 1.75rem;
     font-weight: 500;
+  }
+
+  .sort-toggle {
+    flex-shrink: 0;
   }
 }
 
@@ -99,8 +108,23 @@
     font-size: 0.875rem;
   }
 
-  .score-chip {
+  .score-chip,
+  .season-chip {
     flex-shrink: 0;
+  }
+
+  // The season total is secondary to the current (net) total — mute it until
+  // it's the active sort key, so the ranking metric stays visually dominant.
+  .season-chip {
+    opacity: 0.75;
+  }
+
+  // Whichever chip corresponds to the active sort key is emphasised.
+  .score-chip-active {
+    opacity: 1;
+    font-weight: 700;
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -1px;
   }
 
   .expand-button {

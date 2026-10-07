@@ -338,6 +338,109 @@ describe('ActivityService', () => {
     });
   });
 
+  describe('applySeasonTotals', () => {
+    it('should populate seasonTotal from the map and default missing users to 0', () => {
+      const scores: UserScore[] = [
+        { userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] },
+        { userId: 'b', displayName: 'Bob', totalScore: 50, weeklyScores: [] },
+      ];
+      const totals = new Map([['a', 300]]);
+
+      const result = service.applySeasonTotals(scores, totals);
+
+      expect(result.find(u => u.userId === 'a')!.seasonTotal).toBe(300);
+      expect(result.find(u => u.userId === 'b')!.seasonTotal).toBe(0);
+    });
+
+    it('should not change ordering (sorting is the leaderboard component’s concern)', () => {
+      const scores: UserScore[] = [
+        { userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] },
+        { userId: 'b', displayName: 'Bob', totalScore: 50, weeklyScores: [] },
+      ];
+      const result = service.applySeasonTotals(scores, new Map([['b', 999]]));
+      expect(result.map(u => u.userId)).toEqual(['a', 'b']);
+    });
+  });
+
+  describe('loadSeasonTotals', () => {
+    const season = {
+      id: 's1',
+      name: 'Season 1',
+      startDate: new Date('2026-01-05T00:00:00Z'),
+      weekCount: 20,
+      endDate: new Date('2026-05-25T00:00:00Z'),
+      createdAt: new Date('2026-01-01T00:00:00Z'),
+      updatedAt: new Date('2026-01-01T00:00:00Z'),
+      weekActivities: [],
+    };
+
+    const configureWith = (rows: unknown[], opts: { serverId?: string | null; tiebreaker?: string | null } = {}) => {
+      const { serverId = 'server-1', tiebreaker = null } = opts;
+      const lteMock = vi.fn().mockResolvedValue({ data: rows, error: null });
+      const gteMock = vi.fn().mockReturnValue({ lte: lteMock });
+      const eqMock = vi.fn().mockReturnValue({ gte: gteMock });
+      const supabaseMock = {
+        from: vi.fn().mockReturnValue({ select: vi.fn().mockReturnValue({ eq: eqMock }) }),
+      };
+      const authMock = {
+        getServerId: vi.fn().mockReturnValue(serverId),
+        getUserId: vi.fn().mockReturnValue(null),
+        userProfile: signal(null),
+      };
+      serverServiceMock.server.set(tiebreaker ? ({ tiebreaker_activity_type: tiebreaker } as unknown as Server) : null);
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideZonelessChangeDetection(),
+          ActivityService,
+          { provide: SupabaseService, useValue: supabaseMock },
+          { provide: AuthService, useValue: authMock },
+          { provide: ServerService, useValue: serverServiceMock },
+        ],
+      });
+      return { svc: TestBed.inject(ActivityService), eqMock, gteMock, lteMock };
+    };
+
+    it('should sum points per user across the full season range', async () => {
+      const { svc } = configureWith([
+        { user_id: 'a', activity_type: 'legion', points: 100 },
+        { user_id: 'a', activity_type: 'desolate', points: 50 },
+        { user_id: 'b', activity_type: 'legion', points: 80 },
+      ]);
+
+      const result = await svc.loadSeasonTotals(season);
+
+      expect(result.get('a')).toBe(150);
+      expect(result.get('b')).toBe(80);
+    });
+
+    it('should exclude the tiebreaker activity type', async () => {
+      const { svc } = configureWith(
+        [
+          { user_id: 'a', activity_type: 'legion', points: 100 },
+          { user_id: 'a', activity_type: 'tiebreak', points: 999 },
+        ],
+        { tiebreaker: 'tiebreak' }
+      );
+
+      const result = await svc.loadSeasonTotals(season);
+
+      expect(result.get('a')).toBe(100);
+    });
+
+    it('should scope the query to the current server', async () => {
+      const { svc, eqMock } = configureWith([]);
+      await svc.loadSeasonTotals(season);
+      expect(eqMock).toHaveBeenCalledWith('user_profiles.server_id', 'server-1');
+    });
+
+    it('should return an empty map when there is no server id', async () => {
+      const { svc } = configureWith([], { serverId: null });
+      const result = await svc.loadSeasonTotals(season);
+      expect(result.size).toBe(0);
+    });
+  });
+
   describe('batchImportActivities', () => {
     let upsertMock: ReturnType<typeof vi.fn>;
     let adminService: ActivityService;

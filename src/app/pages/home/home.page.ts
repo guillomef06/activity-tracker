@@ -43,10 +43,12 @@ export class HomePage implements OnInit {
   private readonly progressBarService = inject(ProgressBarService);
 
   private readonly mgDeductions = signal<Map<string, number>>(new Map());
+  private readonly seasonTotals = signal<Map<string, number>>(new Map());
 
-  readonly userScores = computed<UserScore[]>(() =>
-    this.activityService.applyMgDeductions(this.activityService.getUserScores(), this.mgDeductions())
-  );
+  readonly userScores = computed<UserScore[]>(() => {
+    const net = this.activityService.applyMgDeductions(this.activityService.getUserScores(), this.mgDeductions());
+    return this.activityService.applySeasonTotals(net, this.seasonTotals());
+  });
 
   async ngOnInit(): Promise<void> {
     await this.progressBarService.withProgress(async () => {
@@ -55,8 +57,16 @@ export class HomePage implements OnInit {
         this.activityService.initialize(),
         this.seasonService.loadSeasons(),
       ]);
-      await this.loadMgDeductions();
+      await Promise.all([this.loadMgDeductions(), this.loadSeasonTotals()]);
     });
+  }
+
+  private async loadSeasonTotals(): Promise<void> {
+    const currentSeason = this.seasonService.getSeasonForDate(new Date());
+    if (!currentSeason) return;
+
+    const totals = await this.activityService.loadSeasonTotals(currentSeason);
+    this.seasonTotals.set(totals);
   }
 
   private async loadMgDeductions(): Promise<void> {

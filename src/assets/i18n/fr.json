@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "Trier par",
+    "sortCurrent": "Actuel",
+    "sortSeason": "Saison",
+    "seasonPointsShort": "saison",
+    "currentPointsTooltip": "Points de classement actuels (fenêtre glissante, après dépenses MG)",
+    "seasonPointsTooltip": "Total des points gagnés cette saison (toutes les semaines, avant dépenses MG)"
   },
   "common": {
     "points": "points",

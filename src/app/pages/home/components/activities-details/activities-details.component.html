@@ -1,10 +1,21 @@
 <div class="scores-section">
   <div class="scores-header">
     <h2>{{ 'activitiesDetails.title' | translate }}</h2>
+    @if (hasSeasonTotals()) {
+      <mat-button-toggle-group
+        class="sort-toggle"
+        [value]="sortKey()"
+        (change)="setSortKey($event.value)"
+        [attr.aria-label]="'activitiesDetails.sortBy' | translate"
+      >
+        <mat-button-toggle value="current">{{ 'activitiesDetails.sortCurrent' | translate }}</mat-button-toggle>
+        <mat-button-toggle value="season">{{ 'activitiesDetails.sortSeason' | translate }}</mat-button-toggle>
+      </mat-button-toggle-group>
+    }
   </div>
 
   <div class="scores-container">
-    @for (userScore of userScores(); track trackByUserId($index, userScore); let i = $index) {
+    @for (userScore of rankedScores(); track trackByUserId($index, userScore); let i = $index) {
       <mat-card class="score-card" [class.rank-1]="i === 0" [class.rank-2]="i === 1" [class.rank-3]="i === 2">
         <div
           class="score-header"
@@ -23,7 +34,20 @@
               -{{ userScore.mgDeduction }}
             </span>
           }
-          <mat-chip class="score-chip">{{ userScore.totalScore }} {{ 'dashboard.totalPoints' | translate }}</mat-chip>
+          <mat-chip
+            class="score-chip"
+            [class.score-chip-active]="sortKey() === 'current'"
+            [matTooltip]="'activitiesDetails.currentPointsTooltip' | translate"
+            >{{ userScore.totalScore }} {{ 'dashboard.totalPoints' | translate }}</mat-chip
+          >
+          @if (hasSeasonTotals()) {
+            <mat-chip
+              class="season-chip"
+              [class.score-chip-active]="sortKey() === 'season'"
+              [matTooltip]="'activitiesDetails.seasonPointsTooltip' | translate"
+              >{{ userScore.seasonTotal ?? 0 }} {{ 'activitiesDetails.seasonPointsShort' | translate }}</mat-chip
+            >
+          }
           <button mat-icon-button class="expand-button">
             <mat-icon>{{ selectedUserId() === userScore.userId ? 'expand_less' : 'expand_more' }}</mat-icon>
           </button>

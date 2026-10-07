@@ -8,6 +8,7 @@ import {
   UserScore,
   WeeklyScore,
 } from '@shared/models';
+import type { SeasonWithWeeks } from '@shared/models';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { ServerService } from './server.service';
@@ -322,6 +323,58 @@ export class ActivityService {
     this.annotatePositionConflicts(userScores);
 
     return userScores.sort((a, b) => this.compareByScoreDesc(a, b));
+  }
+
+  /**
+   * Sums every point each user earned across the full `season` date range,
+   * independent of the rolling scoring window and of DKP spending — the
+   * "historical season total" shown alongside the current (net) leaderboard
+   * total.
+   *
+   * Runs its OWN query rather than reusing the loaded activities signal: a
+   * season can be longer than the rolling window, so the signal doesn't hold
+   * the season's earliest weeks. Excludes the tiebreaker activity type to match
+   * how getUserScores() computes the current total (same kind of points on both
+   * numbers). Server scoping is applied explicitly (same reason as
+   * loadActivities): a super_admin session bypasses the RLS server scope.
+   *
+   * @returns userId → total season points (users with no season activity are absent)
+   */
+  async loadSeasonTotals(season: SeasonWithWeeks): Promise<Map<string, number>> {
+    const serverId = this.authService.getServerId();
+    if (!serverId) return new Map();
+
+    const tiebreaker = this.serverService.server()?.tiebreaker_activity_type ?? null;
+
+    const { data, error } = await this.supabase
+      .from('activities')
+      .select('user_id, activity_type, points, user_profiles!inner(server_id)')
+      .eq('user_profiles.server_id', serverId)
+      .gte('date', season.startDate.toISOString())
+      .lte('date', getWeekEnd(season.endDate).toISOString());
+
+    if (error) {
+      console.error('Error loading season totals:', error);
+      return new Map();
+    }
+
+    const rows = (data ?? []) as unknown as { user_id: string; activity_type: string; points: number }[];
+
+    const totals = new Map<string, number>();
+    for (const row of rows) {
+      if (tiebreaker && row.activity_type === tiebreaker) continue;
+      totals.set(row.user_id, (totals.get(row.user_id) ?? 0) + row.points);
+    }
+    return totals;
+  }
+
+  /**
+   * Returns a copy of `scores` with each user's `seasonTotal` populated from
+   * `totals` (0 when absent). Pure/no I/O — ordering is unchanged; the leaderboard
+   * component owns which key it sorts by.
+   */
+  applySeasonTotals(scores: UserScore[], totals: Map<string, number>): UserScore[] {
+    return scores.map(s => ({ ...s, seasonTotal: totals.get(s.userId) ?? 0 }));
   }
 
   private buildUserScores(recentActivities: Activity[], tiebreaker: string | null, scoringWeeks: number): UserScore[] {
