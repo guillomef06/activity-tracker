@@ -55,13 +55,13 @@ describe('HomePage', () => {
     loadSlotConfig: vi.fn().mockResolvedValue([]),
     loadUserRegistration: vi.fn().mockResolvedValue(null),
     loadSelection: vi.fn().mockResolvedValue([]),
-    loadCostDeductions: vi.fn().mockResolvedValue(new Map()),
+    loadSpends: vi.fn().mockResolvedValue([]),
   };
 
   beforeEach(async () => {
     vi.clearAllMocks();
     mgEventServiceSpy.loadServerConfig.mockResolvedValue(null);
-    mgEventServiceSpy.loadCostDeductions.mockResolvedValue(new Map());
+    mgEventServiceSpy.loadSpends.mockResolvedValue([]);
 
     await TestBed.configureTestingModule({
       imports: [HomePage, TranslateModule.forRoot()],
@@ -95,10 +95,10 @@ describe('HomePage', () => {
 
   it('should not load MG cost deductions when DKP is disabled for the server', () => {
     expect(mgEventServiceSpy.loadServerConfig).toHaveBeenCalledWith('server-1');
-    expect(mgEventServiceSpy.loadCostDeductions).not.toHaveBeenCalled();
+    expect(mgEventServiceSpy.loadSpends).not.toHaveBeenCalled();
   });
 
-  it('should load MG cost deductions when DKP is enabled for the server', async () => {
+  it('should load MG spends when DKP is enabled for the server', async () => {
     mgEventServiceSpy.loadServerConfig.mockResolvedValueOnce({
       server_id: 'server-1',
       capacity: 10,
@@ -113,7 +113,7 @@ describe('HomePage', () => {
     await component.ngOnInit();
     fixture.detectChanges();
 
-    expect(mgEventServiceSpy.loadCostDeductions).toHaveBeenCalledWith('server-1', expect.any(Date));
+    expect(mgEventServiceSpy.loadSpends).toHaveBeenCalledWith('server-1', expect.any(Date));
   });
 
   it('should render the 4 tabs', () => {

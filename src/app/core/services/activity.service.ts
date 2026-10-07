@@ -12,7 +12,8 @@ import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { ServerService } from './server.service';
 import { APP_CONSTANTS } from '@shared/constants/constants';
-import { getDateForWeeksAgo, getWeekEnd } from '@shared/utils/date.util';
+import { getDateForWeeksAgo, getWeekEnd, getWeekStart } from '@shared/utils/date.util';
+import { computeFifoDeductions, type FifoEarningWeek, type FifoSpend } from '@shared/utils/mg-dkp.util';
 
 @Injectable({
   providedIn: 'root',
@@ -395,10 +396,95 @@ export class ActivityService {
   applyMgDeductions(scores: UserScore[], deductions: Map<string, number>): UserScore[] {
     return scores
       .map(s => {
-        const mgDeduction = deductions.get(s.userId) ?? 0;
+        // FIFO deductions (computeFifoDeductions) already never exceed the points still
+        // in the window, but clamp the applied amount to the available total as a floor
+        // so the displayed balance can never go negative regardless of the map's source.
+        const mgDeduction = Math.min(deductions.get(s.userId) ?? 0, Math.max(0, s.totalScore));
         return { ...s, mgDeduction, totalScore: s.totalScore - mgDeduction };
       })
       .sort((a, b) => this.compareByScoreDesc(a, b));
+  }
+
+  /**
+   * Resolves FIFO DKP deductions per user: each spend consumes the oldest
+   * still-available points first, and only consumed points whose week is still
+   * in the current rolling window are deducted (see mg-dkp.util).
+   *
+   * This runs its OWN earnings query rather than reusing the loaded activities
+   * signal: FIFO needs up to 2× the window of history (a spend inside the
+   * current window may have consumed weeks a full window older than itself),
+   * while the signal only holds the current window. Keeping it separate leaves
+   * the leaderboard/conflict load path untouched.
+   *
+   * Earnings exclude the tiebreaker activity type, mirroring getUserScores()
+   * so the consumable base matches the displayed total.
+   *
+   * @param spends published spends whose event week has ended (MgEventService.loadSpends)
+   */
+  async loadFifoDeductions(spends: FifoSpend[]): Promise<Map<string, number>> {
+    if (spends.length === 0) return new Map();
+
+    const serverId = this.authService.getServerId();
+    if (!serverId) return new Map();
+
+    const scoringWeeks = this.serverService.scoringWeeks();
+    const tiebreaker = this.serverService.server()?.tiebreaker_activity_type ?? null;
+    const currentWeekStart = getWeekStart(new Date());
+    // 2× the window (minus the current week) covers any spend still in-window plus
+    // the oldest earning week it could have consumed.
+    const earningsCutoff = getDateForWeeksAgo(2 * scoringWeeks - 1);
+
+    const earningsByUser = await this.loadEarningsByUser(serverId, earningsCutoff, tiebreaker);
+
+    return computeFifoDeductions(earningsByUser, spends, scoringWeeks, currentWeekStart.getTime());
+  }
+
+  /**
+   * Loads per-user, per-week earned points since `cutoff` for FIFO attribution.
+   * Points are bucketed by the Monday 00:00 UTC of each activity's week and
+   * summed; the tiebreaker type is excluded to match the leaderboard total.
+   */
+  private async loadEarningsByUser(
+    serverId: string,
+    cutoff: Date,
+    tiebreaker: string | null
+  ): Promise<Map<string, FifoEarningWeek[]>> {
+    const { data, error } = await this.supabase
+      .from('activities')
+      .select('user_id, activity_type, points, date, user_profiles!inner(server_id)')
+      .eq('user_profiles.server_id', serverId)
+      .gte('date', cutoff.toISOString());
+
+    if (error) {
+      console.error('Error loading earnings for FIFO deductions:', error);
+      return new Map();
+    }
+
+    const rows = (data ?? []) as unknown as {
+      user_id: string;
+      activity_type: string;
+      points: number;
+      date: string;
+    }[];
+
+    // userId → (weekStartMs → points)
+    const byUser = new Map<string, Map<number, number>>();
+    for (const row of rows) {
+      if (tiebreaker && row.activity_type === tiebreaker) continue;
+      const weekStartMs = getWeekStart(new Date(row.date)).getTime();
+      const weeks = byUser.get(row.user_id) ?? new Map<number, number>();
+      weeks.set(weekStartMs, (weeks.get(weekStartMs) ?? 0) + row.points);
+      byUser.set(row.user_id, weeks);
+    }
+
+    const result = new Map<string, FifoEarningWeek[]>();
+    for (const [userId, weeks] of byUser) {
+      result.set(
+        userId,
+        [...weeks.entries()].map(([weekStartMs, points]) => ({ weekStartMs, points }))
+      );
+    }
+    return result;
   }
 
   private compareByScoreDesc(a: UserScore, b: UserScore): number {

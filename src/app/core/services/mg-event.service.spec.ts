@@ -6,6 +6,7 @@ import { MgEventService } from './mg-event.service';
 import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { buildMgSlotRows, resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
+import { getWeekStart } from '@shared/utils/date.util';
 
 function generateAutoSelectionPayload(
   mgEventId: string,
@@ -280,7 +281,7 @@ describe('MgEventService', () => {
   });
 
   // ============================================
-  describe('loadCostDeductions', () => {
+  describe('loadSpends', () => {
     const toIsoDate = (d: Date) => d.toISOString().slice(0, 10);
     const pastWeekStart = (() => {
       const d = new Date();
@@ -293,7 +294,7 @@ describe('MgEventService', () => {
       return toIsoDate(d);
     })();
 
-    it('should sum cost per user for events whose week has already ended', async () => {
+    it('should return one raw spend per row for events whose week has already ended', async () => {
       // Arrange
       const chain: Record<string, ReturnType<typeof vi.fn>> = {};
       chain['select'] = vi.fn().mockReturnThis();
@@ -310,11 +311,19 @@ describe('MgEventService', () => {
       fromMock.mockReturnValue(chain);
 
       // Act
-      const result = await service.loadCostDeductions('server-1', new Date(0));
+      const result = await service.loadSpends('server-1', new Date(0));
 
-      // Assert
-      expect(result.get('a')).toBe(240);
-      expect(result.get('b')).toBe(100);
+      // Assert — spends are returned un-summed; eventWeekStartMs is the Monday 00:00 UTC of the event week.
+      expect(result).toHaveLength(3);
+      expect(
+        result
+          .filter(s => s.userId === 'a')
+          .map(s => s.cost)
+          .sort((x, y) => x - y)
+      ).toEqual([90, 150]);
+      expect(result.find(s => s.userId === 'b')?.cost).toBe(100);
+      const expectedWeekMs = getWeekStart(new Date(pastWeekStart)).getTime();
+      expect(result.every(s => s.eventWeekStartMs === expectedWeekMs)).toBe(true);
     });
 
     it('should exclude events whose week has not ended yet', async () => {
@@ -330,13 +339,13 @@ describe('MgEventService', () => {
       fromMock.mockReturnValue(chain);
 
       // Act
-      const result = await service.loadCostDeductions('server-1', new Date(0));
+      const result = await service.loadSpends('server-1', new Date(0));
 
       // Assert
-      expect(result.size).toBe(0);
+      expect(result).toHaveLength(0);
     });
 
-    it('should return an empty Map on Supabase error', async () => {
+    it('should return an empty array on Supabase error', async () => {
       // Arrange
       const chain: Record<string, ReturnType<typeof vi.fn>> = {};
       chain['select'] = vi.fn().mockReturnThis();
@@ -346,10 +355,10 @@ describe('MgEventService', () => {
       fromMock.mockReturnValue(chain);
 
       // Act
-      const result = await service.loadCostDeductions('server-1', new Date(0));
+      const result = await service.loadSpends('server-1', new Date(0));
 
       // Assert
-      expect(result.size).toBe(0);
+      expect(result).toHaveLength(0);
     });
   });
 });

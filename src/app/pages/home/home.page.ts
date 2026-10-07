@@ -66,8 +66,13 @@ export class HomePage implements OnInit {
     const config = await this.mgEventService.loadServerConfig(serverId);
     if (!config?.dkp_enabled) return;
 
-    const sinceDate = getDateForWeeksAgo(this.serverService.scoringWeeks() - 1);
-    const deductions = await this.mgEventService.loadCostDeductions(serverId, sinceDate);
+    // A spend inside the current window may have consumed earning-weeks up to a
+    // full window older than itself, so scan spends back 2× the window; FIFO
+    // attribution (loadFifoDeductions) then resolves which consumed points are
+    // still in-window and therefore still deducted.
+    const sinceDate = getDateForWeeksAgo(2 * this.serverService.scoringWeeks() - 1);
+    const spends = await this.mgEventService.loadSpends(serverId, sinceDate);
+    const deductions = await this.activityService.loadFifoDeductions(spends);
     this.mgDeductions.set(deductions);
   }
 }
