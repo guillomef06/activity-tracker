@@ -336,6 +336,118 @@ describe('ActivityService', () => {
       expect(result[0].totalScore).toBe(100);
       expect(result[0].mgDeduction).toBe(0);
     });
+
+    it('should floor the applied deduction at the available total so the balance never goes negative', () => {
+      // Arrange — a deduction larger than the remaining in-window points.
+      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 30, weeklyScores: [] }];
+      const deductions = new Map([['a', 100]]);
+
+      // Act
+      const result = service.applyMgDeductions(scores, deductions);
+
+      // Assert
+      expect(result[0].totalScore).toBe(0);
+      expect(result[0].mgDeduction).toBe(30);
+    });
+  });
+
+  describe('loadFifoDeductions', () => {
+    const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+
+    const configureWith = (rows: unknown[], serverId: string | null = 'server-1') => {
+      const supabaseMock = {
+        from: vi.fn().mockReturnValue({
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          gte: vi.fn().mockResolvedValue({ data: rows, error: null }),
+        }),
+      };
+      const authMock = {
+        getServerId: vi.fn().mockReturnValue(serverId),
+        getUserId: vi.fn().mockReturnValue(null),
+        userProfile: signal(null),
+      };
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideZonelessChangeDetection(),
+          ActivityService,
+          { provide: SupabaseService, useValue: supabaseMock },
+          { provide: AuthService, useValue: authMock },
+          { provide: ServerService, useValue: serverServiceMock },
+        ],
+      });
+      return TestBed.inject(ActivityService);
+    };
+
+    it('should return an empty map when there are no spends (no earnings query)', async () => {
+      const svc = configureWith([]);
+      const result = await svc.loadFifoDeductions([]);
+      expect(result.size).toBe(0);
+    });
+
+    it('should deduct oldest-first consumed points that are still in the window', async () => {
+      // scoringWeeks = 6. Earn 10/wk for the 6 weeks ending now; spend 20 last week.
+      serverServiceMock.scoringWeeks.set(6);
+      const currentWeekMonday = (() => {
+        const d = new Date();
+        const day = d.getUTCDay();
+        d.setUTCDate(d.getUTCDate() - ((day + 6) % 7));
+        d.setUTCHours(0, 0, 0, 0);
+        return d.getTime();
+      })();
+      const rows = [];
+      for (let o = -5; o <= 0; o++) {
+        rows.push({
+          user_id: 'u',
+          activity_type: 'legion',
+          points: 10,
+          date: new Date(currentWeekMonday + o * MS_PER_WEEK).toISOString(),
+        });
+      }
+      const svc = configureWith(rows);
+
+      const result = await svc.loadFifoDeductions([
+        { userId: 'u', eventWeekStartMs: currentWeekMonday - MS_PER_WEEK, cost: 20 },
+      ]);
+
+      // 20 consumed from the two oldest in-window weeks, both still in window → 20 deducted.
+      expect(result.get('u')).toBe(20);
+    });
+
+    it('should exclude the tiebreaker activity type from consumable earnings', async () => {
+      serverServiceMock.scoringWeeks.set(6);
+      serverServiceMock.server.set({ tiebreaker_activity_type: 'tiebreak' } as unknown as Server);
+      const currentWeekMonday = (() => {
+        const d = new Date();
+        const day = d.getUTCDay();
+        d.setUTCDate(d.getUTCDate() - ((day + 6) % 7));
+        d.setUTCHours(0, 0, 0, 0);
+        return d.getTime();
+      })();
+      // Only tiebreaker points exist → nothing consumable → no deduction.
+      const rows = [
+        {
+          user_id: 'u',
+          activity_type: 'tiebreak',
+          points: 50,
+          date: new Date(currentWeekMonday - MS_PER_WEEK).toISOString(),
+        },
+      ];
+      const svc = configureWith(rows);
+
+      const result = await svc.loadFifoDeductions([
+        { userId: 'u', eventWeekStartMs: currentWeekMonday - MS_PER_WEEK, cost: 20 },
+      ]);
+
+      expect(result.get('u') ?? 0).toBe(0);
+    });
+
+    it('should return an empty map when there is no server id', async () => {
+      const svc = configureWith([], null);
+      const result = await svc.loadFifoDeductions([{ userId: 'u', eventWeekStartMs: Date.now(), cost: 20 }]);
+      expect(result.size).toBe(0);
+    });
   });
 
   describe('batchImportActivities', () => {
