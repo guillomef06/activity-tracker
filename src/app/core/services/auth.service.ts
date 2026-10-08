@@ -471,4 +471,84 @@ export class AuthService {
     const { data } = await this.supabase.rpc('check_username_available', { p_username: username });
     return (data as boolean) ?? false;
   }
+
+  // ── Discord account linking ────────────────────────────────────────────────
+  // Pairing a Discord account lets the Discord bot submit activities on this
+  // user's behalf (the bot only acts for a verifiably-linked Discord user). The
+  // link is a VERIFIED OAuth identity (auth.identities); sync_discord_link() then
+  // mirrors it into the public `discord_links` table the bot path reads.
+
+  /**
+   * Start Discord OAuth to attach a Discord identity to the current account.
+   * Redirects to Discord, then back to `redirectTo` (default: current URL). The
+   * identity isn't usable by the bot until syncDiscordLink() runs on return.
+   */
+  async linkDiscord(redirectTo?: string): Promise<{ error: string | null }> {
+    try {
+      const { error } = await this.supabase.auth.linkIdentity({
+        provider: 'discord',
+        options: { redirectTo: redirectTo ?? window.location.href },
+      });
+      if (error) return { error: error.message };
+      return { error: null };
+    } catch (err) {
+      return { error: (err as Error).message };
+    }
+  }
+
+  /**
+   * Mirror the just-linked Discord identity into `discord_links` (server-side,
+   * via the SECURITY DEFINER RPC — the Discord id is read from auth.identities,
+   * never trusted from the client). Idempotent; safe to call on every return.
+   * Returns the linked Discord id, or null if no Discord identity is present.
+   */
+  async syncDiscordLink(): Promise<{ discordId: string | null; error: string | null }> {
+    try {
+      const { data, error } = await this.supabase.rpc('sync_discord_link');
+      if (error) return { discordId: null, error: error.message };
+      return { discordId: (data as string | null) ?? null, error: null };
+    } catch (err) {
+      return { discordId: null, error: (err as Error).message };
+    }
+  }
+
+  /**
+   * Current user's Discord link row (discord_user_id + display username), or null
+   * if not linked. RLS limits this to the caller's own row.
+   */
+  async getDiscordLink(): Promise<{ discordUserId: string; discordUsername: string | null } | null> {
+    const userId = this.getUserId();
+    if (!userId) return null;
+    const { data, error } = await this.supabase
+      .from('discord_links')
+      .select('discord_user_id, discord_username')
+      .eq('user_id', userId)
+      .maybeSingle();
+    if (error || !data) return null;
+    return { discordUserId: data.discord_user_id, discordUsername: data.discord_username };
+  }
+
+  /**
+   * Remove the Discord pairing: delete the mapping row (RLS: own row only) and
+   * detach the OAuth identity so a future link starts clean.
+   */
+  async unlinkDiscord(): Promise<{ error: string | null }> {
+    try {
+      const userId = this.getUserId();
+      if (!userId) return { error: 'Not authenticated' };
+
+      const { error: delError } = await this.supabase.from('discord_links').delete().eq('user_id', userId);
+      if (delError) return { error: delError.message };
+
+      // Best-effort: detach the OAuth identity too (requires >1 identity to unlink).
+      const { data: identities } = await this.supabase.auth.getUserIdentities();
+      const discord = identities?.identities?.find(i => i.provider === 'discord');
+      if (discord) {
+        await this.supabase.auth.unlinkIdentity(discord);
+      }
+      return { error: null };
+    } catch (err) {
+      return { error: (err as Error).message };
+    }
+  }
 }

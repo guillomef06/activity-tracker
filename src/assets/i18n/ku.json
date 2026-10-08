@@ -637,6 +637,15 @@
       "success": "پرسیاری گەڕانەوە نوێکرایەوە",
       "error": "نوێکردنەوەی پرسیاری گەڕانەوە سەرنەکەوت"
     },
+    "discord": {
+      "title": "Discord Account",
+      "description": "Link your Discord account to submit activities from Discord via the bot.",
+      "connect": "Connect Discord",
+      "disconnect": "Disconnect",
+      "connectedAs": "Connected as {{name}}",
+      "disconnected": "Discord account disconnected",
+      "error": "Failed to update Discord link"
+    },
     "language": {
       "title": "زمانی بەرنامە"
     },

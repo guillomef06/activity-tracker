@@ -724,6 +724,15 @@
       "success": "Question de récupération mise à jour",
       "error": "Échec de la mise à jour de la question"
     },
+    "discord": {
+      "title": "Discord Account",
+      "description": "Link your Discord account to submit activities from Discord via the bot.",
+      "connect": "Connect Discord",
+      "disconnect": "Disconnect",
+      "connectedAs": "Connected as {{name}}",
+      "disconnected": "Discord account disconnected",
+      "error": "Failed to update Discord link"
+    },
     "language": {
       "title": "Langue de l'application"
     },

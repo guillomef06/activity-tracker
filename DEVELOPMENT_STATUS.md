@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 5 octobre 2026
+**Dernière mise à jour:** 8 octobre 2026
 
 ## 📋 Résumé
 
@@ -14,7 +14,7 @@ Application Angular 22 de gestion d'activités avec backend Supabase et système
 - Upgrade Angular 21 → 22 (montée de version pure, aucun changement de comportement)
 - Zoneless change detection activé (`provideZonelessChangeDetection()` dans `app.config.ts`, `zone.js` retiré des polyfills et de `package.json`) : possible grâce à `OnPush` partout + app 100% signal-driven (prérequis Signal Forms / Resource API déjà en place)
 - Builders `serve` et `extract-i18n` migrés de `@angular-devkit/build-angular` (déprécié) vers `@angular/build` dans `angular.json`, suite à la dépréciation du support Webpack d'Angular
-- Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `discord_scheduled_messages`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
+- Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `discord_scheduled_messages`, `discord_links`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
 - Authentification par username uniquement (email généré en interne `username@app.tracker`)
 - RLS configuré avec helper functions `SECURITY DEFINER`
 - PWA (manifest, service worker, banner d'installation A2HS)
@@ -24,6 +24,7 @@ Application Angular 22 de gestion d'activités avec backend Supabase et système
 - Signup admin (crée un serveur) / member (via token d'invitation)
 - Login par username + password
 - Dialog "Mon Compte" : modifier display name, mot de passe, question de récupération + préférences langue
+- **Liaison compte Discord** (OAuth) : bouton "Connect Discord" dans le dialog "Mon Compte" → `auth.linkIdentity({ provider: 'discord' })` attache une identité Discord vérifiée ; au retour, `sync_discord_link()` (RPC SECURITY DEFINER, migration `43-discord-account-link.sql`) lit l'id Discord **côté serveur** depuis `auth.identities` (jamais fourni par le client) et l'enregistre dans la table publique `discord_links` (RLS : chacun ne voit/supprime que sa propre ligne). Permet au bot Discord de soumettre des activités au nom d'un utilisateur dont le compte est lié de façon vérifiable. Pré-requis déploiement : provider Discord activé dans Supabase Auth + app OAuth Discord (scope `identify`)
 - Account recovery : question secrète → reset mot de passe (rate limiting custom, sans email)
 - Rôles : `super_admin` (accès global), `admin` (gestion serveur), `member`
 
