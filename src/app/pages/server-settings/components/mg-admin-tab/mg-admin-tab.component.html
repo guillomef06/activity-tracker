@@ -174,91 +174,37 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Selection -->
-      @if (!isLocked()) {
-        <mat-card class="section-card">
-          <mat-card-header>
-            <mat-icon mat-card-avatar>groups</mat-icon>
-            <mat-card-title>{{ 'mg.admin.selection.title' | translate }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            @if (isAutoMode()) {
-              <!-- Auto mode: generate preview then confirm -->
-              @if (!showPreview()) {
-                <button mat-stroked-button (click)="generatePreview()">
-                  <mat-icon>auto_awesome</mat-icon>
-                  {{ 'mg.admin.selection.generate' | translate }}
-                </button>
-              } @else {
-                <p class="preview-label">{{ 'mg.admin.selection.previewLabel' | translate }}</p>
-                <div class="preview-list">
-                  @for (p of previewPayloads(); track trackByPayload($index, p)) {
-                    <div class="list-row" [class.ffa-row]="p.selection_type === 'ffa'">
-                      <span class="rank">{{ p.rank }}</span>
-                      <span>
-                        @if (p.selection_type === 'ffa') {
-                          {{ 'mg.registration.ffaSlot' | translate }}
-                        } @else {
-                          {{ getDisplayName(p.user_id) }}
-                        }
-                      </span>
-                      <mat-chip [class]="p.selection_type">{{ p.selection_type }}</mat-chip>
-                    </div>
-                  }
-                </div>
-                <div class="preview-actions">
-                  <button mat-flat-button color="primary" [disabled]="isGenerating()" (click)="confirmAutoSelection()">
-                    {{ 'mg.admin.selection.confirm' | translate }}
-                  </button>
-                  <button mat-stroked-button (click)="cancelPreview()">
-                    {{ 'mg.admin.selection.cancel' | translate }}
-                  </button>
-                </div>
-              }
-            }
+      <!-- Selection: editable draft, or read-only once published / in progress -->
+      <app-mg-selection-panel
+        [event]="mgEvent()!"
+        [kind]="currentPanelKind()"
+        [registrations]="registrations()"
+        [selection]="currentSelection()"
+        [capacity]="savedCapacity()"
+        [assignmentMode]="savedAssignmentMode()"
+        [slotRows]="savedSlotRows()"
+        [dkpEnabled]="savedDkpEnabled()"
+        [totalScores]="totalScoreByUserId()"
+        (selectionSaved)="reloadCurrentSelection()"
+        (published)="reloadCurrentEvent()"
+      />
+    }
 
-            <!-- Current saved selection -->
-            @if (currentSelection().length > 0) {
-              <mat-divider class="section-divider" />
-              <p class="section-label">{{ 'mg.admin.selection.current' | translate }}</p>
-              <div class="selection-list">
-                @for (slot of selectedPlayers(); track trackBySel($index, slot)) {
-                  <div class="list-row">
-                    <span class="rank">{{ slot.rank }}</span>
-                    <span>{{ slot.user_profiles?.display_name }}</span>
-                  </div>
-                }
-                @if (ffaCount() > 0) {
-                  <p class="ffa-info">{{ 'mg.registration.ffaSlots' | translate: { count: ffaCount() } }}</p>
-                }
-              </div>
-            }
-          </mat-card-content>
-
-          <mat-card-actions align="end">
-            @if (canPublish()) {
-              <button
-                mat-flat-button
-                color="accent"
-                [disabled]="isPublishing() || currentSelection().length === 0"
-                (click)="publishSelection()"
-              >
-                <mat-icon>publish</mat-icon>
-                {{ 'mg.admin.selection.publish' | translate }}
-              </button>
-            }
-          </mat-card-actions>
-        </mat-card>
-      } @else {
-        <!-- Locked state -->
-        <mat-card class="section-card">
-          <mat-card-content>
-            <div class="locked-state">
-              <mat-icon>lock</mat-icon>
-              <p>{{ 'mg.admin.selectionLocked' | translate }}</p>
-            </div>
-          </mat-card-content>
-        </mat-card>
+    <!-- Correction of the last finished event (players don't always follow the planned order) -->
+    @if (lastFinishedEvent(); as finished) {
+      @if (lastFinishedSelection().length > 0) {
+        <app-mg-selection-panel
+          [event]="finished"
+          kind="correction"
+          [registrations]="lastFinishedRegistrations()"
+          [selection]="lastFinishedSelection()"
+          [capacity]="savedCapacity()"
+          [assignmentMode]="savedAssignmentMode()"
+          [slotRows]="savedSlotRows()"
+          [dkpEnabled]="savedDkpEnabled()"
+          [totalScores]="totalScoreByUserId()"
+          (selectionSaved)="reloadLastFinishedSelection()"
+        />
       }
     }
   }

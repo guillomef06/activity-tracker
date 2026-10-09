@@ -14,7 +14,8 @@ import type {
   UpsertMgSlotConfigRow,
   RegisterMgPlayerPayload,
 } from '@shared/models';
-import { resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
+import type { MgSlotRow } from '@shared/utils/mg-slot.util';
+import { buildSelectionPayload } from '@shared/utils/mg-selection.util';
 import { getWeekStart, getWeekEnd } from '@shared/utils/date.util';
 import type { FifoSpend } from '@shared/utils/mg-dkp.util';
 
@@ -42,6 +43,27 @@ export class MgEventService {
     return data as MgEvent | null;
   }
 
+  /**
+   * Most recent finished event, used by admins to correct its selection after
+   * the fact (loadCurrentEvent excludes finished events).
+   */
+  async loadLastFinishedEvent(serverId: string): Promise<MgEvent | null> {
+    const { data, error } = await this.supabase
+      .from('mg_events')
+      .select('*')
+      .eq('server_id', serverId)
+      .eq('status', 'finished')
+      .order('start_date', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error loading last finished MG event:', error);
+      return null;
+    }
+    return data as MgEvent | null;
+  }
+
   async loadServerConfig(serverId: string): Promise<ServerMgConfig | null> {
     const { data, error } = await this.supabase
       .from('server_mg_config')
@@ -62,6 +84,7 @@ export class MgEventService {
         server_id: serverId,
         capacity: config.capacity,
         assignment_mode: config.assignment_mode,
+        dkp_enabled: config.dkp_enabled,
       },
       { onConflict: 'server_id' }
     );
@@ -141,15 +164,40 @@ export class MgEventService {
     return (data ?? []) as MgSelectionWithUser[];
   }
 
+  /**
+   * Replaces an event's selection. New rows are inserted BEFORE the old ones are
+   * removed, so a failure part-way leaves the previous selection intact instead
+   * of an empty one (this also runs on already-published events, where losing
+   * the rows would silently drop DKP costs already charged to players).
+   */
   async saveSelection(mgEventId: string, payloads: MgSelectionPayload[]): Promise<{ error: unknown }> {
-    const { error: deleteError } = await this.supabase.from('mg_selections').delete().eq('mg_event_id', mgEventId);
+    const { data: existing, error: loadError } = await this.supabase
+      .from('mg_selections')
+      .select('id')
+      .eq('mg_event_id', mgEventId);
+    if (loadError) return { error: loadError };
 
-    if (deleteError) return { error: deleteError };
+    const previousIds = (existing ?? []).map((row: { id: string }) => row.id);
 
-    if (payloads.length === 0) return { error: null };
+    let insertedIds: string[] = [];
+    if (payloads.length > 0) {
+      const { data: inserted, error: insertError } = await this.supabase
+        .from('mg_selections')
+        .insert(payloads)
+        .select('id');
+      if (insertError) return { error: insertError };
+      insertedIds = (inserted ?? []).map((row: { id: string }) => row.id);
+    }
 
-    const { error } = await this.supabase.from('mg_selections').insert(payloads);
-    return { error };
+    if (previousIds.length === 0) return { error: null };
+
+    const { error: deleteError } = await this.supabase.from('mg_selections').delete().in('id', previousIds);
+    if (deleteError) {
+      // Best-effort rollback so the event never ends up with both selections.
+      if (insertedIds.length > 0) await this.supabase.from('mg_selections').delete().in('id', insertedIds);
+      return { error: deleteError };
+    }
+    return { error: null };
   }
 
   async publishSelection(mgEventId: string): Promise<{ error: unknown }> {
@@ -168,49 +216,11 @@ export class MgEventService {
     slotRows: MgSlotRow[]
   ): MgSelectionPayload[] {
     const scoreByUserId = new Map(scores.map(s => [s.user_id, s.total_points]));
-    const sorted = [...registrations].sort(
-      (a, b) => (scoreByUserId.get(b.user_id) ?? 0) - (scoreByUserId.get(a.user_id) ?? 0)
-    );
+    const rankedUserIds = [...registrations]
+      .sort((a, b) => (scoreByUserId.get(b.user_id) ?? 0) - (scoreByUserId.get(a.user_id) ?? 0))
+      .map(reg => reg.user_id);
 
-    const selected = sorted.slice(0, capacity);
-    const ffaCount = Math.max(0, capacity - selected.length);
-
-    const payloads: MgSelectionPayload[] = selected.map((reg, i) => ({
-      mg_event_id: mgEventId,
-      user_id: reg.user_id,
-      rank: i + 1,
-      selection_type: 'selected',
-      selected_by: 'automatic',
-      cost: resolveSlotForRank(i + 1, slotRows)?.cost ?? 0,
-    }));
-
-    for (let i = 0; i < ffaCount; i++) {
-      payloads.push({
-        mg_event_id: mgEventId,
-        user_id: null,
-        rank: selected.length + i + 1,
-        selection_type: 'ffa',
-        selected_by: 'automatic',
-        cost: 0,
-      });
-    }
-
-    return payloads;
-  }
-
-  buildManualSelectionPayload(
-    mgEventId: string,
-    orderedUserIds: string[],
-    slotRows: MgSlotRow[]
-  ): MgSelectionPayload[] {
-    return orderedUserIds.map((userId, i) => ({
-      mg_event_id: mgEventId,
-      user_id: userId,
-      rank: i + 1,
-      selection_type: 'selected',
-      selected_by: 'manual',
-      cost: resolveSlotForRank(i + 1, slotRows)?.cost ?? 0,
-    }));
+    return buildSelectionPayload(mgEventId, rankedUserIds, capacity, slotRows, 'automatic');
   }
 
   /**

@@ -1,0 +1,130 @@
+.section-card {
+  width: 100%;
+}
+
+.hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.section-label {
+  margin: 1rem 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.section-divider {
+  margin: 1rem 0;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.ffa-info {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.error-text {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--mat-sys-error);
+}
+
+.player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container);
+  }
+
+  .rank {
+    min-width: 1.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-align: right;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .player-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .row-actions {
+    display: flex;
+    flex-shrink: 0;
+
+    button {
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+    }
+  }
+
+  .player-meta,
+  .player-comment {
+    flex-basis: 100%;
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .player-comment {
+    font-style: italic;
+  }
+}
+
+.locked-state {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+mat-card-actions {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.unsaved-hint {
+  margin-right: auto;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+}

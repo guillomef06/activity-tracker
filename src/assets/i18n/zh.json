@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "排序方式",
+    "sortCurrent": "当前",
+    "sortSeason": "赛季",
+    "seasonPointsShort": "赛季",
+    "currentPointsTooltip": "当前排名积分（滚动窗口，扣除 MG 消耗后）",
+    "seasonPointsTooltip": "本赛季累计积分（所有周，扣除 MG 消耗前）"
   },
   "common": {
     "points": "积分",
@@ -907,6 +913,7 @@
       "noEvent": "该服务器暂无即将举行的 MG 赛事。",
       "eventTitle": "当前赛事",
       "selectionLocked": "名单已锁定——赛事正在进行中。",
+      "selectionPublishedLocked": "选拔已发布并锁定。活动结束后可以更正。",
       "configSaved": "配置已保存。",
       "configSaveError": "配置保存失败。",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "入选名单",
         "generate": "生成自动名单",
-        "previewLabel": "预览——确认以保存：",
-        "confirm": "确认",
-        "cancel": "取消",
         "publish": "公布名单",
-        "current": "当前名单"
+        "current": "当前名单",
+        "players": "已选玩家",
+        "available": "尚未安排的已报名玩家",
+        "noneSelected": "尚未选择任何玩家。请从下方列表添加玩家。",
+        "noneAvailable": "所有已报名的玩家都已在选拔名单中。",
+        "add": "添加 {{name}}",
+        "remove": "移除 {{name}}",
+        "moveUp": "上移 {{name}}",
+        "moveDown": "下移 {{name}}",
+        "save": "保存更改",
+        "reset": "放弃更改",
+        "unsaved": "有未保存的更改 — 请先保存再发布。",
+        "overCapacity": "玩家过多（{{count}} / {{capacity}}）：请先移除部分玩家再保存。"
+      },
+      "correction": {
+        "title": "更正上一场活动",
+        "hint": "活动已结束。调整顺序时，只会重新计算名次发生变化的玩家的费用；他们在排行榜上的 DKP 也会重新计算。"
       }
     }
   },
