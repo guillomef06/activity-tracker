@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, input, signal, inject, computed } f
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -9,6 +10,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserScore } from '@shared/models/activity.model';
+
+/** Which metric the leaderboard is ranked/sorted by. */
+export type LeaderboardSortKey = 'current' | 'season';
 import { ActivityLabelPipe } from '@shared/pipes/activity-label.pipe';
 import { WeekLabelPipe } from '@shared/pipes/week-label.pipe';
 import { ShortDatePipe } from '@shared/pipes/short-date.pipe';
@@ -24,6 +28,7 @@ import { firstValueFrom } from 'rxjs';
     MatCardModule,
     MatIconModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatExpansionModule,
     MatChipsModule,
     MatBadgeModule,
@@ -50,6 +55,33 @@ export class ActivitiesDetailsComponent {
   protected readonly selectedUserId = signal<string | null>(null);
   protected readonly deletingActivityId = signal<string | null>(null);
   protected readonly isSuperAdmin = computed(() => this.authService.isSuperAdmin());
+
+  /** Current ranking metric. Defaults to current (net) points. */
+  protected readonly sortKey = signal<LeaderboardSortKey>('current');
+
+  /**
+   * True once any user has a season total — the sort toggle and the season chip
+   * only appear when season data was actually loaded (no season covering "now"
+   * leaves every seasonTotal undefined, and we keep the original UI).
+   */
+  protected readonly hasSeasonTotals = computed(() => this.userScores().some(u => u.seasonTotal !== undefined));
+
+  /**
+   * The scores in display order. The parent already sorts by current (net)
+   * total descending, so 'current' preserves input order (keeping the parent's
+   * tiebreaker rule); 'season' re-sorts by seasonTotal descending.
+   */
+  protected readonly rankedScores = computed<UserScore[]>(() => {
+    const scores = this.userScores();
+    if (this.sortKey() === 'season') {
+      return [...scores].sort((a, b) => (b.seasonTotal ?? 0) - (a.seasonTotal ?? 0));
+    }
+    return scores;
+  });
+
+  protected setSortKey(key: LeaderboardSortKey): void {
+    this.sortKey.set(key);
+  }
 
   protected readonly trackByUserId = (_index: number, user: UserScore) => user.userId;
   protected readonly trackByIndex = (index: number) => index;

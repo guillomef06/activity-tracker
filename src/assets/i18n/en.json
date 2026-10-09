@@ -326,7 +326,13 @@
     "deleteActivity": "Delete activity",
     "deleteActivityConfirm": "Permanently delete this activity? This action cannot be undone.",
     "deleteActivitySuccess": "Activity deleted",
-    "deleteActivityFailed": "Failed to delete activity"
+    "deleteActivityFailed": "Failed to delete activity",
+    "sortBy": "Sort by",
+    "sortCurrent": "Current",
+    "sortSeason": "Season",
+    "seasonPointsShort": "season",
+    "currentPointsTooltip": "Current ranking points (rolling window, after any MG spending)",
+    "seasonPointsTooltip": "Total points earned this season (all weeks, before MG spending)"
   },
   "common": {
     "points": "points",
