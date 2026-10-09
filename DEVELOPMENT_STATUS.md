@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 5 octobre 2026
+**Dernière mise à jour:** 8 octobre 2026
 
 ## 📋 Résumé
 
@@ -14,7 +14,7 @@ Application Angular 22 de gestion d'activités avec backend Supabase et système
 - Upgrade Angular 21 → 22 (montée de version pure, aucun changement de comportement)
 - Zoneless change detection activé (`provideZonelessChangeDetection()` dans `app.config.ts`, `zone.js` retiré des polyfills et de `package.json`) : possible grâce à `OnPush` partout + app 100% signal-driven (prérequis Signal Forms / Resource API déjà en place)
 - Builders `serve` et `extract-i18n` migrés de `@angular-devkit/build-angular` (déprécié) vers `@angular/build` dans `angular.json`, suite à la dépréciation du support Webpack d'Angular
-- Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `discord_scheduled_messages`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
+- Backend Supabase : `servers`, `user_profiles`, `activities`, `invitation_tokens`, `activity_point_rules`, `discord_webhooks`, `discord_scheduled_messages`, `discord_links`, `server_activity_settings`, `mg_events`, `server_mg_config`, `mg_registrations`, `mg_selections`
 - Authentification par username uniquement (email généré en interne `username@app.tracker`)
 - RLS configuré avec helper functions `SECURITY DEFINER`
 - PWA (manifest, service worker, banner d'installation A2HS)
@@ -24,6 +24,8 @@ Application Angular 22 de gestion d'activités avec backend Supabase et système
 - Signup admin (crée un serveur) / member (via token d'invitation)
 - Login par username + password
 - Dialog "Mon Compte" : modifier display name, mot de passe, question de récupération + préférences langue
+- **Liaison compte Discord** (OAuth) : bouton "Connect Discord" dans le dialog "Mon Compte" → `auth.linkIdentity({ provider: 'discord' })` attache une identité Discord vérifiée ; au retour, `sync_discord_link()` (RPC SECURITY DEFINER, migration `43-discord-account-link.sql`) lit l'id Discord **côté serveur** depuis `auth.identities` (jamais fourni par le client) et l'enregistre dans la table publique `discord_links` (RLS : chacun ne voit/supprime que sa propre ligne). Permet au bot Discord de soumettre des activités au nom d'un utilisateur dont le compte est lié de façon vérifiable. Pré-requis déploiement : provider Discord activé dans Supabase Auth + app OAuth Discord (scope `identify`)
+- **Soumission d'activité via Discord (backend)** : migration `44-discord-submit-activity.sql` + Edge Function `supabase/functions/discord-submit`. Le bot n'appelle QUE l'Edge Function (secret partagé `x-bot-secret`) ; celle-ci tourne avec le service role et relaie vers des RPC SECURITY DEFINER — le service role ne quitte jamais Supabase. `submit_activity_for_discord(discord_id, activity, rank, week_date)` est le point unique de validation : résout l'utilisateur lié, normalise la semaine au lundi 00:00 UTC (même règle que l'UI web + trigger 42), choisit participation vs classement (`server_activity_settings`), calcule les points (`calculate_activity_points` ou points de participation), puis upsert dans `activities` — la validation saison/date/planning est déléguée au trigger de la migration 42 (exception capturée → rejet JSON propre). RPC d'autocomplete `discord_open_weeks` / `discord_week_activities` pour alimenter les listes de la commande Discord. Toutes réservées à `service_role`. Portée v1 : auto-soumission uniquement (pas d'admin-pour-autrui ni de batch). Pré-requis déploiement : Edge Function déployée + secret `DISCORD_BOT_SECRET`. **Côté bot Discord (repo séparé) : non encore implémenté.**
 - Account recovery : question secrète → reset mot de passe (rate limiting custom, sans email)
 - Rôles : `super_admin` (accès global), `admin` (gestion serveur), `member`
 
@@ -112,6 +114,12 @@ Application Angular 22 de gestion d'activités avec backend Supabase et système
   - `MgAdminTabComponent` : nouveau `computed()` privé `totalScoreByUserId` (Map userId → totalScore construite depuis `activityService.getUserScores()`) consommé par `registrationRows` pour enrichir chaque ligne d'un champ `totalScore: number | null` — `null` si le joueur n'a aucune activité dans la fenêtre de scoring courante (le template affiche alors `0`).
   - i18n : `mg.admin.registrations.totalScore` ajouté dans les **14 locales**.
   - **Renommage `UserScore.sixWeekTotal` → `UserScore.totalScore`** (`activity.model.ts`) : le nom `sixWeekTotal` était devenu trompeur depuis l'introduction de `scoring_weeks_multiplier` (jusqu'à 18 semaines) — propagé dans `ActivityService` (`buildUserScores`, `applyMgDeductions`, `compareByScoreDesc`), `activities-details.component.html`, et tous les tests concernés.
+- **Total de saison sur le leaderboard (tri sélectionnable)** ✅ : chaque carte joueur du leaderboard (`app-activities-details`) affiche, à côté du total courant (net, fenêtre glissante, après dépenses DKP), un second chip « saison » = **tous les points gagnés sur la saison en cours**, indépendamment de la fenêtre glissante ET des dépenses DKP. Un `mat-button-toggle` en tête de liste bascule le tri/classement entre « Actuel » (défaut) et « Saison ».
+  - **Nouvelle requête** (`ActivityService.loadSeasonTotals(season)`) : la saison pouvant être plus longue que la fenêtre glissante, le signal d'activités chargé ne contient pas forcément les semaines les plus anciennes de la saison — on fait donc une requête dédiée qui somme `points` par `user_id` sur toute la plage `[startDate, getWeekEnd(endDate)]`, scoping serveur explicite (comme `loadActivities`, pour ne pas dépendre de la seule RLS côté super_admin), type tiebreaker exclu pour que « Saison » et « Actuel » mesurent le même genre de points.
+  - `ActivityService.applySeasonTotals(scores, totals)` : fonction pure qui renseigne `UserScore.seasonTotal` (0 si absent), sans toucher à l'ordre — le composant leaderboard décide de la clé de tri. `UserScore.seasonTotal?: number` ajouté au modèle.
+  - `HomePage` : charge les totaux de saison en parallèle des déductions DKP (`loadSeasonTotals`, seulement si une saison couvre « maintenant » via `SeasonService.getSeasonForDate(new Date())`) et les fusionne dans le `computed()` `userScores`.
+  - `ActivitiesDetailsComponent` : signal `sortKey` (`'current' | 'season'`, défaut `'current'`), `computed()` `rankedScores` (ordre parent préservé pour `current`, re-tri par `seasonTotal` desc pour `season`), `hasSeasonTotals` (toggle + chip saison masqués si aucune donnée de saison). Le chip de la clé active est mis en valeur (`.score-chip-active`).
+  - i18n : `activitiesDetails.sortBy`/`sortCurrent`/`sortSeason`/`seasonPointsShort`/`currentPointsTooltip`/`seasonPointsTooltip` ajoutés en **en/fr** (même précédent de périmètre que slot-config/DKP).
 
 ### Seasons (calendrier d'activités dynamique)
 

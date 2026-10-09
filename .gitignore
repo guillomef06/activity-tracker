@@ -41,3 +41,6 @@ docs/
 .playwright-mcp/
 
 ctx7.txt
+
+# Claude Code local settings/hooks
+.claude/

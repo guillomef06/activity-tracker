@@ -1,4 +1,4 @@
-import { Component, inject, signal, ChangeDetectionStrategy, computed } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, computed, OnInit } from '@angular/core';
 import { form, FormField, required, minLength, maxLength, pattern } from '@angular/forms/signals';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -60,7 +60,7 @@ interface RecoveryFormModel {
   styleUrl: './user-account-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserAccountDialogComponent {
+export class UserAccountDialogComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly languageService = inject(LanguageService);
   private readonly themeService = inject(ThemeService);
@@ -84,6 +84,11 @@ export class UserAccountDialogComponent {
   protected readonly hidePassword = signal(true);
   protected readonly hideConfirmPassword = signal(true);
   protected readonly hideAnswer = signal(true);
+
+  // Discord account linking
+  protected readonly discordLink = signal<{ discordUserId: string; discordUsername: string | null } | null>(null);
+  protected readonly loadingDiscord = signal(false);
+  protected readonly discordLinked = computed(() => this.discordLink() !== null);
 
   protected readonly displayNameModel = signal<DisplayNameFormModel>({
     displayName: this.authService.userProfile()?.display_name ?? '',
@@ -127,6 +132,39 @@ export class UserAccountDialogComponent {
   );
   protected readonly questionError = computed(() => getFieldErrorKey(this.recoveryForm.questionId().errors()));
   protected readonly answerError = computed(() => getFieldErrorKey(this.recoveryForm.answer().errors()));
+
+  async ngOnInit(): Promise<void> {
+    // On return from the Discord OAuth redirect the identity exists but isn't yet
+    // mirrored into discord_links — sync it (idempotent), then load current state.
+    await this.authService.syncDiscordLink();
+    this.discordLink.set(await this.authService.getDiscordLink());
+  }
+
+  /** Begin Discord OAuth (redirects away, then back to this page). */
+  protected async onConnectDiscord(): Promise<void> {
+    if (this.loadingDiscord()) return;
+    this.loadingDiscord.set(true);
+    const { error } = await this.authService.linkDiscord();
+    // Success navigates away; only reach here (and clear loading) on failure.
+    if (error) {
+      this.snackbar.error(this.translate.instant('accountSettings.discord.error'));
+      this.loadingDiscord.set(false);
+    }
+  }
+
+  /** Remove the Discord pairing. */
+  protected async onDisconnectDiscord(): Promise<void> {
+    if (this.loadingDiscord()) return;
+    this.loadingDiscord.set(true);
+    const { error } = await this.authService.unlinkDiscord();
+    this.loadingDiscord.set(false);
+    if (error) {
+      this.snackbar.error(this.translate.instant('accountSettings.discord.error'));
+    } else {
+      this.discordLink.set(null);
+      this.snackbar.success(this.translate.instant('accountSettings.discord.disconnected'));
+    }
+  }
 
   protected async onSaveDisplayName(event: Event): Promise<void> {
     event.preventDefault();

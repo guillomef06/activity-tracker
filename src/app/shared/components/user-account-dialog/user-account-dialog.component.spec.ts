@@ -53,6 +53,10 @@ interface DialogInternals {
   onSaveRecovery(event: Event): Promise<void>;
   changeLanguage(lang: SupportedLanguage): Promise<void>;
   close(): void;
+  discordLink: () => { discordUserId: string; discordUsername: string | null } | null;
+  discordLinked: () => boolean;
+  onConnectDiscord(): Promise<void>;
+  onDisconnectDiscord(): Promise<void>;
 }
 
 function submitEvent(): Event {
@@ -67,6 +71,10 @@ describe('UserAccountDialogComponent', () => {
     updatePassword: ReturnType<typeof vi.fn>;
     updateRecovery: ReturnType<typeof vi.fn>;
     userProfile: WritableSignal<UserProfile | null>;
+    linkDiscord: ReturnType<typeof vi.fn>;
+    syncDiscordLink: ReturnType<typeof vi.fn>;
+    getDiscordLink: ReturnType<typeof vi.fn>;
+    unlinkDiscord: ReturnType<typeof vi.fn>;
   };
   let languageService: {
     setLanguage: ReturnType<typeof vi.fn>;
@@ -86,6 +94,10 @@ describe('UserAccountDialogComponent', () => {
       updateDisplayName: vi.fn().mockResolvedValue({ error: null }),
       updatePassword: vi.fn().mockResolvedValue({ error: null }),
       updateRecovery: vi.fn().mockResolvedValue({ error: null }),
+      linkDiscord: vi.fn().mockResolvedValue({ error: null }),
+      syncDiscordLink: vi.fn().mockResolvedValue({ discordId: null, error: null }),
+      getDiscordLink: vi.fn().mockResolvedValue(null),
+      unlinkDiscord: vi.fn().mockResolvedValue({ error: null }),
     };
 
     languageService = {
@@ -260,5 +272,43 @@ describe('UserAccountDialogComponent', () => {
   it('closes dialog on close()', () => {
     internals().close();
     expect(dialogRef.close).toHaveBeenCalled();
+  });
+
+  describe('Discord link', () => {
+    it('syncs then loads the link state on init', () => {
+      // ngOnInit already ran in beforeEach's detectChanges()
+      expect(authService.syncDiscordLink).toHaveBeenCalled();
+      expect(authService.getDiscordLink).toHaveBeenCalled();
+    });
+
+    it('reflects a linked account after init', async () => {
+      authService.getDiscordLink.mockResolvedValue({ discordUserId: '123', discordUsername: 'cmdr' });
+      await (component as unknown as { ngOnInit(): Promise<void> }).ngOnInit();
+      expect(internals().discordLinked()).toBe(true);
+      expect(internals().discordLink()?.discordUsername).toBe('cmdr');
+    });
+
+    it('starts OAuth on connect', async () => {
+      await internals().onConnectDiscord();
+      expect(authService.linkDiscord).toHaveBeenCalled();
+    });
+
+    it('surfaces an error if connect fails', async () => {
+      authService.linkDiscord.mockResolvedValue({ error: 'boom' });
+      await internals().onConnectDiscord();
+      expect(snackbar.error).toHaveBeenCalled();
+    });
+
+    it('clears the link on disconnect', async () => {
+      authService.getDiscordLink.mockResolvedValue({ discordUserId: '123', discordUsername: 'cmdr' });
+      await (component as unknown as { ngOnInit(): Promise<void> }).ngOnInit();
+      expect(internals().discordLinked()).toBe(true);
+
+      await internals().onDisconnectDiscord();
+
+      expect(authService.unlinkDiscord).toHaveBeenCalled();
+      expect(internals().discordLinked()).toBe(false);
+      expect(snackbar.success).toHaveBeenCalled();
+    });
   });
 });
