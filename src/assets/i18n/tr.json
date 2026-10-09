@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "Sırala",
+    "sortCurrent": "Güncel",
+    "sortSeason": "Sezon",
+    "seasonPointsShort": "sezon",
+    "currentPointsTooltip": "Güncel sıralama puanları (kayan pencere, MG harcamalarından sonra)",
+    "seasonPointsTooltip": "Bu sezon kazanılan toplam puan (tüm haftalar, MG harcamalarından önce)"
   },
   "common": {
     "points": "puan",
@@ -907,6 +913,7 @@
       "noEvent": "Bu sunucu için yaklaşan MG etkinliği yok.",
       "eventTitle": "Mevcut etkinlik",
       "selectionLocked": "Seçim kilitlendi — etkinlik devam ediyor.",
+      "selectionPublishedLocked": "Seçim yayınlandı ve kilitlendi. Etkinlik bittikten sonra düzeltilebilir.",
       "configSaved": "Yapılandırma kaydedildi.",
       "configSaveError": "Yapılandırma kaydedilemedi.",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "Seçim",
         "generate": "Otomatik seçim oluştur",
-        "previewLabel": "Önizleme — kaydetmek için onaylayın:",
-        "confirm": "Onayla",
-        "cancel": "İptal",
         "publish": "Seçimi yayınla",
-        "current": "Mevcut seçim"
+        "current": "Mevcut seçim",
+        "players": "Seçilen oyuncular",
+        "available": "Henüz yerleştirilmemiş kayıtlı oyuncular",
+        "noneSelected": "Henüz oyuncu seçilmedi. Aşağıdaki listeden oyuncu ekleyin.",
+        "noneAvailable": "Tüm kayıtlı oyuncular zaten seçimde.",
+        "add": "{{name}} ekle",
+        "remove": "{{name}} çıkar",
+        "moveUp": "{{name}} yukarı taşı",
+        "moveDown": "{{name}} aşağı taşı",
+        "save": "Değişiklikleri kaydet",
+        "reset": "Değişiklikleri at",
+        "unsaved": "Kaydedilmemiş değişiklikler — yayınlamadan önce kaydedin.",
+        "overCapacity": "Çok fazla oyuncu ({{count}} / {{capacity}}): kaydetmeden önce bazılarını çıkarın."
+      },
+      "correction": {
+        "title": "Son etkinliği düzelt",
+        "hint": "Etkinlik bitti. Yeniden sıralama yalnızca sırası değişen oyuncuların maliyetini yeniden hesaplar; sıralamadaki DKP'leri de güncellenir."
       }
     }
   },

@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "इसके अनुसार क्रमबद्ध करें",
+    "sortCurrent": "वर्तमान",
+    "sortSeason": "सीज़न",
+    "seasonPointsShort": "सीज़न",
+    "currentPointsTooltip": "वर्तमान रैंकिंग अंक (रोलिंग विंडो, MG खर्च के बाद)",
+    "seasonPointsTooltip": "इस सीज़न में अर्जित कुल अंक (सभी सप्ताह, MG खर्च से पहले)"
   },
   "common": {
     "points": "अंक",
@@ -907,6 +913,7 @@
       "noEvent": "इस सर्वर के लिए कोई आगामी MG इवेंट नहीं है।",
       "eventTitle": "वर्तमान इवेंट",
       "selectionLocked": "चयन लॉक है — इवेंट जारी है।",
+      "selectionPublishedLocked": "चयन प्रकाशित और लॉक है। इवेंट समाप्त होने के बाद इसे सुधारा जा सकता है।",
       "configSaved": "कॉन्फ़िगरेशन सहेजा गया।",
       "configSaveError": "कॉन्फ़िगरेशन सहेजने में विफल।",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "चयन",
         "generate": "स्वचालित चयन बनाएं",
-        "previewLabel": "पूर्वावलोकन — सहेजने के लिए पुष्टि करें:",
-        "confirm": "पुष्टि करें",
-        "cancel": "रद्द करें",
         "publish": "चयन प्रकाशित करें",
-        "current": "वर्तमान चयन"
+        "current": "वर्तमान चयन",
+        "players": "चयनित खिलाड़ी",
+        "available": "पंजीकृत खिलाड़ी जिन्हें अभी स्थान नहीं मिला",
+        "noneSelected": "अभी कोई खिलाड़ी चयनित नहीं है। नीचे की सूची से खिलाड़ी जोड़ें।",
+        "noneAvailable": "सभी पंजीकृत खिलाड़ी पहले से चयन में हैं।",
+        "add": "{{name}} जोड़ें",
+        "remove": "{{name}} हटाएँ",
+        "moveUp": "{{name}} को ऊपर ले जाएँ",
+        "moveDown": "{{name}} को नीचे ले जाएँ",
+        "save": "बदलाव सहेजें",
+        "reset": "बदलाव रद्द करें",
+        "unsaved": "बदलाव सहेजे नहीं गए — प्रकाशित करने से पहले सहेजें।",
+        "overCapacity": "बहुत अधिक खिलाड़ी ({{count}} / {{capacity}}): सहेजने से पहले कुछ को हटाएँ।"
+      },
+      "correction": {
+        "title": "पिछले इवेंट को सुधारें",
+        "hint": "इवेंट समाप्त हो चुका है। क्रम बदलने पर केवल उन खिलाड़ियों की लागत दोबारा गणना होती है जिनकी रैंक बदलती है; लीडरबोर्ड पर उनका DKP भी दोबारा गणना किया जाता है।"
       }
     }
   },

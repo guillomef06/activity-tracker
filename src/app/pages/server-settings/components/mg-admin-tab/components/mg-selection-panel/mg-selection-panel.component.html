@@ -1,0 +1,179 @@
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>{{ isEditable() ? 'groups' : 'lock' }}</mat-icon>
+    <mat-card-title>{{ titleKey() | translate }}</mat-card-title>
+    @if (isCorrection()) {
+      <mat-card-subtitle>
+        {{ event().start_date | date: 'dd/MM/yyyy' }} – {{ event().end_date | date: 'dd/MM/yyyy' }}
+      </mat-card-subtitle>
+    }
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (!isEditable()) {
+      <!-- Locked: published or in progress, read-only -->
+      <div class="locked-state">
+        <mat-icon>lock</mat-icon>
+        <p>{{ lockedMessageKey() | translate }}</p>
+      </div>
+
+      @if (lockedRows().length > 0) {
+        <mat-divider class="section-divider" />
+        <p class="section-label">{{ 'mg.admin.selection.current' | translate }}</p>
+        <ol class="player-list">
+          @for (row of lockedRows(); track row.id) {
+            <li class="list-row">
+              <span class="rank">{{ row.rank }}</span>
+              <span class="player-name">{{ row.displayName }}</span>
+            </li>
+          }
+        </ol>
+        @if (lockedFfaCount() > 0) {
+          <p class="ffa-info">{{ 'mg.registration.ffaSlots' | translate: { count: lockedFfaCount() } }}</p>
+        }
+      }
+    } @else {
+      @if (isCorrection()) {
+        <p class="hint">{{ 'mg.admin.correction.hint' | translate }}</p>
+      }
+
+      @if (showGenerate()) {
+        <button mat-stroked-button type="button" (click)="generate()">
+          <mat-icon>auto_awesome</mat-icon>
+          {{ 'mg.admin.selection.generate' | translate }}
+        </button>
+      }
+
+      <!-- Ordered selection -->
+      <p class="section-label">
+        {{ 'mg.admin.selection.players' | translate }} ({{ draftRows().length }}/{{ effectiveCapacity() }})
+      </p>
+
+      @if (draftRows().length === 0) {
+        <p class="empty-state">{{ 'mg.admin.selection.noneSelected' | translate }}</p>
+      } @else {
+        <ol class="player-list">
+          @for (row of draftRows(); track row.userId) {
+            <li class="list-row draft-row">
+              <span class="rank">{{ row.rank }}</span>
+              <span class="player-name">{{ row.displayName }}</span>
+              <span class="row-actions">
+                <button
+                  mat-icon-button
+                  type="button"
+                  [disabled]="row.isFirst"
+                  [attr.aria-label]="'mg.admin.selection.moveUp' | translate: { name: row.displayName }"
+                  (click)="move(row.userId, -1)"
+                >
+                  <mat-icon>arrow_upward</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  type="button"
+                  [disabled]="row.isLast"
+                  [attr.aria-label]="'mg.admin.selection.moveDown' | translate: { name: row.displayName }"
+                  (click)="move(row.userId, 1)"
+                >
+                  <mat-icon>arrow_downward</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  type="button"
+                  [attr.aria-label]="'mg.admin.selection.remove' | translate: { name: row.displayName }"
+                  (click)="remove(row.userId)"
+                >
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+              </span>
+              <span class="player-meta">
+                {{ 'mg.admin.registrations.totalScore' | translate }}: {{ row.totalScore }}
+                @if (row.slotLabel) {
+                  · {{ 'mg.admin.slotConfig.rank' | translate }} {{ row.slotLabel }}
+                }
+                @if (dkpEnabled()) {
+                  · {{ 'mg.admin.slotConfig.cost' | translate }}: {{ row.cost }}
+                }
+              </span>
+            </li>
+          }
+        </ol>
+      }
+
+      @if (ffaCount() > 0) {
+        <p class="ffa-info">{{ 'mg.registration.ffaSlots' | translate: { count: ffaCount() } }}</p>
+      }
+      @if (isOverCapacity()) {
+        <p class="error-text" role="alert">
+          {{
+            'mg.admin.selection.overCapacity' | translate: { count: draftRows().length, capacity: effectiveCapacity() }
+          }}
+        </p>
+      }
+
+      <mat-divider class="section-divider" />
+
+      <!-- Registered players not yet placed -->
+      <p class="section-label">{{ 'mg.admin.selection.available' | translate }} ({{ availableRows().length }})</p>
+
+      @if (availableRows().length === 0) {
+        <p class="empty-state">{{ 'mg.admin.selection.noneAvailable' | translate }}</p>
+      } @else {
+        <ul class="player-list">
+          @for (row of availableRows(); track row.userId) {
+            <li class="list-row draft-row">
+              <span class="player-name">{{ row.displayName }}</span>
+              <span class="row-actions">
+                <button
+                  mat-icon-button
+                  type="button"
+                  [disabled]="isFull()"
+                  [attr.aria-label]="'mg.admin.selection.add' | translate: { name: row.displayName }"
+                  (click)="add(row.userId)"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+              </span>
+              <span class="player-meta">
+                {{ 'mg.admin.registrations.totalScore' | translate }}: {{ row.totalScore }} ·
+                {{ 'mg.admin.registrations.position' | translate }}:
+                {{ row.positionLabel ?? ('mg.admin.registrations.noPosition' | translate) }}
+              </span>
+              @if (row.comment) {
+                <span class="player-comment">{{ row.comment }}</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    }
+  </mat-card-content>
+
+  @if (isEditable()) {
+    <mat-card-actions align="end">
+      @if (isDirty()) {
+        <span class="unsaved-hint">{{ 'mg.admin.selection.unsaved' | translate }}</span>
+        <button mat-button type="button" [disabled]="isSaving()" (click)="reset()">
+          {{ 'mg.admin.selection.reset' | translate }}
+        </button>
+      }
+      <button mat-flat-button color="primary" type="button" [disabled]="!canSave()" (click)="save()">
+        @if (isSaving()) {
+          <mat-spinner diameter="18" />
+        }
+        {{ 'mg.admin.selection.save' | translate }}
+      </button>
+      @if (kind() === 'draft') {
+        <button
+          mat-flat-button
+          color="accent"
+          type="button"
+          [disabled]="!canPublish() || isPublishing()"
+          (click)="publish()"
+        >
+          <mat-icon>publish</mat-icon>
+          {{ 'mg.admin.selection.publish' | translate }}
+        </button>
+      }
+    </mat-card-actions>
+  }
+</mat-card>

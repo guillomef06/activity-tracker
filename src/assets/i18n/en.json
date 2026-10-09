@@ -575,6 +575,7 @@
       "noEvent": "No upcoming MG event for this server.",
       "eventTitle": "Current event",
       "selectionLocked": "The selection is locked — the event is in progress.",
+      "selectionPublishedLocked": "The selection is published and locked. It can be corrected once the event is finished.",
       "config": {
         "title": "Server Configuration",
         "capacity": "Capacity",
@@ -610,16 +611,29 @@
       "selection": {
         "title": "Selection",
         "generate": "Generate auto selection",
-        "previewLabel": "Preview — confirm to save:",
-        "confirm": "Confirm",
-        "cancel": "Cancel",
         "publish": "Publish selection",
-        "current": "Current selection"
+        "current": "Current selection",
+        "players": "Selected players",
+        "available": "Registered players not yet placed",
+        "noneSelected": "No player selected yet. Add players from the list below.",
+        "noneAvailable": "Every registered player is already in the selection.",
+        "add": "Add {{name}}",
+        "remove": "Remove {{name}}",
+        "moveUp": "Move {{name}} up",
+        "moveDown": "Move {{name}} down",
+        "save": "Save changes",
+        "reset": "Discard changes",
+        "unsaved": "Unsaved changes — save before publishing.",
+        "overCapacity": "Too many players ({{count}} / {{capacity}}): remove some before saving."
       },
       "selectionSaved": "Selection saved.",
       "selectionSaveError": "Failed to save selection.",
       "selectionPublished": "Selection published successfully.",
-      "publishError": "Failed to publish selection."
+      "publishError": "Failed to publish selection.",
+      "correction": {
+        "title": "Correct the last event",
+        "hint": "The event is over. Reordering re-prices only the players whose rank changes; their DKP on the leaderboard is recalculated."
+      }
     }
   },
   "mightiestGovernor": {
