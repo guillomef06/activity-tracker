@@ -637,6 +637,15 @@
       "success": "복구 질문이 업데이트되었습니다",
       "error": "복구 질문 업데이트 실패"
     },
+    "discord": {
+      "title": "Discord Account",
+      "description": "Link your Discord account to submit activities from Discord via the bot.",
+      "connect": "Connect Discord",
+      "disconnect": "Disconnect",
+      "connectedAs": "Connected as {{name}}",
+      "disconnected": "Discord account disconnected",
+      "error": "Failed to update Discord link"
+    },
     "language": {
       "title": "앱 언어"
     },

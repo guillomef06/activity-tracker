@@ -122,6 +122,32 @@
             />
           </form>
         </section>
+
+        <mat-divider></mat-divider>
+
+        <!-- Discord account link -->
+        <section class="account-section">
+          <h3 class="section-title">{{ 'accountSettings.discord.title' | translate }}</h3>
+          @if (discordLinked()) {
+            <p class="discord-status discord-status--linked">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{
+                'accountSettings.discord.connectedAs'
+                  | translate: { name: discordLink()?.discordUsername || discordLink()?.discordUserId }
+              }}</span>
+            </p>
+            <button mat-stroked-button color="warn" [disabled]="loadingDiscord()" (click)="onDisconnectDiscord()">
+              <mat-icon>link_off</mat-icon>
+              {{ 'accountSettings.discord.disconnect' | translate }}
+            </button>
+          } @else {
+            <p class="discord-status">{{ 'accountSettings.discord.description' | translate }}</p>
+            <button mat-flat-button color="primary" [disabled]="loadingDiscord()" (click)="onConnectDiscord()">
+              <mat-icon>link</mat-icon>
+              {{ 'accountSettings.discord.connect' | translate }}
+            </button>
+          }
+        </section>
       </div>
     </mat-tab>
 
