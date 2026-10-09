@@ -156,6 +156,46 @@ describe('MgEventService', () => {
   });
 
   // ============================================
+  describe('saveServerConfig', () => {
+    it.each([true, false])('should persist dkp_enabled=%s with the rest of the config', async dkpEnabled => {
+      // Arrange
+      const upsert = vi.fn().mockResolvedValue({ error: null });
+      fromMock.mockReturnValue({ upsert });
+
+      // Act
+      const result = await service.saveServerConfig('server-1', {
+        capacity: 50,
+        assignment_mode: 'manual',
+        dkp_enabled: dkpEnabled,
+      });
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(fromMock).toHaveBeenCalledWith('server_mg_config');
+      expect(upsert).toHaveBeenCalledWith(
+        { server_id: 'server-1', capacity: 50, assignment_mode: 'manual', dkp_enabled: dkpEnabled },
+        { onConflict: 'server_id' }
+      );
+    });
+
+    it('should return the Supabase error when the upsert fails', async () => {
+      // Arrange
+      const upsert = vi.fn().mockResolvedValue({ error: { message: 'DB error' } });
+      fromMock.mockReturnValue({ upsert });
+
+      // Act
+      const result = await service.saveServerConfig('server-1', {
+        capacity: 10,
+        assignment_mode: 'automatic',
+        dkp_enabled: true,
+      });
+
+      // Assert
+      expect(result.error).toEqual({ message: 'DB error' });
+    });
+  });
+
+  // ============================================
   describe('loadSlotConfig', () => {
     it('should return the slot config rows ordered by slot_order on success', async () => {
       // Arrange
@@ -359,6 +399,161 @@ describe('MgEventService', () => {
 
       // Assert
       expect(result).toHaveLength(0);
+    });
+  });
+
+  // ============================================
+  describe('saveSelection', () => {
+    const payloads: MgSelectionPayload[] = [
+      {
+        mg_event_id: 'event-1',
+        user_id: 'a',
+        rank: 1,
+        selection_type: 'selected',
+        selected_by: 'manual',
+        cost: 150,
+      },
+    ];
+
+    /** Queues one Supabase chain per from() call, in call order. */
+    const queueChains = (...chains: Record<string, ReturnType<typeof vi.fn>>[]) => {
+      chains.forEach(chain => fromMock.mockReturnValueOnce(chain));
+    };
+    const loadChain = (data: { id: string }[] | null, error: unknown = null) => ({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockResolvedValue({ data, error }),
+    });
+    const insertChain = (data: { id: string }[] | null, error: unknown = null) => ({
+      insert: vi.fn().mockReturnThis(),
+      select: vi.fn().mockResolvedValue({ data, error }),
+    });
+    const deleteChain = (error: unknown = null) => ({
+      delete: vi.fn().mockReturnThis(),
+      in: vi.fn().mockResolvedValue({ error }),
+    });
+
+    it('should insert the new rows and then delete the previous ones', async () => {
+      // Arrange
+      const load = loadChain([{ id: 'old-1' }]);
+      const insert = insertChain([{ id: 'new-1' }]);
+      const del = deleteChain();
+      queueChains(load, insert, del);
+
+      // Act
+      const result = await service.saveSelection('event-1', payloads);
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(insert.insert).toHaveBeenCalledWith(payloads);
+      expect(del.in).toHaveBeenCalledWith('id', ['old-1']);
+    });
+
+    it('should keep the previous selection untouched when the insert fails', async () => {
+      // Arrange
+      const insert = insertChain(null, { message: 'insert failed' });
+      queueChains(loadChain([{ id: 'old-1' }]), insert);
+
+      // Act
+      const result = await service.saveSelection('event-1', payloads);
+
+      // Assert — no delete call was ever made (only load + insert)
+      expect(result.error).toEqual({ message: 'insert failed' });
+      expect(fromMock).toHaveBeenCalledTimes(2);
+    });
+
+    it('should roll back the inserted rows when deleting the previous ones fails', async () => {
+      // Arrange
+      const rollback = deleteChain();
+      queueChains(
+        loadChain([{ id: 'old-1' }]),
+        insertChain([{ id: 'new-1' }]),
+        deleteChain({ message: 'delete failed' }),
+        rollback
+      );
+
+      // Act
+      const result = await service.saveSelection('event-1', payloads);
+
+      // Assert
+      expect(result.error).toEqual({ message: 'delete failed' });
+      expect(rollback.in).toHaveBeenCalledWith('id', ['new-1']);
+    });
+
+    it('should not delete anything when the event had no selection yet', async () => {
+      // Arrange
+      queueChains(loadChain([]), insertChain([{ id: 'new-1' }]));
+
+      // Act
+      const result = await service.saveSelection('event-1', payloads);
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(fromMock).toHaveBeenCalledTimes(2);
+    });
+
+    it('should only delete the previous rows when saving an empty selection', async () => {
+      // Arrange
+      const del = deleteChain();
+      queueChains(loadChain([{ id: 'old-1' }]), del);
+
+      // Act
+      const result = await service.saveSelection('event-1', []);
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(del.in).toHaveBeenCalledWith('id', ['old-1']);
+    });
+
+    it('should return the error without writing when loading the previous rows fails', async () => {
+      // Arrange
+      queueChains(loadChain(null, { message: 'load failed' }));
+
+      // Act
+      const result = await service.saveSelection('event-1', payloads);
+
+      // Assert
+      expect(result.error).toEqual({ message: 'load failed' });
+      expect(fromMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // ============================================
+  describe('loadLastFinishedEvent', () => {
+    it('should return the most recent finished event of the server', async () => {
+      // Arrange
+      const event = { id: 'event-9', status: 'finished' };
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['select'] = vi.fn().mockReturnThis();
+      chain['eq'] = vi.fn().mockReturnThis();
+      chain['order'] = vi.fn().mockReturnThis();
+      chain['limit'] = vi.fn().mockReturnThis();
+      chain['maybeSingle'] = vi.fn().mockResolvedValue({ data: event, error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.loadLastFinishedEvent('server-1');
+
+      // Assert
+      expect(result).toEqual(event);
+      expect(chain['eq']).toHaveBeenCalledWith('status', 'finished');
+      expect(chain['order']).toHaveBeenCalledWith('start_date', { ascending: false });
+    });
+
+    it('should return null on Supabase error', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['select'] = vi.fn().mockReturnThis();
+      chain['eq'] = vi.fn().mockReturnThis();
+      chain['order'] = vi.fn().mockReturnThis();
+      chain['limit'] = vi.fn().mockReturnThis();
+      chain['maybeSingle'] = vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.loadLastFinishedEvent('server-1');
+
+      // Assert
+      expect(result).toBeNull();
     });
   });
 });

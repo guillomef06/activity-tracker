@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "Urutkan berdasarkan",
+    "sortCurrent": "Saat ini",
+    "sortSeason": "Musim",
+    "seasonPointsShort": "musim",
+    "currentPointsTooltip": "Poin peringkat saat ini (jendela bergulir, setelah pengeluaran MG)",
+    "seasonPointsTooltip": "Total poin yang diperoleh musim ini (semua minggu, sebelum pengeluaran MG)"
   },
   "common": {
     "points": "poin",
@@ -907,6 +913,7 @@
       "noEvent": "Tidak ada acara MG yang akan datang untuk server ini.",
       "eventTitle": "Acara saat ini",
       "selectionLocked": "Seleksi terkunci — acara sedang berlangsung.",
+      "selectionPublishedLocked": "Seleksi sudah dipublikasikan dan terkunci. Dapat dikoreksi setelah event selesai.",
       "configSaved": "Konfigurasi disimpan.",
       "configSaveError": "Gagal menyimpan konfigurasi.",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "Seleksi",
         "generate": "Buat seleksi otomatis",
-        "previewLabel": "Pratinjau — konfirmasi untuk menyimpan:",
-        "confirm": "Konfirmasi",
-        "cancel": "Batal",
         "publish": "Publikasikan seleksi",
-        "current": "Seleksi saat ini"
+        "current": "Seleksi saat ini",
+        "players": "Pemain terpilih",
+        "available": "Pemain terdaftar yang belum ditempatkan",
+        "noneSelected": "Belum ada pemain terpilih. Tambahkan pemain dari daftar di bawah.",
+        "noneAvailable": "Semua pemain terdaftar sudah ada dalam seleksi.",
+        "add": "Tambah {{name}}",
+        "remove": "Hapus {{name}}",
+        "moveUp": "Naikkan {{name}}",
+        "moveDown": "Turunkan {{name}}",
+        "save": "Simpan perubahan",
+        "reset": "Batalkan perubahan",
+        "unsaved": "Perubahan belum disimpan — simpan sebelum mempublikasikan.",
+        "overCapacity": "Terlalu banyak pemain ({{count}} / {{capacity}}): hapus beberapa sebelum menyimpan."
+      },
+      "correction": {
+        "title": "Koreksi event terakhir",
+        "hint": "Event telah selesai. Pengurutan ulang hanya menghitung ulang biaya pemain yang peringkatnya berubah; DKP mereka di papan peringkat juga dihitung ulang."
       }
     }
   },

@@ -1,5 +1,144 @@
 [
   {
+    "version": "1.8.0",
+    "date": "2026-10-09",
+    "entries": [
+      {
+        "type": "feature",
+        "text": {
+          "en": "Mightiest Governor selection — admins can now reorder, add or remove players before publishing, in both automatic and manual mode. Once the event is over, the last event's order can still be corrected; DKP costs are recalculated only for players whose rank changes",
+          "fr": "Sélection du Gouverneur le Plus Puissant — les admins peuvent désormais réordonner, ajouter ou retirer des joueurs avant de publier, en mode automatique comme en manuel. Une fois l'évènement terminé, l'ordre du dernier évènement peut encore être corrigé ; les coûts DKP ne sont recalculés que pour les joueurs dont le rang change",
+          "es": "Selección del Gobernador Más Poderoso — los administradores ahora pueden reordenar, añadir o quitar jugadores antes de publicar, tanto en modo automático como manual. Una vez terminado el evento, aún se puede corregir el orden del último evento; los costes DKP solo se recalculan para los jugadores cuyo puesto cambia",
+          "it": "Selezione del Governatore Più Potente — gli admin ora possono riordinare, aggiungere o rimuovere giocatori prima di pubblicare, sia in modalità automatica che manuale. Al termine dell'evento è ancora possibile correggere l'ordine dell'ultimo evento; i costi DKP vengono ricalcolati solo per i giocatori il cui rango cambia",
+          "de": "Auswahl für den Mightiest Governor — Admins können Spieler jetzt vor der Veröffentlichung neu anordnen, hinzufügen oder entfernen, sowohl im automatischen als auch im manuellen Modus. Nach Ende des Events kann die Reihenfolge des letzten Events noch korrigiert werden; die DKP-Kosten werden nur für Spieler neu berechnet, deren Rang sich ändert",
+          "tr": "En Güçlü Vali seçimi — yöneticiler artık yayınlamadan önce oyuncuları yeniden sıralayabilir, ekleyebilir veya çıkarabilir; hem otomatik hem manuel modda. Etkinlik bittikten sonra son etkinliğin sıralaması hâlâ düzeltilebilir; DKP maliyetleri yalnızca sırası değişen oyuncular için yeniden hesaplanır",
+          "pt": "Seleção do Governador Mais Poderoso — os administradores agora podem reordenar, adicionar ou remover jogadores antes de publicar, tanto no modo automático como no manual. Depois de o evento terminar, ainda é possível corrigir a ordem do último evento; os custos DKP só são recalculados para os jogadores cuja posição muda",
+          "el": "Επιλογή του Ισχυρότερου Κυβερνήτη — οι διαχειριστές μπορούν πλέον να αναδιατάσσουν, να προσθέτουν ή να αφαιρούν παίκτες πριν τη δημοσίευση, τόσο σε αυτόματη όσο και σε χειροκίνητη λειτουργία. Όταν τελειώσει η εκδήλωση, η σειρά της τελευταίας εκδήλωσης μπορεί ακόμη να διορθωθεί· τα κόστη DKP υπολογίζονται εκ νέου μόνο για τους παίκτες των οποίων αλλάζει η θέση",
+          "ko": "최강 총독 선발 — 관리자가 게시 전에 자동 및 수동 모드 모두에서 플레이어를 재정렬하거나 추가·제거할 수 있습니다. 이벤트가 끝난 후에도 마지막 이벤트의 순서를 수정할 수 있으며, DKP 비용은 순위가 바뀐 플레이어에 대해서만 다시 계산됩니다",
+          "hi": "सबसे शक्तिशाली गवर्नर चयन — एडमिन अब प्रकाशित करने से पहले स्वचालित और मैन्युअल दोनों मोड में खिलाड़ियों का क्रम बदल सकते हैं, जोड़ सकते हैं या हटा सकते हैं। इवेंट समाप्त होने के बाद भी पिछले इवेंट का क्रम सुधारा जा सकता है; DKP लागत केवल उन खिलाड़ियों के लिए दोबारा गणना की जाती है जिनकी रैंक बदलती है",
+          "zh": "最强总督选拔 — 管理员现在可以在发布前重新排序、添加或移除玩家，自动和手动模式均适用。活动结束后仍可更正上一场活动的顺序；DKP 费用仅对名次发生变化的玩家重新计算",
+          "ku": "Hilbijartina Walîyê Herî Bihêz — rêveber niha dikarin beriya weşandinê lîstikvanan ji nû ve rêz bikin, zêde bikin an jê bibin, hem di moda otomatîk de hem jî di moda destan de. Piştî ku bûyer biqede, rêza bûyera dawî hê jî dikare were rastkirin; lêçûnên DKP tenê ji bo lîstikvanên ku rêza wan diguhere ji nû ve têne hesibandin",
+          "ar": "اختيار الحاكم الأقوى — يمكن للمشرفين الآن إعادة ترتيب اللاعبين أو إضافتهم أو إزالتهم قبل النشر، في الوضعين التلقائي واليدوي. بعد انتهاء الحدث، لا يزال بالإمكان تصحيح ترتيب آخر حدث؛ ويُعاد احتساب تكاليف DKP فقط للاعبين الذين تغيّر ترتيبهم",
+          "id": "Seleksi Mightiest Governor — admin kini dapat mengurutkan ulang, menambah, atau menghapus pemain sebelum dipublikasikan, baik dalam mode otomatis maupun manual. Setelah event selesai, urutan event terakhir masih dapat dikoreksi; biaya DKP hanya dihitung ulang untuk pemain yang peringkatnya berubah"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Season total on the leaderboard — each player now also shows the points earned over the whole season, with a sort toggle between Current and Season",
+          "fr": "Total de saison au classement — chaque joueur affiche désormais aussi ses points cumulés sur toute la saison, avec un choix de tri entre Actuel et Saison",
+          "es": "Total de temporada en la clasificación — cada jugador ahora muestra también los puntos acumulados durante toda la temporada, con un selector de orden entre Actual y Temporada",
+          "it": "Totale di stagione in classifica — ogni giocatore mostra ora anche i punti accumulati nell'intera stagione, con la possibilità di ordinare tra Attuale e Stagione",
+          "de": "Saisonsumme in der Rangliste — jeder Spieler zeigt jetzt zusätzlich die in der gesamten Saison gesammelten Punkte, mit Sortierumschalter zwischen Aktuell und Saison",
+          "tr": "Sıralamada sezon toplamı — her oyuncu artık tüm sezon boyunca kazandığı puanları da gösteriyor; Güncel ve Sezon arasında sıralama seçeneği mevcut",
+          "pt": "Total da temporada na classificação — cada jogador agora mostra também os pontos acumulados em toda a temporada, com alternância de ordenação entre Atual e Temporada",
+          "el": "Σύνολο σεζόν στην κατάταξη — κάθε παίκτης εμφανίζει πλέον και τους πόντους που συγκέντρωσε σε ολόκληρη τη σεζόν, με επιλογή ταξινόμησης μεταξύ Τρέχον και Σεζόν",
+          "ko": "순위표에 시즌 합계 추가 — 이제 각 플레이어의 전체 시즌 누적 점수도 표시되며, 현재와 시즌 간 정렬 전환이 가능합니다",
+          "hi": "लीडरबोर्ड पर सीज़न कुल — अब हर खिलाड़ी के पूरे सीज़न में अर्जित अंक भी दिखते हैं, साथ में वर्तमान और सीज़न के बीच क्रमबद्ध करने का विकल्प है",
+          "zh": "排行榜新增赛季总分 — 现在每位玩家还会显示整个赛季累计的积分，并可在“当前”和“赛季”之间切换排序",
+          "ku": "Tevahiya demsalê di tabloya rêzê de — niha her lîstikvan xalên ku di tevahiya demsalê de berhev kirine jî nîşan dide, bi vebijêrka rêzkirinê di navbera Heyî û Demsalê de",
+          "ar": "إجمالي الموسم في لوحة الترتيب — يعرض كل لاعب الآن أيضًا النقاط التي جمعها خلال الموسم بأكمله، مع إمكانية التبديل في الترتيب بين الحالي والموسم",
+          "id": "Total musim di papan peringkat — setiap pemain kini juga menampilkan poin yang dikumpulkan selama satu musim penuh, dengan pilihan urutan antara Saat Ini dan Musim"
+        }
+      },
+      {
+        "type": "feature",
+        "text": {
+          "en": "Discord — link your Discord account from your account settings, then submit your activities directly from the Discord bot",
+          "fr": "Discord — liez votre compte Discord depuis les paramètres de votre compte, puis soumettez vos activités directement depuis le bot Discord",
+          "es": "Discord — vincula tu cuenta de Discord desde los ajustes de tu cuenta y envía tus actividades directamente desde el bot de Discord",
+          "it": "Discord — collega il tuo account Discord dalle impostazioni dell'account, poi invia le tue attività direttamente dal bot Discord",
+          "de": "Discord — verknüpfe dein Discord-Konto in den Kontoeinstellungen und reiche deine Aktivitäten direkt über den Discord-Bot ein",
+          "tr": "Discord — hesap ayarlarından Discord hesabını bağla, ardından aktivitelerini doğrudan Discord botundan gönder",
+          "pt": "Discord — associe a sua conta Discord nas definições da conta e envie as suas atividades diretamente a partir do bot do Discord",
+          "el": "Discord — συνδέστε τον λογαριασμό σας στο Discord από τις ρυθμίσεις λογαριασμού και υποβάλετε τις δραστηριότητές σας απευθείας από το bot του Discord",
+          "ko": "Discord — 계정 설정에서 Discord 계정을 연결한 다음 Discord 봇에서 바로 활동을 제출하세요",
+          "hi": "Discord — अपने खाता सेटिंग से अपना Discord खाता लिंक करें, फिर Discord बॉट से सीधे अपनी गतिविधियाँ जमा करें",
+          "zh": "Discord — 在账户设置中绑定你的 Discord 账号，然后直接通过 Discord 机器人提交你的活动",
+          "ku": "Discord — hesabê xwe yê Discord ji mîhengên hesabê xwe girêde, paşê çalakiyên xwe rasterast ji botê Discord re bişîne",
+          "ar": "ديسكورد — اربط حسابك على ديسكورد من إعدادات الحساب، ثم أرسل أنشطتك مباشرة من بوت ديسكورد",
+          "id": "Discord — tautkan akun Discord Anda dari pengaturan akun, lalu kirim aktivitas Anda langsung dari bot Discord"
+        }
+      },
+      {
+        "type": "improvement",
+        "text": {
+          "en": "DKP — points are now spent oldest first, so the deduction can never exceed the points you still have and fades as old points roll out of the window",
+          "fr": "DKP — les points les plus anciens sont désormais dépensés en premier : la déduction ne peut plus dépasser les points restants et s'estompe à mesure que les vieux points sortent de la fenêtre",
+          "es": "DKP — los puntos más antiguos ahora se gastan primero, por lo que la deducción nunca supera los puntos que aún tienes y se reduce a medida que los puntos antiguos salen de la ventana",
+          "it": "DKP — i punti più vecchi vengono ora spesi per primi, quindi la detrazione non può superare i punti ancora disponibili e si attenua man mano che i vecchi punti escono dalla finestra",
+          "de": "DKP — die ältesten Punkte werden jetzt zuerst verbraucht, sodass der Abzug nie die noch vorhandenen Punkte übersteigt und sich verringert, sobald alte Punkte aus dem Zeitfenster fallen",
+          "tr": "DKP — artık en eski puanlar önce harcanıyor; böylece kesinti kalan puanları aşamaz ve eski puanlar pencereden çıktıkça azalır",
+          "pt": "DKP — os pontos mais antigos agora são gastos primeiro, por isso a dedução nunca excede os pontos que ainda tem e diminui à medida que os pontos antigos saem da janela",
+          "el": "DKP — οι παλαιότεροι πόντοι ξοδεύονται πλέον πρώτοι, οπότε η έκπτωση δεν μπορεί να ξεπεράσει τους πόντους που σας απομένουν και μειώνεται καθώς οι παλιοί πόντοι βγαίνουν από το παράθυρο",
+          "ko": "DKP — 이제 가장 오래된 포인트부터 먼저 사용되므로 차감액이 보유 포인트를 넘을 수 없으며, 오래된 포인트가 기간에서 빠지면 차감도 줄어듭니다",
+          "hi": "DKP — अब सबसे पुराने अंक पहले खर्च होते हैं, इसलिए कटौती आपके बचे अंकों से अधिक नहीं हो सकती और पुराने अंक विंडो से बाहर जाने पर घटती जाती है",
+          "zh": "DKP — 现在优先扣除最早获得的积分，因此扣减不会超过你剩余的积分，并会随着旧积分移出统计窗口而逐渐减少",
+          "ku": "DKP — niha xalên herî kevin pêşî têne xerckirin, ji ber vê kêmkirin nikare ji xalên mayî zêdetir be û her ku xalên kevin ji pencereyê derdikevin kêm dibe",
+          "ar": "DKP — تُنفَق النقاط الأقدم أولًا الآن، لذا لا يمكن أن يتجاوز الخصم النقاط المتبقية لديك، ويتناقص كلما خرجت النقاط القديمة من النافذة",
+          "id": "DKP — poin terlama kini dipakai lebih dulu, sehingga pengurangan tidak pernah melebihi poin yang masih Anda miliki dan berkurang seiring poin lama keluar dari jendela"
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "en": "DKP setting — the \"Enable DKP system\" toggle is now actually saved (it used to revert to its previous value after a refresh)",
+          "fr": "Réglage DKP — l'option « Activer le système DKP » est maintenant bien enregistrée (elle revenait à son ancienne valeur après un rafraîchissement)",
+          "es": "Ajuste DKP — la opción «Activar el sistema DKP» ahora se guarda realmente (antes volvía a su valor anterior al recargar)",
+          "it": "Impostazione DKP — l'opzione «Attiva il sistema DKP» ora viene effettivamente salvata (prima tornava al valore precedente dopo un aggiornamento)",
+          "de": "DKP-Einstellung — die Option „DKP-System aktivieren“ wird jetzt tatsächlich gespeichert (sie sprang nach einem Neuladen auf den vorherigen Wert zurück)",
+          "tr": "DKP ayarı — \"DKP sistemini etkinleştir\" seçeneği artık gerçekten kaydediliyor (yenilemeden sonra önceki değerine dönüyordu)",
+          "pt": "Definição DKP — a opção «Ativar o sistema DKP» agora é realmente guardada (antes voltava ao valor anterior depois de atualizar a página)",
+          "el": "Ρύθμιση DKP — η επιλογή «Ενεργοποίηση συστήματος DKP» αποθηκεύεται πλέον πραγματικά (παλιότερα επέστρεφε στην προηγούμενη τιμή μετά από ανανέωση)",
+          "ko": "DKP 설정 — \"DKP 시스템 활성화\" 옵션이 이제 실제로 저장됩니다 (새로고침하면 이전 값으로 되돌아가던 문제를 수정했습니다)",
+          "hi": "DKP सेटिंग — \"DKP सिस्टम सक्षम करें\" विकल्प अब वास्तव में सहेजा जाता है (पहले रिफ्रेश करने पर यह पिछले मान पर लौट जाता था)",
+          "zh": "DKP 设置 — “启用 DKP 系统”开关现在会真正保存（此前刷新页面后会恢复为原来的值）",
+          "ku": "Mîhenga DKP — vebijêrka «Pergala DKP çalak bike» niha bi rastî tê tomarkirin (berê piştî nûkirinê vedigeriya nirxa berê)",
+          "ar": "إعداد DKP — خيار «تفعيل نظام DKP» يُحفظ الآن فعليًا (كان يعود إلى قيمته السابقة بعد التحديث)",
+          "id": "Pengaturan DKP — opsi \"Aktifkan sistem DKP\" kini benar-benar tersimpan (sebelumnya kembali ke nilai lama setelah halaman dimuat ulang)"
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "en": "Activity submission — a page left open across the Monday reset can no longer record an activity in the wrong week",
+          "fr": "Saisie d'activité — une page restée ouverte pendant le reset du lundi ne peut plus enregistrer une activité dans la mauvaise semaine",
+          "es": "Envío de actividades — una página abierta durante el reinicio del lunes ya no puede registrar una actividad en la semana equivocada",
+          "it": "Invio delle attività — una pagina rimasta aperta durante il reset del lunedì non può più registrare un'attività nella settimana sbagliata",
+          "de": "Aktivitätseingabe — eine über den Montags-Reset hinaus geöffnete Seite kann Aktivitäten nicht mehr in der falschen Woche speichern",
+          "tr": "Aktivite girişi — pazartesi sıfırlaması sırasında açık kalan bir sayfa artık aktiviteyi yanlış haftaya kaydedemez",
+          "pt": "Registo de atividades — uma página deixada aberta durante o reinício de segunda-feira já não consegue registar uma atividade na semana errada",
+          "el": "Υποβολή δραστηριότητας — μια σελίδα που έμεινε ανοιχτή κατά την επαναφορά της Δευτέρας δεν μπορεί πλέον να καταχωρίσει δραστηριότητα σε λάθος εβδομάδα",
+          "ko": "활동 제출 — 월요일 초기화 시점에 열려 있던 페이지에서 더 이상 잘못된 주에 활동이 기록되지 않습니다",
+          "hi": "गतिविधि जमा करना — सोमवार के रीसेट के दौरान खुला रह गया पेज अब गलत सप्ताह में गतिविधि दर्ज नहीं कर सकता",
+          "zh": "活动提交 — 在周一重置期间保持打开的页面，现在不会再把活动记录到错误的一周",
+          "ku": "Şandina çalakiyê — rûpelek ku di sifirkirina Duşemê de vekirî ma êdî nikare çalakiyekê di hefteya şaş de tomar bike",
+          "ar": "إرسال الأنشطة — لم يعد بإمكان صفحة تُركت مفتوحة أثناء إعادة ضبط يوم الاثنين تسجيل نشاط في الأسبوع الخطأ",
+          "id": "Pengiriman aktivitas — halaman yang dibiarkan terbuka saat reset hari Senin tidak lagi dapat mencatat aktivitas di minggu yang salah"
+        }
+      },
+      {
+        "type": "improvement",
+        "text": {
+          "en": "Safer Excel import — the import library was upgraded to fix known security vulnerabilities",
+          "fr": "Import Excel plus sûr — la bibliothèque d'import a été mise à jour pour corriger des failles de sécurité connues",
+          "es": "Importación de Excel más segura — se actualizó la biblioteca de importación para corregir vulnerabilidades de seguridad conocidas",
+          "it": "Importazione Excel più sicura — la libreria di importazione è stata aggiornata per correggere vulnerabilità di sicurezza note",
+          "de": "Sicherer Excel-Import — die Import-Bibliothek wurde aktualisiert, um bekannte Sicherheitslücken zu schließen",
+          "tr": "Daha güvenli Excel içe aktarma — bilinen güvenlik açıklarını gidermek için içe aktarma kütüphanesi güncellendi",
+          "pt": "Importação de Excel mais segura — a biblioteca de importação foi atualizada para corrigir vulnerabilidades de segurança conhecidas",
+          "el": "Ασφαλέστερη εισαγωγή Excel — η βιβλιοθήκη εισαγωγής αναβαθμίστηκε για να διορθωθούν γνωστά κενά ασφαλείας",
+          "ko": "더 안전한 Excel 가져오기 — 알려진 보안 취약점을 수정하기 위해 가져오기 라이브러리를 업그레이드했습니다",
+          "hi": "अधिक सुरक्षित Excel इम्पोर्ट — ज्ञात सुरक्षा कमजोरियों को ठीक करने के लिए इम्पोर्ट लाइब्रेरी को अपग्रेड किया गया",
+          "zh": "更安全的 Excel 导入 — 已升级导入库以修复已知的安全漏洞",
+          "ku": "Importa Excel a ewletir — pirtûkxaneya importê hate nûkirin da ku qelsiyên ewlehiyê yên naskirî çareser bike",
+          "ar": "استيراد Excel أكثر أمانًا — تمت ترقية مكتبة الاستيراد لإصلاح ثغرات أمنية معروفة",
+          "id": "Impor Excel lebih aman — pustaka impor ditingkatkan untuk memperbaiki kerentanan keamanan yang diketahui"
+        }
+      }
+    ]
+  },
+  {
     "version": "1.7.1",
     "date": "2026-09-05",
     "entries": [

@@ -42,7 +42,7 @@ export function buildMgSlotRows(
  * `rankLabel` is either a plain number ("1") or an inclusive range ("6-7"),
  * so a single rank can match a row covering several consecutive ranks.
  * Used at selection-generation time to snapshot the cost charged for a rank
- * (see MgEventService.generateAutoSelectionPayload/buildManualSelectionPayload).
+ * (see buildSelectionPayload in mg-selection.util.ts).
  */
 export function resolveSlotForRank(rank: number, rows: readonly MgSlotRow[]): MgSlotRow | undefined {
   return rows.find(row => {

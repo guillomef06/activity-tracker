@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "ترتيب حسب",
+    "sortCurrent": "الحالي",
+    "sortSeason": "الموسم",
+    "seasonPointsShort": "الموسم",
+    "currentPointsTooltip": "نقاط الترتيب الحالية (نافذة متحركة، بعد نفقات MG)",
+    "seasonPointsTooltip": "إجمالي النقاط المكتسبة هذا الموسم (جميع الأسابيع، قبل نفقات MG)"
   },
   "common": {
     "points": "نقاط",
@@ -907,6 +913,7 @@
       "noEvent": "لا يوجد حدث MG قادم لهذا الخادم.",
       "eventTitle": "الحدث الحالي",
       "selectionLocked": "القائمة مقفلة — الحدث جارٍ.",
+      "selectionPublishedLocked": "تم نشر الاختيار وقفله. يمكن تصحيحه بعد انتهاء الحدث.",
       "configSaved": "تم حفظ الإعدادات.",
       "configSaveError": "فشل حفظ الإعدادات.",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "الاختيار",
         "generate": "إنشاء اختيار تلقائي",
-        "previewLabel": "معاينة — تأكيد للحفظ:",
-        "confirm": "تأكيد",
-        "cancel": "إلغاء",
         "publish": "نشر القائمة",
-        "current": "القائمة الحالية"
+        "current": "القائمة الحالية",
+        "players": "اللاعبون المختارون",
+        "available": "اللاعبون المسجّلون غير المُدرَجين بعد",
+        "noneSelected": "لم يتم اختيار أي لاعب بعد. أضف لاعبين من القائمة أدناه.",
+        "noneAvailable": "جميع اللاعبين المسجّلين موجودون بالفعل في الاختيار.",
+        "add": "إضافة {{name}}",
+        "remove": "إزالة {{name}}",
+        "moveUp": "نقل {{name}} لأعلى",
+        "moveDown": "نقل {{name}} لأسفل",
+        "save": "حفظ التغييرات",
+        "reset": "تجاهل التغييرات",
+        "unsaved": "تغييرات غير محفوظة — احفظ قبل النشر.",
+        "overCapacity": "عدد اللاعبين كبير جدًا ({{count}} / {{capacity}}): أزل بعضهم قبل الحفظ."
+      },
+      "correction": {
+        "title": "تصحيح آخر حدث",
+        "hint": "انتهى الحدث. تؤدي إعادة الترتيب إلى إعادة احتساب تكلفة اللاعبين الذين تغيّر ترتيبهم فقط؛ كما يُعاد احتساب DKP الخاص بهم في لوحة الترتيب."
       }
     }
   },

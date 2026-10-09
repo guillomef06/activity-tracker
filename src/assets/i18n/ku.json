@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "Rêz bike li gorî",
+    "sortCurrent": "Heyî",
+    "sortSeason": "Demsal",
+    "seasonPointsShort": "demsal",
+    "currentPointsTooltip": "Xalên rêzkirina heyî (pencereya livok, piştî lêçûnên MG)",
+    "seasonPointsTooltip": "Tevahiya xalên vê demsalê (hemû hefte, beriya lêçûnên MG)"
   },
   "common": {
     "points": "خاڵ",
@@ -907,6 +913,7 @@
       "noEvent": "Ji bo vê serverê tu bûyera MG ya pêş de nîne.",
       "eventTitle": "Bûyera niha",
       "selectionLocked": "Hilbijartî hat kilîtkirin — bûyer berdewam e.",
+      "selectionPublishedLocked": "Hilbijartin hat weşandin û hate qefilandin. Piştî ku bûyer biqede dikare were rastkirin.",
       "configSaved": "Mîheng hat tomarkirin.",
       "configSaveError": "Tomarkirina mîhengê têk çû.",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "Hilbijartî",
         "generate": "Hilbijartina otomatîk çêbike",
-        "previewLabel": "Pêşdîtin — ji bo tomarkirinê bipejirîne:",
-        "confirm": "Bipejirîne",
-        "cancel": "Betal bike",
         "publish": "Hilbijartî weşan bike",
-        "current": "Hilbijartina niha"
+        "current": "Hilbijartina niha",
+        "players": "Lîstikvanên hilbijartî",
+        "available": "Lîstikvanên tomarkirî yên ku hê nehatine danîn",
+        "noneSelected": "Hê tu lîstikvan nehatiye hilbijartin. Ji lîsteya jêrîn lîstikvan zêde bike.",
+        "noneAvailable": "Hemû lîstikvanên tomarkirî jixwe di hilbijartinê de ne.",
+        "add": "{{name}} zêde bike",
+        "remove": "{{name}} rake",
+        "moveUp": "{{name}} bilind bike",
+        "moveDown": "{{name}} daxe",
+        "save": "Guhertinan tomar bike",
+        "reset": "Guhertinan betal bike",
+        "unsaved": "Guhertinên netomarkirî — beriya weşandinê tomar bike.",
+        "overCapacity": "Zêde lîstikvan ({{count}} / {{capacity}}): beriya tomarkirinê hinekan rake."
+      },
+      "correction": {
+        "title": "Bûyera dawî rast bike",
+        "hint": "Bûyer qediya. Ji nû ve rêzkirin tenê lêçûna lîstikvanên ku rêza wan diguhere ji nû ve dihesibîne; DKP-ya wan di tabloya rêzê de jî ji nû ve tê hesibandin."
       }
     }
   },

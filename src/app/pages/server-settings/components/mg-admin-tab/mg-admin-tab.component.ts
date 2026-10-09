@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -19,6 +18,10 @@ import { ServerService } from '@app/core/services/server.service';
 import { SnackbarService } from '@app/core/services';
 import { buildMgSlotRows, MgSlotRow } from '@shared/utils/mg-slot.util';
 import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
+import {
+  MgSelectionPanelComponent,
+  type MgSelectionPanelKind,
+} from './components/mg-selection-panel/mg-selection-panel.component';
 import type {
   MgEvent,
   ServerMgConfig,
@@ -27,8 +30,6 @@ import type {
   UpsertMgSlotConfigRow,
   MgRegistrationWithUser,
   MgSelectionWithUser,
-  MgSelectionPayload,
-  MgLeaderboardEntry,
 } from '@shared/models';
 
 const MIN_SLOT_VALUE = 0;
@@ -65,10 +66,10 @@ interface MgRegistrationRow extends MgRegistrationWithUser {
     MatInputModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatDividerModule,
     MatChipsModule,
     MatProgressSpinnerModule,
     TranslateModule,
+    MgSelectionPanelComponent,
   ],
   templateUrl: './mg-admin-tab.component.html',
   styleUrl: './mg-admin-tab.component.scss',
@@ -85,16 +86,15 @@ export class MgAdminTabComponent implements OnInit {
   protected readonly isLoading = signal(false);
   protected readonly isSavingConfig = signal(false);
   protected readonly isSavingSlotConfig = signal(false);
-  protected readonly isGenerating = signal(false);
-  protected readonly isPublishing = signal(false);
 
   protected readonly mgEvent = signal<MgEvent | null>(null);
   protected readonly serverConfig = signal<ServerMgConfig | null>(null);
   protected readonly slotConfig = signal<ServerMgSlotConfig[]>([]);
   protected readonly registrations = signal<MgRegistrationWithUser[]>([]);
   protected readonly currentSelection = signal<MgSelectionWithUser[]>([]);
-  protected readonly previewPayloads = signal<MgSelectionPayload[]>([]);
-  protected readonly showPreview = signal(false);
+  protected readonly lastFinishedEvent = signal<MgEvent | null>(null);
+  protected readonly lastFinishedRegistrations = signal<MgRegistrationWithUser[]>([]);
+  protected readonly lastFinishedSelection = signal<MgSelectionWithUser[]>([]);
 
   protected readonly configModel = signal<ConfigFormModel>({
     capacity: DEFAULT_CAPACITY,
@@ -127,26 +127,24 @@ export class MgAdminTabComponent implements OnInit {
     return this.slotConfigModel().rows;
   }
 
-  protected readonly isAutoMode = computed(() => this.configModel().assignment_mode === 'automatic');
+  /** Saved (not in-progress-form) slot rows: the prices a selection is snapshotted with. */
+  protected readonly savedSlotRows = computed(() => buildMgSlotRows(this.slotConfig()));
 
-  protected readonly canPublish = computed(() => {
-    const ev = this.mgEvent();
-    return ev !== null && (ev.status === 'registration_closed' || ev.status === 'selection_published');
-  });
-
-  protected readonly isLocked = computed(() => {
-    const ev = this.mgEvent();
-    return ev?.status === 'ongoing' || ev?.status === 'finished';
-  });
-
-  protected readonly selectedPlayers = computed(() =>
-    this.currentSelection().filter(s => s.selection_type === 'selected')
+  /** Selection settings come from the saved server config, not the (possibly unsaved) config form. */
+  protected readonly savedCapacity = computed(() => this.serverConfig()?.capacity ?? DEFAULT_CAPACITY);
+  protected readonly savedAssignmentMode = computed(
+    () => this.serverConfig()?.assignment_mode ?? DEFAULT_ASSIGNMENT_MODE
   );
+  protected readonly savedDkpEnabled = computed(() => this.serverConfig()?.dkp_enabled ?? false);
 
-  protected readonly ffaCount = computed(() => this.currentSelection().filter(s => s.selection_type === 'ffa').length);
+  /** Published or running events are frozen; only a finished one can be corrected (see lastFinishedEvent). */
+  protected readonly currentPanelKind = computed<MgSelectionPanelKind>(() => {
+    const status = this.mgEvent()?.status;
+    return status === 'selection_published' || status === 'ongoing' ? 'locked' : 'draft';
+  });
 
   /** userId -> current leaderboard total score, for enriching registrationRows below. */
-  private readonly totalScoreByUserId = computed<Map<string, number>>(
+  protected readonly totalScoreByUserId = computed<Map<string, number>>(
     () => new Map(this.activityService.getUserScores().map(us => [us.userId, us.totalScore]))
   );
 
@@ -192,14 +190,7 @@ export class MgAdminTabComponent implements OnInit {
 
       this.rebuildSlotConfigForm(slotConfig);
 
-      if (event) {
-        const [regs, sel] = await Promise.all([
-          this.mgEventService.loadRegistrations(event.id),
-          this.mgEventService.loadSelection(event.id),
-        ]);
-        this.registrations.set(regs);
-        this.currentSelection.set(sel);
-      }
+      await Promise.all([this.loadEventData(event), this.loadLastFinishedData(serverId)]);
 
       await this.activityService.initialize();
     } catch (error) {
@@ -264,96 +255,47 @@ export class MgAdminTabComponent implements OnInit {
     }
   }
 
-  protected generatePreview(): void {
-    const event = this.mgEvent();
-    const config = this.serverConfig() ?? { capacity: this.configModel().capacity };
+  private async loadEventData(event: MgEvent | null): Promise<void> {
     if (!event) return;
-
-    const scores: MgLeaderboardEntry[] = this.activityService.getUserScores().map(us => ({
-      user_id: us.userId,
-      display_name: us.displayName,
-      total_points: us.totalScore,
-    }));
-
-    const payloads = this.mgEventService.generateAutoSelectionPayload(
-      event.id,
-      this.registrations().map(r => ({
-        id: r.id,
-        mg_event_id: r.mg_event_id,
-        user_id: r.user_id,
-        registered_at: r.registered_at,
-        desired_slot_order: r.desired_slot_order,
-        comment: r.comment,
-      })),
-      scores,
-      config.capacity,
-      this.slotRows
-    );
-
-    this.previewPayloads.set(payloads);
-    this.showPreview.set(true);
+    const [regs, sel] = await Promise.all([
+      this.mgEventService.loadRegistrations(event.id),
+      this.mgEventService.loadSelection(event.id),
+    ]);
+    this.registrations.set(regs);
+    this.currentSelection.set(sel);
   }
 
-  protected async confirmAutoSelection(): Promise<void> {
-    const event = this.mgEvent();
-    if (!event) return;
-
-    this.isGenerating.set(true);
-    try {
-      const { error } = await this.mgEventService.saveSelection(event.id, this.previewPayloads());
-      if (error) throw error;
-      const sel = await this.mgEventService.loadSelection(event.id);
-      this.currentSelection.set(sel);
-      this.showPreview.set(false);
-      this.snackbarService.success(this.translate.instant('mg.admin.selectionSaved'));
-    } catch {
-      this.snackbarService.error(this.translate.instant('mg.admin.selectionSaveError'));
-    } finally {
-      this.isGenerating.set(false);
-    }
+  private async loadLastFinishedData(serverId: string): Promise<void> {
+    const finished = await this.mgEventService.loadLastFinishedEvent(serverId);
+    this.lastFinishedEvent.set(finished);
+    if (!finished) return;
+    const [regs, sel] = await Promise.all([
+      this.mgEventService.loadRegistrations(finished.id),
+      this.mgEventService.loadSelection(finished.id),
+    ]);
+    this.lastFinishedRegistrations.set(regs);
+    this.lastFinishedSelection.set(sel);
   }
 
-  protected cancelPreview(): void {
-    this.showPreview.set(false);
-    this.previewPayloads.set([]);
-  }
-
-  protected async publishSelection(): Promise<void> {
+  protected async reloadCurrentSelection(): Promise<void> {
     const event = this.mgEvent();
     if (!event) return;
+    this.currentSelection.set(await this.mgEventService.loadSelection(event.id));
+  }
 
+  protected async reloadLastFinishedSelection(): Promise<void> {
+    const finished = this.lastFinishedEvent();
+    if (!finished) return;
+    this.lastFinishedSelection.set(await this.mgEventService.loadSelection(finished.id));
+  }
+
+  protected async reloadCurrentEvent(): Promise<void> {
     const serverId = this.authService.getServerId();
     if (!serverId) return;
-
-    this.isPublishing.set(true);
-    try {
-      const { error } = await this.mgEventService.publishSelection(event.id);
-      if (error) throw error;
-      const updated = await this.mgEventService.loadCurrentEvent(serverId);
-      this.mgEvent.set(updated);
-      this.snackbarService.success(this.translate.instant('mg.admin.selectionPublished'));
-    } catch {
-      this.snackbarService.error(this.translate.instant('mg.admin.publishError'));
-    } finally {
-      this.isPublishing.set(false);
-    }
+    this.mgEvent.set(await this.mgEventService.loadCurrentEvent(serverId));
   }
 
-  trackByReg(_: number, reg: MgRegistrationRow): string {
+  protected trackByReg(_: number, reg: MgRegistrationRow): string {
     return reg.id;
-  }
-
-  trackBySel(_: number, sel: MgSelectionWithUser): string {
-    return sel.id;
-  }
-
-  trackByPayload(_: number, p: MgSelectionPayload): number {
-    return p.rank;
-  }
-
-  protected getDisplayName(userId: string | null): string {
-    if (!userId) return '';
-    const reg = this.registrations().find(r => r.user_id === userId);
-    return reg?.user_profiles.display_name ?? userId;
   }
 }

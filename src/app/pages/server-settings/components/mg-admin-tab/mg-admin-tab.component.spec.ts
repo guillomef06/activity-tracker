@@ -13,6 +13,7 @@ import type { MgSlotRow } from '@shared/utils/mg-slot.util';
 
 const mockMgEventService = {
   loadCurrentEvent: vi.fn().mockResolvedValue(null),
+  loadLastFinishedEvent: vi.fn().mockResolvedValue(null),
   loadServerConfig: vi.fn().mockResolvedValue(null),
   saveServerConfig: vi.fn().mockResolvedValue({ error: null }),
   loadSlotConfig: vi.fn().mockResolvedValue([]),
@@ -115,35 +116,6 @@ describe('MgAdminTabComponent', () => {
 
       const model = (component as unknown as { configModel: () => { dkp_enabled: boolean } }).configModel();
       expect(model.dkp_enabled).toBe(true);
-    });
-
-    it('should pass the resolved slot rows to generateAutoSelectionPayload', async () => {
-      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
-        id: 'event-1',
-        server_id: 'server-1',
-        start_date: '2026-01-05',
-        end_date: '2026-01-11',
-        registration_open_at: '2025-12-29',
-        registration_close_at: '2026-01-01',
-        status: 'registration_closed',
-        selection_published_at: null,
-        created_at: '2026-01-01T00:00:00Z',
-      });
-
-      fixture = TestBed.createComponent(MgAdminTabComponent);
-      component = fixture.componentInstance;
-      await component.ngOnInit();
-      fixture.detectChanges();
-
-      (component as unknown as { generatePreview: () => void }).generatePreview();
-
-      expect(mockMgEventService.generateAutoSelectionPayload).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.anything(),
-        expect.anything(),
-        expect.arrayContaining([expect.objectContaining({ slotOrder: 1, cost: 150 })])
-      );
     });
   });
 
@@ -514,6 +486,108 @@ describe('MgAdminTabComponent', () => {
 
       const compiled = fixture.nativeElement as HTMLElement;
       expect(compiled.querySelector('.registration-comment')).toBeNull();
+    });
+  });
+
+  describe('selection panels', () => {
+    const flushAsyncNgOnInit = async (): Promise<void> => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
+    };
+
+    const makeEvent = (id: string, status: string) => ({
+      id,
+      server_id: 'server-1',
+      start_date: '2026-01-05',
+      end_date: '2026-01-11',
+      registration_open_at: '2025-12-29',
+      registration_close_at: '2026-01-01',
+      status,
+      selection_published_at: status === 'registration_closed' ? null : '2026-01-05T00:00:00Z',
+      created_at: '2026-01-01T00:00:00Z',
+    });
+
+    const makeSelection = (eventId: string) => [
+      {
+        id: 'sel-1',
+        mg_event_id: eventId,
+        user_id: 'user-1',
+        rank: 1,
+        selection_type: 'selected',
+        selected_by: 'automatic',
+        cost: 150,
+        user_profiles: { display_name: 'Alice', username: 'alice' },
+      },
+    ];
+
+    const render = async (): Promise<HTMLElement> => {
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flushAsyncNgOnInit();
+      fixture.detectChanges();
+      return fixture.nativeElement as HTMLElement;
+    };
+
+    it('should render one editable panel for a draft current event', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-1', 'registration_closed'));
+
+      // Act
+      const compiled = await render();
+
+      // Assert
+      expect(compiled.querySelectorAll('app-mg-selection-panel')).toHaveLength(1);
+      expect(compiled.querySelector('.locked-state')).toBeNull();
+    });
+
+    it('should render the panel locked once the selection is published', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-1', 'selection_published'));
+
+      // Act
+      const compiled = await render();
+
+      // Assert
+      expect(compiled.querySelector('.locked-state')).not.toBeNull();
+    });
+
+    it('should not render a correction panel when no event is finished', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-1', 'registration_closed'));
+
+      // Act
+      const compiled = await render();
+
+      // Assert
+      expect(mockMgEventService.loadLastFinishedEvent).toHaveBeenCalledWith('server-1');
+      expect(compiled.querySelectorAll('app-mg-selection-panel')).toHaveLength(1);
+    });
+
+    it('should render a correction panel for the last finished event when it has a selection', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-2', 'registration_open'));
+      mockMgEventService.loadLastFinishedEvent.mockResolvedValueOnce(makeEvent('event-1', 'finished'));
+      // The current event's selection is loaded first, then the finished event's.
+      mockMgEventService.loadSelection.mockResolvedValueOnce([]).mockResolvedValueOnce(makeSelection('event-1'));
+
+      // Act
+      const compiled = await render();
+
+      // Assert
+      expect(compiled.querySelectorAll('app-mg-selection-panel')).toHaveLength(2);
+    });
+
+    it('should not render a correction panel when the finished event has no selection', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-2', 'registration_open'));
+      mockMgEventService.loadLastFinishedEvent.mockResolvedValueOnce(makeEvent('event-1', 'finished'));
+
+      // Act
+      const compiled = await render();
+
+      // Assert
+      expect(compiled.querySelectorAll('app-mg-selection-panel')).toHaveLength(1);
     });
   });
 });

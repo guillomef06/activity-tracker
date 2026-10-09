@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "Ordina per",
+    "sortCurrent": "Attuale",
+    "sortSeason": "Stagione",
+    "seasonPointsShort": "stagione",
+    "currentPointsTooltip": "Punti classifica attuali (finestra mobile, dopo le spese MG)",
+    "seasonPointsTooltip": "Totale punti guadagnati in questa stagione (tutte le settimane, prima delle spese MG)"
   },
   "common": {
     "points": "punti",
@@ -907,6 +913,7 @@
       "noEvent": "Nessun evento MG imminente per questo server.",
       "eventTitle": "Evento corrente",
       "selectionLocked": "La selezione è bloccata — l'evento è in corso.",
+      "selectionPublishedLocked": "La selezione è pubblicata e bloccata. Potrà essere corretta al termine dell'evento.",
       "configSaved": "Configurazione salvata.",
       "configSaveError": "Impossibile salvare la configurazione.",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "Selezione",
         "generate": "Genera selezione automatica",
-        "previewLabel": "Anteprima — conferma per salvare:",
-        "confirm": "Conferma",
-        "cancel": "Annulla",
         "publish": "Pubblica selezione",
-        "current": "Selezione corrente"
+        "current": "Selezione corrente",
+        "players": "Giocatori selezionati",
+        "available": "Iscritti non ancora assegnati",
+        "noneSelected": "Nessun giocatore selezionato. Aggiungi giocatori dall'elenco qui sotto.",
+        "noneAvailable": "Tutti gli iscritti sono già nella selezione.",
+        "add": "Aggiungi {{name}}",
+        "remove": "Rimuovi {{name}}",
+        "moveUp": "Sposta su {{name}}",
+        "moveDown": "Sposta giù {{name}}",
+        "save": "Salva le modifiche",
+        "reset": "Annulla le modifiche",
+        "unsaved": "Modifiche non salvate — salva prima di pubblicare.",
+        "overCapacity": "Troppi giocatori ({{count}} / {{capacity}}): rimuovine alcuni prima di salvare."
+      },
+      "correction": {
+        "title": "Correggi l'ultimo evento",
+        "hint": "L'evento è terminato. Riordinare ricalcola il costo solo dei giocatori il cui rango cambia; il loro DKP in classifica viene ricalcolato."
       }
     }
   },

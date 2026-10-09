@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "정렬 기준",
+    "sortCurrent": "현재",
+    "sortSeason": "시즌",
+    "seasonPointsShort": "시즌",
+    "currentPointsTooltip": "현재 순위 점수 (이동 기간, MG 지출 반영 후)",
+    "seasonPointsTooltip": "이번 시즌 총 획득 점수 (전체 주, MG 지출 반영 전)"
   },
   "common": {
     "points": "점수",
@@ -907,6 +913,7 @@
       "noEvent": "이 서버의 예정된 MG 이벤트가 없습니다.",
       "eventTitle": "현재 이벤트",
       "selectionLocked": "선발이 잠겼습니다 — 이벤트가 진행 중입니다.",
+      "selectionPublishedLocked": "선발이 게시되어 잠겼습니다. 이벤트가 끝나면 수정할 수 있습니다.",
       "configSaved": "설정이 저장되었습니다.",
       "configSaveError": "설정 저장에 실패했습니다.",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "선발",
         "generate": "자동 선발 생성",
-        "previewLabel": "미리보기 — 저장하려면 확인하세요:",
-        "confirm": "확인",
-        "cancel": "취소",
         "publish": "선발 명단 공개",
-        "current": "현재 선발 명단"
+        "current": "현재 선발 명단",
+        "players": "선발된 플레이어",
+        "available": "아직 배치되지 않은 등록 플레이어",
+        "noneSelected": "선발된 플레이어가 없습니다. 아래 목록에서 플레이어를 추가하세요.",
+        "noneAvailable": "등록된 모든 플레이어가 이미 선발되어 있습니다.",
+        "add": "{{name}} 추가",
+        "remove": "{{name}} 제거",
+        "moveUp": "{{name}} 위로 이동",
+        "moveDown": "{{name}} 아래로 이동",
+        "save": "변경 사항 저장",
+        "reset": "변경 사항 취소",
+        "unsaved": "저장되지 않은 변경 사항이 있습니다 — 게시하기 전에 저장하세요.",
+        "overCapacity": "플레이어가 너무 많습니다 ({{count}} / {{capacity}}): 저장하기 전에 일부를 제거하세요."
+      },
+      "correction": {
+        "title": "지난 이벤트 수정",
+        "hint": "이벤트가 끝났습니다. 순서를 바꾸면 순위가 바뀐 플레이어의 비용만 다시 계산되며, 순위표의 DKP도 다시 계산됩니다."
       }
     }
   },

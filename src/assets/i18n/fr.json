@@ -575,6 +575,7 @@
       "noEvent": "Aucun évènement MG à venir pour ce serveur.",
       "eventTitle": "Évènement en cours",
       "selectionLocked": "La sélection est verrouillée — l'évènement est en cours.",
+      "selectionPublishedLocked": "La sélection est publiée et verrouillée. Elle pourra être corrigée une fois l'évènement terminé.",
       "config": {
         "title": "Configuration du serveur",
         "capacity": "Capacité",
@@ -610,16 +611,29 @@
       "selection": {
         "title": "Sélection",
         "generate": "Générer la sélection automatique",
-        "previewLabel": "Aperçu — confirmez pour enregistrer :",
-        "confirm": "Confirmer",
-        "cancel": "Annuler",
         "publish": "Publier la sélection",
-        "current": "Sélection actuelle"
+        "current": "Sélection actuelle",
+        "players": "Joueurs sélectionnés",
+        "available": "Inscrits pas encore placés",
+        "noneSelected": "Aucun joueur sélectionné. Ajoutez des joueurs depuis la liste ci-dessous.",
+        "noneAvailable": "Tous les inscrits sont déjà dans la sélection.",
+        "add": "Ajouter {{name}}",
+        "remove": "Retirer {{name}}",
+        "moveUp": "Monter {{name}}",
+        "moveDown": "Descendre {{name}}",
+        "save": "Enregistrer les modifications",
+        "reset": "Annuler les modifications",
+        "unsaved": "Modifications non enregistrées — enregistrez avant de publier.",
+        "overCapacity": "Trop de joueurs ({{count}} / {{capacity}}) : retirez-en avant d'enregistrer."
       },
       "selectionSaved": "Sélection enregistrée.",
       "selectionSaveError": "Échec de l'enregistrement de la sélection.",
       "selectionPublished": "Sélection publiée avec succès.",
-      "publishError": "Échec de la publication de la sélection."
+      "publishError": "Échec de la publication de la sélection.",
+      "correction": {
+        "title": "Corriger le dernier évènement",
+        "hint": "L'évènement est terminé. Réordonner ne recalcule le coût que des joueurs dont le rang change ; leur DKP sur le classement est recalculé."
+      }
     }
   },
   "mightiestGovernor": {

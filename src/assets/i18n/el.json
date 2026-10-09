@@ -326,7 +326,13 @@
     "deleteActivity": "Supprimer l'activité",
     "deleteActivityConfirm": "Supprimer définitivement cette activité ? Cette action est irréversible.",
     "deleteActivitySuccess": "Activité supprimée",
-    "deleteActivityFailed": "Échec de la suppression de l'activité"
+    "deleteActivityFailed": "Échec de la suppression de l'activité",
+    "sortBy": "Ταξινόμηση κατά",
+    "sortCurrent": "Τρέχον",
+    "sortSeason": "Σεζόν",
+    "seasonPointsShort": "σεζόν",
+    "currentPointsTooltip": "Τρέχοντες πόντοι κατάταξης (κυλιόμενο παράθυρο, μετά τις δαπάνες MG)",
+    "seasonPointsTooltip": "Συνολικοί πόντοι αυτής της σεζόν (όλες οι εβδομάδες, πριν τις δαπάνες MG)"
   },
   "common": {
     "points": "πόντοι",
@@ -907,6 +913,7 @@
       "noEvent": "Δεν υπάρχει επερχόμενη εκδήλωση MG για αυτόν τον διακομιστή.",
       "eventTitle": "Τρέχουσα εκδήλωση",
       "selectionLocked": "Η επιλογή είναι κλειδωμένη — η εκδήλωση είναι σε εξέλιξη.",
+      "selectionPublishedLocked": "Η επιλογή έχει δημοσιευτεί και κλειδωθεί. Μπορεί να διορθωθεί όταν τελειώσει η εκδήλωση.",
       "configSaved": "Διαμόρφωση αποθηκεύτηκε.",
       "configSaveError": "Αποτυχία αποθήκευσης διαμόρφωσης.",
       "slotConfig": {
@@ -946,11 +953,24 @@
       "selection": {
         "title": "Επιλογή",
         "generate": "Δημιουργία αυτόματης επιλογής",
-        "previewLabel": "Προεπισκόπηση — επιβεβαιώστε για αποθήκευση:",
-        "confirm": "Επιβεβαίωση",
-        "cancel": "Ακύρωση",
         "publish": "Δημοσίευση επιλογής",
-        "current": "Τρέχουσα επιλογή"
+        "current": "Τρέχουσα επιλογή",
+        "players": "Επιλεγμένοι παίκτες",
+        "available": "Εγγεγραμμένοι παίκτες που δεν έχουν τοποθετηθεί",
+        "noneSelected": "Δεν έχει επιλεγεί κανένας παίκτης. Προσθέστε παίκτες από τη λίστα παρακάτω.",
+        "noneAvailable": "Όλοι οι εγγεγραμμένοι παίκτες είναι ήδη στην επιλογή.",
+        "add": "Προσθήκη {{name}}",
+        "remove": "Αφαίρεση {{name}}",
+        "moveUp": "Μετακίνηση {{name}} πάνω",
+        "moveDown": "Μετακίνηση {{name}} κάτω",
+        "save": "Αποθήκευση αλλαγών",
+        "reset": "Απόρριψη αλλαγών",
+        "unsaved": "Μη αποθηκευμένες αλλαγές — αποθηκεύστε πριν τη δημοσίευση.",
+        "overCapacity": "Πάρα πολλοί παίκτες ({{count}} / {{capacity}}): αφαιρέστε μερικούς πριν την αποθήκευση."
+      },
+      "correction": {
+        "title": "Διόρθωση τελευταίας εκδήλωσης",
+        "hint": "Η εκδήλωση τελείωσε. Η αναδιάταξη υπολογίζει εκ νέου το κόστος μόνο των παικτών των οποίων αλλάζει η θέση· τα DKP τους στην κατάταξη ενημερώνονται."
       }
     }
   },
