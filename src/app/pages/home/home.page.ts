@@ -43,11 +43,15 @@ export class HomePage implements OnInit {
   private readonly progressBarService = inject(ProgressBarService);
 
   private readonly mgDeductions = signal<Map<string, number>>(new Map());
-  private readonly seasonTotals = signal<Map<string, number>>(new Map());
+  // null until resolved: a season is active and its per-user totals are loaded.
+  // Stays null when no season covers today, so the leaderboard omits the season
+  // column/toggle entirely rather than showing a meaningless 0 for everyone.
+  private readonly seasonTotals = signal<Map<string, number> | null>(null);
 
   readonly userScores = computed<UserScore[]>(() => {
     const net = this.activityService.applyMgDeductions(this.activityService.getUserScores(), this.mgDeductions());
-    return this.activityService.applySeasonTotals(net, this.seasonTotals());
+    const totals = this.seasonTotals();
+    return totals ? this.activityService.applySeasonTotals(net, totals) : net;
   });
 
   async ngOnInit(): Promise<void> {
