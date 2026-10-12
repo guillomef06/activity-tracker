@@ -8,42 +8,104 @@
   </div>
 
   <mat-card class="mg-card">
-    <mat-card-content>
-      <p class="mg-description">{{ 'mightiestGovernor.description' | translate }}</p>
-
-      <mat-divider />
-
-      <div class="mg-table">
-        <div class="mg-table-header">
-          <span>{{ 'mightiestGovernor.rank' | translate }}</span>
-          <span class="header-center">{{ 'mightiestGovernor.medal' | translate }}</span>
-          <span class="header-center">{{ 'mightiestGovernor.cost' | translate }}</span>
-          <span class="header-right">{{ 'mightiestGovernor.targetScore' | translate }}</span>
+    @if (isFullFfa()) {
+      <mat-card-content>
+        <div class="full-ffa-notice">
+          <mat-icon class="full-ffa-icon">emoji_events</mat-icon>
+          <div class="full-ffa-text">
+            <p class="full-ffa-title">{{ 'mg.registration.fullFfaTitle' | translate }}</p>
+            <p class="full-ffa-description">{{ 'mg.registration.fullFfaDescription' | translate }}</p>
+          </div>
         </div>
+      </mat-card-content>
+    } @else {
+      <mat-card-content>
+        @if (isPublished()) {
+          <p class="mg-section-label">{{ 'mg.registration.selectionTitle' | translate }}</p>
+        } @else {
+          <p class="mg-description">{{ 'mightiestGovernor.description' | translate }}</p>
+        }
 
-        @for (slot of slots(); track trackByRank($index, slot)) {
-          <div class="mg-row">
-            <span class="mg-rank">{{ slot.rankLabel }}</span>
-            <span class="mg-medal">{{ slot.medal }}</span>
-            <span class="mg-cost">{{ slot.cost }} pts</span>
-            <span class="mg-target">{{ slot.targetLabel }}</span>
+        @if (canToggleMedalCost()) {
+          <div class="mg-table-controls">
+            <button
+              type="button"
+              class="medal-cost-toggle"
+              [class.active]="showMedalCost()"
+              [attr.aria-pressed]="showMedalCost()"
+              (click)="toggleMedalCost()"
+            >
+              <mat-icon class="toggle-icon">{{ showMedalCost() ? 'visibility' : 'visibility_off' }}</mat-icon>
+              <span>{{ 'mightiestGovernor.medalCostToggle' | translate }}</span>
+            </button>
           </div>
         }
-      </div>
-    </mat-card-content>
+
+        <mat-divider />
+
+        <div class="mg-table" [class.has-player]="isPublished()" [class.show-medal-cost]="showMedalCost()">
+          <div class="mg-table-header">
+            <span>{{ 'mightiestGovernor.rank' | translate }}</span>
+            @if (isPublished()) {
+              <span>{{ 'mg.registration.player' | translate }}</span>
+            }
+            @if (showMedalCost()) {
+              <span class="header-center">{{ 'mightiestGovernor.medal' | translate }}</span>
+              <span class="header-center">{{ 'mightiestGovernor.cost' | translate }}</span>
+            }
+            <span class="header-right">{{ 'mightiestGovernor.targetScore' | translate }}</span>
+          </div>
+
+          @for (row of rows(); track trackByRow($index, row)) {
+            <div class="mg-row" [class.group-start]="row.isGroupStart" [class.highlighted]="row.isCurrentUser">
+              <span class="mg-rank">{{ row.rankLabel }}</span>
+              @if (isPublished()) {
+                <span class="mg-player">
+                  <span class="mg-player-name">{{
+                    row.playerName ?? ('mg.registration.unknownPlayer' | translate)
+                  }}</span>
+                  @if (row.isCurrentUser) {
+                    <mat-icon class="you-icon">person</mat-icon>
+                  }
+                </span>
+              }
+              @if (showMedalCost()) {
+                <span class="mg-medal">{{ row.medal }}</span>
+                <span class="mg-cost">{{ row.cost !== null ? row.cost + ' pts' : '' }}</span>
+              }
+              <span class="mg-target">{{ row.targetLabel }}</span>
+            </div>
+          }
+        </div>
+
+        @if (ffaCount() > 0) {
+          <div class="ffa-row">
+            <mat-icon class="ffa-icon">groups</mat-icon>
+            <div class="ffa-text">
+              <span>{{ 'mg.registration.ffaSlots' | translate: { count: ffaCount() } }}</span>
+              @if (ffaTargetCap() !== null) {
+                <span class="ffa-cap">{{
+                  'mg.registration.ffaTargetCap' | translate: { target: ffaTargetCap() }
+                }}</span>
+              }
+            </div>
+          </div>
+        }
+      </mat-card-content>
+    }
   </mat-card>
 
-  <p class="mg-notice">
-    <mat-icon class="notice-icon">info</mat-icon>
-    {{ 'mightiestGovernor.notice' | translate }}
-  </p>
+  @if (!isFullFfa() && showMedalCost()) {
+    <p class="mg-notice">
+      <mat-icon class="notice-icon">info</mat-icon>
+      {{ 'mightiestGovernor.notice' | translate }}
+    </p>
+  }
 
   @if (showEventCard()) {
     <app-mg-event-card
       [mgEvent]="mgEvent()!"
       [registration]="registration()"
-      [selection]="selection()"
-      [currentUserId]="currentUserId()"
       [isRegistering]="isRegistering()"
       (register)="onRegister($event)"
       (unregister)="onUnregister()"

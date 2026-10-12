@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
 import { getFieldErrorKey } from '@shared/utils/form-validation.utils';
-import type { MgEvent, MgRegistration, MgSelectionWithUser, RegisterMgPlayerPayload } from '@shared/models';
+import type { MgEvent, MgRegistration, RegisterMgPlayerPayload } from '@shared/models';
 
 /** Max length of the optional free-text comment a player can attach to their registration. */
 const COMMENT_MAX_LENGTH = 200;
@@ -49,8 +49,6 @@ const DEFAULT_REGISTRATION_FORM_MODEL: RegistrationFormModel = {
 export class MgEventCardComponent {
   readonly mgEvent = input.required<MgEvent>();
   readonly registration = input<MgRegistration | null>(null);
-  readonly selection = input<MgSelectionWithUser[]>([]);
-  readonly currentUserId = input.required<string>();
   readonly isRegistering = input(false);
 
   readonly register = output<RegisterMgPlayerPayload>();
@@ -85,27 +83,9 @@ export class MgEventCardComponent {
 
   readonly isRegistered = computed(() => this.registration() !== null);
 
-  readonly isSelected = computed(() => {
-    const uid = this.currentUserId();
-    return this.selection().some(s => s.user_id === uid && s.selection_type === 'selected');
-  });
-
-  readonly selectedPlayers = computed(() => this.selection().filter(s => s.selection_type === 'selected'));
-
-  readonly ffaCount = computed(() => this.selection().filter(s => s.selection_type === 'ffa').length);
-
   readonly showRegistrationActions = computed(() => this.mgEvent().status === 'registration_open');
 
   readonly showWaiting = computed(() => this.mgEvent().status === 'registration_closed');
-
-  readonly showSelection = computed(() => {
-    const s = this.mgEvent().status;
-    return s === 'selection_published' || s === 'ongoing' || s === 'finished';
-  });
-
-  readonly isFullFfa = computed(
-    () => this.showSelection() && this.mgEvent().selection_published_at !== null && this.selection().length === 0
-  );
 
   onRegister(): void {
     if (this.registrationForm().invalid()) {

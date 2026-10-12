@@ -37,7 +37,10 @@
 
 .mg-card {
   mat-card-content {
-    padding: 0;
+    // Flush top/sides so the table reaches the card edges, but a real bottom pad:
+    // mat-card-content has no padding otherwise, so a child's bottom margin would
+    // collapse through the card edge instead of buffering the last element.
+    padding: 0 0 1rem;
   }
 }
 
@@ -49,6 +52,55 @@
   line-height: 1.5;
 }
 
+// Section heading shown (instead of the description) once a player list is published.
+.mg-section-label {
+  margin: 0;
+  padding: 1rem 1rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.mg-table-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1rem 0.75rem;
+}
+
+// Toggle for the Medal/Cost columns. Default off when a list is published, on otherwise.
+.medal-cost-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: none;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface-variant);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &.active {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+    border-color: transparent;
+  }
+
+  .toggle-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+}
+
 mat-divider {
   margin: 0;
 }
@@ -58,13 +110,45 @@ mat-divider {
   flex-direction: column;
 }
 
+// Column template is composed from the visible columns. Base = Rank + Target.
+// .has-player inserts a Player column after Rank; .show-medal-cost inserts
+// Medal + Cost before Target. The four combinations are spelled out so the
+// grid lines up between header and rows regardless of toggle/publish state.
 .mg-table-header,
 .mg-row {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
+  grid-template-columns: 1.5fr 1.5fr; // Rank | Target
   align-items: center;
   padding: 0.625rem 1.25rem;
   gap: 0.5rem;
+}
+
+// Fixed row height + uniform line-height so toggling the medal/cost columns
+// (whose cells are a touch larger) never reflows the row heights.
+.mg-row {
+  min-height: 2.75rem;
+  line-height: 1.25rem;
+}
+
+.mg-table.show-medal-cost {
+  .mg-table-header,
+  .mg-row {
+    grid-template-columns: 1.5fr 1fr 1fr 1.5fr; // Rank | Medal | Cost | Target
+  }
+}
+
+.mg-table.has-player {
+  .mg-table-header,
+  .mg-row {
+    grid-template-columns: 1.1fr 2fr 1.3fr; // Rank | Player | Target
+  }
+
+  &.show-medal-cost {
+    .mg-table-header,
+    .mg-row {
+      grid-template-columns: 1.1fr 2fr 0.8fr 1fr 1.3fr; // Rank | Player | Medal | Cost | Target
+    }
+  }
 }
 
 .mg-table-header {
@@ -84,11 +168,22 @@ mat-divider {
 }
 
 .mg-row {
-  border-top: 1px solid var(--mat-sys-outline-variant);
   transition: background-color 0.15s ease;
+
+  // Divider only between rank-range blocks. Continuation rows (same range, blank
+  // range cells) have no border so each range reads as one unit. Unpublished slot
+  // rows are all group-starts, so every one keeps its divider as before.
+  &.group-start {
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
 
   &:hover {
     background-color: var(--mat-sys-surface-container);
+  }
+
+  &.highlighted {
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
   }
 }
 
@@ -96,6 +191,32 @@ mat-divider {
   font-weight: 500;
   font-size: 0.95rem;
   color: var(--mat-sys-on-surface-variant);
+}
+
+.mg-player {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  font-weight: 500;
+  font-size: 0.95rem;
+
+  // Ellipsis long names rather than let them overrun into the Medal column on
+  // narrow screens; needs min-width:0 on both the flex item and this child.
+  .mg-player-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .you-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    color: var(--mat-sys-primary);
+  }
 }
 
 .mg-medal {
@@ -117,6 +238,74 @@ mat-divider {
   font-size: 1rem;
   color: var(--mat-sys-on-surface);
   text-align: right;
+}
+
+.ffa-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  // Top margin separates it from the last table row; the card-content bottom pad
+  // supplies the gap below, so no bottom margin here (it would collapse anyway).
+  margin: 1rem 1rem 0;
+  padding: 0.625rem 0.75rem;
+  border-radius: 6px;
+  background-color: var(--mat-sys-surface-container-low);
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  .ffa-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .ffa-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  // The score cap FFA players must stay under — emphasised since it's the actionable bit.
+  .ffa-cap {
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+}
+
+// Full-FFA: no list was ever published, so the card is just this notice (no
+// table). Icon + two lines of copy, centered to read as a standalone message.
+.full-ffa-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+
+  .full-ffa-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    color: var(--mat-sys-primary);
+  }
+
+  .full-ffa-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .full-ffa-title {
+    margin: 0;
+    font-weight: 600;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .full-ffa-description {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
 }
 
 .mg-notice {

@@ -467,6 +467,12 @@ button.submit-button {
   display: none;
 }
 
+// MG registration comment field — give the character-count hint a little breathing
+// room so it doesn't sit flush against the textarea's bottom outline.
+.mg-comment-field .mat-mdc-form-field-subscript-wrapper {
+  padding-top: 0.25rem;
+}
+
 // User account dialog
 .user-account-dialog {
   // Fixed height — single scroller, no jump on tab switch
