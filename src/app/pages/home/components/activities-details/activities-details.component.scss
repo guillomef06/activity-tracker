@@ -238,6 +238,20 @@ $duplicate-radius: 4px;
       text-align: center;
     }
   }
+
+  // Mobile: the two labeled chips crowded the display name down to one letter.
+  // Show only the number for the metric currently being sorted on (the toggle
+  // above the list switches which), and drop the "total points" / "season"
+  // word labels — the toggle already names the active metric.
+  .score-header {
+    .chip-hidden-on-mobile {
+      display: none;
+    }
+
+    .chip-label {
+      display: none;
+    }
+  }
 }
 
 @media (min-width: tokens.$bp-md) {
