@@ -62,6 +62,11 @@ export const APP_CONSTANTS = {
       labelKey: 'activities.types.behemoth-conquest',
       points: 8,
     },
+    {
+      value: 'stormlands',
+      labelKey: 'activities.types.stormlands',
+      points: 8,
+    },
   ] as ActivityType[],
 } as const;
 
