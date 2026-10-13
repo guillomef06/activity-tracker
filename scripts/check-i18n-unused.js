@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Detects translation keys defined in i18n JSON files that are not used
- * anywhere in the application source files.
+ * Checks the i18n JSON files:
+ *  - every locale must define exactly the same keys (any delta is an error)
+ *  - keys must be used somewhere in the application source files
  *
  * Usage:
  *   node scripts/check-i18n-unused.js
@@ -35,6 +36,23 @@ function flattenKeys(obj, prefix = '') {
     }
     return [fullKey];
   });
+}
+
+/**
+ * Compares the key sets of all locales against the union of every key found.
+ * Returns, per locale, the keys it lacks — locales with no delta are omitted.
+ */
+function findMissingKeysByLocale(keysByLocale) {
+  const allKeys = new Set(Object.values(keysByLocale).flat());
+  const missingByLocale = {};
+
+  for (const [locale, keys] of Object.entries(keysByLocale)) {
+    const own = new Set(keys);
+    const missing = [...allKeys].filter((key) => !own.has(key));
+    if (missing.length > 0) missingByLocale[locale] = missing;
+  }
+
+  return missingByLocale;
 }
 
 /** Recursively collect all files with the given extensions under a directory. */
@@ -106,6 +124,33 @@ const GREEN = '\x1b[32m';
 const YELLOW = '\x1b[33m';
 const BOLD = '\x1b[1m';
 
+/** Prints keys that differ between locales. Returns true when any delta exists. */
+function reportMissingKeys() {
+  const keysByLocale = {};
+  for (const locale of ALL_LOCALES) {
+    const localeFile = path.join(I18N_DIR, `${locale}.json`);
+    if (fs.existsSync(localeFile)) {
+      keysByLocale[locale] = flattenKeys(JSON.parse(fs.readFileSync(localeFile, 'utf8')));
+    }
+  }
+
+  const missingByLocale = findMissingKeysByLocale(keysByLocale);
+  const localesWithDelta = Object.keys(missingByLocale);
+
+  console.log(`${BOLD}i18n key parity check — ${ALL_LOCALES.length} locales${RESET}`);
+  if (localesWithDelta.length === 0) {
+    console.log(`\n${GREEN}All locales have the same keys. ✓${RESET}\n`);
+    return false;
+  }
+
+  for (const locale of localesWithDelta) {
+    console.log(`\n${RED}Missing in ${locale}:${RESET}`);
+    missingByLocale[locale].forEach((k) => console.log(`  ✗ ${k}`));
+  }
+  console.log();
+  return true;
+}
+
 function runCheck() {
   const args = process.argv.slice(2);
   const localeFlag = args.indexOf('--locale');
@@ -127,6 +172,8 @@ function runCheck() {
   }
 
   let globalFailed = false;
+
+  if (reportMissingKeys()) globalFailed = true;
 
   for (const locale of locales) {
     const localeFile = path.join(I18N_DIR, `${locale}.json`);
@@ -178,6 +225,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  findMissingKeysByLocale,
   findDynamicPrefixes,
   isKeyCoveredByDynamicPrefix,
   shouldSkipDynamicKey,
