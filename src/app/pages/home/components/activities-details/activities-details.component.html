@@ -37,15 +37,19 @@
           <mat-chip
             class="score-chip"
             [class.score-chip-active]="sortKey() === 'current'"
+            [class.chip-hidden-on-mobile]="hasSeasonTotals() && sortKey() !== 'current'"
             [matTooltip]="'activitiesDetails.currentPointsTooltip' | translate"
-            >{{ userScore.totalScore }} {{ 'dashboard.totalPoints' | translate }}</mat-chip
+            >{{ userScore.totalScore }}
+            <span class="chip-label">{{ 'dashboard.totalPoints' | translate }}</span></mat-chip
           >
           @if (hasSeasonTotals()) {
             <mat-chip
               class="season-chip"
               [class.score-chip-active]="sortKey() === 'season'"
+              [class.chip-hidden-on-mobile]="sortKey() !== 'season'"
               [matTooltip]="'activitiesDetails.seasonPointsTooltip' | translate"
-              >{{ userScore.seasonTotal ?? 0 }} {{ 'activitiesDetails.seasonPointsShort' | translate }}</mat-chip
+              >{{ userScore.seasonTotal ?? 0 }}
+              <span class="chip-label">{{ 'activitiesDetails.seasonPointsShort' | translate }}</span></mat-chip
             >
           }
           <button mat-icon-button class="expand-button">
