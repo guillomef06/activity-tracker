@@ -209,5 +209,30 @@ describe('ActivitiesDetailsComponent', () => {
       expect(compiled.querySelector('.sort-toggle')).toBeTruthy();
       expect(compiled.querySelector('.season-chip')?.textContent).toContain('300');
     });
+
+    // On mobile the CSS collapses the row to just the active metric's number via
+    // the chip-hidden-on-mobile class (applied to the non-active chip) — assert the
+    // class tracks the sort key so that behavior can't silently regress.
+    it('should mark only the inactive chip as hidden-on-mobile, following the sort key', () => {
+      fixture.componentRef.setInput('userScores', current());
+      fixture.detectChanges();
+      const compiled = fixture.nativeElement as HTMLElement;
+
+      // Default sort = current: season chip is the one hidden on mobile.
+      expect(compiled.querySelector('.score-chip')?.classList).not.toContain('chip-hidden-on-mobile');
+      expect(compiled.querySelector('.season-chip')?.classList).toContain('chip-hidden-on-mobile');
+
+      // Switch to season: now the current chip is hidden on mobile.
+      component['setSortKey']('season');
+      fixture.detectChanges();
+      expect(compiled.querySelector('.score-chip')?.classList).toContain('chip-hidden-on-mobile');
+      expect(compiled.querySelector('.season-chip')?.classList).not.toContain('chip-hidden-on-mobile');
+    });
+
+    it('should never hide the current chip on mobile when there are no season totals', () => {
+      // Single metric → nothing to toggle, the current chip must always stay visible.
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.score-chip')?.classList).not.toContain('chip-hidden-on-mobile');
+    });
   });
 });
