@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { provideRouter } from '@angular/router';
 import type { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -80,6 +81,7 @@ describe('SuperAdminSeasonsPage', () => {
       imports: [SuperAdminSeasonsPage, NoopAnimationsModule, TranslateModule.forRoot()],
       providers: [
         provideZonelessChangeDetection(),
+        provideRouter([]),
         { provide: SeasonService, useValue: seasonServiceMock },
         { provide: SnackbarService, useValue: snackbarMock },
         { provide: MatDialog, useValue: dialogMock },
@@ -96,6 +98,15 @@ describe('SuperAdminSeasonsPage', () => {
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render the back-to-dashboard button in the page header', () => {
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      'mat-card-header app-back-to-dashboard-button a'
+    );
+
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute('href')).toBe('/app/super-admin/dashboard');
   });
 
   it('should load seasons via the seasons resource on init', () => {

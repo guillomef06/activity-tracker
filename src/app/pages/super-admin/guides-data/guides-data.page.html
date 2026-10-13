@@ -2,6 +2,7 @@
   <!-- Page header -->
   <mat-card class="page-header">
     <mat-card-header>
+      <app-back-to-dashboard-button />
       <mat-icon class="header-icon">auto_stories</mat-icon>
       <div class="header-content">
         <mat-card-title>{{ 'superAdmin.guidesData' | translate }}</mat-card-title>
@@ -14,7 +15,7 @@
   </mat-card>
 
   <mat-card class="content-card">
-    <mat-tab-group animationDuration="200ms">
+    <mat-tab-group class="admin-tabs" animationDuration="200ms">
       <!-- ══════════════════════════════════════════════════════════
            Tab 1 — Champions
       ══════════════════════════════════════════════════════════ -->
