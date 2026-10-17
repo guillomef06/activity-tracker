@@ -366,6 +366,7 @@
     "retry": "دووبارە هەوڵدانەوە"
   },
   "superAdmin": {
+    "backToDashboard": "گەڕانەوە بۆ داشبۆرد",
     "dashboard": {
       "title": "پانێلی بەڕێوەبەری سەرەکی",
       "subtitle": "دیمەنی گشتی و بەڕێوەبردنی سیستەم",
@@ -544,6 +545,7 @@
     "medal": "Medal",
     "cost": "تێچوون",
     "targetScore": "Xalên Armancê",
+    "medalCostToggle": "Madalya û Bihayî",
     "notice": "تێچووە نیشانکراوەکان لەوانەیە لە ڕووداوێکەوە بۆ ڕووداوێکی تر بگۆڕن. خاڵەکان لە کۆی گشتیت کەم دەکرێنەوە لە دووشەممەی دوای ڕووداوەکەوە."
   },
   "gemCalculator": {
@@ -890,11 +892,11 @@
       "register": "Tescîl Bike",
       "unregister": "Tescîlê Betal Bike",
       "registeredBadge": "Tescîlkirî",
-      "selectedBadge": "Hilbijartî",
       "ffaSlots": "{{ count }} cihê FFA heye",
       "ffaSlot": "Cihê FFA",
+      "ffaTargetCap": "Ji {{ target }}M zêdetir nekin",
       "selectionTitle": "Lîstikvanên hilbijartî",
-      "noSelection": "Hîna hilbijartî nehatiye weşandin.",
+      "player": "Lîstikvan",
       "unknownPlayer": "Lîstikvanê nenas",
       "registerSuccess": "Tescîl hat pejirandin.",
       "registerError": "Tescîl têk çû. Ji kerema xwe dîsa biceribîne.",

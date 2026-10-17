@@ -4,7 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MgEventCardComponent } from './mg-event-card.component';
-import type { MgEvent, MgRegistration, MgSelectionWithUser } from '@shared/models';
+import type { MgEvent, MgRegistration } from '@shared/models';
 
 // Pure computed logic tests (no DOM)
 const makeEvent = (status: MgEvent['status']): MgEvent => ({
@@ -26,17 +26,6 @@ const makeRegistration = (): MgRegistration => ({
   registered_at: new Date().toISOString(),
   desired_slot_order: 3,
   comment: null,
-});
-
-const makeSelection = (userId: string, rank: number): MgSelectionWithUser => ({
-  id: 'sel-' + rank,
-  mg_event_id: 'ev-1',
-  user_id: userId,
-  rank,
-  selection_type: 'selected',
-  selected_by: 'automatic',
-  cost: 0,
-  user_profiles: { display_name: 'Player ' + rank, username: 'player' + rank },
 });
 
 describe('MgEventCardComponent logic', () => {
@@ -68,48 +57,9 @@ describe('MgEventCardComponent logic', () => {
     expect(waiting).toHaveLength(1);
   });
 
-  it('showSelection for selection_published, ongoing, finished', () => {
-    const showFor: MgEvent['status'][] = ['selection_published', 'ongoing', 'finished'];
-    expect(showFor).toHaveLength(3);
-  });
-
   it('isRegistered when registration is not null', () => {
     const reg = makeRegistration();
     expect(reg).not.toBeNull();
-  });
-
-  it('isSelected when user_id matches a selected slot', () => {
-    const selection = [makeSelection('user-1', 1), makeSelection('user-2', 2)];
-    const isSelected = selection.some(s => s.user_id === 'user-1' && s.selection_type === 'selected');
-    expect(isSelected).toBe(true);
-  });
-
-  it('ffaCount counts ffa slots', () => {
-    const selection: MgSelectionWithUser[] = [
-      { ...makeSelection('user-1', 1) },
-      {
-        id: 'ffa-1',
-        mg_event_id: 'ev-1',
-        user_id: null,
-        rank: 2,
-        selection_type: 'ffa',
-        selected_by: 'automatic',
-        cost: 0,
-        user_profiles: null,
-      },
-      {
-        id: 'ffa-2',
-        mg_event_id: 'ev-1',
-        user_id: null,
-        rank: 3,
-        selection_type: 'ffa',
-        selected_by: 'automatic',
-        cost: 0,
-        user_profiles: null,
-      },
-    ];
-    const count = selection.filter(s => s.selection_type === 'ffa').length;
-    expect(count).toBe(2);
   });
 
   it('makeEvent helper builds correct shape', () => {
@@ -132,7 +82,6 @@ describe('MgEventCardComponent registration form', () => {
     fixture = TestBed.createComponent(MgEventCardComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('mgEvent', makeEvent('registration_open'));
-    fixture.componentRef.setInput('currentUserId', 'user-1');
     fixture.detectChanges();
   });
 

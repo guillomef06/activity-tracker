@@ -366,6 +366,7 @@
     "retry": "重试"
   },
   "superAdmin": {
+    "backToDashboard": "返回仪表板",
     "dashboard": {
       "title": "超级管理员控制台",
       "subtitle": "全局系统概览与管理",
@@ -544,6 +545,7 @@
     "medal": "勋章",
     "cost": "费用",
     "targetScore": "目标分数",
+    "medalCostToggle": "勋章与花费",
     "notice": "显示的费用可能会因活动而异。积分将从活动结束后的下一个星期一开始从您的总分中扣除。"
   },
   "gemCalculator": {
@@ -890,11 +892,11 @@
       "register": "报名",
       "unregister": "取消报名",
       "registeredBadge": "已报名",
-      "selectedBadge": "已入选",
       "ffaSlots": "还有 {{ count }} 个 FFA 名额",
       "ffaSlot": "FFA 名额",
+      "ffaTargetCap": "请勿超过 {{ target }}M",
       "selectionTitle": "入选玩家",
-      "noSelection": "暂无已公布的名单。",
+      "player": "玩家",
       "unknownPlayer": "未知玩家",
       "registerSuccess": "报名成功。",
       "registerError": "报名失败，请重试。",

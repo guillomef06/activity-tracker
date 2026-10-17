@@ -38,6 +38,7 @@ import type {
   UpdateSeasonStructureRequest,
   WeekActivityAssignment,
 } from '@app/shared/models/season.model';
+import { BackToDashboardButtonComponent } from '@app/pages/super-admin/components/back-to-dashboard-button/back-to-dashboard-button.component';
 
 const SEASON_NAME_MAX_LENGTH = 100;
 const MIN_WEEK_COUNT = 1;
@@ -60,6 +61,7 @@ interface SeasonFormValue {
 @Component({
   selector: 'app-super-admin-seasons',
   imports: [
+    BackToDashboardButtonComponent,
     FormField,
     DatePipe,
     MatCardModule,

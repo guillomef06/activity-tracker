@@ -56,6 +56,15 @@ describe('SuperAdminUsersPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should render the back-to-dashboard button in the page header', () => {
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      'mat-card-header app-back-to-dashboard-button a'
+    );
+
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute('href')).toBe('/app/super-admin/dashboard');
+  });
+
   it('should have an edit form with display_name and role fields', () => {
     expect(component['editForm']).toBeDefined();
     expect(component['editForm'].display_name).toBeDefined();

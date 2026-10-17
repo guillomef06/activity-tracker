@@ -14,13 +14,23 @@ import type {
   RegisterMgPlayerPayload,
   ServerMgSlotConfig,
 } from '@shared/models';
-import { buildMgSlotRows } from '@shared/utils/mg-slot.util';
+import { buildMgSlotRows, resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
 
-interface GovernorSlot {
-  rankLabel: string;
-  medal: number;
-  cost: number;
-  targetLabel: string;
+/**
+ * One row of the unified MG table. Before a selection is published the rows are
+ * the slot-cost ranges (one per range, no player); once published they are the
+ * assigned players (one per rank) with the range columns populated only on the
+ * first row of each range (`isGroupStart`) so each range reads as one block.
+ */
+interface GovernorRow {
+  key: string;
+  isGroupStart: boolean;
+  rankLabel: string | null;
+  playerName: string | null;
+  isCurrentUser: boolean;
+  medal: number | null;
+  cost: number | null;
+  targetLabel: string | null;
 }
 
 @Component({
@@ -38,14 +48,9 @@ export class MightiestGovernorComponent implements OnInit {
 
   protected readonly slotConfig = signal<ServerMgSlotConfig[]>([]);
 
-  readonly slots = computed<GovernorSlot[]>(() =>
-    buildMgSlotRows(this.slotConfig()).map(row => ({
-      rankLabel: row.rankLabel,
-      medal: row.medal,
-      cost: row.cost,
-      targetLabel: row.targetMin === row.targetMax ? `${row.targetMin}M` : `${row.targetMin}M-${row.targetMax}M`,
-    }))
-  );
+  /** Fully-resolved slot rows (defaults merged with server overrides), shared by the
+   * config table here and the selection list in the child event card. */
+  readonly slotRows = computed<MgSlotRow[]>(() => buildMgSlotRows(this.slotConfig()));
 
   protected readonly mgEvent = signal<MgEvent | null>(null);
   protected readonly registration = signal<MgRegistration | null>(null);
@@ -54,13 +59,117 @@ export class MightiestGovernorComponent implements OnInit {
 
   protected readonly currentUserId = computed(() => this.authService.getUserId() ?? '');
 
+  // The bottom event card now only carries the sign-up form (registration_open) and a
+  // brief "closed, awaiting selection" notice (registration_closed). Once a selection is
+  // published / the event is ongoing or finished, the main table says everything, so the
+  // card is hidden.
   protected readonly showEventCard = computed(() => {
-    const ev = this.mgEvent();
-    return ev !== null && ev.status !== 'upcoming';
+    const status = this.mgEvent()?.status;
+    return status === 'registration_open' || status === 'registration_closed';
   });
 
-  trackByRank(_: number, slot: GovernorSlot): string {
-    return slot.rankLabel;
+  /** Selected (named) players for the current event, sorted by rank. */
+  private readonly selectedPlayers = computed(() =>
+    this.selection()
+      .filter(s => s.selection_type === 'selected')
+      .sort((a, b) => a.rank - b.rank)
+  );
+
+  /** A published player list exists once at least one player is assigned a slot. */
+  readonly isPublished = computed(() => this.selectedPlayers().length > 0);
+
+  /**
+   * Full-FFA: admins never published a list and the failsafe started the event
+   * anyway, so it's a free-for-all for everyone. Per migration 28 the data shape
+   * is "selection published, but no selection rows" — a published timestamp with
+   * an empty selection. Distinct from off-week/awaiting, which have no timestamp.
+   */
+  readonly isFullFfa = computed(() => this.mgEvent()?.selection_published_at != null && this.selection().length === 0);
+
+  /**
+   * Rows of the single MG table. Unpublished: the slot-cost ranges (reference
+   * table, as before). Published: the assigned players, with range columns shown
+   * only on the first row of each range so each range reads as one block.
+   */
+  readonly rows = computed<GovernorRow[]>(() => (this.isPublished() ? this.buildPlayerRows() : this.buildSlotRows()));
+
+  private buildSlotRows(): GovernorRow[] {
+    return this.slotRows().map(row => ({
+      key: row.rankLabel,
+      isGroupStart: true,
+      rankLabel: row.rankLabel,
+      playerName: null,
+      isCurrentUser: false,
+      medal: row.medal,
+      cost: row.cost,
+      targetLabel: this.formatTarget(row),
+    }));
+  }
+
+  private buildPlayerRows(): GovernorRow[] {
+    const rows = this.slotRows();
+    let previousLabel: string | null = null;
+
+    return this.selectedPlayers().map(player => {
+      const slot = resolveSlotForRank(player.rank, rows);
+      const rankLabel = slot?.rankLabel ?? String(player.rank);
+      const isGroupStart = rankLabel !== previousLabel;
+      previousLabel = rankLabel;
+
+      return {
+        key: 'p-' + player.rank,
+        isGroupStart,
+        rankLabel: isGroupStart ? rankLabel : null,
+        playerName: player.user_profiles?.display_name ?? null,
+        isCurrentUser: player.user_id === this.currentUserId(),
+        medal: isGroupStart ? (slot?.medal ?? null) : null,
+        cost: isGroupStart ? (slot?.cost ?? null) : null,
+        targetLabel: isGroupStart ? this.formatTarget(slot) : null,
+      };
+    });
+  }
+
+  /** Number of unassigned (FFA) slots: capacity minus assigned players. */
+  readonly ffaCount = computed(() => this.selection().filter(s => s.selection_type === 'ffa').length);
+
+  /**
+   * The score an FFA player must not exceed. To keep a buffer below the lowest
+   * assigned slot, we take the targetMax of the range one step BELOW the first
+   * open slot (rank = assignedCount + 1). E.g. 15 assigned → first open is rank
+   * 16 (range 16-25) → the range below is 26-50 → cap 15M. Null when there is no
+   * lower range (every rank filled) or no slot config.
+   */
+  readonly ffaTargetCap = computed<number | null>(() => {
+    const rows = this.slotRows();
+    const firstOpen = resolveSlotForRank(this.selectedPlayers().length + 1, rows);
+    if (!firstOpen) return null;
+    const belowIndex = rows.findIndex(r => r.slotOrder === firstOpen.slotOrder) + 1;
+    const buffered = rows[belowIndex] ?? firstOpen; // no lower range → fall back to the open slot itself
+    return buffered.targetMax;
+  });
+
+  /** The medal/cost toggle only exists once a list is published; unpublished the
+   * columns are the whole point of the table and are always shown. */
+  readonly canToggleMedalCost = computed(() => this.isPublished());
+
+  /** User's manual override, honoured only while the toggle exists (published). */
+  private readonly medalCostUserToggled = signal<boolean | null>(null);
+
+  // Unpublished: always shown (no toggle). Published: user choice, defaulting to hidden.
+  readonly showMedalCost = computed(() => (this.canToggleMedalCost() ? (this.medalCostUserToggled() ?? false) : true));
+
+  toggleMedalCost(): void {
+    const current = this.showMedalCost();
+    this.medalCostUserToggled.set(!current);
+  }
+
+  private formatTarget(slot: MgSlotRow | undefined): string | null {
+    if (!slot) return null;
+    return slot.targetMin === slot.targetMax ? `${slot.targetMin}M` : `${slot.targetMin}M-${slot.targetMax}M`;
+  }
+
+  trackByRow(_: number, row: GovernorRow): string {
+    return row.key;
   }
 
   async ngOnInit(): Promise<void> {
@@ -93,6 +202,11 @@ export class MightiestGovernorComponent implements OnInit {
     const event = this.mgEvent();
     const userId = this.authService.getUserId();
     if (!event || !userId) return;
+
+    // Registration is only accepted while the window is actually open. The form is
+    // already hidden otherwise, but guard the action too so a stale view, a double
+    // submit, or a programmatic call can't slip a sign-up past a closed window.
+    if (event.status !== 'registration_open') return;
 
     this.isRegistering.set(true);
     try {

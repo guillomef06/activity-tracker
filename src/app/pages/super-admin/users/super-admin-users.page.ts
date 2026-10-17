@@ -21,6 +21,7 @@ import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import { InfiniteScrollDirective } from '@app/shared/directives/infinite-scroll/infinite-scroll.directive';
 import type { UserProfile } from '@app/shared/models';
 import { firstValueFrom } from 'rxjs';
+import { BackToDashboardButtonComponent } from '@app/pages/super-admin/components/back-to-dashboard-button/back-to-dashboard-button.component';
 
 const DISPLAY_NAME_MIN_LENGTH = 2;
 
@@ -36,6 +37,7 @@ interface UserEditFormValue {
 @Component({
   selector: 'app-super-admin-users',
   imports: [
+    BackToDashboardButtonComponent,
     FormField,
     MatCardModule,
     MatFormFieldModule,

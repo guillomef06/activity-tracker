@@ -22,12 +22,14 @@ import { SnackbarService } from '@app/core/services';
 import { ProgressBarService } from '@app/core/services/progress-bar.service';
 import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/confirm-dialog.component';
 import type { Champion, Skill, HorseTemperament, Adornment, Gem, GemType, Ring } from '@app/shared/models/guide.model';
+import { BackToDashboardButtonComponent } from '@app/pages/super-admin/components/back-to-dashboard-button/back-to-dashboard-button.component';
 
 const GEM_TYPES: GemType[] = ['strategy', 'hero', 'tactics'];
 
 @Component({
   selector: 'app-guides-data',
   imports: [
+    BackToDashboardButtonComponent,
     ReactiveFormsModule,
     MatCardModule,
     MatTabsModule,

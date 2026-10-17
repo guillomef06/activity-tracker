@@ -45,3 +45,23 @@ ctx7.txt
 
 # Claude Code local settings/hooks
 .claude/
+.specify/.gitignore
+.specify/init-options.json
+.specify/integration.json
+.specify/integrations/claude.manifest.json
+.specify/integrations/speckit.manifest.json
+.specify/memory/.constitution-template.json
+.specify/memory/constitution.md
+.specify/scripts/powershell/check-prerequisites.ps1
+.specify/scripts/powershell/common.ps1
+.specify/scripts/powershell/create-new-feature.ps1
+.specify/scripts/powershell/resolve-template.ps1
+.specify/scripts/powershell/setup-plan.ps1
+.specify/scripts/powershell/setup-tasks.ps1
+.specify/templates/checklist-template.md
+.specify/templates/constitution-template.md
+.specify/templates/plan-template.md
+.specify/templates/spec-template.md
+.specify/templates/tasks-template.md
+.specify/workflows/workflow-registry.json
+.specify/workflows/speckit/workflow.yml

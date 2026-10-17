@@ -34,6 +34,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check i18n keys
+        id: i18n
+        run: npm run i18n:check
+
       - name: Run linter
         id: lint
         run: npm run lint
@@ -46,6 +50,10 @@ jobs:
         id: tests
         run: npm run test:ci
 
+      - name: Run scripts tests
+        id: scripts-tests
+        run: npm run test:scripts
+
       - name: Comment PR
         uses: actions/github-script@v7
         if: always()
@@ -55,9 +63,11 @@ jobs:
             const emoji = status === 'success' ? '✅' : '❌';
             const message = `## ${emoji} PR Checks ${status === 'success' ? 'Passed' : 'Failed'}
             
+            **i18n:** ${{ steps.i18n.outcome || 'N/A' }}
             **Lint:** ${{ steps.lint.outcome || 'N/A' }}
             **Build:** ${{ steps.build.outcome || 'N/A' }}
             **Tests:** ${{ steps.tests.outcome || 'N/A' }}
+            **Scripts tests:** ${{ steps.scripts-tests.outcome || 'N/A' }}
             
             ${status === 'success' ? '✨ All checks passed! Ready for review.' : '⚠️ Some checks failed. Please review the logs.'}`;
             

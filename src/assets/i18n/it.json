@@ -366,6 +366,7 @@
     "retry": "Riprova"
   },
   "superAdmin": {
+    "backToDashboard": "Torna alla dashboard",
     "dashboard": {
       "title": "Dashboard Super Amministratore",
       "subtitle": "Panoramica globale e gestione del sistema",
@@ -544,6 +545,7 @@
     "medal": "Medaglia",
     "cost": "Costo",
     "targetScore": "Punteggio Obiettivo",
+    "medalCostToggle": "Medaglie e Costo",
     "notice": "I costi mostrati possono cambiare da un evento all'altro. I punti vengono detratti dal tuo totale a partire dal lunedì successivo all'evento."
   },
   "gemCalculator": {
@@ -890,11 +892,11 @@
       "register": "Iscriviti",
       "unregister": "Cancella iscrizione",
       "registeredBadge": "Iscritto",
-      "selectedBadge": "Selezionato",
       "ffaSlots": "{{ count }} posto/i FFA disponibile/i",
       "ffaSlot": "Posto FFA",
+      "ffaTargetCap": "Non superare {{ target }}M",
       "selectionTitle": "Giocatori selezionati",
-      "noSelection": "Nessuna selezione pubblicata.",
+      "player": "Giocatore",
       "unknownPlayer": "Giocatore sconosciuto",
       "registerSuccess": "Iscrizione confermata.",
       "registerError": "Iscrizione fallita. Riprova.",

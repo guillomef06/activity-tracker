@@ -3,6 +3,7 @@ import { vi } from 'vitest';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog } from '@angular/material/dialog';
+import { provideRouter } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { GuidesDataPage } from './guides-data.page';
@@ -148,6 +149,7 @@ describe('GuidesDataPage', () => {
       imports: [GuidesDataPage, NoopAnimationsModule, TranslateModule.forRoot()],
       providers: [
         provideZonelessChangeDetection(),
+        provideRouter([]),
         { provide: GuideAdminService, useValue: guideAdminMock },
         { provide: SnackbarService, useValue: snackbarMock },
         { provide: ProgressBarService, useValue: progressBarMock },
@@ -163,6 +165,22 @@ describe('GuidesDataPage', () => {
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render the back-to-dashboard button in the page header', () => {
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>(
+      'mat-card-header app-back-to-dashboard-button a'
+    );
+
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute('href')).toBe('/app/super-admin/dashboard');
+  });
+
+  it('should render six tabs in a mat-tab-group with the admin-tabs class', () => {
+    const tabGroup = (fixture.nativeElement as HTMLElement).querySelector('mat-tab-group');
+
+    expect(tabGroup?.classList.contains('admin-tabs')).toBe(true);
+    expect(tabGroup?.querySelectorAll('.mat-mdc-tab')).toHaveLength(6);
   });
 
   it('should load all reference data on init', () => {

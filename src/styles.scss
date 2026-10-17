@@ -155,15 +155,34 @@ body {
   }
 }
 
-/* Server Settings Tabs - Global Material Override */
-.settings-tabs .mat-mdc-tab-label {
-  min-width: 160px;
+/* Admin tab groups - equal-width tabs.
+   Material 22 tabs are `.mdc-tab.mat-mdc-tab` with `flex: 1 0 auto`, so their width follows the
+   label content. A shared flex-basis and min-width makes every tab the same width, and the
+   ellipsis keeps a long translation from widening a single tab. */
+.admin-tabs {
+  --admin-tab-width: 10rem;
+
+  .mat-mdc-tab {
+    flex: 1 0 var(--admin-tab-width);
+    min-width: var(--admin-tab-width);
+  }
+
+  .mdc-tab__content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .mdc-tab__text-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: tokens.$bp-md) {
-  .settings-tabs .mat-mdc-tab-label {
-    min-width: 80px;
-    padding: 0 0.75rem;
+  .admin-tabs {
+    --admin-tab-width: 7.5rem;
   }
 }
 
@@ -465,6 +484,12 @@ button.submit-button {
 // Import Excel tab — hide subscript wrapper on inline player-select form fields
 .player-select .mat-mdc-form-field-subscript-wrapper {
   display: none;
+}
+
+// MG registration comment field — give the character-count hint a little breathing
+// room so it doesn't sit flush against the textarea's bottom outline.
+.mg-comment-field .mat-mdc-form-field-subscript-wrapper {
+  padding-top: 0.25rem;
 }
 
 // User account dialog
