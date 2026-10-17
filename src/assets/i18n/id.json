@@ -545,6 +545,7 @@
     "medal": "Medali",
     "cost": "Biaya",
     "targetScore": "Skor Target",
+    "medalCostToggle": "Medali & Biaya",
     "notice": "Biaya yang ditampilkan dapat berubah dari satu event ke event berikutnya. Poin akan dikurangi dari total Anda mulai hari Senin setelah event."
   },
   "gemCalculator": {
@@ -893,7 +894,9 @@
       "registeredBadge": "Terdaftar",
       "ffaSlots": "{{ count }} slot FFA tersedia",
       "ffaSlot": "Slot FFA",
+      "ffaTargetCap": "Jangan melebihi {{ target }}M",
       "selectionTitle": "Pemain terpilih",
+      "player": "Pemain",
       "unknownPlayer": "Pemain tidak dikenal",
       "registerSuccess": "Pendaftaran dikonfirmasi.",
       "registerError": "Pendaftaran gagal. Silakan coba lagi.",

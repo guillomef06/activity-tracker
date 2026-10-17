@@ -545,6 +545,7 @@
     "medal": "Medalha",
     "cost": "Custo",
     "targetScore": "Pontuação Alvo",
+    "medalCostToggle": "Medalhas e Custo",
     "notice": "Os custos mostrados podem mudar de um evento para outro. Os pontos são deduzidos do seu total a partir da segunda-feira seguinte ao evento."
   },
   "gemCalculator": {
@@ -893,7 +894,9 @@
       "registeredBadge": "Inscrito",
       "ffaSlots": "{{ count }} vaga(s) FFA disponível(is)",
       "ffaSlot": "Vaga FFA",
+      "ffaTargetCap": "Não ultrapassar {{ target }}M",
       "selectionTitle": "Jogadores selecionados",
+      "player": "Jogador",
       "unknownPlayer": "Jogador desconhecido",
       "registerSuccess": "Inscrição confirmada.",
       "registerError": "Falha na inscrição. Por favor, tente novamente.",

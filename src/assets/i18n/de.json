@@ -545,6 +545,7 @@
     "medal": "Medaille",
     "cost": "Kosten",
     "targetScore": "Zielpunktzahl",
+    "medalCostToggle": "Medaillen & Kosten",
     "notice": "Die angezeigten Kosten können sich von Event zu Event ändern. Punkte werden ab dem Montag nach dem Event von deinem Gesamtwert abgezogen."
   },
   "gemCalculator": {
@@ -893,7 +894,9 @@
       "registeredBadge": "Angemeldet",
       "ffaSlots": "{{ count }} FFA-Platz/-Plätze verfügbar",
       "ffaSlot": "FFA-Platz",
+      "ffaTargetCap": "{{ target }}M nicht überschreiten",
       "selectionTitle": "Ausgewählte Spieler",
+      "player": "Spieler",
       "unknownPlayer": "Unbekannter Spieler",
       "registerSuccess": "Anmeldung bestätigt.",
       "registerError": "Anmeldung fehlgeschlagen. Bitte erneut versuchen.",

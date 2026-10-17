@@ -545,6 +545,7 @@
     "medal": "Medal",
     "cost": "تێچوون",
     "targetScore": "Xalên Armancê",
+    "medalCostToggle": "Madalya û Bihayî",
     "notice": "تێچووە نیشانکراوەکان لەوانەیە لە ڕووداوێکەوە بۆ ڕووداوێکی تر بگۆڕن. خاڵەکان لە کۆی گشتیت کەم دەکرێنەوە لە دووشەممەی دوای ڕووداوەکەوە."
   },
   "gemCalculator": {
@@ -893,7 +894,9 @@
       "registeredBadge": "Tescîlkirî",
       "ffaSlots": "{{ count }} cihê FFA heye",
       "ffaSlot": "Cihê FFA",
+      "ffaTargetCap": "Ji {{ target }}M zêdetir nekin",
       "selectionTitle": "Lîstikvanên hilbijartî",
+      "player": "Lîstikvan",
       "unknownPlayer": "Lîstikvanê nenas",
       "registerSuccess": "Tescîl hat pejirandin.",
       "registerError": "Tescîl têk çû. Ji kerema xwe dîsa biceribîne.",

@@ -545,6 +545,7 @@
     "medal": "पदक",
     "cost": "लागत",
     "targetScore": "लक्ष्य स्कोर",
+    "medalCostToggle": "पदक और लागत",
     "notice": "दिखाई गई लागतें हर इवेंट में बदल सकती हैं। इवेंट के बाद अगले सोमवार से आपके कुल स्कोर से अंक काटे जाते हैं।"
   },
   "gemCalculator": {
@@ -893,7 +894,9 @@
       "registeredBadge": "पंजीकृत",
       "ffaSlots": "{{ count }} FFA स्लॉट उपलब्ध",
       "ffaSlot": "FFA स्लॉट",
+      "ffaTargetCap": "{{ target }}M से अधिक न करें",
       "selectionTitle": "चयनित खिलाड़ी",
+      "player": "खिलाड़ी",
       "unknownPlayer": "अज्ञात खिलाड़ी",
       "registerSuccess": "पंजीकरण की पुष्टि हो गई।",
       "registerError": "पंजीकरण विफल। कृपया पुनः प्रयास करें।",

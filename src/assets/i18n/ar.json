@@ -545,6 +545,7 @@
     "medal": "ميدالية",
     "cost": "التكلفة",
     "targetScore": "النقاط المستهدفة",
+    "medalCostToggle": "الميداليات والتكلفة",
     "notice": "قد تتغير التكاليف المعروضة من حدث إلى آخر. تُخصم النقاط من إجماليك ابتداءً من يوم الاثنين التالي للحدث."
   },
   "gemCalculator": {
@@ -893,7 +894,9 @@
       "registeredBadge": "مسجّل",
       "ffaSlots": "{{ count }} مقعد/مقاعد FFA متاحة",
       "ffaSlot": "مقعد FFA",
+      "ffaTargetCap": "لا تتجاوز {{ target }}M",
       "selectionTitle": "اللاعبون المختارون",
+      "player": "اللاعب",
       "unknownPlayer": "لاعب مجهول",
       "registerSuccess": "تم تأكيد التسجيل.",
       "registerError": "فشل التسجيل. يرجى المحاولة مجدداً.",
