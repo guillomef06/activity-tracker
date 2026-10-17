@@ -545,6 +545,7 @@
     "medal": "Madalya",
     "cost": "Maliyet",
     "targetScore": "Hedef Puan",
+    "medalCostToggle": "Madalyalar ve Maliyet",
     "notice": "Gösterilen maliyetler etkinlikten etkinliğe değişebilir. Puanlar, etkinlikten sonraki pazartesiden itibaren toplamınızdan düşülür."
   },
   "gemCalculator": {
@@ -891,11 +892,11 @@
       "register": "Kayıt Ol",
       "unregister": "Kaydı İptal Et",
       "registeredBadge": "Kayıtlı",
-      "selectedBadge": "Seçildi",
       "ffaSlots": "{{ count }} FFA yeri mevcut",
       "ffaSlot": "FFA yeri",
+      "ffaTargetCap": "{{ target }}M değerini aşmayın",
       "selectionTitle": "Seçilen oyuncular",
-      "noSelection": "Henüz seçim yayınlanmadı.",
+      "player": "Oyuncu",
       "unknownPlayer": "Bilinmeyen oyuncu",
       "registerSuccess": "Kayıt onaylandı.",
       "registerError": "Kayıt başarısız. Lütfen tekrar deneyin.",

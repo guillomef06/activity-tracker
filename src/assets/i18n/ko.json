@@ -545,6 +545,7 @@
     "medal": "메달",
     "cost": "비용",
     "targetScore": "목표 점수",
+    "medalCostToggle": "메달 및 비용",
     "notice": "표시된 비용은 이벤트마다 달라질 수 있습니다. 포인트는 이벤트 종료 후 다음 월요일부터 총점에서 차감됩니다."
   },
   "gemCalculator": {
@@ -891,11 +892,11 @@
       "register": "등록하기",
       "unregister": "등록 취소",
       "registeredBadge": "등록됨",
-      "selectedBadge": "선발됨",
       "ffaSlots": "FFA 자리 {{ count }}개 남음",
       "ffaSlot": "FFA 자리",
+      "ffaTargetCap": "{{ target }}M를 초과하지 마세요",
       "selectionTitle": "선발된 플레이어",
-      "noSelection": "아직 선발 명단이 없습니다.",
+      "player": "플레이어",
       "unknownPlayer": "알 수 없는 플레이어",
       "registerSuccess": "등록이 확인되었습니다.",
       "registerError": "등록에 실패했습니다. 다시 시도해 주세요.",
