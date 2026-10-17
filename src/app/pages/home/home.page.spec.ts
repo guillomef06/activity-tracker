@@ -116,6 +116,49 @@ describe('HomePage', () => {
     expect(mgEventServiceSpy.loadSpends).toHaveBeenCalledWith('server-1', expect.any(Date));
   });
 
+  it('should not apply season totals when no season covers today', async () => {
+    // Default seasonServiceSpy.getSeasonForDate returns null → no active season.
+    const activityService = TestBed.inject(ActivityService);
+    const applySpy = vi.spyOn(activityService, 'applySeasonTotals');
+    const loadSpy = vi.spyOn(activityService, 'loadSeasonTotals');
+
+    fixture = TestBed.createComponent(HomePage);
+    component = fixture.componentInstance;
+    await component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(loadSpy).not.toHaveBeenCalled();
+    expect(applySpy).not.toHaveBeenCalled();
+    // seasonTotal must stay undefined so the leaderboard hides the season column.
+    expect(component.userScores().every(u => u.seasonTotal === undefined)).toBe(true);
+  });
+
+  it('should load and apply season totals when a season is active', async () => {
+    const season = {
+      id: 's1',
+      name: 'Season 1',
+      startDate: new Date('2026-01-05T00:00:00Z'),
+      weekCount: 20,
+      endDate: new Date('2026-05-25T00:00:00Z'),
+      createdAt: new Date('2026-01-01T00:00:00Z'),
+      updatedAt: new Date('2026-01-01T00:00:00Z'),
+      weekActivities: [],
+    };
+    seasonServiceSpy.getSeasonForDate.mockReturnValueOnce(season);
+
+    const activityService = TestBed.inject(ActivityService);
+    const loadSpy = vi.spyOn(activityService, 'loadSeasonTotals').mockResolvedValue(new Map([['test-user', 500]]));
+    const applySpy = vi.spyOn(activityService, 'applySeasonTotals');
+
+    fixture = TestBed.createComponent(HomePage);
+    component = fixture.componentInstance;
+    await component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(loadSpy).toHaveBeenCalledWith(season);
+    expect(applySpy).toHaveBeenCalled();
+  });
+
   it('should render the 4 tabs', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('mat-tab-group')).toBeTruthy();

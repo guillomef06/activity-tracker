@@ -18,6 +18,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
     "deploy": "ng deploy --base-href=/activity-tracker/",
     "i18n:check": "node scripts/check-i18n-unused.js",
+    "test:scripts": "node --test \"scripts/*.test.js\"",
     "version": "node scripts/update-release-notes.js",
     "prepare": "husky"
   },

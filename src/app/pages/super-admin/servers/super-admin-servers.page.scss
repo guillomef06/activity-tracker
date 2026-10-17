@@ -1,6 +1,6 @@
 @use '../../../../styles/design-tokens' as tokens;
 
-.super-admin-servers-page {
+.super-admin-servers {
   padding: 1rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -162,7 +162,7 @@
 
 // Mobile responsiveness
 @media (max-width: tokens.$bp-md) {
-  .super-admin-servers-page {
+  .super-admin-servers {
     padding: 1rem;
   }
 

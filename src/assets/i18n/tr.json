@@ -309,7 +309,8 @@
       "primordial-conflict": "İlksel Çatışma",
       "legion": "Şafak Savaşı / Harikalar",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "Behemot Fethi"
+      "behemoth-conquest": "Behemot Fethi",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "Tekrar dene"
   },
   "superAdmin": {
+    "backToDashboard": "Panele geri dön",
     "dashboard": {
       "title": "Süper Admin Paneli",
       "subtitle": "Global sistem genel bakışı ve yönetimi",

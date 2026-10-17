@@ -309,7 +309,8 @@
       "primordial-conflict": "Αρχέγονη Σύγκρουση",
       "legion": "Μάχη της Αυγής / Θαύματα",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "Κατάκτηση του Βεεμώθ"
+      "behemoth-conquest": "Κατάκτηση του Βεεμώθ",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "Επανάληψη"
   },
   "superAdmin": {
+    "backToDashboard": "Επιστροφή στον πίνακα ελέγχου",
     "dashboard": {
       "title": "Πίνακας Ελέγχου Super Admin",
       "subtitle": "Παγκόσμια επισκόπηση συστήματος και διαχείριση",

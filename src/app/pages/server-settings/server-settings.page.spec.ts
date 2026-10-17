@@ -102,6 +102,14 @@ describe('ServerSettingsPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should render six tabs in a mat-tab-group with the admin-tabs class', () => {
+    const tabGroup = (fixture.nativeElement as HTMLElement).querySelector('mat-tab-group');
+
+    expect(tabGroup?.classList.contains('admin-tabs')).toBe(true);
+    expect(tabGroup?.classList.contains('settings-tabs')).toBe(true);
+    expect(tabGroup?.querySelectorAll('.mat-mdc-tab')).toHaveLength(6);
+  });
+
   it('should load data on init', async () => {
     await component.ngOnInit();
 

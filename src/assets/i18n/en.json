@@ -309,7 +309,8 @@
       "primordial-conflict": "Primordial Conflict",
       "legion": "Battle of Dawn / Wonders",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "Behemoth Conquest"
+      "behemoth-conquest": "Behemoth Conquest",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "Retry"
   },
   "superAdmin": {
+    "backToDashboard": "Back to dashboard",
     "dashboard": {
       "title": "Super Admin Dashboard",
       "subtitle": "Global system overview and management",

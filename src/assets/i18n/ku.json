@@ -309,7 +309,8 @@
       "primordial-conflict": "ناکۆکی سەرەتایی",
       "legion": "شەڕی بەیانی / سەرسوڕمانەوە",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "داگیرکردنی بەهیمۆس"
+      "behemoth-conquest": "داگیرکردنی بەهیمۆس",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "دووبارە هەوڵدانەوە"
   },
   "superAdmin": {
+    "backToDashboard": "گەڕانەوە بۆ داشبۆرد",
     "dashboard": {
       "title": "پانێلی بەڕێوەبەری سەرەکی",
       "subtitle": "دیمەنی گشتی و بەڕێوەبردنی سیستەم",

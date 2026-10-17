@@ -309,7 +309,8 @@
       "primordial-conflict": "Konflik Purba",
       "legion": "Pertempuran Fajar / Keajaiban",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "Penaklukan Behemoth"
+      "behemoth-conquest": "Penaklukan Behemoth",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "Coba lagi"
   },
   "superAdmin": {
+    "backToDashboard": "Kembali ke dasbor",
     "dashboard": {
       "title": "Dasbor Super Admin",
       "subtitle": "Ikhtisar dan manajemen sistem global",

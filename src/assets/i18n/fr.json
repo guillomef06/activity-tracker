@@ -309,7 +309,8 @@
       "primordial-conflict": "Conflit Primordial",
       "legion": "Bataille de l'Aube / Merveilles",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "Conquête du Béhémoth"
+      "behemoth-conquest": "Conquête du Béhémoth",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "Réessayer"
   },
   "superAdmin": {
+    "backToDashboard": "Retour au tableau de bord",
     "dashboard": {
       "title": "Tableau de Bord Super Admin",
       "subtitle": "Vue d'ensemble et gestion globale du système",

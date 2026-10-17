@@ -309,7 +309,8 @@
       "primordial-conflict": "Conflicto Primordial",
       "legion": "Batalla del Amanecer / Maravillas",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "Conquista del Behemoth"
+      "behemoth-conquest": "Conquista del Behemoth",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "Reintentar"
   },
   "superAdmin": {
+    "backToDashboard": "Volver al panel",
     "dashboard": {
       "title": "Panel de Superadministrador",
       "subtitle": "Vista general y gestión global del sistema",

@@ -309,7 +309,8 @@
       "primordial-conflict": "الصراع الأزلي",
       "legion": "معركة الفجر / العجائب",
       "me-overall": "ME Overall",
-      "behemoth-conquest": "غزو البهيموث"
+      "behemoth-conquest": "غزو البهيموث",
+      "stormlands": "Stormlands"
     }
   },
   "dashboard": {
@@ -365,6 +366,7 @@
     "retry": "إعادة المحاولة"
   },
   "superAdmin": {
+    "backToDashboard": "العودة إلى لوحة التحكم",
     "dashboard": {
       "title": "لوحة تحكم المسؤول الرئيسي",
       "subtitle": "نظرة عامة على النظام العالمي وإدارته",
