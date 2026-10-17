@@ -55,6 +55,10 @@ describe('SuperAdminDashboardPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should not render a back button (the dashboard is the landing page)', () => {
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-back-to-dashboard-button')).toBeNull();
+  });
+
   it('should have statistics signals', () => {
     expect(component['stats']).toBeDefined();
   });

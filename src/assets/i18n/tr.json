@@ -366,6 +366,7 @@
     "retry": "Tekrar dene"
   },
   "superAdmin": {
+    "backToDashboard": "Panele geri dön",
     "dashboard": {
       "title": "Süper Admin Paneli",
       "subtitle": "Global sistem genel bakışı ve yönetimi",

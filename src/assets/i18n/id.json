@@ -366,6 +366,7 @@
     "retry": "Coba lagi"
   },
   "superAdmin": {
+    "backToDashboard": "Kembali ke dasbor",
     "dashboard": {
       "title": "Dasbor Super Admin",
       "subtitle": "Ikhtisar dan manajemen sistem global",

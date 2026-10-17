@@ -366,6 +366,7 @@
     "retry": "重试"
   },
   "superAdmin": {
+    "backToDashboard": "返回仪表板",
     "dashboard": {
       "title": "超级管理员控制台",
       "subtitle": "全局系统概览与管理",

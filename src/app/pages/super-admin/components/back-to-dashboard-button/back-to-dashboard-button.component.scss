@@ -1,0 +1,12 @@
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+// Material's icon button is 40px with a 48px touch area; enforce 44px explicitly
+// so the target stays WCAG-sized if the density token changes.
+.back-btn {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}

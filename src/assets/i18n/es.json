@@ -366,6 +366,7 @@
     "retry": "Reintentar"
   },
   "superAdmin": {
+    "backToDashboard": "Volver al panel",
     "dashboard": {
       "title": "Panel de Superadministrador",
       "subtitle": "Vista general y gestión global del sistema",

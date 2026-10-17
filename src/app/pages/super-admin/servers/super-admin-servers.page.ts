@@ -18,6 +18,7 @@ import { getFieldErrorKey } from '@app/shared/utils/form-validation.utils';
 import { LocalDatePipe } from '@app/shared/pipes/local-date.pipe';
 import type { Server } from '@app/shared/models';
 import { firstValueFrom } from 'rxjs';
+import { BackToDashboardButtonComponent } from '@app/pages/super-admin/components/back-to-dashboard-button/back-to-dashboard-button.component';
 
 const SERVER_NAME_MIN_LENGTH = 3;
 const SERVER_NAME_MAX_LENGTH = 100;
@@ -40,6 +41,7 @@ interface ServerEditFormValue {
 @Component({
   selector: 'app-super-admin-servers',
   imports: [
+    BackToDashboardButtonComponent,
     FormField,
     MatCardModule,
     MatFormFieldModule,
