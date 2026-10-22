@@ -108,6 +108,14 @@
     font-size: 0.875rem;
   }
 
+  // Admin manual adjustment on the header — signed: green when added, red when
+  // removed. Same sizing as the DKP deduction so the two read as siblings.
+  .point-adjustment {
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
   .score-chip,
   .season-chip {
     flex-shrink: 0;
@@ -130,6 +138,61 @@
   .expand-button {
     flex-shrink: 0;
     margin: -8px -8px -8px 0;
+  }
+}
+
+// Shared signed-delta colours (header chip + per-week log rows).
+.adjustment-positive {
+  color: var(--mat-sys-success);
+}
+
+.adjustment-negative {
+  color: var(--mat-sys-error);
+}
+
+// Per-week folded adjustment rows inside an expanded player's accordion. Shown
+// for context in the week the adjustment is dated to, but visually set apart so
+// it's clear they are NOT part of that week's point total.
+.week-adjustments {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--mat-sys-outline-variant);
+
+  .adjustment-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+
+    .adjustment-row-icon {
+      flex-shrink: 0;
+      font-size: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    .adjustment-reason {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.875rem;
+    }
+
+    .adjustment-delta {
+      flex-shrink: 0;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+  }
+
+  .adjustment-note {
+    margin: 0.25rem 0 0;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
