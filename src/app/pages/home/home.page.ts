@@ -75,14 +75,13 @@ export class HomePage implements OnInit {
   });
 
   readonly userScores = computed<UserScore[]>(() => {
-    // Adjustments first so the DKP pass's final re-sort reflects the adjusted totals.
-    const adjusted = this.activityService.applyPointAdjustments(
-      this.activityService.getUserScores(),
-      this.adjustmentTotals()
-    );
-    const net = this.activityService.applyMgDeductions(adjusted, this.mgDeductions());
+    // DKP first — it clamps against the pure earned total (always ≥ 0) so a slot
+    // cost can never push a balance negative. Manual adjustments apply LAST and
+    // are unfloored, so an admin penalty is the only thing that can break zero.
+    const net = this.activityService.applyMgDeductions(this.activityService.getUserScores(), this.mgDeductions());
+    const adjusted = this.activityService.applyPointAdjustments(net, this.adjustmentTotals());
     const totals = this.seasonTotals();
-    return totals ? this.activityService.applySeasonTotals(net, totals) : net;
+    return totals ? this.activityService.applySeasonTotals(adjusted, totals) : adjusted;
   });
 
   async ngOnInit(): Promise<void> {

@@ -366,11 +366,22 @@ describe('ActivityService', () => {
       expect(result[0].pointAdjustment).toBe(-80);
     });
 
-    it('should floor the total at 0 when a penalty exceeds the current score', () => {
+    it('should allow a manual penalty to take the total NEGATIVE (not floored, unlike DKP)', () => {
       const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 30, weeklyScores: [] }];
       const result = service.applyPointAdjustments(scores, new Map([['a', -100]]));
-      expect(result[0].totalScore).toBe(0);
+      expect(result[0].totalScore).toBe(-70);
       expect(result[0].pointAdjustment).toBe(-100);
+    });
+
+    it('should re-sort so a penalised player drops below an un-penalised one', () => {
+      const scores: UserScore[] = [
+        { userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] },
+        { userId: 'b', displayName: 'Bob', totalScore: 90, weeklyScores: [] },
+      ];
+      const result = service.applyPointAdjustments(scores, new Map([['a', -120]])); // Alice → -20
+      expect(result[0].userId).toBe('b');
+      expect(result[1].userId).toBe('a');
+      expect(result[1].totalScore).toBe(-20);
     });
 
     it('should leave users absent from the map at 0 adjustment', () => {

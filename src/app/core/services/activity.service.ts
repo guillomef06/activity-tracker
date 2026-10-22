@@ -459,17 +459,21 @@ export class ActivityService {
   }
 
   /**
-   * Applies admin manual point adjustments (signed deltas) on top of
-   * getUserScores(). A flat, permanent correction: positive rewards, negative
-   * penalises. The applied total is floored at 0 (same "never negative" rule as
-   * DKP). No sort here — compose this BEFORE applyMgDeductions, whose final sort
-   * then reflects the adjusted totals.
+   * Applies admin manual point adjustments (signed deltas). A flat, permanent
+   * correction: positive rewards, negative penalises. Unlike DKP, this is NOT
+   * floored at 0 — a manual penalty is the ONLY thing allowed to take a player
+   * negative (earning points back out of the hole is the intended consequence).
+   * Compose this AFTER applyMgDeductions so DKP acts on the pure earned total
+   * (always ≥ 0, its floor intact) and the adjustment lands on the floored
+   * result; re-sorts here since this is the last step and can change the rank.
    */
   applyPointAdjustments(scores: UserScore[], adjustments: Map<string, number>): UserScore[] {
-    return scores.map(s => {
-      const pointAdjustment = adjustments.get(s.userId) ?? 0;
-      return { ...s, pointAdjustment, totalScore: Math.max(0, s.totalScore + pointAdjustment) };
-    });
+    return scores
+      .map(s => {
+        const pointAdjustment = adjustments.get(s.userId) ?? 0;
+        return { ...s, pointAdjustment, totalScore: s.totalScore + pointAdjustment };
+      })
+      .sort((a, b) => this.compareByScoreDesc(a, b));
   }
 
   /**
