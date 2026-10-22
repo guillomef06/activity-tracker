@@ -973,7 +973,10 @@
       },
       "correction": {
         "title": "Koreksi event terakhir",
-        "hint": "Event telah selesai. Pengurutan ulang hanya menghitung ulang biaya pemain yang peringkatnya berubah; DKP mereka di papan peringkat juga dihitung ulang."
+        "hint": "Event telah selesai. Pengurutan ulang hanya menghitung ulang biaya pemain yang peringkatnya berubah; DKP mereka di papan peringkat juga dihitung ulang.",
+        "available": "Pemain yang belum ditempatkan (terdaftar atau tidak)",
+        "noneAvailable": "Semua pemain sudah ada dalam seleksi.",
+        "notRegistered": "Belum terdaftar"
       }
     }
   },

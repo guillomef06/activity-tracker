@@ -52,9 +52,12 @@
       @if (draftRows().length === 0) {
         <p class="empty-state">{{ 'mg.admin.selection.noneSelected' | translate }}</p>
       } @else {
-        <ol class="player-list">
+        <ol class="player-list" cdkDropList cdkDropListLockAxis="y" (cdkDropListDropped)="drop($event)">
           @for (row of draftRows(); track row.userId) {
-            <li class="list-row draft-row">
+            <li class="list-row draft-row" cdkDrag cdkDragLockAxis="y">
+              <span class="drag-handle" cdkDragHandle aria-hidden="true">
+                <mat-icon>drag_indicator</mat-icon>
+              </span>
               <span class="rank">{{ row.rank }}</span>
               <span class="player-name">{{ row.displayName }}</span>
               <span class="row-actions">
@@ -113,10 +116,10 @@
       <mat-divider class="section-divider" />
 
       <!-- Registered players not yet placed -->
-      <p class="section-label">{{ 'mg.admin.selection.available' | translate }} ({{ availableRows().length }})</p>
+      <p class="section-label">{{ availableLabelKey() | translate }} ({{ availableRows().length }})</p>
 
       @if (availableRows().length === 0) {
-        <p class="empty-state">{{ 'mg.admin.selection.noneAvailable' | translate }}</p>
+        <p class="empty-state">{{ noneAvailableKey() | translate }}</p>
       } @else {
         <ul class="player-list">
           @for (row of availableRows(); track row.userId) {
@@ -135,8 +138,12 @@
               </span>
               <span class="player-meta">
                 {{ 'mg.admin.registrations.totalScore' | translate }}: {{ row.totalScore }} ·
-                {{ 'mg.admin.registrations.position' | translate }}:
-                {{ row.positionLabel ?? ('mg.admin.registrations.noPosition' | translate) }}
+                @if (row.isRegistered) {
+                  {{ 'mg.admin.registrations.position' | translate }}:
+                  {{ row.positionLabel ?? ('mg.admin.registrations.noPosition' | translate) }}
+                } @else {
+                  {{ 'mg.admin.correction.notRegistered' | translate }}
+                }
               </span>
               @if (row.comment) {
                 <span class="player-comment">{{ row.comment }}</span>

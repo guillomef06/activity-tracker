@@ -63,6 +63,23 @@
     background-color: var(--mat-sys-surface-container);
   }
 
+  .drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    margin-inline-end: -0.5rem;
+    color: var(--mat-sys-on-surface-variant);
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
   .rank {
     min-width: 1.5rem;
     font-weight: 600;
@@ -99,6 +116,23 @@
   .player-comment {
     font-style: italic;
   }
+}
+
+// The preview is a clone of the dragged row that CDK appends to <body>; it keeps this
+// component's scoping attributes, so these rules still apply to it.
+.list-row.cdk-drag-preview {
+  box-sizing: border-box;
+  background-color: var(--mat-sys-surface-container-high);
+  box-shadow: var(--mat-sys-level3);
+}
+
+.list-row.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.list-row.cdk-drag-animating,
+.player-list.cdk-drop-list-dragging .list-row:not(.cdk-drag-placeholder) {
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .locked-state {
