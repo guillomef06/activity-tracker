@@ -7,9 +7,11 @@ import { ActivityService } from '@core/services/activity.service';
 import { ServerService } from '@core/services/server.service';
 import { SeasonService } from '@core/services/season.service';
 import { MgEventService } from '@core/services/mg-event.service';
+import { PointAdjustmentService } from '@core/services/point-adjustment.service';
 import { AuthService } from '@core/services/auth.service';
 import { ProgressBarService } from '@core/services/progress-bar.service';
 import { UserScore } from '@shared/models/activity.model';
+import type { PointAdjustment, PointAdjustmentWithUser } from '@shared/models';
 import { getDateForWeeksAgo } from '@shared/utils/date.util';
 import { ActivityInputComponent } from './components/activity-input/activity-input.component';
 import { ActivitiesDetailsComponent } from './components/activities-details/activities-details.component';
@@ -39,6 +41,7 @@ export class HomePage implements OnInit {
   private readonly serverService = inject(ServerService);
   private readonly seasonService = inject(SeasonService);
   private readonly mgEventService = inject(MgEventService);
+  private readonly pointAdjustmentService = inject(PointAdjustmentService);
   private readonly authService = inject(AuthService);
   private readonly progressBarService = inject(ProgressBarService);
 
@@ -48,8 +51,36 @@ export class HomePage implements OnInit {
   // column/toggle entirely rather than showing a meaningless 0 for everyone.
   private readonly seasonTotals = signal<Map<string, number> | null>(null);
 
+  /** Raw admin point adjustments for the server (newest first). */
+  private readonly adjustments = signal<PointAdjustmentWithUser[]>([]);
+
+  /** Per-user net signed delta — the amount folded into each player's total. */
+  private readonly adjustmentTotals = computed(() => {
+    const map = new Map<string, number>();
+    for (const adj of this.adjustments()) {
+      map.set(adj.userId, (map.get(adj.userId) ?? 0) + adj.delta);
+    }
+    return map;
+  });
+
+  /** Adjustments grouped by user, passed to the leaderboard for the per-week log. */
+  readonly adjustmentsByUser = computed<Map<string, PointAdjustment[]>>(() => {
+    const map = new Map<string, PointAdjustment[]>();
+    for (const adj of this.adjustments()) {
+      const list = map.get(adj.userId) ?? [];
+      list.push(adj);
+      map.set(adj.userId, list);
+    }
+    return map;
+  });
+
   readonly userScores = computed<UserScore[]>(() => {
-    const net = this.activityService.applyMgDeductions(this.activityService.getUserScores(), this.mgDeductions());
+    // Adjustments first so the DKP pass's final re-sort reflects the adjusted totals.
+    const adjusted = this.activityService.applyPointAdjustments(
+      this.activityService.getUserScores(),
+      this.adjustmentTotals()
+    );
+    const net = this.activityService.applyMgDeductions(adjusted, this.mgDeductions());
     const totals = this.seasonTotals();
     return totals ? this.activityService.applySeasonTotals(net, totals) : net;
   });
@@ -61,8 +92,16 @@ export class HomePage implements OnInit {
         this.activityService.initialize(),
         this.seasonService.loadSeasons(),
       ]);
-      await Promise.all([this.loadMgDeductions(), this.loadSeasonTotals()]);
+      await Promise.all([this.loadMgDeductions(), this.loadSeasonTotals(), this.loadAdjustments()]);
     });
+  }
+
+  private async loadAdjustments(): Promise<void> {
+    const serverId = this.authService.getServerId();
+    if (!serverId) return;
+
+    const adjustments = await this.pointAdjustmentService.loadAdjustments(serverId);
+    this.adjustments.set(adjustments);
   }
 
   private async loadSeasonTotals(): Promise<void> {

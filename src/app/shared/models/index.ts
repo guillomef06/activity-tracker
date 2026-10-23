@@ -105,6 +105,14 @@ export type {
   ChampionSlotConfig,
 } from './guide.model';
 
+// Point Adjustment models
+export type {
+  PointAdjustment,
+  PointAdjustmentResponse,
+  PointAdjustmentWithUser,
+  CreatePointAdjustmentPayload,
+} from './point-adjustment.model';
+
 // Season models
 export type {
   ActivitySeason,

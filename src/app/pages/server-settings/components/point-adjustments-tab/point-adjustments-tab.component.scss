@@ -1,0 +1,103 @@
+.adjustments-card {
+  margin: 1rem 0;
+}
+
+.adjustment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  .player-field,
+  .delta-field,
+  .reason-field {
+    width: 100%;
+  }
+
+  button[type='submit'] {
+    align-self: flex-start;
+  }
+}
+
+.adjustments-list {
+  h3 {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .list-spinner {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+  }
+
+  .empty-list {
+    margin: 0;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.875rem;
+  }
+}
+
+.adjustment-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas:
+    'main   main  actions'
+    'reason date  actions';
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+  padding: 0.625rem 0;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+
+  .adjustment-main {
+    grid-area: main;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .adjustment-player {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .adjustment-value {
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .adjustment-reason {
+    grid-area: reason;
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .adjustment-date {
+    grid-area: date;
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+    white-space: nowrap;
+  }
+
+  .btn-danger {
+    grid-area: actions;
+    color: var(--mat-sys-error);
+  }
+}
+
+// Signed-delta colours, shared vocabulary with the leaderboard display.
+.adjustment-positive {
+  color: var(--mat-sys-success);
+}
+
+.adjustment-negative {
+  color: var(--mat-sys-error);
+}

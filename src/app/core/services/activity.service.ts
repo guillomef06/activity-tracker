@@ -459,6 +459,20 @@ export class ActivityService {
   }
 
   /**
+   * Applies admin manual point adjustments (signed deltas) on top of
+   * getUserScores(). A flat, permanent correction: positive rewards, negative
+   * penalises. The applied total is floored at 0 (same "never negative" rule as
+   * DKP). No sort here — compose this BEFORE applyMgDeductions, whose final sort
+   * then reflects the adjusted totals.
+   */
+  applyPointAdjustments(scores: UserScore[], adjustments: Map<string, number>): UserScore[] {
+    return scores.map(s => {
+      const pointAdjustment = adjustments.get(s.userId) ?? 0;
+      return { ...s, pointAdjustment, totalScore: Math.max(0, s.totalScore + pointAdjustment) };
+    });
+  }
+
+  /**
    * Resolves FIFO DKP deductions per user: each spend consumes the oldest
    * still-available points first, and only consumed points whose week is still
    * in the current rolling window are deducted (see mg-dkp.util).

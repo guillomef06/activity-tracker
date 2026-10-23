@@ -98,7 +98,8 @@
         "retroactive": "چالاکییەکانی پێشوو",
         "importExcel": "هێنان لە Excel",
         "discord": "Discord",
-        "mg": "Bûyera MG"
+        "mg": "Bûyera MG",
+        "pointAdjustments": "Adjustments"
       },
       "serverInfo": "زانیاری هاوپەیمانی",
       "serverName": "ناوی هاوپەیمانی",
@@ -982,5 +983,28 @@
     "subtitle": "Lîstikvanek din ji bo heman çalakiyê heman cihê xwest",
     "conflictLine": "{{activityType}} — cih {{position}} — ji hêla {{player}} ve jî hat xwestin",
     "acknowledge": "Têgihiştim"
+  },
+  "pointAdjustments": {
+    "title": "Manual Point Adjustments",
+    "subtitle": "Reward or penalise a player's current total with a dated, reasoned adjustment.",
+    "playerLabel": "Player",
+    "playerPlaceholder": "Search a player…",
+    "playerRequired": "Select a player.",
+    "deltaLabel": "Point value",
+    "deltaHint": "Positive to add, negative to subtract (e.g. -80 or 50).",
+    "deltaNonZero": "Enter a non-zero value.",
+    "reasonLabel": "Reason",
+    "reasonPlaceholder": "Why is this adjustment being made?",
+    "addButton": "Add adjustment",
+    "createSuccess": "Adjustment added.",
+    "createError": "Could not add the adjustment. Please try again.",
+    "listTitle": "Existing adjustments",
+    "emptyList": "No adjustments yet.",
+    "deleteTitle": "Delete adjustment",
+    "deleteConfirm": "Remove this adjustment? The player's total will revert.",
+    "deleteSuccess": "Adjustment removed.",
+    "deleteError": "Could not remove the adjustment. Please try again.",
+    "leaderboardTooltip": "Manual admin point adjustment",
+    "notCountedInWeek": "Adjustments are not included in the week total above."
   }
 }

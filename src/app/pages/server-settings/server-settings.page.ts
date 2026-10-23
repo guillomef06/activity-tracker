@@ -16,6 +16,7 @@ import { RetroactiveActivitiesTabComponent } from './components/retroactive-acti
 import { ImportExcelTabComponent } from './components/import-excel-tab/import-excel-tab.component';
 import { DiscordTabComponent } from './components/discord-tab/discord-tab.component';
 import { MgAdminTabComponent } from './components/mg-admin-tab/mg-admin-tab.component';
+import { PointAdjustmentsTabComponent } from './components/point-adjustments-tab/point-adjustments-tab.component';
 import { SwipeTabsDirective } from '@app/shared/directives/swipe-tabs/swipe-tabs.directive';
 
 @Component({
@@ -31,6 +32,7 @@ import { SwipeTabsDirective } from '@app/shared/directives/swipe-tabs/swipe-tabs
     ImportExcelTabComponent,
     DiscordTabComponent,
     MgAdminTabComponent,
+    PointAdjustmentsTabComponent,
     SwipeTabsDirective,
   ],
   templateUrl: './server-settings.page.html',
