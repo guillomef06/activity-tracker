@@ -634,7 +634,10 @@
       "publishError": "Échec de la publication de la sélection.",
       "correction": {
         "title": "Corriger le dernier évènement",
-        "hint": "L'évènement est terminé. Réordonner ne recalcule le coût que des joueurs dont le rang change ; leur DKP sur le classement est recalculé."
+        "hint": "L'évènement est terminé. Réordonner ne recalcule le coût que des joueurs dont le rang change ; leur DKP sur le classement est recalculé.",
+        "available": "Joueurs pas encore placés (inscrits ou non)",
+        "noneAvailable": "Tous les joueurs sont déjà dans la sélection.",
+        "notRegistered": "Non inscrit"
       }
     }
   },

@@ -973,7 +973,10 @@
       },
       "correction": {
         "title": "Bûyera dawî rast bike",
-        "hint": "Bûyer qediya. Ji nû ve rêzkirin tenê lêçûna lîstikvanên ku rêza wan diguhere ji nû ve dihesibîne; DKP-ya wan di tabloya rêzê de jî ji nû ve tê hesibandin."
+        "hint": "Bûyer qediya. Ji nû ve rêzkirin tenê lêçûna lîstikvanên ku rêza wan diguhere ji nû ve dihesibîne; DKP-ya wan di tabloya rêzê de jî ji nû ve tê hesibandin.",
+        "available": "Lîstikvanên ku hê nehatine danîn (tomarkirî an na)",
+        "noneAvailable": "Hemû lîstikvan jixwe di hilbijartinê de ne.",
+        "notRegistered": "Ne tomarkirî"
       }
     }
   },

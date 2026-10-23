@@ -9,6 +9,7 @@ import {
   linkedSignal,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { DragDropModule, moveItemInArray, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -48,10 +49,17 @@ interface DraftRow {
   isLast: boolean;
 }
 
+/** A server member who can be placed in a corrected selection even without having registered. */
+export interface MgMemberOption {
+  userId: string;
+  displayName: string;
+}
+
 interface AvailableRow {
   userId: string;
   displayName: string;
   totalScore: number;
+  isRegistered: boolean;
   positionLabel: string | null;
   comment: string | null;
 }
@@ -66,6 +74,7 @@ interface LockedRow {
   selector: 'app-mg-selection-panel',
   imports: [
     DatePipe,
+    DragDropModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -85,6 +94,11 @@ export class MgSelectionPanelComponent {
   readonly event = input.required<MgEvent>();
   readonly kind = input.required<MgSelectionPanelKind>();
   readonly registrations = input.required<readonly MgRegistrationWithUser[]>();
+  /**
+   * Every server member. Only offered in `correction`: a player who slipped into the ranking
+   * without registering (and so broke the rules) still has to be recorded and charged.
+   */
+  readonly members = input<readonly MgMemberOption[]>([]);
   readonly selection = input.required<readonly MgSelectionWithUser[]>();
   readonly capacity = input.required<number>();
   readonly assignmentMode = input.required<MgAssignmentMode>();
@@ -138,6 +152,7 @@ export class MgSelectionPanelComponent {
     for (const row of this.selection()) {
       if (row.user_id && row.user_profiles) names.set(row.user_id, row.user_profiles.display_name);
     }
+    for (const member of this.members()) names.set(member.userId, member.displayName);
     for (const reg of this.registrations()) names.set(reg.user_id, reg.user_profiles.display_name);
     return names;
   });
@@ -170,17 +185,32 @@ export class MgSelectionPanelComponent {
 
   protected readonly availableRows = computed<AvailableRow[]>(() => {
     const inDraft = new Set(this.draftOrder());
-    return this.registrations()
+    const registered: AvailableRow[] = this.registrations()
       .filter(reg => !inDraft.has(reg.user_id))
       .map(reg => ({
         userId: reg.user_id,
         displayName: reg.user_profiles.display_name,
         totalScore: this.totalScores().get(reg.user_id) ?? 0,
+        isRegistered: true,
         positionLabel: MG_SLOT_DEFAULTS.find(slot => slot.slotOrder === reg.desired_slot_order)?.rankLabel ?? null,
         comment: reg.comment,
-      }))
-      .sort((a, b) => b.totalScore - a.totalScore || a.displayName.localeCompare(b.displayName));
+      }));
+
+    return [...registered, ...this.unregisteredRows(inDraft)].sort(
+      (a, b) =>
+        Number(b.isRegistered) - Number(a.isRegistered) ||
+        b.totalScore - a.totalScore ||
+        a.displayName.localeCompare(b.displayName)
+    );
   });
+
+  protected readonly availableLabelKey = computed(() =>
+    this.isCorrection() ? 'mg.admin.correction.available' : 'mg.admin.selection.available'
+  );
+
+  protected readonly noneAvailableKey = computed(() =>
+    this.isCorrection() ? 'mg.admin.correction.noneAvailable' : 'mg.admin.selection.noneAvailable'
+  );
 
   protected readonly lockedRows = computed<LockedRow[]>(() =>
     this.selection()
@@ -210,6 +240,21 @@ export class MgSelectionPanelComponent {
       this.selection().length > 0 &&
       !this.isDirty()
   );
+
+  private unregisteredRows(inDraft: ReadonlySet<string>): AvailableRow[] {
+    if (!this.isCorrection()) return [];
+    const registeredIds = new Set(this.registrations().map(reg => reg.user_id));
+    return this.members()
+      .filter(member => !inDraft.has(member.userId) && !registeredIds.has(member.userId))
+      .map(member => ({
+        userId: member.userId,
+        displayName: member.displayName,
+        totalScore: this.totalScores().get(member.userId) ?? 0,
+        isRegistered: false,
+        positionLabel: null,
+        comment: null,
+      }));
+  }
 
   protected generate(): void {
     const registrations = this.registrations();
@@ -241,6 +286,15 @@ export class MgSelectionPanelComponent {
   protected add(userId: string): void {
     if (this.isFull() || this.draftOrder().includes(userId)) return;
     this.draftOrder.update(order => [...order, userId]);
+    this.draftSource.set('manual');
+  }
+
+  /** Drag & drop reorder. The ↑/↓ buttons stay for keyboard and screen-reader users. */
+  protected drop(event: CdkDragDrop<string[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+    const order = [...this.draftOrder()];
+    moveItemInArray(order, event.previousIndex, event.currentIndex);
+    this.draftOrder.set(order);
     this.draftSource.set('manual');
   }
 
