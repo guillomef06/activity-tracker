@@ -20,6 +20,7 @@ import { buildMgSlotRows, MgSlotRow } from '@shared/utils/mg-slot.util';
 import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
 import {
   MgSelectionPanelComponent,
+  type MgMemberOption,
   type MgSelectionPanelKind,
 } from './components/mg-selection-panel/mg-selection-panel.component';
 import type {
@@ -146,6 +147,11 @@ export class MgAdminTabComponent implements OnInit {
   /** userId -> current leaderboard total score, for enriching registrationRows below. */
   protected readonly totalScoreByUserId = computed<Map<string, number>>(
     () => new Map(this.activityService.getUserScores().map(us => [us.userId, us.totalScore]))
+  );
+
+  /** Every server member, so a correction can record a player who played without registering. */
+  protected readonly memberOptions = computed<MgMemberOption[]>(() =>
+    this.serverService.members().map(member => ({ userId: member.id, displayName: member.display_name }))
   );
 
   /**

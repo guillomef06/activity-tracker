@@ -973,7 +973,10 @@
       },
       "correction": {
         "title": "Corrigir o último evento",
-        "hint": "O evento terminou. Reordenar só recalcula o custo dos jogadores cuja posição muda; o respetivo DKP na classificação é recalculado."
+        "hint": "O evento terminou. Reordenar só recalcula o custo dos jogadores cuja posição muda; o respetivo DKP na classificação é recalculado.",
+        "available": "Jogadores ainda não colocados (inscritos ou não)",
+        "noneAvailable": "Todos os jogadores já estão na seleção.",
+        "notRegistered": "Não inscrito"
       }
     }
   },

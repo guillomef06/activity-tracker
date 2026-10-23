@@ -973,7 +973,10 @@
       },
       "correction": {
         "title": "Correggi l'ultimo evento",
-        "hint": "L'evento è terminato. Riordinare ricalcola il costo solo dei giocatori il cui rango cambia; il loro DKP in classifica viene ricalcolato."
+        "hint": "L'evento è terminato. Riordinare ricalcola il costo solo dei giocatori il cui rango cambia; il loro DKP in classifica viene ricalcolato.",
+        "available": "Giocatori non ancora inseriti (iscritti o no)",
+        "noneAvailable": "Tutti i giocatori sono già nella selezione.",
+        "notRegistered": "Non iscritto"
       }
     }
   },

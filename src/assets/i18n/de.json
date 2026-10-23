@@ -973,7 +973,10 @@
       },
       "correction": {
         "title": "Letztes Event korrigieren",
-        "hint": "Das Event ist beendet. Beim Neuordnen werden nur die Kosten der Spieler neu berechnet, deren Rang sich ändert; ihre DKP in der Rangliste werden neu berechnet."
+        "hint": "Das Event ist beendet. Beim Neuordnen werden nur die Kosten der Spieler neu berechnet, deren Rang sich ändert; ihre DKP in der Rangliste werden neu berechnet.",
+        "available": "Noch nicht platzierte Spieler (angemeldet oder nicht)",
+        "noneAvailable": "Alle Spieler sind bereits in der Auswahl.",
+        "notRegistered": "Nicht angemeldet"
       }
     }
   },

@@ -35,7 +35,7 @@ const mockActivityService = {
   getUserScores: vi.fn().mockReturnValue([]),
 };
 
-const mockServerService = {};
+const mockServerService = { members: vi.fn().mockReturnValue([]) };
 
 const mockSnackbarService = {
   success: vi.fn(),
@@ -588,6 +588,27 @@ describe('MgAdminTabComponent', () => {
 
       // Assert
       expect(compiled.querySelectorAll('app-mg-selection-panel')).toHaveLength(1);
+    });
+
+    it('should offer every server member to the correction panel, registered or not', async () => {
+      // Arrange
+      mockServerService.members.mockReturnValueOnce([
+        { id: 'u-1', display_name: 'Alice' },
+        { id: 'u-2', display_name: 'Intruder' },
+      ]);
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-2', 'registration_open'));
+      mockMgEventService.loadLastFinishedEvent.mockResolvedValueOnce(makeEvent('event-1', 'finished'));
+      mockMgEventService.loadSelection.mockResolvedValueOnce([]).mockResolvedValueOnce(makeSelection('event-1'));
+
+      // Act
+      await render();
+
+      // Assert
+      const memberOptions = (component as unknown as { memberOptions: () => unknown[] }).memberOptions();
+      expect(memberOptions).toEqual([
+        { userId: 'u-1', displayName: 'Alice' },
+        { userId: 'u-2', displayName: 'Intruder' },
+      ]);
     });
   });
 });

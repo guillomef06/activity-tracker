@@ -1,9 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import type { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { MgSelectionPanelComponent, type MgSelectionPanelKind } from './mg-selection-panel.component';
+import {
+  MgSelectionPanelComponent,
+  type MgMemberOption,
+  type MgSelectionPanelKind,
+} from './mg-selection-panel.component';
 import { MgEventService } from '@app/core/services/mg-event.service';
 import { SnackbarService } from '@app/core/services';
 import { buildMgSlotRows } from '@shared/utils/mg-slot.util';
@@ -77,6 +82,7 @@ interface PanelInputs {
   kind: MgSelectionPanelKind;
   status: MgEventStatus;
   registrations: MgRegistrationWithUser[];
+  members: MgMemberOption[];
   selection: MgSelectionWithUser[];
   capacity: number;
   assignmentMode: MgAssignmentMode;
@@ -86,6 +92,7 @@ const defaultInputs = (): PanelInputs => ({
   kind: 'draft',
   status: 'registration_closed',
   registrations: [makeRegistration('a', 'Alice'), makeRegistration('b', 'Bob'), makeRegistration('c', 'Carol')],
+  members: [],
   selection: [makeSelected('a', 1, 150), makeSelected('b', 2, 140), makeFfa(3), makeFfa(4)],
   capacity: 4,
   assignmentMode: 'automatic',
@@ -100,12 +107,13 @@ interface PanelInternals {
   isOverCapacity: () => boolean;
   effectiveCapacity: () => number;
   showGenerate: () => boolean;
-  draftRows: () => { userId: string; cost: number }[];
-  availableRows: () => { userId: string }[];
+  draftRows: () => { userId: string; cost: number; displayName: string }[];
+  availableRows: () => { userId: string; isRegistered: boolean; displayName: string }[];
   generate: () => void;
   add: (userId: string) => void;
   remove: (userId: string) => void;
   move: (userId: string, delta: -1 | 1) => void;
+  drop: (event: CdkDragDrop<string[]>) => void;
   reset: () => void;
   save: () => Promise<void>;
   publish: () => Promise<void>;
@@ -121,6 +129,7 @@ describe('MgSelectionPanelComponent', () => {
     fixture.componentRef.setInput('event', makeEvent(inputs.status));
     fixture.componentRef.setInput('kind', inputs.kind);
     fixture.componentRef.setInput('registrations', inputs.registrations);
+    fixture.componentRef.setInput('members', inputs.members);
     fixture.componentRef.setInput('selection', inputs.selection);
     fixture.componentRef.setInput('capacity', inputs.capacity);
     fixture.componentRef.setInput('assignmentMode', inputs.assignmentMode);
@@ -255,6 +264,81 @@ describe('MgSelectionPanelComponent', () => {
       // Assert
       expect(panel.draftOrder()).toEqual(['a', 'b']);
       expect(panel.isDirty()).toBe(false);
+    });
+
+    describe('drag & drop', () => {
+      const dropped = (previousIndex: number, currentIndex: number): CdkDragDrop<string[]> =>
+        ({ previousIndex, currentIndex }) as CdkDragDrop<string[]>;
+
+      it('should move the dragged player to the dropped position and mark the draft dirty', () => {
+        // Arrange
+        create({ selection: [makeSelected('a', 1, 150), makeSelected('b', 2, 140), makeSelected('c', 3, 130)] });
+
+        // Act
+        panel.drop(dropped(2, 0));
+
+        // Assert
+        expect(panel.draftOrder()).toEqual(['c', 'a', 'b']);
+        expect(panel.isDirty()).toBe(true);
+      });
+
+      it('should re-price the players whose rank changed after a drop', () => {
+        // Arrange
+        create();
+
+        // Act
+        panel.drop(dropped(1, 0));
+
+        // Assert
+        expect(panel.draftRows().map(r => [r.userId, r.cost])).toEqual([
+          ['b', 150],
+          ['a', 140],
+        ]);
+      });
+
+      it('should keep the draft untouched when dropped where it started', () => {
+        // Arrange
+        create();
+
+        // Act
+        panel.drop(dropped(1, 1));
+
+        // Assert
+        expect(panel.draftOrder()).toEqual(['a', 'b']);
+        expect(panel.isDirty()).toBe(false);
+      });
+
+      it('should save a dragged order as manual', async () => {
+        // Arrange
+        create();
+        panel.drop(dropped(0, 1));
+
+        // Act
+        await panel.save();
+
+        // Assert
+        const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
+        expect(saved.slice(0, 2).map(p => [p.user_id, p.selected_by])).toEqual([
+          ['b', 'manual'],
+          ['a', 'manual'],
+        ]);
+      });
+
+      it('should render one drag handle per selected player', () => {
+        // Arrange / Act
+        create();
+
+        // Assert
+        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.drag-handle')).toHaveLength(2);
+      });
+
+      it('should not render any drag handle for a locked selection', () => {
+        // Arrange / Act
+        create({ kind: 'locked', status: 'ongoing' });
+
+        // Assert
+        expect((fixture.nativeElement as HTMLElement).querySelectorAll('.drag-handle')).toHaveLength(0);
+      });
     });
 
     it('should restore the saved order when resetting', () => {
@@ -591,6 +675,94 @@ describe('MgSelectionPanelComponent', () => {
         ['b', 888],
       ]);
       expect(saved[2]).toMatchObject({ user_id: 'c', cost: 130 });
+    });
+
+    describe('players who did not register', () => {
+      const members: MgMemberOption[] = [
+        { userId: 'a', displayName: 'Alice' },
+        { userId: 'b', displayName: 'Bob' },
+        { userId: 'c', displayName: 'Carol' },
+        { userId: 'x', displayName: 'Intruder' },
+      ];
+      const correction = (overrides: Partial<PanelInputs> = {}): void =>
+        create({
+          kind: 'correction',
+          status: 'finished',
+          selection: finishedSelection,
+          capacity: 3,
+          members,
+          registrations: [makeRegistration('a', 'Alice'), makeRegistration('b', 'Bob'), makeRegistration('c', 'Carol')],
+          ...overrides,
+        });
+
+      it('should offer members who never registered, after the registered ones', () => {
+        // Arrange / Act
+        correction();
+
+        // Assert
+        expect(panel.availableRows().map(r => [r.userId, r.isRegistered])).toEqual([
+          ['c', true],
+          ['x', false],
+        ]);
+      });
+
+      it('should place an unregistered player and charge them the cost of their rank', async () => {
+        // Arrange — x broke the rules and took rank 3 during the event
+        correction();
+        panel.add('x');
+
+        // Act
+        await panel.save();
+
+        // Assert
+        const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
+        expect(saved[2]).toMatchObject({ user_id: 'x', rank: 3, selection_type: 'selected', cost: 130 });
+      });
+
+      it('should display the name of an unregistered player once placed', () => {
+        // Arrange
+        correction();
+
+        // Act
+        panel.add('x');
+
+        // Assert
+        expect(panel.draftRows().find(r => r.userId === 'x')?.displayName).toBe('Intruder');
+      });
+
+      it('should let an unregistered player take the seat of a placed one', async () => {
+        // Arrange — x took b's seat
+        correction();
+        panel.remove('b');
+        panel.add('x');
+
+        // Act
+        await panel.save();
+
+        // Assert
+        const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
+        expect(saved.slice(0, 2).map(p => [p.user_id, p.rank])).toEqual([
+          ['a', 1],
+          ['x', 2],
+        ]);
+      });
+
+      it('should not offer a member who is already placed', () => {
+        // Arrange / Act
+        correction();
+        panel.add('x');
+
+        // Assert
+        expect(panel.availableRows().map(r => r.userId)).toEqual(['c']);
+      });
+
+      it('should not offer unregistered members while the selection is still a draft', () => {
+        // Arrange / Act
+        create({ kind: 'draft', members });
+
+        // Assert
+        expect(panel.availableRows().map(r => r.userId)).toEqual(['c']);
+      });
     });
   });
 });
