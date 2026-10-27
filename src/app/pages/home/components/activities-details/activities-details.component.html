@@ -34,6 +34,16 @@
               -{{ userScore.mgDeduction }}
             </span>
           }
+          @if ((userScore.pointAdjustment ?? 0) !== 0) {
+            <span
+              class="point-adjustment"
+              [class.adjustment-positive]="(userScore.pointAdjustment ?? 0) > 0"
+              [class.adjustment-negative]="(userScore.pointAdjustment ?? 0) < 0"
+              [matTooltip]="'pointAdjustments.leaderboardTooltip' | translate"
+            >
+              {{ (userScore.pointAdjustment ?? 0) > 0 ? '+' : '' }}{{ userScore.pointAdjustment }}
+            </span>
+          }
           <mat-chip
             class="score-chip"
             [class.score-chip-active]="sortKey() === 'current'"
@@ -110,6 +120,25 @@
                     </div>
                   } @else {
                     <p class="no-activities">{{ 'dashboard.noActivitiesThisWeek' | translate }}</p>
+                  }
+
+                  @if (adjustmentsByWeek().get(weekIndex); as weekAdjustments) {
+                    <div class="week-adjustments">
+                      @for (adj of weekAdjustments; track adj.id) {
+                        <div class="adjustment-row">
+                          <mat-icon class="adjustment-row-icon">bolt</mat-icon>
+                          <span class="adjustment-reason">{{ adj.reason }}</span>
+                          <span
+                            class="adjustment-delta"
+                            [class.adjustment-positive]="adj.delta > 0"
+                            [class.adjustment-negative]="adj.delta < 0"
+                          >
+                            {{ adj.delta > 0 ? '+' : '' }}{{ adj.delta }}
+                          </span>
+                        </div>
+                      }
+                      <p class="adjustment-note">{{ 'pointAdjustments.notCountedInWeek' | translate }}</p>
+                    </div>
                   }
                 </mat-expansion-panel>
               }

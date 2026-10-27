@@ -73,6 +73,12 @@ export interface UserScore {
   /** Points deducted for MG event selections (DKP). Undefined/0 = no deduction. */
   mgDeduction?: number;
   /**
+   * Net manual point adjustment (admin correction) applied to the current/rolling
+   * total — signed: positive rewards, negative penalises. A flat permanent amount
+   * (does not age out of the window). Undefined/0 = no adjustment.
+   */
+  pointAdjustment?: number;
+  /**
    * Total points earned across the full current season, independent of the
    * rolling scoring window and of DKP spending. Undefined when no season
    * covers "now" or season totals haven't been loaded.

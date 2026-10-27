@@ -16,7 +16,7 @@
         {{ 'home.tabs.leaderboard' | translate }}
       </span>
     </ng-template>
-    <app-activities-details [userScores]="userScores()" />
+    <app-activities-details [userScores]="userScores()" [adjustments]="adjustmentsByUser()" />
   </mat-tab>
 
   <mat-tab>

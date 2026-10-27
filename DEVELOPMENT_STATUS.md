@@ -1,6 +1,6 @@
 # État d'Avancement du Développement
 
-**Dernière mise à jour:** 8 octobre 2026
+**Dernière mise à jour:** 13 octobre 2026
 
 ## 📋 Résumé
 
@@ -150,6 +150,21 @@ Application Angular 22 de gestion d'activités avec backend Supabase et système
   - **Garde d'inscription** : `onRegister()` refuse l'action si `status !== 'registration_open'` (le formulaire était déjà masqué, mais l'action elle-même ne bloquait pas — une vue périmée ou un appel programmatique passait jusqu'à l'INSERT, refusé seulement par la RLS avec un snackbar d'erreur générique). La RLS reste l'enforcement réel.
   - **UI** : toggle Medal/Cost (défaut off une fois publié), troncature ellipsis des noms longs (évite le chevauchement avec la colonne Medal sur mobile), notice « les coûts peuvent changer » liée à la visibilité des colonnes Medal/Cost, buffer bas de la ligne FFA (fix margin-collapse via padding bottom du `mat-card-content`).
   - Fichiers : `mightiest-governor.component.{ts,html,scss,spec.ts}`, `mg-event-card.component.{ts,html,scss,spec.ts}`, `en.json`/`fr.json` (clé `ffaTargetCap`), `styles.scss`.
+
+### Ajustements manuels de points (admin)
+
+Un admin peut corriger le total **courant** (fenêtre glissante) d'un joueur avec un delta signé, daté et justifié — récompense ou pénalité — hors du flux normal de saisie d'activités. Se branche sur le même pipeline que la déduction MG/DKP : une somme par utilisateur est repliée dans le total du leaderboard et s'affiche en pastille colorée à côté du pseudo.
+
+- **Décisions produit** : delta **signé** (vert `+50` / rouge `-80`) ; affecte **le total courant uniquement** (pas le chip saison) ; **delta plat permanent** (ne sort jamais de la fenêtre glissante) ; les admins **créent et suppriment** (pas d'édition — supprimer puis recréer).
+- **Migration `46-point-adjustments.sql`** (non appliquée en prod — même précédent que les migrations 33/36/41) : table `point_adjustments` (`server_id`, `user_id`, `delta INTEGER CHECK <> 0`, `reason TEXT CHECK 1..200`, `created_by`, `created_at`), scoping `server_id` direct (comme `mg_events`). RLS : SELECT membres du serveur, INSERT/DELETE admins (helpers `is_super_admin`/`is_user_admin`/`get_user_server_id`). Pas d'UPDATE.
+- **Modèle** : `point-adjustment.model.ts` (`PointAdjustment`, `PointAdjustmentResponse`, `PointAdjustmentWithUser`, `CreatePointAdjustmentPayload`) ; champ `UserScore.pointAdjustment?: number` (somme nette signée) ajouté à côté de `mgDeduction`.
+- **Service** : `PointAdjustmentService` (`loadAdjustments`/`createAdjustment`/`deleteAdjustment`), même forme que `MgEventService`.
+- **Calcul** : `ActivityService.applyPointAdjustments(scores, map)` (pur, à côté de `applyMgDeductions`) — ajoute le delta signé, plancher à 0. Composé **avant** `applyMgDeductions` dans `HomePage.userScores` pour que le tri final DKP reflète les ajustements.
+- **Affichage leaderboard** (`activities-details`) : pastille `+N`/`-N` (vert/rouge) à côté du pseudo + lignes repliées par semaine dans le panneau déplié du joueur (icône ⚡, raison, delta signé) — **display-only, non comptées dans le total de la semaine** (note explicite affichée).
+- **Admin** : 7e onglet « Ajustements » dans Server Settings (`point-adjustments-tab`) — dropdown joueur recherchable (`mat-autocomplete` sur `serverService.members()`), valeur signée, raison (Signal Forms : `required`, non-zéro, `maxLength 200`), liste des ajustements existants avec suppression (`ConfirmDialogComponent`).
+- i18n : bloc `pointAdjustments.*` + `server.settings.tabs.pointAdjustments` traduits en **en/fr** ; les 12 autres locales reçoivent les clés avec le **texte anglais en placeholder** (à traduire) — requis par le gate de parité i18n (`i18n:check`, pre-commit) qui exige la présence de chaque clé dans les 14 locales.
+- **Limitations connues** : (1) migration `46` **à appliquer manuellement en prod** avant que la feature fonctionne (sinon liste vide / erreurs silencieuses loggées) ; (2) un ajustement daté **hors de la fenêtre glissante** ne se replie dans aucune semaine visible — la pastille d'en-tête rend quand même compte du total ; (3) verrouillage « admins seulement » appliqué côté UI + RLS (la RLS est l'enforcement réel).
+- Fichiers : `supabase/46-point-adjustments.sql`, `point-adjustment.model.ts`, `point-adjustment.service.ts` (+ `.spec`), `point-adjustments-tab.component.{ts,html,scss,spec.ts}` ; modifiés : `activity.model.ts`, `models/index.ts`, `activity.service.ts` (+ `.spec`), `home.page.{ts,html}` (+ `.spec`), `activities-details.component.{ts,html,scss,spec.ts}`, `server-settings.page.{ts,html}`, `en.json`/`fr.json`.
 
 ### Seasons (calendrier d'activités dynamique)
 

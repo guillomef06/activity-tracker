@@ -98,7 +98,8 @@
         "retroactive": "소급 활동",
         "importExcel": "엑셀 가져오기",
         "discord": "Discord",
-        "mg": "MG 이벤트"
+        "mg": "MG 이벤트",
+        "pointAdjustments": "Adjustments"
       },
       "serverInfo": "서버 정보",
       "serverName": "서버 이름",
@@ -993,5 +994,28 @@
     "subtitle": "다른 플레이어가 같은 활동에 같은 위치를 주장했습니다",
     "conflictLine": "{{activityType}} — 위치 {{position}} — {{player}}도 주장함",
     "acknowledge": "알겠습니다"
+  },
+  "pointAdjustments": {
+    "title": "Manual Point Adjustments",
+    "subtitle": "Reward or penalise a player's current total with a dated, reasoned adjustment.",
+    "playerLabel": "Player",
+    "playerPlaceholder": "Search a player…",
+    "playerRequired": "Select a player.",
+    "deltaLabel": "Point value",
+    "deltaHint": "Positive to add, negative to subtract (e.g. -80 or 50).",
+    "deltaNonZero": "Enter a non-zero value.",
+    "reasonLabel": "Reason",
+    "reasonPlaceholder": "Why is this adjustment being made?",
+    "addButton": "Add adjustment",
+    "createSuccess": "Adjustment added.",
+    "createError": "Could not add the adjustment. Please try again.",
+    "listTitle": "Existing adjustments",
+    "emptyList": "No adjustments yet.",
+    "deleteTitle": "Delete adjustment",
+    "deleteConfirm": "Remove this adjustment? The player's total will revert.",
+    "deleteSuccess": "Adjustment removed.",
+    "deleteError": "Could not remove the adjustment. Please try again.",
+    "leaderboardTooltip": "Manual admin point adjustment",
+    "notCountedInWeek": "Adjustments are not included in the week total above."
   }
 }

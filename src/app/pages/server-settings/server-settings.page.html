@@ -82,5 +82,15 @@
 
       <app-mg-admin-tab />
     </mat-tab>
+
+    <!-- Point Adjustments Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">tune</mat-icon>
+        {{ 'server.settings.tabs.pointAdjustments' | translate }}
+      </ng-template>
+
+      <app-point-adjustments-tab />
+    </mat-tab>
   </mat-tab-group>
 </div>
