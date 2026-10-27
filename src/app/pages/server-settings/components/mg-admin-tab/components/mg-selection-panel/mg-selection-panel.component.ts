@@ -63,6 +63,9 @@ interface DraftRow {
   canForgive: boolean;
   /** Whether this player's move is currently forgiven (billed at approved cost). */
   forgiven: boolean;
+  /** For an empty slot: true when the typed label matches an existing player's name
+   * (they should be added from the pool instead of typed as a placeholder). */
+  nameCollision: boolean;
   isFirst: boolean;
   isLast: boolean;
 }
@@ -192,22 +195,41 @@ export class MgSelectionPanelComponent {
   /** Monotonic counter so each freshly-added empty slot gets a unique sentinel id. */
   private readonly nextEmptyId = signal(0);
 
-  /** Approved rank per userId from the published snapshot, for display + forgive gating. */
+  // Approved baseline per userId. For events published after migration 46 it's the
+  // stamped snapshot; for a legacy event (columns null) we fall back to the player's
+  // current saved rank/cost, which on a not-yet-corrected published selection IS the
+  // approved list — so forgiveness works on old events too, not just post-migration ones.
   private readonly approvedRankByUserId = computed<Map<string, number>>(() => {
     const map = new Map<string, number>();
+    if (!this.isCorrection()) return map; // forgiveness only applies to a finished event's correction
     for (const row of this.selection()) {
-      if (row.user_id && row.approved_rank !== null) map.set(row.user_id, row.approved_rank);
+      if (!row.user_id || row.selection_type !== 'selected') continue;
+      const approved = row.approved_rank ?? row.rank;
+      if (approved !== null) map.set(row.user_id, approved);
     }
     return map;
   });
 
-  /** Approved cost per userId from the published snapshot, for forgive gating. */
   private readonly approvedCostByUserId = computed<Map<string, number>>(() => {
     const map = new Map<string, number>();
+    if (!this.isCorrection()) return map;
     for (const row of this.selection()) {
-      if (row.user_id && row.approved_cost !== null) map.set(row.user_id, row.approved_cost);
+      if (!row.user_id || row.selection_type !== 'selected') continue;
+      const approved = row.approved_cost ?? row.cost;
+      if (approved !== null) map.set(row.user_id, approved);
     }
     return map;
+  });
+
+  /** UserIds on the original published list. A placed player NOT in this set is an
+   * "FFA player" (added during the correction, never approved for a slot). */
+  private readonly approvedUserIds = computed<Set<string>>(() => {
+    const set = new Set<string>();
+    if (!this.isCorrection()) return set;
+    for (const row of this.selection()) {
+      if (row.user_id && row.selection_type === 'selected') set.add(row.user_id);
+    }
+    return set;
   });
 
   protected readonly isEditable = computed(() => this.kind() !== 'locked');
@@ -237,6 +259,15 @@ export class MgSelectionPanelComponent {
     return names;
   });
 
+  /** Lower-cased known player names (members + registrations), to flag an empty-slot
+   * label that collides with a real player — who should be added from the pool instead. */
+  private readonly knownPlayerNames = computed<Set<string>>(() => {
+    const set = new Set<string>();
+    for (const member of this.members()) set.add(member.displayName.trim().toLowerCase());
+    for (const reg of this.registrations()) set.add(reg.user_profiles.display_name.trim().toLowerCase());
+    return set;
+  });
+
   private readonly draftPayloads = computed(() =>
     buildSelectionPayload(
       this.event().id,
@@ -258,6 +289,8 @@ export class MgSelectionPanelComponent {
     const payloadByRank = new Map(this.draftPayloads().map(p => [p.rank, p]));
     const approvedRanks = this.approvedRankByUserId();
     const approvedCosts = this.approvedCostByUserId();
+    const approvedIds = this.approvedUserIds();
+    const approvedCount = approvedIds.size;
     const forgiven = this.forgiven();
 
     return order.map((entry, index) => {
@@ -266,18 +299,18 @@ export class MgSelectionPanelComponent {
       const approvedRank = empty ? null : (approvedRanks.get(entry) ?? null);
       const approvedCost = empty ? null : (approvedCosts.get(entry) ?? null);
       const finalRankCost = resolveSlotForRank(rank, this.slotRows())?.cost ?? 0;
-      // Only an UP-move carries a penalty to forgive (final slot dearer than the
-      // approved one). A DOWN-move already bills the cheaper final slot by default,
-      // so no toggle is offered.
-      const canForgive = approvedCost !== null && finalRankCost > approvedCost;
+      // An FFA player (not on the original published list) is billed only when they
+      // sit above the approved cutoff (rank <= original list size); there, "No penalty"
+      // can waive it to 0. A below-cutoff FFA player is free automatically, no toggle.
+      const isFfaPlayer = !empty && this.isCorrection() && approvedCount > 0 && !approvedIds.has(entry);
+      const canForgive = isFfaPlayer ? rank <= approvedCount : approvedCost !== null && finalRankCost > approvedCost;
+      const emptyLabel = empty ? (this.emptyLabels().get(entry) ?? DEFAULT_EMPTY_LABEL) : '';
       return {
         id: entry,
         isEmpty: empty,
         userId: empty ? null : entry,
         rank,
-        displayName: empty
-          ? (this.emptyLabels().get(entry) ?? DEFAULT_EMPTY_LABEL)
-          : (this.displayNameByUserId().get(entry) ?? entry),
+        displayName: empty ? emptyLabel : (this.displayNameByUserId().get(entry) ?? entry),
         totalScore: empty ? 0 : (this.totalScores().get(entry) ?? 0),
         slotLabel: resolveSlotForRank(rank, this.slotRows())?.rankLabel ?? null,
         cost: payloadByRank.get(rank)?.cost ?? 0,
@@ -285,6 +318,7 @@ export class MgSelectionPanelComponent {
           approvedRank !== null ? (resolveSlotForRank(approvedRank, this.slotRows())?.rankLabel ?? null) : null,
         canForgive,
         forgiven: !empty && forgiven.has(entry),
+        nameCollision: empty && this.knownPlayerNames().has(emptyLabel.trim().toLowerCase()),
         isFirst: index === 0,
         isLast: index === order.length - 1,
       };

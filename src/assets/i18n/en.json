@@ -642,6 +642,7 @@
         "notRegistered": "Not registered",
         "addEmpty": "Add empty slot",
         "emptyLabel": "Slot name",
+        "emptyNameExists": "A player with this name exists — add them from the list below instead.",
         "approved": "Approved:",
         "noPenalty": "No penalty",
         "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank."

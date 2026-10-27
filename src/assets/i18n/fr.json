@@ -642,6 +642,7 @@
         "notRegistered": "Non inscrit",
         "addEmpty": "Ajouter un créneau vide",
         "emptyLabel": "Nom du créneau",
+        "emptyNameExists": "Un joueur portant ce nom existe — ajoutez-le plutôt depuis la liste ci-dessous.",
         "approved": "Approuvé :",
         "noPenalty": "Sans pénalité",
         "noPenaltyTooltip": "Facturer ce joueur au coût du créneau pour lequel il a été approuvé, et non à son rang final."

@@ -60,14 +60,14 @@
               </span>
               <span class="rank">{{ row.rank }}</span>
               @if (row.isEmpty) {
-                <mat-form-field appearance="outline" class="empty-label-field" subscriptSizing="dynamic">
-                  <input
-                    matInput
-                    [value]="row.displayName"
-                    [attr.aria-label]="'mg.admin.correction.emptyLabel' | translate"
-                    (input)="setEmptyLabel(row.id, $any($event.target).value)"
-                  />
-                </mat-form-field>
+                <input
+                  type="text"
+                  class="empty-label-input"
+                  [class.name-collision]="row.nameCollision"
+                  [value]="row.displayName"
+                  [attr.aria-label]="'mg.admin.correction.emptyLabel' | translate"
+                  (input)="setEmptyLabel(row.id, $any($event.target).value)"
+                />
               } @else {
                 <span class="player-name">{{ row.displayName }}</span>
               }
@@ -113,6 +113,12 @@
                   · {{ 'mg.admin.slotConfig.cost' | translate }}: {{ row.cost }}
                 }
               </span>
+              @if (row.nameCollision) {
+                <span class="name-collision-warning" role="alert">
+                  <mat-icon>warning</mat-icon>
+                  {{ 'mg.admin.correction.emptyNameExists' | translate }}
+                </span>
+              }
               @if (dkpEnabled() && row.canForgive) {
                 <mat-checkbox
                   class="forgive-toggle"
