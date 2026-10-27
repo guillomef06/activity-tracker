@@ -351,36 +351,6 @@ describe('ActivityService', () => {
     });
   });
 
-  describe('applyPointAdjustments', () => {
-    it('should add a positive adjustment and expose it as pointAdjustment', () => {
-      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] }];
-      const result = service.applyPointAdjustments(scores, new Map([['a', 50]]));
-      expect(result[0].totalScore).toBe(150);
-      expect(result[0].pointAdjustment).toBe(50);
-    });
-
-    it('should subtract a negative adjustment', () => {
-      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] }];
-      const result = service.applyPointAdjustments(scores, new Map([['a', -80]]));
-      expect(result[0].totalScore).toBe(20);
-      expect(result[0].pointAdjustment).toBe(-80);
-    });
-
-    it('should floor the total at 0 when a penalty exceeds the current score', () => {
-      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 30, weeklyScores: [] }];
-      const result = service.applyPointAdjustments(scores, new Map([['a', -100]]));
-      expect(result[0].totalScore).toBe(0);
-      expect(result[0].pointAdjustment).toBe(-100);
-    });
-
-    it('should leave users absent from the map at 0 adjustment', () => {
-      const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] }];
-      const result = service.applyPointAdjustments(scores, new Map());
-      expect(result[0].totalScore).toBe(100);
-      expect(result[0].pointAdjustment).toBe(0);
-    });
-  });
-
   describe('loadFifoDeductions', () => {
     const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 

@@ -98,8 +98,7 @@
         "retroactive": "补录活动",
         "importExcel": "导入Excel",
         "discord": "Discord",
-        "mg": "MG 赛事",
-        "pointAdjustments": "Adjustments"
+        "mg": "MG 赛事"
       },
       "serverInfo": "服务器信息",
       "serverName": "服务器名称",
@@ -994,28 +993,5 @@
     "subtitle": "另一名玩家声称同一活动的相同位置",
     "conflictLine": "{{activityType}} — 位置 {{position}} — {{player}} 也声称此位置",
     "acknowledge": "我明白了"
-  },
-  "pointAdjustments": {
-    "title": "Manual Point Adjustments",
-    "subtitle": "Reward or penalise a player's current total with a dated, reasoned adjustment.",
-    "playerLabel": "Player",
-    "playerPlaceholder": "Search a player…",
-    "playerRequired": "Select a player.",
-    "deltaLabel": "Point value",
-    "deltaHint": "Positive to add, negative to subtract (e.g. -80 or 50).",
-    "deltaNonZero": "Enter a non-zero value.",
-    "reasonLabel": "Reason",
-    "reasonPlaceholder": "Why is this adjustment being made?",
-    "addButton": "Add adjustment",
-    "createSuccess": "Adjustment added.",
-    "createError": "Could not add the adjustment. Please try again.",
-    "listTitle": "Existing adjustments",
-    "emptyList": "No adjustments yet.",
-    "deleteTitle": "Delete adjustment",
-    "deleteConfirm": "Remove this adjustment? The player's total will revert.",
-    "deleteSuccess": "Adjustment removed.",
-    "deleteError": "Could not remove the adjustment. Please try again.",
-    "leaderboardTooltip": "Manual admin point adjustment",
-    "notCountedInWeek": "Adjustments are not included in the week total above."
   }
 }
