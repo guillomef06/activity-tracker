@@ -969,14 +969,22 @@
         "save": "Değişiklikleri kaydet",
         "reset": "Değişiklikleri at",
         "unsaved": "Kaydedilmemiş değişiklikler — yayınlamadan önce kaydedin.",
-        "overCapacity": "Çok fazla oyuncu ({{count}} / {{capacity}}): kaydetmeden önce bazılarını çıkarın."
+        "overCapacity": "Çok fazla oyuncu ({{count}} / {{capacity}}): kaydetmeden önce bazılarını çıkarın.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "Son etkinliği düzelt",
         "hint": "Etkinlik bitti. Yeniden sıralama yalnızca sırası değişen oyuncuların maliyetini yeniden hesaplar; sıralamadaki DKP'leri de güncellenir.",
         "available": "Henüz yerleştirilmemiş oyuncular (kayıtlı veya değil)",
         "noneAvailable": "Tüm oyuncular zaten seçimde.",
-        "notRegistered": "Kayıtlı değil"
+        "notRegistered": "Kayıtlı değil",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank.",
+        "emptyNameExists": "A player with this name exists — add them from the list below instead."
       }
     }
   },

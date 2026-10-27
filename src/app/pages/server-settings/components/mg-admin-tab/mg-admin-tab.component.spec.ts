@@ -516,6 +516,9 @@ describe('MgAdminTabComponent', () => {
         selection_type: 'selected',
         selected_by: 'automatic',
         cost: 150,
+        label: null,
+        approved_rank: null,
+        approved_cost: null,
         user_profiles: { display_name: 'Alice', username: 'alice' },
       },
     ];

@@ -75,6 +75,15 @@ export class MightiestGovernorComponent implements OnInit {
       .sort((a, b) => a.rank - b.rank)
   );
 
+  /** Everything that occupies a ranked row — real players plus empty placeholder
+   * slots (from a correction) — sorted by rank, so the displayed ranks read
+   * correctly even when a vacant slot sits between players. */
+  private readonly placedRows = computed(() =>
+    this.selection()
+      .filter(s => s.selection_type === 'selected' || s.selection_type === 'empty')
+      .sort((a, b) => a.rank - b.rank)
+  );
+
   /** A published player list exists once at least one player is assigned a slot. */
   readonly isPublished = computed(() => this.selectedPlayers().length > 0);
 
@@ -110,18 +119,21 @@ export class MightiestGovernorComponent implements OnInit {
     const rows = this.slotRows();
     let previousLabel: string | null = null;
 
-    return this.selectedPlayers().map(player => {
-      const slot = resolveSlotForRank(player.rank, rows);
-      const rankLabel = slot?.rankLabel ?? String(player.rank);
+    return this.placedRows().map(row => {
+      const slot = resolveSlotForRank(row.rank, rows);
+      const rankLabel = slot?.rankLabel ?? String(row.rank);
       const isGroupStart = rankLabel !== previousLabel;
       previousLabel = rankLabel;
 
+      // Empty placeholder slots show their label (default "Empty") and are never
+      // flagged as the current user.
+      const isEmpty = row.selection_type === 'empty';
       return {
-        key: 'p-' + player.rank,
+        key: 'p-' + row.rank,
         isGroupStart,
         rankLabel: isGroupStart ? rankLabel : null,
-        playerName: player.user_profiles?.display_name ?? null,
-        isCurrentUser: player.user_id === this.currentUserId(),
+        playerName: isEmpty ? (row.label ?? null) : (row.user_profiles?.display_name ?? null),
+        isCurrentUser: !isEmpty && row.user_id === this.currentUserId(),
         medal: isGroupStart ? (slot?.medal ?? null) : null,
         cost: isGroupStart ? (slot?.cost ?? null) : null,
         targetLabel: isGroupStart ? this.formatTarget(slot) : null,

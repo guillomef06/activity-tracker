@@ -969,14 +969,22 @@
         "save": "Simpan perubahan",
         "reset": "Batalkan perubahan",
         "unsaved": "Perubahan belum disimpan — simpan sebelum mempublikasikan.",
-        "overCapacity": "Terlalu banyak pemain ({{count}} / {{capacity}}): hapus beberapa sebelum menyimpan."
+        "overCapacity": "Terlalu banyak pemain ({{count}} / {{capacity}}): hapus beberapa sebelum menyimpan.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "Koreksi event terakhir",
         "hint": "Event telah selesai. Pengurutan ulang hanya menghitung ulang biaya pemain yang peringkatnya berubah; DKP mereka di papan peringkat juga dihitung ulang.",
         "available": "Pemain yang belum ditempatkan (terdaftar atau tidak)",
         "noneAvailable": "Semua pemain sudah ada dalam seleksi.",
-        "notRegistered": "Belum terdaftar"
+        "notRegistered": "Belum terdaftar",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank.",
+        "emptyNameExists": "A player with this name exists — add them from the list below instead."
       }
     }
   },

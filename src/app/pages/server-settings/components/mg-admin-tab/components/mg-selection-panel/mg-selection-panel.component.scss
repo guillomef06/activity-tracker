@@ -116,6 +116,75 @@
   .player-comment {
     font-style: italic;
   }
+
+  // Inline name editor for an empty placeholder slot. At rest it looks exactly like
+  // a .player-name cell (borderless, same font); only on focus does it reveal an
+  // outline, so a filled/blurred empty slot reads identically to the other rows.
+  .empty-label-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.25rem 0.375rem;
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    outline: none;
+
+    &:hover {
+      border-color: var(--mat-sys-outline-variant);
+    }
+
+    &:focus {
+      border-color: var(--mat-sys-primary);
+    }
+
+    // Collides with an existing player's name — they should be added from the pool.
+    &.name-collision {
+      border-color: var(--mat-sys-error);
+      color: var(--mat-sys-error);
+    }
+  }
+
+  // The "no penalty" checkbox sits on its own line under the row meta.
+  .forgive-toggle {
+    flex-basis: 100%;
+    font-size: 0.8rem;
+  }
+
+  // Inline warning when an empty-slot name matches a real player.
+  .name-collision-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-basis: 100%;
+    font-size: 0.8rem;
+    color: var(--mat-sys-error);
+
+    mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
+
+.list-row.empty-row {
+  // Visually distinguish a placeholder from a real player.
+  background-color: var(--mat-sys-surface-container-low);
+
+  .rank {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.add-empty-btn {
+  margin-top: 0.5rem;
+}
+
+.pool-search {
+  width: 100%;
+  margin-bottom: 0.5rem;
 }
 
 // The preview is a clone of the dragged row that CDK appends to <body>; it keeps this

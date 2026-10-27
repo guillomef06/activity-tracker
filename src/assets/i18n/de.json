@@ -969,14 +969,22 @@
         "save": "Änderungen speichern",
         "reset": "Änderungen verwerfen",
         "unsaved": "Nicht gespeicherte Änderungen — vor dem Veröffentlichen speichern.",
-        "overCapacity": "Zu viele Spieler ({{count}} / {{capacity}}): Entferne einige vor dem Speichern."
+        "overCapacity": "Zu viele Spieler ({{count}} / {{capacity}}): Entferne einige vor dem Speichern.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "Letztes Event korrigieren",
         "hint": "Das Event ist beendet. Beim Neuordnen werden nur die Kosten der Spieler neu berechnet, deren Rang sich ändert; ihre DKP in der Rangliste werden neu berechnet.",
         "available": "Noch nicht platzierte Spieler (angemeldet oder nicht)",
         "noneAvailable": "Alle Spieler sind bereits in der Auswahl.",
-        "notRegistered": "Nicht angemeldet"
+        "notRegistered": "Nicht angemeldet",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank.",
+        "emptyNameExists": "A player with this name exists — add them from the list below instead."
       }
     }
   },
