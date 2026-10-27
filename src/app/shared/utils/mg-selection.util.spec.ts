@@ -1,11 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { buildSelectionPayload } from './mg-selection.util';
+import { buildSelectionPayload, EMPTY_SLOT_PREFIX, DEFAULT_EMPTY_LABEL } from './mg-selection.util';
 import { buildMgSlotRows } from './mg-slot.util';
 import type { MgSelection } from '@shared/models';
 
 const slotRows = buildMgSlotRows([]);
 
-const makePrevious = (userId: string | null, rank: number, cost: number): MgSelection => ({
+const makePrevious = (
+  userId: string | null,
+  rank: number,
+  cost: number,
+  approved?: { rank: number; cost: number }
+): MgSelection => ({
   id: `sel-${rank}`,
   mg_event_id: 'event-1',
   user_id: userId,
@@ -13,6 +18,9 @@ const makePrevious = (userId: string | null, rank: number, cost: number): MgSele
   selection_type: userId ? 'selected' : 'ffa',
   selected_by: 'automatic',
   cost,
+  label: null,
+  approved_rank: approved?.rank ?? null,
+  approved_cost: approved?.cost ?? null,
 });
 
 describe('buildSelectionPayload', () => {
@@ -82,7 +90,7 @@ describe('buildSelectionPayload', () => {
       const previous = [makePrevious('a', 1, 999)];
 
       // Act
-      const result = buildSelectionPayload('event-1', ['a'], 1, slotRows, 'manual', previous);
+      const result = buildSelectionPayload('event-1', ['a'], 1, slotRows, 'manual', { previous });
 
       // Assert
       expect(result[0].cost).toBe(999);
@@ -93,7 +101,7 @@ describe('buildSelectionPayload', () => {
       const previous = [makePrevious('a', 1, 999), makePrevious('b', 2, 888)];
 
       // Act — a and b swap places
-      const result = buildSelectionPayload('event-1', ['b', 'a'], 2, slotRows, 'manual', previous);
+      const result = buildSelectionPayload('event-1', ['b', 'a'], 2, slotRows, 'manual', { previous });
 
       // Assert
       expect(result.map(p => [p.user_id, p.cost])).toEqual([
@@ -102,15 +110,15 @@ describe('buildSelectionPayload', () => {
       ]);
     });
 
-    it('should price a newly added player from the slot rows', () => {
-      // Arrange
+    it('should treat a newly added player below the approved list as free (FFA)', () => {
+      // Arrange — list of 1 approved player; z added below them was never approved.
       const previous = [makePrevious('a', 1, 999)];
 
       // Act
-      const result = buildSelectionPayload('event-1', ['a', 'z'], 2, slotRows, 'manual', previous);
+      const result = buildSelectionPayload('event-1', ['a', 'z'], 2, slotRows, 'manual', { previous });
 
-      // Assert
-      expect(result[1]).toMatchObject({ user_id: 'z', cost: 140 });
+      // Assert — z is a below-cutoff FFA player → free
+      expect(result[1]).toMatchObject({ user_id: 'z', cost: 0 });
     });
 
     it('should ignore previous free-for-all rows', () => {
@@ -118,10 +126,173 @@ describe('buildSelectionPayload', () => {
       const previous = [makePrevious(null, 1, 500)];
 
       // Act
-      const result = buildSelectionPayload('event-1', ['a'], 1, slotRows, 'manual', previous);
+      const result = buildSelectionPayload('event-1', ['a'], 1, slotRows, 'manual', { previous });
 
       // Assert
       expect(result[0].cost).toBe(150);
+    });
+
+    it('should carry forward the approved snapshot unchanged across a correction', () => {
+      // Arrange — 'a' approved for rank 7 (cost 160), now moved to rank 3.
+      const previous = [makePrevious('a', 7, 160, { rank: 7, cost: 160 })];
+
+      // Act
+      const result = buildSelectionPayload('event-1', ['a'], 7, slotRows, 'manual', { previous });
+
+      // Assert — approved snapshot preserved
+      expect(result[0]).toMatchObject({ approved_rank: 7, approved_cost: 160 });
+    });
+  });
+
+  describe('forgiveness (no penalty for an approved move)', () => {
+    it('should bill a forgiven player their approved cost, not the dearer final rank', () => {
+      // Arrange — approved for rank 7 (160); ends at rank 3 (which would cost 130... use a
+      // config where moving UP is dearer: rank 3 default is 130, rank 7 is 90).
+      // Use the real defaults: rank 3 = 130, rank 7 = 90. Forgiving a move from 7→3 bills 90.
+      const previous = [
+        makePrevious('a', 7, 90, { rank: 7, cost: 90 }),
+        makePrevious('b', 3, 130, { rank: 3, cost: 130 }),
+      ];
+
+      // Act — a moves up to rank 1, forgiven
+      const result = buildSelectionPayload('event-1', ['a', 'b'], 2, slotRows, 'manual', {
+        previous,
+        forgiven: new Set(['a']),
+      });
+
+      // Assert — a billed approved 90 (not rank-1's 150); b re-priced to final rank 2 (140)
+      expect(result.find(p => p.user_id === 'a')?.cost).toBe(90);
+      expect(result.find(p => p.user_id === 'b')?.cost).toBe(140);
+    });
+
+    it('should use the saved rank/cost as the approved baseline for a legacy event (no snapshot columns)', () => {
+      // Arrange — event published BEFORE migration 46: approved_* are null, but the
+      // player's saved row (rank 7, cost 90) is the approved list. Forgiving an upward
+      // move to rank 1 should bill that fallback baseline (90), not rank 1's 150.
+      const previous = [makePrevious('a', 7, 90)];
+
+      // Act
+      const result = buildSelectionPayload('event-1', ['a'], 1, slotRows, 'manual', {
+        previous,
+        forgiven: new Set(['a']),
+      });
+
+      // Assert — min(fallback-approved 90, final 150) = 90
+      expect(result[0].cost).toBe(90);
+    });
+
+    it('should treat a brand-new player below the approved list as a free FFA player', () => {
+      // Arrange — 'z' was never approved; the list had 1 approved player (a).
+      const previous = [makePrevious('a', 1, 150, { rank: 1, cost: 150 })];
+
+      // Act — z added at rank 2, below the single approved player
+      const result = buildSelectionPayload('event-1', ['a', 'z'], 2, slotRows, 'manual', { previous });
+
+      // Assert — z is an FFA player below the cutoff → free
+      expect(result.find(p => p.user_id === 'z')?.cost).toBe(0);
+    });
+
+    it('should bill the cheaper final slot for a DOWN-move by default (no forgiveness needed)', () => {
+      // Arrange — 'a' approved for rank 3 (130) but ended at rank 7 (90), a lower/cheaper slot.
+      const previous = [makePrevious('a', 3, 130, { rank: 3, cost: 130 })];
+
+      // Act — placed at rank 7, NOT forgiven
+      const result = buildSelectionPayload(
+        'event-1',
+        Array.from({ length: 7 }, (_, i) => (i === 6 ? 'a' : `x${i}`)),
+        7,
+        slotRows,
+        'manual',
+        {
+          previous,
+        }
+      );
+
+      // Assert — a billed the cheaper final slot (90), not the approved 130
+      expect(result.find(p => p.user_id === 'a')?.cost).toBe(90);
+    });
+
+    it('should never bill more than the cheaper of approved/final when a down-mover is forgiven', () => {
+      // Arrange — approved rank 3 (130), ended at rank 7 (90). Even if an admin ticks
+      // "no penalty", min() keeps it at the cheaper 90 (forgiveness can't raise a cost).
+      const previous = [makePrevious('a', 3, 130, { rank: 3, cost: 130 })];
+
+      // Act
+      const result = buildSelectionPayload(
+        'event-1',
+        Array.from({ length: 7 }, (_, i) => (i === 6 ? 'a' : `x${i}`)),
+        7,
+        slotRows,
+        'manual',
+        {
+          previous,
+          forgiven: new Set(['a']),
+        }
+      );
+
+      // Assert
+      expect(result.find(p => p.user_id === 'a')?.cost).toBe(90);
+    });
+  });
+
+  describe('FFA players added during a correction (not on the original list)', () => {
+    // Original published list: 2 approved players (a, b).
+    const approvedTwo = () => [
+      makePrevious('a', 1, 150, { rank: 1, cost: 150 }),
+      makePrevious('b', 2, 140, { rank: 2, cost: 140 }),
+    ];
+
+    it('should NOT bill an FFA player who ends below everyone on the original list', () => {
+      // Arrange — list of 2; 'z' (never approved) lands at rank 3, below both.
+      const result = buildSelectionPayload('event-1', ['a', 'b', 'z'], 3, slotRows, 'manual', {
+        previous: approvedTwo(),
+      });
+
+      // Assert — z is free (rank 3 > approvedCount 2)
+      expect(result.find(p => p.user_id === 'z')?.cost).toBe(0);
+    });
+
+    it('should bill an FFA player who displaces the approved order (above the cutoff)', () => {
+      // Arrange — 'z' jumps to rank 1, pushing a and b down.
+      const result = buildSelectionPayload('event-1', ['z', 'a', 'b'], 3, slotRows, 'manual', {
+        previous: approvedTwo(),
+      });
+
+      // Assert — z billed the slot they displaced into (rank 1 = 150)
+      expect(result.find(p => p.user_id === 'z')?.cost).toBe(150);
+    });
+
+    it('should waive an above-cutoff FFA player to 0 when forgiven', () => {
+      // Arrange — z at rank 1, forgiven
+      const result = buildSelectionPayload('event-1', ['z', 'a', 'b'], 3, slotRows, 'manual', {
+        previous: approvedTwo(),
+        forgiven: new Set(['z']),
+      });
+
+      // Assert — forgiven FFA player pays nothing (no approved slot to fall back to)
+      expect(result.find(p => p.user_id === 'z')?.cost).toBe(0);
+    });
+  });
+
+  describe('empty placeholder slots', () => {
+    it('should emit an empty row (null user, slot cost shown, label) that occupies its rank', () => {
+      // Act — empty slot at rank 2 between two players
+      const result = buildSelectionPayload('event-1', ['a', `${EMPTY_SLOT_PREFIX}1`, 'b'], 3, slotRows, 'manual', {
+        emptyLabels: new Map([[`${EMPTY_SLOT_PREFIX}1`, 'Ghost']]),
+      });
+
+      // Assert
+      expect(result.map(p => [p.user_id, p.rank, p.selection_type, p.cost])).toEqual([
+        ['a', 1, 'selected', 150],
+        [null, 2, 'empty', 140],
+        ['b', 3, 'selected', 130],
+      ]);
+      expect(result[1].label).toBe('Ghost');
+    });
+
+    it('should default an empty slot label when none is provided', () => {
+      const result = buildSelectionPayload('event-1', [`${EMPTY_SLOT_PREFIX}1`], 1, slotRows, 'manual');
+      expect(result[0]).toMatchObject({ selection_type: 'empty', label: DEFAULT_EMPTY_LABEL, user_id: null });
     });
   });
 });

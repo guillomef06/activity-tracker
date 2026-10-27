@@ -53,20 +53,31 @@
         <p class="empty-state">{{ 'mg.admin.selection.noneSelected' | translate }}</p>
       } @else {
         <ol class="player-list" cdkDropList cdkDropListLockAxis="y" (cdkDropListDropped)="drop($event)">
-          @for (row of draftRows(); track row.userId) {
-            <li class="list-row draft-row" cdkDrag cdkDragLockAxis="y">
+          @for (row of draftRows(); track row.id) {
+            <li class="list-row draft-row" [class.empty-row]="row.isEmpty" cdkDrag cdkDragLockAxis="y">
               <span class="drag-handle" cdkDragHandle aria-hidden="true">
                 <mat-icon>drag_indicator</mat-icon>
               </span>
               <span class="rank">{{ row.rank }}</span>
-              <span class="player-name">{{ row.displayName }}</span>
+              @if (row.isEmpty) {
+                <input
+                  type="text"
+                  class="empty-label-input"
+                  [class.name-collision]="row.nameCollision"
+                  [value]="row.displayName"
+                  [attr.aria-label]="'mg.admin.correction.emptyLabel' | translate"
+                  (input)="setEmptyLabel(row.id, $any($event.target).value)"
+                />
+              } @else {
+                <span class="player-name">{{ row.displayName }}</span>
+              }
               <span class="row-actions">
                 <button
                   mat-icon-button
                   type="button"
                   [disabled]="row.isFirst"
                   [attr.aria-label]="'mg.admin.selection.moveUp' | translate: { name: row.displayName }"
-                  (click)="move(row.userId, -1)"
+                  (click)="move(row.id, -1)"
                 >
                   <mat-icon>arrow_upward</mat-icon>
                 </button>
@@ -75,7 +86,7 @@
                   type="button"
                   [disabled]="row.isLast"
                   [attr.aria-label]="'mg.admin.selection.moveDown' | translate: { name: row.displayName }"
-                  (click)="move(row.userId, 1)"
+                  (click)="move(row.id, 1)"
                 >
                   <mat-icon>arrow_downward</mat-icon>
                 </button>
@@ -83,23 +94,51 @@
                   mat-icon-button
                   type="button"
                   [attr.aria-label]="'mg.admin.selection.remove' | translate: { name: row.displayName }"
-                  (click)="remove(row.userId)"
+                  (click)="remove(row.id)"
                 >
                   <mat-icon>remove_circle_outline</mat-icon>
                 </button>
               </span>
               <span class="player-meta">
-                {{ 'mg.admin.registrations.totalScore' | translate }}: {{ row.totalScore }}
+                @if (!row.isEmpty) {
+                  {{ 'mg.admin.registrations.totalScore' | translate }}: {{ row.totalScore }} ·
+                }
                 @if (row.slotLabel) {
-                  · {{ 'mg.admin.slotConfig.rank' | translate }} {{ row.slotLabel }}
+                  {{ 'mg.admin.slotConfig.rank' | translate }} {{ row.slotLabel }}
+                }
+                @if (row.approvedSlotLabel) {
+                  · {{ 'mg.admin.correction.approved' | translate }} {{ row.approvedSlotLabel }}
                 }
                 @if (dkpEnabled()) {
                   · {{ 'mg.admin.slotConfig.cost' | translate }}: {{ row.cost }}
                 }
               </span>
+              @if (row.nameCollision) {
+                <span class="name-collision-warning" role="alert">
+                  <mat-icon>warning</mat-icon>
+                  {{ 'mg.admin.correction.emptyNameExists' | translate }}
+                </span>
+              }
+              @if (dkpEnabled() && row.canForgive) {
+                <mat-checkbox
+                  class="forgive-toggle"
+                  [checked]="row.forgiven"
+                  [matTooltip]="'mg.admin.correction.noPenaltyTooltip' | translate"
+                  (change)="toggleForgive(row.id)"
+                >
+                  {{ 'mg.admin.correction.noPenalty' | translate }}
+                </mat-checkbox>
+              }
             </li>
           }
         </ol>
+      }
+
+      @if (isCorrection() && !isFull()) {
+        <button mat-stroked-button type="button" class="add-empty-btn" (click)="addEmpty()">
+          <mat-icon>add</mat-icon>
+          {{ 'mg.admin.correction.addEmpty' | translate }}
+        </button>
       }
 
       @if (ffaCount() > 0) {
@@ -118,11 +157,31 @@
       <!-- Registered players not yet placed -->
       <p class="section-label">{{ availableLabelKey() | translate }} ({{ availableRows().length }})</p>
 
+      @if (availableRows().length > 0) {
+        <mat-form-field appearance="outline" class="pool-search" subscriptSizing="dynamic">
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            matInput
+            [value]="poolSearch()"
+            [placeholder]="'mg.admin.selection.searchPool' | translate"
+            [attr.aria-label]="'mg.admin.selection.searchPool' | translate"
+            (input)="onPoolSearch($any($event.target).value)"
+          />
+          @if (poolSearch()) {
+            <button matSuffix mat-icon-button type="button" aria-label="clear" (click)="onPoolSearch('')">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+      }
+
       @if (availableRows().length === 0) {
         <p class="empty-state">{{ noneAvailableKey() | translate }}</p>
+      } @else if (filteredAvailableRows().length === 0) {
+        <p class="empty-state">{{ 'mg.admin.selection.noSearchMatch' | translate }}</p>
       } @else {
         <ul class="player-list">
-          @for (row of availableRows(); track row.userId) {
+          @for (row of filteredAvailableRows(); track row.userId) {
             <li class="list-row draft-row">
               <span class="player-name">{{ row.displayName }}</span>
               <span class="row-actions">

@@ -969,14 +969,22 @@
         "save": "बदलाव सहेजें",
         "reset": "बदलाव रद्द करें",
         "unsaved": "बदलाव सहेजे नहीं गए — प्रकाशित करने से पहले सहेजें।",
-        "overCapacity": "बहुत अधिक खिलाड़ी ({{count}} / {{capacity}}): सहेजने से पहले कुछ को हटाएँ।"
+        "overCapacity": "बहुत अधिक खिलाड़ी ({{count}} / {{capacity}}): सहेजने से पहले कुछ को हटाएँ।",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "पिछले इवेंट को सुधारें",
         "hint": "इवेंट समाप्त हो चुका है। क्रम बदलने पर केवल उन खिलाड़ियों की लागत दोबारा गणना होती है जिनकी रैंक बदलती है; लीडरबोर्ड पर उनका DKP भी दोबारा गणना किया जाता है।",
         "available": "अभी तक स्थान न पाए खिलाड़ी (पंजीकृत या नहीं)",
         "noneAvailable": "सभी खिलाड़ी पहले से चयन में हैं।",
-        "notRegistered": "पंजीकृत नहीं"
+        "notRegistered": "पंजीकृत नहीं",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank.",
+        "emptyNameExists": "A player with this name exists — add them from the list below instead."
       }
     }
   },

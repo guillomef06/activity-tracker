@@ -161,6 +161,9 @@ describe('MightiestGovernorComponent', () => {
       selection_type: 'selected',
       selected_by: 'manual',
       cost: 0,
+      label: null,
+      approved_rank: null,
+      approved_cost: null,
       user_profiles: { display_name: 'Player ' + rank, username: 'player' + rank },
     });
 
@@ -172,6 +175,23 @@ describe('MightiestGovernorComponent', () => {
       selection_type: 'ffa',
       selected_by: 'automatic',
       cost: 0,
+      label: null,
+      approved_rank: null,
+      approved_cost: null,
+      user_profiles: null,
+    });
+
+    const empty = (rank: number, label = 'Empty'): MgSelectionWithUser => ({
+      id: 'empty-' + rank,
+      mg_event_id: 'event-1',
+      user_id: null,
+      rank,
+      selection_type: 'empty',
+      selected_by: 'manual',
+      cost: 0,
+      label,
+      approved_rank: null,
+      approved_cost: null,
       user_profiles: null,
     });
 
@@ -240,6 +260,17 @@ describe('MightiestGovernorComponent', () => {
       await setup([player('u1', 1), ffa(2), ffa(3)]);
       expect(component.ffaCount()).toBe(2);
     });
+
+    it('should render an empty placeholder slot by its label, at its rank, not as FFA', async () => {
+      await setup([player('u1', 1), empty(2, 'Vacant'), player('u3', 3)]);
+
+      const names = component.rows().map(r => r.playerName);
+      expect(names).toEqual(['Player 1', 'Vacant', 'Player 3']);
+      // The empty slot is not counted as an FFA slot.
+      expect(component.ffaCount()).toBe(0);
+      // And it's never flagged as the current user.
+      expect(component.rows()[1].isCurrentUser).toBe(false);
+    });
   });
 
   describe('full FFA', () => {
@@ -282,6 +313,9 @@ describe('MightiestGovernorComponent', () => {
           selection_type: 'selected',
           selected_by: 'manual',
           cost: 0,
+          label: null,
+          approved_rank: null,
+          approved_cost: null,
           user_profiles: { display_name: 'Player 1', username: 'player1' },
         },
       ]);
