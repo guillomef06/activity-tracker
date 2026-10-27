@@ -163,68 +163,6 @@ describe('ActivitiesDetailsComponent', () => {
     expect(mockSnackbarService.error).toHaveBeenCalled();
   });
 
-  describe('point adjustments', () => {
-    it('should not show the adjustment badge when pointAdjustment is absent or zero', () => {
-      const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('.point-adjustment')).toBeNull();
-    });
-
-    it('should show a green +N badge for a positive net adjustment', () => {
-      fixture.componentRef.setInput('userScores', [{ ...mockUserScores[0], pointAdjustment: 50 }]);
-      fixture.detectChanges();
-
-      const badge = (fixture.nativeElement as HTMLElement).querySelector('.point-adjustment');
-      expect(badge).toBeTruthy();
-      expect(badge?.textContent).toContain('+50');
-      expect(badge?.classList).toContain('adjustment-positive');
-    });
-
-    it('should show a red -N badge for a negative net adjustment', () => {
-      fixture.componentRef.setInput('userScores', [{ ...mockUserScores[0], pointAdjustment: -80 }]);
-      fixture.detectChanges();
-
-      const badge = (fixture.nativeElement as HTMLElement).querySelector('.point-adjustment');
-      expect(badge?.textContent).toContain('-80');
-      expect(badge?.classList).toContain('adjustment-negative');
-    });
-
-    it('should bucket an adjustment into the week its date falls in', () => {
-      // mockUserScores[0] week runs 2024-01-01..2024-01-07.
-      const adj = {
-        id: 'adj-1',
-        userId: 'u1',
-        delta: -80,
-        reason: 'Rule violation',
-        date: new Date('2024-01-03'),
-        createdBy: 'admin',
-      };
-      fixture.componentRef.setInput('adjustments', new Map([['u1', [adj]]]));
-      component['toggleUserDetails']('u1');
-      fixture.detectChanges();
-
-      expect(component['adjustmentsByWeek']().get(0)).toEqual([adj]);
-      const row = (fixture.nativeElement as HTMLElement).querySelector('.adjustment-row');
-      expect(row?.textContent).toContain('Rule violation');
-      expect(row?.textContent).toContain('-80');
-    });
-
-    it('should bucket no adjustment when its date is outside every rendered week', () => {
-      const adj = {
-        id: 'adj-2',
-        userId: 'u1',
-        delta: 25,
-        reason: 'Old bonus',
-        date: new Date('2023-06-01'), // before the only week
-        createdBy: 'admin',
-      };
-      fixture.componentRef.setInput('adjustments', new Map([['u1', [adj]]]));
-      component['toggleUserDetails']('u1');
-      fixture.detectChanges();
-
-      expect(component['adjustmentsByWeek']().size).toBe(0);
-    });
-  });
-
   describe('season total sorting', () => {
     // Alice has the higher current total; Bob has the higher season total.
     const current = (): UserScore[] => [

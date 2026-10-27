@@ -10,7 +10,6 @@ import { ServerService } from '@core/services/server.service';
 import { SeasonService } from '@core/services/season.service';
 import { AuthService } from '@core/services/auth.service';
 import { MgEventService } from '@core/services/mg-event.service';
-import { PointAdjustmentService } from '@core/services/point-adjustment.service';
 import { SupabaseService } from '@core/services/supabase.service';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 
@@ -59,15 +58,10 @@ describe('HomePage', () => {
     loadSpends: vi.fn().mockResolvedValue([]),
   };
 
-  const pointAdjustmentServiceSpy = {
-    loadAdjustments: vi.fn().mockResolvedValue([]),
-  };
-
   beforeEach(async () => {
     vi.clearAllMocks();
     mgEventServiceSpy.loadServerConfig.mockResolvedValue(null);
     mgEventServiceSpy.loadSpends.mockResolvedValue([]);
-    pointAdjustmentServiceSpy.loadAdjustments.mockResolvedValue([]);
 
     await TestBed.configureTestingModule({
       imports: [HomePage, TranslateModule.forRoot()],
@@ -81,7 +75,6 @@ describe('HomePage', () => {
         { provide: ServerService, useValue: serverServiceSpy },
         { provide: SeasonService, useValue: seasonServiceSpy },
         { provide: MgEventService, useValue: mgEventServiceSpy },
-        { provide: PointAdjustmentService, useValue: pointAdjustmentServiceSpy },
         provideZonelessChangeDetection(),
       ],
     }).compileComponents();
@@ -164,37 +157,6 @@ describe('HomePage', () => {
 
     expect(loadSpy).toHaveBeenCalledWith(season);
     expect(applySpy).toHaveBeenCalled();
-  });
-
-  it('should group loaded adjustments by user for the leaderboard', async () => {
-    pointAdjustmentServiceSpy.loadAdjustments.mockResolvedValueOnce([
-      {
-        id: 'a1',
-        userId: 'test-user',
-        delta: -80,
-        reason: 'Rule violation',
-        date: new Date(),
-        createdBy: 'admin',
-        displayName: 'Test User',
-      },
-      {
-        id: 'a2',
-        userId: 'test-user',
-        delta: 50,
-        reason: 'Bonus',
-        date: new Date(),
-        createdBy: 'admin',
-        displayName: 'Test User',
-      },
-    ]);
-
-    fixture = TestBed.createComponent(HomePage);
-    component = fixture.componentInstance;
-    await component.ngOnInit();
-    fixture.detectChanges();
-
-    expect(pointAdjustmentServiceSpy.loadAdjustments).toHaveBeenCalledWith('server-1');
-    expect(component.adjustmentsByUser().get('test-user')).toHaveLength(2);
   });
 
   it('should render the 4 tabs', () => {

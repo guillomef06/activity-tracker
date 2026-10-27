@@ -10,7 +10,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserScore } from '@shared/models/activity.model';
-import type { PointAdjustment } from '@shared/models';
 
 /** Which metric the leaderboard is ranked/sorted by. */
 export type LeaderboardSortKey = 'current' | 'season';
@@ -53,9 +52,6 @@ export class ActivitiesDetailsComponent {
 
   readonly userScores = input.required<UserScore[]>();
 
-  /** Admin point adjustments grouped by userId (for the per-week log + header delta). */
-  readonly adjustments = input<Map<string, PointAdjustment[]>>(new Map());
-
   protected readonly selectedUserId = signal<string | null>(null);
   protected readonly deletingActivityId = signal<string | null>(null);
   protected readonly isSuperAdmin = computed(() => this.authService.isSuperAdmin());
@@ -86,34 +82,6 @@ export class ActivitiesDetailsComponent {
   protected setSortKey(key: LeaderboardSortKey): void {
     this.sortKey.set(key);
   }
-
-  /**
-   * Adjustments for the currently expanded user, bucketed by the index of the
-   * week their date falls in (matching the weeklyScores order the template
-   * renders). Precomputed here because templates can't call functions; the key
-   * is the week index so the template can look it up with the same $index it
-   * already iterates. Adjustments dated outside the rolling window land in no
-   * bucket — the header net delta still accounts for them.
-   */
-  protected readonly adjustmentsByWeek = computed<Map<number, PointAdjustment[]>>(() => {
-    const userId = this.selectedUserId();
-    const map = new Map<number, PointAdjustment[]>();
-    if (!userId) return map;
-
-    const user = this.userScores().find(u => u.userId === userId);
-    const userAdjustments = this.adjustments().get(userId);
-    if (!user || !userAdjustments?.length) return map;
-
-    for (const adj of userAdjustments) {
-      const time = adj.date.getTime();
-      const weekIndex = user.weeklyScores.findIndex(w => time >= w.weekStart.getTime() && time <= w.weekEnd.getTime());
-      if (weekIndex === -1) continue;
-      const list = map.get(weekIndex) ?? [];
-      list.push(adj);
-      map.set(weekIndex, list);
-    }
-    return map;
-  });
 
   protected readonly trackByUserId = (_index: number, user: UserScore) => user.userId;
   protected readonly trackByIndex = (index: number) => index;

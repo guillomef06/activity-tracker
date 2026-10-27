@@ -98,8 +98,7 @@
         "retroactive": "Activités Rétroactives",
         "importExcel": "Import Excel",
         "discord": "Discord",
-        "mg": "Évènement MG",
-        "pointAdjustments": "Ajustements"
+        "mg": "Évènement MG"
       },
       "serverInfo": "Informations du serveur",
       "serverName": "Nom du serveur",
@@ -537,29 +536,6 @@
       "meteorSteel": "Acier météorique",
       "crimsonMeteorite": "Météorite cramoisie"
     }
-  },
-  "pointAdjustments": {
-    "title": "Ajustements manuels de points",
-    "subtitle": "Récompensez ou pénalisez le total actuel d'un joueur avec un ajustement daté et justifié.",
-    "playerLabel": "Joueur",
-    "playerPlaceholder": "Rechercher un joueur…",
-    "playerRequired": "Sélectionnez un joueur.",
-    "deltaLabel": "Valeur en points",
-    "deltaHint": "Positif pour ajouter, négatif pour retirer (ex. -80 ou 50).",
-    "deltaNonZero": "Saisissez une valeur non nulle.",
-    "reasonLabel": "Raison",
-    "reasonPlaceholder": "Pourquoi cet ajustement ?",
-    "addButton": "Ajouter l'ajustement",
-    "createSuccess": "Ajustement ajouté.",
-    "createError": "Impossible d'ajouter l'ajustement. Veuillez réessayer.",
-    "listTitle": "Ajustements existants",
-    "emptyList": "Aucun ajustement pour l'instant.",
-    "deleteTitle": "Supprimer l'ajustement",
-    "deleteConfirm": "Supprimer cet ajustement ? Le total du joueur sera rétabli.",
-    "deleteSuccess": "Ajustement supprimé.",
-    "deleteError": "Impossible de supprimer l'ajustement. Veuillez réessayer.",
-    "leaderboardTooltip": "Ajustement manuel de points par un admin",
-    "notCountedInWeek": "Les ajustements ne sont pas inclus dans le total de la semaine ci-dessus."
   },
   "mg": {
     "event": {
