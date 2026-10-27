@@ -915,6 +915,26 @@ describe('MgSelectionPanelComponent', () => {
         expect(rowA.forgiven).toBe(true);
         expect(panel.isDirty()).toBe(false);
       });
+
+      it('should NOT offer forgiveness for a down-move (cheaper final slot billed automatically)', () => {
+        // Arrange — 'a' approved for rank 1 (150) but ended lower at rank 3 (130, cheaper).
+        create({
+          kind: 'correction',
+          status: 'finished',
+          capacity: 3,
+          dkpEnabled: true,
+          selection: [
+            makeSelected('a', 3, 130, 'manual', { rank: 1, cost: 150 }),
+            makeSelected('b', 1, 150, 'manual', { rank: 2, cost: 140 }),
+            makeSelected('c', 2, 140, 'manual', { rank: 3, cost: 130 }),
+          ],
+        });
+
+        // Assert — no penalty to forgive (final 130 < approved 150), and already billed the cheaper slot
+        const rowA = panel.draftRows().find(r => r.userId === 'a')!;
+        expect(rowA.canForgive).toBe(false);
+        expect(rowA.cost).toBe(130);
+      });
     });
 
     describe('searchable pool', () => {

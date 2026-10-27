@@ -84,7 +84,11 @@ export function buildSelectionPayload(
 
     let cost: number;
     if (forgiven?.has(entry) && approvedCost !== null) {
-      cost = approvedCost;
+      // A forgiven move never costs more than the slot they were approved for,
+      // nor more than the slot they actually ended in: a player who moved UP is
+      // billed their (cheaper) approved cost, and one who moved DOWN keeps the
+      // (cheaper) final-slot cost. min() makes forgiveness safe in both directions.
+      cost = Math.min(approvedCost, finalRankCost);
     } else if (snapshot?.rank === rank) {
       cost = snapshot.cost;
     } else {

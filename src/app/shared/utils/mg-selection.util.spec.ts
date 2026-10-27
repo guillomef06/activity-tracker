@@ -178,6 +178,48 @@ describe('buildSelectionPayload', () => {
       // Assert — can't forgive without a baseline, so re-priced to rank 1
       expect(result[0].cost).toBe(150);
     });
+
+    it('should bill the cheaper final slot for a DOWN-move by default (no forgiveness needed)', () => {
+      // Arrange — 'a' approved for rank 3 (130) but ended at rank 7 (90), a lower/cheaper slot.
+      const previous = [makePrevious('a', 3, 130, { rank: 3, cost: 130 })];
+
+      // Act — placed at rank 7, NOT forgiven
+      const result = buildSelectionPayload(
+        'event-1',
+        Array.from({ length: 7 }, (_, i) => (i === 6 ? 'a' : `x${i}`)),
+        7,
+        slotRows,
+        'manual',
+        {
+          previous,
+        }
+      );
+
+      // Assert — a billed the cheaper final slot (90), not the approved 130
+      expect(result.find(p => p.user_id === 'a')?.cost).toBe(90);
+    });
+
+    it('should never bill more than the cheaper of approved/final when a down-mover is forgiven', () => {
+      // Arrange — approved rank 3 (130), ended at rank 7 (90). Even if an admin ticks
+      // "no penalty", min() keeps it at the cheaper 90 (forgiveness can't raise a cost).
+      const previous = [makePrevious('a', 3, 130, { rank: 3, cost: 130 })];
+
+      // Act
+      const result = buildSelectionPayload(
+        'event-1',
+        Array.from({ length: 7 }, (_, i) => (i === 6 ? 'a' : `x${i}`)),
+        7,
+        slotRows,
+        'manual',
+        {
+          previous,
+          forgiven: new Set(['a']),
+        }
+      );
+
+      // Assert
+      expect(result.find(p => p.user_id === 'a')?.cost).toBe(90);
+    });
   });
 
   describe('empty placeholder slots', () => {

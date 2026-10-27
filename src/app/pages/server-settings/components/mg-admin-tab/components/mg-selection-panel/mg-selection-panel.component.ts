@@ -201,6 +201,15 @@ export class MgSelectionPanelComponent {
     return map;
   });
 
+  /** Approved cost per userId from the published snapshot, for forgive gating. */
+  private readonly approvedCostByUserId = computed<Map<string, number>>(() => {
+    const map = new Map<string, number>();
+    for (const row of this.selection()) {
+      if (row.user_id && row.approved_cost !== null) map.set(row.user_id, row.approved_cost);
+    }
+    return map;
+  });
+
   protected readonly isEditable = computed(() => this.kind() !== 'locked');
   protected readonly isCorrection = computed(() => this.kind() === 'correction');
   protected readonly showGenerate = computed(() => this.kind() === 'draft' && this.assignmentMode() === 'automatic');
@@ -248,12 +257,19 @@ export class MgSelectionPanelComponent {
     // Cost per placed entry, indexed by position (handles empties + duplicate nulls).
     const payloadByRank = new Map(this.draftPayloads().map(p => [p.rank, p]));
     const approvedRanks = this.approvedRankByUserId();
+    const approvedCosts = this.approvedCostByUserId();
     const forgiven = this.forgiven();
 
     return order.map((entry, index) => {
       const rank = index + 1;
       const empty = isEmptySlotId(entry);
       const approvedRank = empty ? null : (approvedRanks.get(entry) ?? null);
+      const approvedCost = empty ? null : (approvedCosts.get(entry) ?? null);
+      const finalRankCost = resolveSlotForRank(rank, this.slotRows())?.cost ?? 0;
+      // Only an UP-move carries a penalty to forgive (final slot dearer than the
+      // approved one). A DOWN-move already bills the cheaper final slot by default,
+      // so no toggle is offered.
+      const canForgive = approvedCost !== null && finalRankCost > approvedCost;
       return {
         id: entry,
         isEmpty: empty,
@@ -267,7 +283,7 @@ export class MgSelectionPanelComponent {
         cost: payloadByRank.get(rank)?.cost ?? 0,
         approvedSlotLabel:
           approvedRank !== null ? (resolveSlotForRank(approvedRank, this.slotRows())?.rankLabel ?? null) : null,
-        canForgive: approvedRank !== null && approvedRank !== rank,
+        canForgive,
         forgiven: !empty && forgiven.has(entry),
         isFirst: index === 0,
         isLast: index === order.length - 1,
