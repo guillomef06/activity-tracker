@@ -969,14 +969,21 @@
         "save": "حفظ التغييرات",
         "reset": "تجاهل التغييرات",
         "unsaved": "تغييرات غير محفوظة — احفظ قبل النشر.",
-        "overCapacity": "عدد اللاعبين كبير جدًا ({{count}} / {{capacity}}): أزل بعضهم قبل الحفظ."
+        "overCapacity": "عدد اللاعبين كبير جدًا ({{count}} / {{capacity}}): أزل بعضهم قبل الحفظ.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "تصحيح آخر حدث",
         "hint": "انتهى الحدث. تؤدي إعادة الترتيب إلى إعادة احتساب تكلفة اللاعبين الذين تغيّر ترتيبهم فقط؛ كما يُعاد احتساب DKP الخاص بهم في لوحة الترتيب.",
         "available": "اللاعبون الذين لم يتم وضعهم بعد (مسجلون أو غير مسجلين)",
         "noneAvailable": "جميع اللاعبين موجودون بالفعل في التشكيلة.",
-        "notRegistered": "غير مسجل"
+        "notRegistered": "غير مسجل",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank."
       }
     }
   },

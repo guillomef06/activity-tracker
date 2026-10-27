@@ -517,6 +517,77 @@ describe('MgEventService', () => {
     });
   });
 
+  describe('publishSelection', () => {
+    // snapshot chain: from('mg_selections').select().eq().eq().is() → rows lacking approval
+    const snapshotLoadChain = (rows: { id: string; rank: number; cost: number }[], error: unknown = null) => ({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockResolvedValue({ data: rows, error }),
+    });
+    // per-row update chain: from('mg_selections').update().eq()
+    const updateChain = () => {
+      const eq = vi.fn().mockResolvedValue({ error: null });
+      return { update: vi.fn().mockReturnValue({ eq }), _eq: eq };
+    };
+    // event status flip: from('mg_events').update().eq()
+    const eventUpdateChain = (error: unknown = null) => {
+      const eq = vi.fn().mockResolvedValue({ error });
+      return { update: vi.fn().mockReturnValue({ eq }), _eq: eq };
+    };
+
+    it('should stamp approved_rank/approved_cost on un-snapshotted selected rows, then flip status', async () => {
+      // Arrange
+      const rowA = updateChain();
+      const rowB = updateChain();
+      const eventUpdate = eventUpdateChain();
+      fromMock
+        .mockReturnValueOnce(
+          snapshotLoadChain([
+            { id: 's1', rank: 1, cost: 150 },
+            { id: 's2', rank: 2, cost: 140 },
+          ])
+        )
+        .mockReturnValueOnce(rowA)
+        .mockReturnValueOnce(rowB)
+        .mockReturnValueOnce(eventUpdate);
+
+      // Act
+      const result = await service.publishSelection('event-1');
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(rowA.update).toHaveBeenCalledWith({ approved_rank: 1, approved_cost: 150 });
+      expect(rowB.update).toHaveBeenCalledWith({ approved_rank: 2, approved_cost: 140 });
+      expect(eventUpdate.update).toHaveBeenCalledWith(expect.objectContaining({ status: 'selection_published' }));
+    });
+
+    it('should still flip status when there is nothing to snapshot', async () => {
+      // Arrange — no rows missing an approval (re-publish)
+      const eventUpdate = eventUpdateChain();
+      fromMock.mockReturnValueOnce(snapshotLoadChain([])).mockReturnValueOnce(eventUpdate);
+
+      // Act
+      const result = await service.publishSelection('event-1');
+
+      // Assert
+      expect(result.error).toBeNull();
+      expect(eventUpdate.update).toHaveBeenCalled();
+    });
+
+    it('should still publish when the snapshot load errors (best-effort)', async () => {
+      // Arrange
+      const eventUpdate = eventUpdateChain();
+      fromMock.mockReturnValueOnce(snapshotLoadChain([], { message: 'load failed' })).mockReturnValueOnce(eventUpdate);
+
+      // Act
+      const result = await service.publishSelection('event-1');
+
+      // Assert — status flip still happened, no error surfaced
+      expect(result.error).toBeNull();
+      expect(eventUpdate.update).toHaveBeenCalled();
+    });
+  });
+
   // ============================================
   describe('loadLastFinishedEvent', () => {
     it('should return the most recent finished event of the server', async () => {

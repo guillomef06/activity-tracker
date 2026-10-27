@@ -116,6 +116,36 @@
   .player-comment {
     font-style: italic;
   }
+
+  // Inline name editor for an empty placeholder slot — fills the player-name slot.
+  .empty-label-field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // The "no penalty" checkbox sits on its own line under the row meta.
+  .forgive-toggle {
+    flex-basis: 100%;
+    font-size: 0.8rem;
+  }
+}
+
+.list-row.empty-row {
+  // Visually distinguish a placeholder from a real player.
+  background-color: var(--mat-sys-surface-container-low);
+
+  .rank {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.add-empty-btn {
+  margin-top: 0.5rem;
+}
+
+.pool-search {
+  width: 100%;
+  margin-bottom: 0.5rem;
 }
 
 // The preview is a clone of the dragged row that CDK appends to <body>; it keeps this

@@ -969,14 +969,21 @@
         "save": "保存更改",
         "reset": "放弃更改",
         "unsaved": "有未保存的更改 — 请先保存再发布。",
-        "overCapacity": "玩家过多（{{count}} / {{capacity}}）：请先移除部分玩家再保存。"
+        "overCapacity": "玩家过多（{{count}} / {{capacity}}）：请先移除部分玩家再保存。",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "更正上一场活动",
         "hint": "活动已结束。调整顺序时，只会重新计算名次发生变化的玩家的费用；他们在排行榜上的 DKP 也会重新计算。",
         "available": "尚未安排的玩家（无论是否已报名）",
         "noneAvailable": "所有玩家都已在名单中。",
-        "notRegistered": "未报名"
+        "notRegistered": "未报名",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank."
       }
     }
   },

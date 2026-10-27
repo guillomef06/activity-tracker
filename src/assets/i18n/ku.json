@@ -969,14 +969,21 @@
         "save": "Guhertinan tomar bike",
         "reset": "Guhertinan betal bike",
         "unsaved": "Guhertinên netomarkirî — beriya weşandinê tomar bike.",
-        "overCapacity": "Zêde lîstikvan ({{count}} / {{capacity}}): beriya tomarkirinê hinekan rake."
+        "overCapacity": "Zêde lîstikvan ({{count}} / {{capacity}}): beriya tomarkirinê hinekan rake.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "Bûyera dawî rast bike",
         "hint": "Bûyer qediya. Ji nû ve rêzkirin tenê lêçûna lîstikvanên ku rêza wan diguhere ji nû ve dihesibîne; DKP-ya wan di tabloya rêzê de jî ji nû ve tê hesibandin.",
         "available": "Lîstikvanên ku hê nehatine danîn (tomarkirî an na)",
         "noneAvailable": "Hemû lîstikvan jixwe di hilbijartinê de ne.",
-        "notRegistered": "Ne tomarkirî"
+        "notRegistered": "Ne tomarkirî",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank."
       }
     }
   },

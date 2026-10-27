@@ -15,10 +15,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MgEventService } from '@app/core/services/mg-event.service';
 import { SnackbarService } from '@app/core/services';
-import { buildSelectionPayload } from '@shared/utils/mg-selection.util';
+import {
+  buildSelectionPayload,
+  EMPTY_SLOT_PREFIX,
+  isEmptySlotId,
+  DEFAULT_EMPTY_LABEL,
+} from '@shared/utils/mg-selection.util';
 import { resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
 import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
 import type {
@@ -39,12 +48,21 @@ import type {
 export type MgSelectionPanelKind = 'draft' | 'correction' | 'locked';
 
 interface DraftRow {
-  userId: string;
+  /** Real userId, or an EMPTY_SLOT_PREFIX sentinel for a placeholder slot. */
+  id: string;
+  isEmpty: boolean;
+  userId: string | null;
   rank: number;
   displayName: string;
   totalScore: number;
   slotLabel: string | null;
   cost: number;
+  /** Approved slot label (e.g. "6-7") for a real player with a published baseline. */
+  approvedSlotLabel: string | null;
+  /** True when this player's current rank differs from their approved rank (move happened). */
+  canForgive: boolean;
+  /** Whether this player's move is currently forgiven (billed at approved cost). */
+  forgiven: boolean;
   isFirst: boolean;
   isLast: boolean;
 }
@@ -80,6 +98,10 @@ interface LockedRow {
     MatIconModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatTooltipModule,
     TranslateModule,
   ],
   templateUrl: './mg-selection-panel.component.html',
@@ -115,12 +137,19 @@ export class MgSelectionPanelComponent {
   protected readonly isSaving = signal(false);
   protected readonly isPublishing = signal(false);
 
-  private readonly savedOrder = computed<string[]>(() =>
-    this.selection()
-      .filter(row => row.selection_type === 'selected')
+  // The placed order interleaves real players and empty placeholder slots by rank.
+  // Empty rows become EMPTY_SLOT_PREFIX sentinels keyed the same way emptyLabels is,
+  // so a saved empty slot round-trips with its name.
+  private readonly savedOrder = computed<string[]>(() => {
+    let emptyIndex = 0;
+    return this.selection()
+      .filter(row => row.selection_type === 'selected' || row.selection_type === 'empty')
       .sort((a, b) => a.rank - b.rank)
-      .flatMap(row => (row.user_id ? [row.user_id] : []))
-  );
+      .flatMap(row => {
+        if (row.selection_type === 'empty') return [EMPTY_SLOT_PREFIX + 'saved-' + emptyIndex++];
+        return row.user_id ? [row.user_id] : [];
+      });
+  });
 
   /** Working copy of the ordered players; resets whenever the saved selection input changes. */
   protected readonly draftOrder = linkedSignal<string[]>(() => this.savedOrder());
@@ -129,6 +158,48 @@ export class MgSelectionPanelComponent {
   private readonly draftSource = linkedSignal<MgSelectedBy>(
     () => this.selection()[0]?.selected_by ?? this.assignmentMode()
   );
+
+  /** Labels for empty placeholder slots (EMPTY_SLOT_PREFIX id → name). Resets with the selection. */
+  private readonly emptyLabels = linkedSignal<Map<string, string>>(() => {
+    const map = new Map<string, string>();
+    this.selection()
+      .filter(row => row.selection_type === 'empty')
+      .sort((a, b) => a.rank - b.rank)
+      .forEach((row, index) => map.set(EMPTY_SLOT_PREFIX + 'saved-' + index, row.label ?? DEFAULT_EMPTY_LABEL));
+    return map;
+  });
+
+  /** UserIds whose rank change is forgiven (billed at approved cost). Derived from the
+   * saved selection: a row already charged at its approved cost (and whose current rank
+   * differs from approved) is treated as forgiven so reloading preserves the decision. */
+  private readonly forgiven = linkedSignal<Set<string>>(() => {
+    const set = new Set<string>();
+    for (const row of this.selection()) {
+      if (
+        row.user_id &&
+        row.selection_type === 'selected' &&
+        row.approved_cost !== null &&
+        row.approved_rank !== null &&
+        row.rank !== row.approved_rank &&
+        row.cost === row.approved_cost
+      ) {
+        set.add(row.user_id);
+      }
+    }
+    return set;
+  });
+
+  /** Monotonic counter so each freshly-added empty slot gets a unique sentinel id. */
+  private readonly nextEmptyId = signal(0);
+
+  /** Approved rank per userId from the published snapshot, for display + forgive gating. */
+  private readonly approvedRankByUserId = computed<Map<string, number>>(() => {
+    const map = new Map<string, number>();
+    for (const row of this.selection()) {
+      if (row.user_id && row.approved_rank !== null) map.set(row.user_id, row.approved_rank);
+    }
+    return map;
+  });
 
   protected readonly isEditable = computed(() => this.kind() !== 'locked');
   protected readonly isCorrection = computed(() => this.kind() === 'correction');
@@ -164,23 +235,44 @@ export class MgSelectionPanelComponent {
       this.effectiveCapacity(),
       this.slotRows(),
       this.draftSource(),
-      this.isCorrection() ? this.selection() : []
+      {
+        previous: this.isCorrection() ? this.selection() : [],
+        forgiven: this.forgiven(),
+        emptyLabels: this.emptyLabels(),
+      }
     )
   );
 
   protected readonly draftRows = computed<DraftRow[]>(() => {
     const order = this.draftOrder();
-    const costByUserId = new Map(this.draftPayloads().map(p => [p.user_id, p.cost]));
-    return order.map((userId, index) => ({
-      userId,
-      rank: index + 1,
-      displayName: this.displayNameByUserId().get(userId) ?? userId,
-      totalScore: this.totalScores().get(userId) ?? 0,
-      slotLabel: resolveSlotForRank(index + 1, this.slotRows())?.rankLabel ?? null,
-      cost: costByUserId.get(userId) ?? 0,
-      isFirst: index === 0,
-      isLast: index === order.length - 1,
-    }));
+    // Cost per placed entry, indexed by position (handles empties + duplicate nulls).
+    const payloadByRank = new Map(this.draftPayloads().map(p => [p.rank, p]));
+    const approvedRanks = this.approvedRankByUserId();
+    const forgiven = this.forgiven();
+
+    return order.map((entry, index) => {
+      const rank = index + 1;
+      const empty = isEmptySlotId(entry);
+      const approvedRank = empty ? null : (approvedRanks.get(entry) ?? null);
+      return {
+        id: entry,
+        isEmpty: empty,
+        userId: empty ? null : entry,
+        rank,
+        displayName: empty
+          ? (this.emptyLabels().get(entry) ?? DEFAULT_EMPTY_LABEL)
+          : (this.displayNameByUserId().get(entry) ?? entry),
+        totalScore: empty ? 0 : (this.totalScores().get(entry) ?? 0),
+        slotLabel: resolveSlotForRank(rank, this.slotRows())?.rankLabel ?? null,
+        cost: payloadByRank.get(rank)?.cost ?? 0,
+        approvedSlotLabel:
+          approvedRank !== null ? (resolveSlotForRank(approvedRank, this.slotRows())?.rankLabel ?? null) : null,
+        canForgive: approvedRank !== null && approvedRank !== rank,
+        forgiven: !empty && forgiven.has(entry),
+        isFirst: index === 0,
+        isLast: index === order.length - 1,
+      };
+    });
   });
 
   protected readonly availableRows = computed<AvailableRow[]>(() => {
@@ -204,6 +296,16 @@ export class MgSelectionPanelComponent {
     );
   });
 
+  /** Free-text filter over the unplaced pool (the pool can be long on big servers). */
+  protected readonly poolSearch = signal('');
+
+  protected readonly filteredAvailableRows = computed<AvailableRow[]>(() => {
+    const search = this.poolSearch().toLowerCase().trim();
+    const rows = this.availableRows();
+    if (!search) return rows;
+    return rows.filter(row => row.displayName.toLowerCase().includes(search));
+  });
+
   protected readonly availableLabelKey = computed(() =>
     this.isCorrection() ? 'mg.admin.correction.available' : 'mg.admin.selection.available'
   );
@@ -225,11 +327,23 @@ export class MgSelectionPanelComponent {
   protected readonly isFull = computed(() => this.draftOrder().length >= this.effectiveCapacity());
   protected readonly isOverCapacity = computed(() => this.draftOrder().length > this.effectiveCapacity());
 
-  protected readonly isDirty = computed(() => {
-    const draft = this.draftOrder();
-    const saved = this.savedOrder();
-    return draft.length !== saved.length || draft.some((userId, index) => userId !== saved[index]);
-  });
+  /** Canonical per-rank signature (user, name, cost) — captures reorders, forgiveness
+   * (which changes cost) and empty-label edits in one comparison. */
+  private static signature(
+    rows: readonly { rank: number; user_id: string | null; label?: string | null; cost: number }[]
+  ): string {
+    return [...rows]
+      .filter(r => r.user_id !== null || (r.label ?? null) !== null)
+      .sort((a, b) => a.rank - b.rank)
+      .map(r => `${r.rank}:${r.user_id ?? ''}:${r.label ?? ''}:${r.cost}`)
+      .join('|');
+  }
+
+  protected readonly isDirty = computed(
+    () =>
+      MgSelectionPanelComponent.signature(this.draftPayloads()) !==
+      MgSelectionPanelComponent.signature(this.selection())
+  );
 
   protected readonly canSave = computed(() => this.isDirty() && !this.isOverCapacity() && !this.isSaving());
 
@@ -298,14 +412,27 @@ export class MgSelectionPanelComponent {
     this.draftSource.set('manual');
   }
 
-  protected remove(userId: string): void {
-    this.draftOrder.update(order => order.filter(id => id !== userId));
+  protected remove(entry: string): void {
+    this.draftOrder.update(order => order.filter(id => id !== entry));
+    if (isEmptySlotId(entry)) {
+      this.emptyLabels.update(labels => {
+        const next = new Map(labels);
+        next.delete(entry);
+        return next;
+      });
+    } else {
+      this.forgiven.update(set => {
+        const next = new Set(set);
+        next.delete(entry);
+        return next;
+      });
+    }
     this.draftSource.set('manual');
   }
 
-  protected move(userId: string, delta: -1 | 1): void {
+  protected move(entry: string, delta: -1 | 1): void {
     const order = [...this.draftOrder()];
-    const from = order.indexOf(userId);
+    const from = order.indexOf(entry);
     const to = from + delta;
     if (from === -1 || to < 0 || to >= order.length) return;
     [order[from], order[to]] = [order[to], order[from]];
@@ -313,7 +440,61 @@ export class MgSelectionPanelComponent {
     this.draftSource.set('manual');
   }
 
+  /** Append a new empty placeholder slot (default name "Empty"). */
+  protected addEmpty(): void {
+    if (this.isFull()) return;
+    const id = EMPTY_SLOT_PREFIX + 'new-' + this.nextEmptyId();
+    this.nextEmptyId.update(n => n + 1);
+    this.emptyLabels.update(labels => new Map(labels).set(id, DEFAULT_EMPTY_LABEL));
+    this.draftOrder.update(order => [...order, id]);
+    this.draftSource.set('manual');
+  }
+
+  protected setEmptyLabel(id: string, label: string): void {
+    this.emptyLabels.update(labels => new Map(labels).set(id, label));
+    this.draftSource.set('manual');
+  }
+
+  /** Toggle whether a moved player's slot change is forgiven (billed at approved cost). */
+  protected toggleForgive(userId: string): void {
+    this.forgiven.update(set => {
+      const next = new Set(set);
+      if (next.has(userId)) next.delete(userId);
+      else next.add(userId);
+      return next;
+    });
+    this.draftSource.set('manual');
+  }
+
+  protected onPoolSearch(value: string): void {
+    this.poolSearch.set(value);
+  }
+
   protected reset(): void {
+    // Re-derive every working signal from the saved selection (they're linkedSignals,
+    // but an explicit edit overrides them until the source input changes).
+    const labels = new Map<string, string>();
+    this.selection()
+      .filter(row => row.selection_type === 'empty')
+      .sort((a, b) => a.rank - b.rank)
+      .forEach((row, index) => labels.set(EMPTY_SLOT_PREFIX + 'saved-' + index, row.label ?? DEFAULT_EMPTY_LABEL));
+    this.emptyLabels.set(labels);
+
+    const forgivenSet = new Set<string>();
+    for (const row of this.selection()) {
+      if (
+        row.user_id &&
+        row.selection_type === 'selected' &&
+        row.approved_cost !== null &&
+        row.approved_rank !== null &&
+        row.rank !== row.approved_rank &&
+        row.cost === row.approved_cost
+      ) {
+        forgivenSet.add(row.user_id);
+      }
+    }
+    this.forgiven.set(forgivenSet);
+
     this.draftOrder.set(this.savedOrder());
     this.draftSource.set(this.selection()[0]?.selected_by ?? this.assignmentMode());
   }

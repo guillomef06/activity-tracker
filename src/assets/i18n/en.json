@@ -626,7 +626,9 @@
         "save": "Save changes",
         "reset": "Discard changes",
         "unsaved": "Unsaved changes — save before publishing.",
-        "overCapacity": "Too many players ({{count}} / {{capacity}}): remove some before saving."
+        "overCapacity": "Too many players ({{count}} / {{capacity}}): remove some before saving.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "selectionSaved": "Selection saved.",
       "selectionSaveError": "Failed to save selection.",
@@ -634,10 +636,15 @@
       "publishError": "Failed to publish selection.",
       "correction": {
         "title": "Correct the last event",
-        "hint": "The event is over. Reordering re-prices only the players whose rank changes; their DKP on the leaderboard is recalculated.",
+        "hint": "The event is over. Reordering re-prices the players whose rank changed; tick \"No penalty\" to bill a player their approved slot instead. DKP on the leaderboard is recalculated.",
         "available": "Players not yet placed (registered or not)",
         "noneAvailable": "Every player is already in the selection.",
-        "notRegistered": "Not registered"
+        "notRegistered": "Not registered",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank."
       }
     }
   },

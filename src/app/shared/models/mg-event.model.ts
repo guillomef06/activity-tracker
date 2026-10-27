@@ -6,7 +6,13 @@ export type MgEventStatus =
   'upcoming' | 'registration_open' | 'registration_closed' | 'selection_published' | 'ongoing' | 'finished';
 
 export type MgAssignmentMode = 'automatic' | 'manual';
-export type MgSelectionType = 'selected' | 'ffa';
+/**
+ * - `selected`: a real player assigned a ranked slot (billed).
+ * - `ffa`: an unassigned free-for-all slot.
+ * - `empty`: a named placeholder (default "Empty", editable) occupying a rank
+ *   during a correction — shows the slot cost but bills nobody (user_id null).
+ */
+export type MgSelectionType = 'selected' | 'ffa' | 'empty';
 export type MgSelectedBy = 'automatic' | 'manual';
 
 /**
@@ -79,6 +85,14 @@ export interface MgSelection {
   selection_type: MgSelectionType;
   selected_by: MgSelectedBy;
   cost: number;
+  /** Display name for an `empty` placeholder slot (null for real players / FFA). */
+  label: string | null;
+  /** Rank/cost this player held on the originally-published ("approved") list,
+   * snapshotted at publish. Null for FFA/empty rows and for events published
+   * before migration 46. Used to bill a forgiven upward move at the cheaper
+   * approved cost instead of the final-rank cost. */
+  approved_rank: number | null;
+  approved_cost: number | null;
 }
 
 /**
@@ -110,6 +124,11 @@ export interface MgSelectionPayload {
   selection_type: MgSelectionType;
   selected_by: MgSelectedBy;
   cost: number;
+  /** Name for an `empty` placeholder slot; null/omitted for real players and FFA. */
+  label?: string | null;
+  /** Carried forward from the approved snapshot so corrections never lose it. */
+  approved_rank?: number | null;
+  approved_cost?: number | null;
 }
 
 /**

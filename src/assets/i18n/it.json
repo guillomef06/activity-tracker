@@ -969,14 +969,21 @@
         "save": "Salva le modifiche",
         "reset": "Annulla le modifiche",
         "unsaved": "Modifiche non salvate — salva prima di pubblicare.",
-        "overCapacity": "Troppi giocatori ({{count}} / {{capacity}}): rimuovine alcuni prima di salvare."
+        "overCapacity": "Troppi giocatori ({{count}} / {{capacity}}): rimuovine alcuni prima di salvare.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "Correggi l'ultimo evento",
         "hint": "L'evento è terminato. Riordinare ricalcola il costo solo dei giocatori il cui rango cambia; il loro DKP in classifica viene ricalcolato.",
         "available": "Giocatori non ancora inseriti (iscritti o no)",
         "noneAvailable": "Tutti i giocatori sono già nella selezione.",
-        "notRegistered": "Non iscritto"
+        "notRegistered": "Non iscritto",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank."
       }
     }
   },

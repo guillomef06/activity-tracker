@@ -201,11 +201,47 @@ export class MgEventService {
   }
 
   async publishSelection(mgEventId: string): Promise<{ error: unknown }> {
+    // Snapshot the approved baseline FIRST: stamp each selected row's current
+    // rank/cost into approved_rank/approved_cost so a later correction can bill a
+    // forgiven move at the approved cost. Only rows without a snapshot yet are
+    // stamped (idempotent — re-publishing never overwrites the original approval).
+    await this.snapshotApprovedBaseline(mgEventId);
+
     const { error } = await this.supabase
       .from('mg_events')
       .update({ status: 'selection_published', selection_published_at: new Date().toISOString() })
       .eq('id', mgEventId);
     return { error };
+  }
+
+  /**
+   * Stamps approved_rank/approved_cost = rank/cost on the event's selected rows
+   * that don't have an approved snapshot yet. Per-row because Supabase can't
+   * express `SET approved_rank = rank` in a bulk update. Best-effort: a failure
+   * here is logged but doesn't block publish (the snapshot only affects a future
+   * correction, and the rows are still correctable manually).
+   */
+  private async snapshotApprovedBaseline(mgEventId: string): Promise<void> {
+    const { data, error } = await this.supabase
+      .from('mg_selections')
+      .select('id, rank, cost')
+      .eq('mg_event_id', mgEventId)
+      .eq('selection_type', 'selected')
+      .is('approved_rank', null);
+    if (error) {
+      console.error('Error loading rows for approved-baseline snapshot:', error);
+      return;
+    }
+
+    const rows = (data ?? []) as { id: string; rank: number; cost: number }[];
+    await Promise.all(
+      rows.map(row =>
+        this.supabase
+          .from('mg_selections')
+          .update({ approved_rank: row.rank, approved_cost: row.cost })
+          .eq('id', row.id)
+      )
+    );
   }
 
   generateAutoSelectionPayload(

@@ -969,14 +969,21 @@
         "save": "Αποθήκευση αλλαγών",
         "reset": "Απόρριψη αλλαγών",
         "unsaved": "Μη αποθηκευμένες αλλαγές — αποθηκεύστε πριν τη δημοσίευση.",
-        "overCapacity": "Πάρα πολλοί παίκτες ({{count}} / {{capacity}}): αφαιρέστε μερικούς πριν την αποθήκευση."
+        "overCapacity": "Πάρα πολλοί παίκτες ({{count}} / {{capacity}}): αφαιρέστε μερικούς πριν την αποθήκευση.",
+        "searchPool": "Search players",
+        "noSearchMatch": "No player matches your search."
       },
       "correction": {
         "title": "Διόρθωση τελευταίας εκδήλωσης",
         "hint": "Η εκδήλωση τελείωσε. Η αναδιάταξη υπολογίζει εκ νέου το κόστος μόνο των παικτών των οποίων αλλάζει η θέση· τα DKP τους στην κατάταξη ενημερώνονται.",
         "available": "Παίκτες που δεν έχουν τοποθετηθεί ακόμη (εγγεγραμμένοι ή όχι)",
         "noneAvailable": "Όλοι οι παίκτες βρίσκονται ήδη στην επιλογή.",
-        "notRegistered": "Μη εγγεγραμμένος"
+        "notRegistered": "Μη εγγεγραμμένος",
+        "addEmpty": "Add empty slot",
+        "emptyLabel": "Slot name",
+        "approved": "Approved:",
+        "noPenalty": "No penalty",
+        "noPenaltyTooltip": "Bill this player the cost of the slot they were approved for, not their final rank."
       }
     }
   },

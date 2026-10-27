@@ -55,7 +55,8 @@ const makeSelected = (
   userId: string,
   rank: number,
   cost: number,
-  selectedBy: 'automatic' | 'manual' = 'automatic'
+  selectedBy: 'automatic' | 'manual' = 'automatic',
+  approved?: { rank: number; cost: number }
 ): MgSelectionWithUser => ({
   id: `sel-${rank}`,
   mg_event_id: 'event-1',
@@ -64,6 +65,9 @@ const makeSelected = (
   selection_type: 'selected',
   selected_by: selectedBy,
   cost,
+  label: null,
+  approved_rank: approved?.rank ?? null,
+  approved_cost: approved?.cost ?? null,
   user_profiles: { display_name: userId.toUpperCase(), username: userId },
 });
 
@@ -75,6 +79,25 @@ const makeFfa = (rank: number): MgSelectionWithUser => ({
   selection_type: 'ffa',
   selected_by: 'automatic',
   cost: 0,
+  label: null,
+  approved_rank: null,
+  approved_cost: null,
+  user_profiles: null,
+});
+
+// cost defaults to the rank's slot cost, matching what buildSelectionPayload persists
+// for an empty slot (it shows the slot cost even though it bills nobody).
+const makeEmpty = (rank: number, label = 'Empty', cost = 0): MgSelectionWithUser => ({
+  id: `sel-${rank}`,
+  mg_event_id: 'event-1',
+  user_id: null,
+  rank,
+  selection_type: 'empty',
+  selected_by: 'manual',
+  cost,
+  label,
+  approved_rank: null,
+  approved_cost: null,
   user_profiles: null,
 });
 
@@ -86,6 +109,7 @@ interface PanelInputs {
   selection: MgSelectionWithUser[];
   capacity: number;
   assignmentMode: MgAssignmentMode;
+  dkpEnabled: boolean;
 }
 
 const defaultInputs = (): PanelInputs => ({
@@ -96,7 +120,19 @@ const defaultInputs = (): PanelInputs => ({
   selection: [makeSelected('a', 1, 150), makeSelected('b', 2, 140), makeFfa(3), makeFfa(4)],
   capacity: 4,
   assignmentMode: 'automatic',
+  dkpEnabled: false,
 });
+
+interface DraftRowShape {
+  id: string;
+  isEmpty: boolean;
+  userId: string | null;
+  cost: number;
+  displayName: string;
+  approvedSlotLabel: string | null;
+  canForgive: boolean;
+  forgiven: boolean;
+}
 
 interface PanelInternals {
   draftOrder: () => string[];
@@ -107,13 +143,19 @@ interface PanelInternals {
   isOverCapacity: () => boolean;
   effectiveCapacity: () => number;
   showGenerate: () => boolean;
-  draftRows: () => { userId: string; cost: number; displayName: string }[];
+  draftRows: () => DraftRowShape[];
   availableRows: () => { userId: string; isRegistered: boolean; displayName: string }[];
+  filteredAvailableRows: () => { userId: string; displayName: string }[];
+  poolSearch: { (): string; set: (v: string) => void };
   generate: () => void;
   add: (userId: string) => void;
-  remove: (userId: string) => void;
-  move: (userId: string, delta: -1 | 1) => void;
+  remove: (entry: string) => void;
+  move: (entry: string, delta: -1 | 1) => void;
   drop: (event: CdkDragDrop<string[]>) => void;
+  addEmpty: () => void;
+  setEmptyLabel: (id: string, label: string) => void;
+  toggleForgive: (userId: string) => void;
+  onPoolSearch: (value: string) => void;
   reset: () => void;
   save: () => Promise<void>;
   publish: () => Promise<void>;
@@ -134,6 +176,7 @@ describe('MgSelectionPanelComponent', () => {
     fixture.componentRef.setInput('capacity', inputs.capacity);
     fixture.componentRef.setInput('assignmentMode', inputs.assignmentMode);
     fixture.componentRef.setInput('slotRows', buildMgSlotRows([]));
+    fixture.componentRef.setInput('dkpEnabled', inputs.dkpEnabled);
     fixture.detectChanges();
     panel = fixture.componentInstance as unknown as PanelInternals;
   };
@@ -762,6 +805,157 @@ describe('MgSelectionPanelComponent', () => {
 
         // Assert
         expect(panel.availableRows().map(r => r.userId)).toEqual(['c']);
+      });
+    });
+
+    describe('empty placeholder slots', () => {
+      it('should append an empty slot with the default label and mark the draft dirty', () => {
+        // Arrange
+        create({ kind: 'correction', status: 'finished', selection: finishedSelection, capacity: 5 });
+
+        // Act
+        panel.addEmpty();
+
+        // Assert
+        const empties = panel.draftRows().filter(r => r.isEmpty);
+        expect(empties).toHaveLength(1);
+        expect(empties[0].displayName).toBe('Empty');
+        expect(panel.isDirty()).toBe(true);
+      });
+
+      it('should persist an empty slot as a null-user empty row that occupies its rank', async () => {
+        // Arrange
+        create({ kind: 'correction', status: 'finished', selection: finishedSelection, capacity: 5 });
+        panel.addEmpty();
+        const emptyId = panel.draftOrder().find(e => e.startsWith('empty:'))!;
+        panel.setEmptyLabel(emptyId, 'Ghost');
+
+        // Act
+        await panel.save();
+
+        // Assert
+        const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
+        const emptyRow = saved.find(p => p.selection_type === 'empty');
+        expect(emptyRow).toMatchObject({ user_id: null, label: 'Ghost' });
+      });
+
+      it('should round-trip a saved empty slot with its name', () => {
+        // Arrange — a saved selection already containing an empty slot at rank 2
+        create({
+          kind: 'correction',
+          status: 'finished',
+          selection: [makeSelected('a', 1, 150), makeEmpty(2, 'Vacant', 140), makeSelected('b', 3, 130)],
+          capacity: 3,
+        });
+
+        // Assert — the empty row shows between the players, by rank, with its label.
+        // (Names resolve via registrations: a→Alice, b→Bob.)
+        const rows = panel.draftRows();
+        expect(rows.map(r => [r.isEmpty, r.displayName])).toEqual([
+          [false, 'Alice'],
+          [true, 'Vacant'],
+          [false, 'Bob'],
+        ]);
+        expect(panel.isDirty()).toBe(false);
+      });
+    });
+
+    describe('cost forgiveness (no penalty for an approved move)', () => {
+      // 'a' approved for rank 3 (cost 130); after movement ends at rank 1 (would cost 150).
+      const approvedSelection = [
+        makeSelected('a', 3, 130, 'manual', { rank: 3, cost: 130 }),
+        makeSelected('b', 1, 150, 'manual', { rank: 1, cost: 150 }),
+        makeSelected('c', 2, 140, 'manual', { rank: 2, cost: 140 }),
+      ];
+
+      it('should expose which players can be forgiven (rank differs from approved)', () => {
+        // Arrange — reorder so 'a' sits at rank 1, away from its approved rank 3
+        create({ kind: 'correction', status: 'finished', selection: approvedSelection, capacity: 3, dkpEnabled: true });
+        // savedOrder already reflects ranks: b(1), c(2), a(3) → move a up to rank 1
+        panel.move('a', -1);
+        panel.move('a', -1);
+
+        // Assert — a is now at a rank different from approved 3 → can forgive
+        const rowA = panel.draftRows().find(r => r.userId === 'a')!;
+        expect(rowA.canForgive).toBe(true);
+        expect(rowA.approvedSlotLabel).toBe('3');
+      });
+
+      it('should bill a forgiven player their approved cost instead of the final rank', async () => {
+        // Arrange
+        create({ kind: 'correction', status: 'finished', selection: approvedSelection, capacity: 3, dkpEnabled: true });
+        panel.move('a', -1);
+        panel.move('a', -1); // a → rank 1 (final cost would be 150)
+
+        // Act
+        panel.toggleForgive('a');
+        await panel.save();
+
+        // Assert — a billed approved 130, not rank-1's 150
+        const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
+        expect(saved.find(p => p.user_id === 'a')?.cost).toBe(130);
+      });
+
+      it('should restore the forgiven state from a reloaded selection', () => {
+        // Arrange — 'a' saved at rank 1 but billed its approved cost 130 (i.e. was forgiven)
+        create({
+          kind: 'correction',
+          status: 'finished',
+          capacity: 3,
+          dkpEnabled: true,
+          selection: [
+            makeSelected('a', 1, 130, 'manual', { rank: 3, cost: 130 }),
+            makeSelected('b', 2, 140, 'manual', { rank: 2, cost: 140 }),
+            makeSelected('c', 3, 130, 'manual', { rank: 1, cost: 150 }),
+          ],
+        });
+
+        // Assert — a is reloaded as forgiven, and nothing is dirty
+        const rowA = panel.draftRows().find(r => r.userId === 'a')!;
+        expect(rowA.forgiven).toBe(true);
+        expect(panel.isDirty()).toBe(false);
+      });
+    });
+
+    describe('searchable pool', () => {
+      const members: MgMemberOption[] = [
+        { userId: 'a', displayName: 'Alice' },
+        { userId: 'b', displayName: 'Bob' },
+        { userId: 'c', displayName: 'Carol' },
+        { userId: 'x', displayName: 'Xavier' },
+      ];
+
+      it('should filter the unplaced pool by display name', () => {
+        // Arrange
+        create({
+          kind: 'correction',
+          status: 'finished',
+          selection: [makeSelected('a', 1, 150), makeFfa(2), makeFfa(3)],
+          capacity: 3,
+          members,
+          registrations: [makeRegistration('b', 'Bob'), makeRegistration('c', 'Carol')],
+        });
+
+        // Act
+        panel.onPoolSearch('car');
+
+        // Assert
+        expect(panel.filteredAvailableRows().map(r => r.displayName)).toEqual(['Carol']);
+      });
+
+      it('should return the whole pool when the search is empty', () => {
+        // Arrange
+        create({
+          kind: 'correction',
+          status: 'finished',
+          selection: [makeSelected('a', 1, 150), makeFfa(2), makeFfa(3)],
+          capacity: 3,
+          members,
+          registrations: [makeRegistration('b', 'Bob'), makeRegistration('c', 'Carol')],
+        });
+
+        // Act / Assert
+        expect(panel.filteredAvailableRows()).toHaveLength(panel.availableRows().length);
       });
     });
   });
