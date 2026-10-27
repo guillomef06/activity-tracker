@@ -59,10 +59,9 @@ export function buildSelectionPayload(
   for (const row of previous) {
     if (row.user_id !== null && row.selection_type === 'selected') previousByUserId.set(row.user_id, row);
   }
-  // Size of the original published list — the number of players who were actually
-  // selected/approved. A player placed beyond this (a higher rank number) sits
-  // below everyone on the approved list.
-  const approvedCount = previousByUserId.size;
+  // Whether there was an original published list to compare against. A fresh draft
+  // has none, so every player there is priced normally by rank.
+  const hasApprovedList = previousByUserId.size > 0;
 
   const placed = orderedEntries.slice(0, capacity).map<MgSelectionPayload>((entry, index) => {
     const rank = index + 1;
@@ -84,9 +83,9 @@ export function buildSelectionPayload(
     const snapshot = previousByUserId.get(entry);
     // An "FFA player" is one added during a correction who was NOT on the original
     // published list (no prior selected snapshot). Only meaningful when there WAS a
-    // published list to compare against (approvedCount > 0) — a fresh draft has no
-    // baseline, so every player there is priced normally by rank.
-    const isFfaPlayer = approvedCount > 0 && snapshot === undefined;
+    // published list to compare against — a fresh draft has no baseline, so every
+    // player there is priced normally by rank.
+    const isFfaPlayer = hasApprovedList && snapshot === undefined;
     const finalRankCost = resolveSlotForRank(rank, slotRows)?.cost ?? 0;
 
     // Approved baseline. For events published AFTER migration 46 it's the stamped
@@ -99,11 +98,10 @@ export function buildSelectionPayload(
 
     let cost: number;
     if (isFfaPlayer) {
-      // Not on the approved list. Free if they ended below everyone who was
-      // approved (rank beyond the original list size), or if an admin forgives
-      // them (they occupied a ranked slot but shouldn't be charged for it).
-      // Otherwise they displaced the approved order and are billed the slot.
-      cost = rank > approvedCount || forgiven?.has(entry) ? 0 : finalRankCost;
+      // Not on the approved list — a player who wasn't selected but ended up in the
+      // ranking. Bill them their final slot by DEFAULT so a rule-breaker is punished;
+      // an admin can waive it with "No penalty" when the placement is legitimate.
+      cost = forgiven?.has(entry) ? 0 : finalRankCost;
     } else if (forgiven?.has(entry) && approvedCost !== null) {
       // A forgiven move never costs more than the slot they were approved for,
       // nor more than the slot they actually ended in: a player who moved UP is

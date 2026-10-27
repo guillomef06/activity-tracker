@@ -290,7 +290,7 @@ export class MgSelectionPanelComponent {
     const approvedRanks = this.approvedRankByUserId();
     const approvedCosts = this.approvedCostByUserId();
     const approvedIds = this.approvedUserIds();
-    const approvedCount = approvedIds.size;
+    const hasApprovedList = approvedIds.size > 0;
     const forgiven = this.forgiven();
 
     return order.map((entry, index) => {
@@ -299,11 +299,12 @@ export class MgSelectionPanelComponent {
       const approvedRank = empty ? null : (approvedRanks.get(entry) ?? null);
       const approvedCost = empty ? null : (approvedCosts.get(entry) ?? null);
       const finalRankCost = resolveSlotForRank(rank, this.slotRows())?.cost ?? 0;
-      // An FFA player (not on the original published list) is billed only when they
-      // sit above the approved cutoff (rank <= original list size); there, "No penalty"
-      // can waive it to 0. A below-cutoff FFA player is free automatically, no toggle.
-      const isFfaPlayer = !empty && this.isCorrection() && approvedCount > 0 && !approvedIds.has(entry);
-      const canForgive = isFfaPlayer ? rank <= approvedCount : approvedCost !== null && finalRankCost > approvedCost;
+      // An FFA player (added during a correction, not on the original published list)
+      // is billed their slot by default so a rule-breaker is punished; "No penalty"
+      // can always waive them to 0 when the placement is legitimate. A ranked player
+      // can only be forgiven for an UP-move (final slot dearer than their approved one).
+      const isFfaPlayer = !empty && this.isCorrection() && hasApprovedList && !approvedIds.has(entry);
+      const canForgive = isFfaPlayer ? true : approvedCost !== null && finalRankCost > approvedCost;
       const emptyLabel = empty ? (this.emptyLabels().get(entry) ?? DEFAULT_EMPTY_LABEL) : '';
       return {
         id: entry,

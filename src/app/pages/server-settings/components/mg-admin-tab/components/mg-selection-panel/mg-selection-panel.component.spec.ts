@@ -698,8 +698,8 @@ describe('MgSelectionPanelComponent', () => {
       ]);
     });
 
-    it('should keep approved players at their charged cost and not bill a below-list joiner', async () => {
-      // Arrange — c joins at rank 3 (below the 2 approved) while a and b stay put
+    it('should keep approved players at their charged cost and bill a joiner by default', async () => {
+      // Arrange — c joins at rank 3 while a and b stay put
       create({
         kind: 'correction',
         status: 'finished',
@@ -712,13 +712,13 @@ describe('MgSelectionPanelComponent', () => {
       // Act
       await panel.save();
 
-      // Assert — a/b unchanged; c is a below-cutoff FFA joiner → free
+      // Assert — a/b unchanged; c is an FFA joiner billed their rank by default (admin may waive)
       const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
       expect(saved.slice(0, 2).map(p => [p.user_id, p.cost])).toEqual([
         ['a', 999],
         ['b', 888],
       ]);
-      expect(saved[2]).toMatchObject({ user_id: 'c', cost: 0 });
+      expect(saved[2]).toMatchObject({ user_id: 'c', cost: 130 });
     });
 
     describe('players who did not register', () => {
@@ -750,17 +750,17 @@ describe('MgSelectionPanelComponent', () => {
         ]);
       });
 
-      it('should place an unregistered player below the list without billing them (FFA)', async () => {
-        // Arrange — x took rank 3, below the 2 approved players
+      it('should place an unregistered player and bill them their rank by default (punish the breaker)', async () => {
+        // Arrange — x took rank 3 without being on the approved list
         correction();
         panel.add('x');
 
         // Act
         await panel.save();
 
-        // Assert — recorded at rank 3, but free (not on the approved list, below the cutoff)
+        // Assert — recorded at rank 3 and billed (130); admin can waive with "No penalty"
         const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
-        expect(saved[2]).toMatchObject({ user_id: 'x', rank: 3, selection_type: 'selected', cost: 0 });
+        expect(saved[2]).toMatchObject({ user_id: 'x', rank: 3, selection_type: 'selected', cost: 130 });
       });
 
       it('should display the name of an unregistered player once placed', () => {
@@ -902,7 +902,7 @@ describe('MgSelectionPanelComponent', () => {
         makeFfa(5),
       ];
 
-      it('should not bill an FFA player added below the original list, and offer no forgiveness toggle', () => {
+      it('should bill an FFA player added below the list by default, and offer the forgiveness toggle', () => {
         // Arrange
         create({
           kind: 'correction',
@@ -916,13 +916,17 @@ describe('MgSelectionPanelComponent', () => {
         // Act — add x at rank 3 (below the 2 approved)
         panel.add('x');
 
-        // Assert
-        const rowX = panel.draftRows().find(r => r.userId === 'x')!;
-        expect(rowX.cost).toBe(0);
-        expect(rowX.canForgive).toBe(false);
+        // Assert — billed their rank by default (punish the breaker); toggle offered to waive
+        const rowX = () => panel.draftRows().find(r => r.userId === 'x')!;
+        expect(rowX().cost).toBe(130);
+        expect(rowX().canForgive).toBe(true);
+
+        // Forgive → free
+        panel.toggleForgive('x');
+        expect(rowX().cost).toBe(0);
       });
 
-      it('should bill an FFA player who moves above the cutoff, and offer forgiveness to zero', () => {
+      it('should bill an FFA player who moves above the approved players, and waive to zero when forgiven', () => {
         // Arrange
         create({
           kind: 'correction',

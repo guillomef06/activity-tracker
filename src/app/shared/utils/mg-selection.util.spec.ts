@@ -110,15 +110,15 @@ describe('buildSelectionPayload', () => {
       ]);
     });
 
-    it('should treat a newly added player below the approved list as free (FFA)', () => {
-      // Arrange — list of 1 approved player; z added below them was never approved.
+    it('should bill a newly added (FFA) player their final slot by default', () => {
+      // Arrange — list of 1 approved player; z added was never approved.
       const previous = [makePrevious('a', 1, 999)];
 
       // Act
       const result = buildSelectionPayload('event-1', ['a', 'z'], 2, slotRows, 'manual', { previous });
 
-      // Assert — z is a below-cutoff FFA player → free
-      expect(result[1]).toMatchObject({ user_id: 'z', cost: 0 });
+      // Assert — FFA player billed their rank (2 = 140) by default; waived only via "No penalty"
+      expect(result[1]).toMatchObject({ user_id: 'z', cost: 140 });
     });
 
     it('should ignore previous free-for-all rows', () => {
@@ -181,15 +181,15 @@ describe('buildSelectionPayload', () => {
       expect(result[0].cost).toBe(90);
     });
 
-    it('should treat a brand-new player below the approved list as a free FFA player', () => {
+    it('should bill a brand-new (FFA) player their final slot by default', () => {
       // Arrange — 'z' was never approved; the list had 1 approved player (a).
       const previous = [makePrevious('a', 1, 150, { rank: 1, cost: 150 })];
 
-      // Act — z added at rank 2, below the single approved player
+      // Act — z added at rank 2, not forgiven
       const result = buildSelectionPayload('event-1', ['a', 'z'], 2, slotRows, 'manual', { previous });
 
-      // Assert — z is an FFA player below the cutoff → free
-      expect(result.find(p => p.user_id === 'z')?.cost).toBe(0);
+      // Assert — an FFA player is punished by default (rank 2 = 140); admins waive via "No penalty"
+      expect(result.find(p => p.user_id === 'z')?.cost).toBe(140);
     });
 
     it('should bill the cheaper final slot for a DOWN-move by default (no forgiveness needed)', () => {
@@ -242,17 +242,18 @@ describe('buildSelectionPayload', () => {
       makePrevious('b', 2, 140, { rank: 2, cost: 140 }),
     ];
 
-    it('should NOT bill an FFA player who ends below everyone on the original list', () => {
-      // Arrange — list of 2; 'z' (never approved) lands at rank 3, below both.
+    it('should bill an FFA player their final slot by default, even below the original list', () => {
+      // Arrange — list of 2; 'z' (never approved) lands at rank 3, below both. A
+      // rule-breaker who snuck in must still be punished unless an admin forgives them.
       const result = buildSelectionPayload('event-1', ['a', 'b', 'z'], 3, slotRows, 'manual', {
         previous: approvedTwo(),
       });
 
-      // Assert — z is free (rank 3 > approvedCount 2)
-      expect(result.find(p => p.user_id === 'z')?.cost).toBe(0);
+      // Assert — z billed rank 3 (130)
+      expect(result.find(p => p.user_id === 'z')?.cost).toBe(130);
     });
 
-    it('should bill an FFA player who displaces the approved order (above the cutoff)', () => {
+    it('should bill an FFA player who displaces the approved order', () => {
       // Arrange — 'z' jumps to rank 1, pushing a and b down.
       const result = buildSelectionPayload('event-1', ['z', 'a', 'b'], 3, slotRows, 'manual', {
         previous: approvedTwo(),
@@ -262,9 +263,9 @@ describe('buildSelectionPayload', () => {
       expect(result.find(p => p.user_id === 'z')?.cost).toBe(150);
     });
 
-    it('should waive an above-cutoff FFA player to 0 when forgiven', () => {
-      // Arrange — z at rank 1, forgiven
-      const result = buildSelectionPayload('event-1', ['z', 'a', 'b'], 3, slotRows, 'manual', {
+    it('should waive an FFA player to 0 only when explicitly forgiven', () => {
+      // Arrange — z at rank 3 (would be billed 130), forgiven
+      const result = buildSelectionPayload('event-1', ['a', 'b', 'z'], 3, slotRows, 'manual', {
         previous: approvedTwo(),
         forgiven: new Set(['z']),
       });
