@@ -289,65 +289,67 @@ describe('ActivityService', () => {
   });
 
   describe('applyMgDeductions', () => {
-    it('should subtract the deduction from totalScore and expose it as mgDeduction', () => {
-      // Arrange
+    it('should subtract the FIFO deduction from totalScore and show the flat display cost as mgDeduction', () => {
+      // Arrange — FIFO took 30 off the balance, but the player bought a 100-cost slot.
       const scores: UserScore[] = [
         { userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] },
         { userId: 'b', displayName: 'Bob', totalScore: 50, weeklyScores: [] },
       ];
-      const deductions = new Map([['a', 30]]);
+      const fifo = new Map([['a', 30]]);
+      const display = new Map([['a', 100]]);
 
       // Act
-      const result = service.applyMgDeductions(scores, deductions);
+      const result = service.applyMgDeductions(scores, fifo, display);
 
-      // Assert
+      // Assert — total moves by the FIFO amount; the chip shows the flat cost
       const alice = result.find(u => u.userId === 'a')!;
       const bob = result.find(u => u.userId === 'b')!;
-      expect(alice.totalScore).toBe(70);
-      expect(alice.mgDeduction).toBe(30);
+      expect(alice.totalScore).toBe(70); // 100 - 30 FIFO
+      expect(alice.mgDeduction).toBe(100); // flat displayed slot cost
       expect(bob.totalScore).toBe(50);
       expect(bob.mgDeduction).toBe(0);
     });
 
-    it('should re-sort when a deduction changes the ranking', () => {
+    it('should re-sort when the FIFO deduction changes the ranking', () => {
       // Arrange
       const scores: UserScore[] = [
         { userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] },
         { userId: 'b', displayName: 'Bob', totalScore: 90, weeklyScores: [] },
       ];
-      const deductions = new Map([['a', 50]]); // Alice drops to 50, below Bob's 90
+      const fifo = new Map([['a', 50]]); // Alice drops to 50, below Bob's 90
 
       // Act
-      const result = service.applyMgDeductions(scores, deductions);
+      const result = service.applyMgDeductions(scores, fifo, new Map());
 
       // Assert
       expect(result[0].userId).toBe('b');
       expect(result[1].userId).toBe('a');
     });
 
-    it('should leave users absent from the deductions map untouched', () => {
+    it('should leave users absent from both maps untouched', () => {
       // Arrange
       const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 100, weeklyScores: [] }];
 
       // Act
-      const result = service.applyMgDeductions(scores, new Map());
+      const result = service.applyMgDeductions(scores, new Map(), new Map());
 
       // Assert
       expect(result[0].totalScore).toBe(100);
       expect(result[0].mgDeduction).toBe(0);
     });
 
-    it('should floor the applied deduction at the available total so the balance never goes negative', () => {
-      // Arrange — a deduction larger than the remaining in-window points.
+    it('should floor the applied FIFO deduction at the available total so the balance never goes negative', () => {
+      // Arrange — FIFO value larger than the remaining in-window points.
       const scores: UserScore[] = [{ userId: 'a', displayName: 'Alice', totalScore: 30, weeklyScores: [] }];
-      const deductions = new Map([['a', 100]]);
+      const fifo = new Map([['a', 100]]);
+      const display = new Map([['a', 100]]);
 
       // Act
-      const result = service.applyMgDeductions(scores, deductions);
+      const result = service.applyMgDeductions(scores, fifo, display);
 
-      // Assert
+      // Assert — balance floored at 0; chip still shows the flat 100
       expect(result[0].totalScore).toBe(0);
-      expect(result[0].mgDeduction).toBe(30);
+      expect(result[0].mgDeduction).toBe(100);
     });
   });
 

@@ -42,14 +42,22 @@ export class HomePage implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly progressBarService = inject(ProgressBarService);
 
+  // FIFO balance deduction (subtracted from the total) and the flat displayed
+  // slot-cost (the leaderboard chip). Two different numbers on purpose — see
+  // ActivityService.applyMgDeductions.
   private readonly mgDeductions = signal<Map<string, number>>(new Map());
+  private readonly mgDisplayDeductions = signal<Map<string, number>>(new Map());
   // null until resolved: a season is active and its per-user totals are loaded.
   // Stays null when no season covers today, so the leaderboard omits the season
   // column/toggle entirely rather than showing a meaningless 0 for everyone.
   private readonly seasonTotals = signal<Map<string, number> | null>(null);
 
   readonly userScores = computed<UserScore[]>(() => {
-    const net = this.activityService.applyMgDeductions(this.activityService.getUserScores(), this.mgDeductions());
+    const net = this.activityService.applyMgDeductions(
+      this.activityService.getUserScores(),
+      this.mgDeductions(),
+      this.mgDisplayDeductions()
+    );
     const totals = this.seasonTotals();
     return totals ? this.activityService.applySeasonTotals(net, totals) : net;
   });
@@ -88,5 +96,7 @@ export class HomePage implements OnInit {
     const spends = await this.mgEventService.loadSpends(serverId, sinceDate);
     const deductions = await this.activityService.loadFifoDeductions(spends);
     this.mgDeductions.set(deductions);
+    // The displayed chip: flat slot cost of in-window spends, from the same spends.
+    this.mgDisplayDeductions.set(this.activityService.computeDisplayDeductions(spends));
   }
 }
