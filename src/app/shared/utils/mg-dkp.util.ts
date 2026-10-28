@@ -70,6 +70,33 @@ export function computeFifoDeductions(
   return deductions;
 }
 
+/**
+ * The DISPLAYED deduction (distinct from the balance math above): per user, the
+ * sum of the flat slot cost of every spend whose event week is still inside the
+ * rolling window. This is the "they bought slot #20 → −100" indicator shown on
+ * the leaderboard; it stays at the flat cost until the event ages out of the
+ * window, rather than shrinking as consumed earning-weeks expire (which is what
+ * computeFifoDeductions does for the balance). Costs are summed at face value —
+ * earnings are irrelevant here. Multiple in-window spends stack (e.g. −200).
+ *
+ * @param currentWeekStartMs Monday 00:00 UTC of the current week, in ms.
+ */
+export function computeWindowSpendTotals(
+  spends: readonly FifoSpend[],
+  windowWeeks: number,
+  currentWeekStartMs: number
+): Map<string, number> {
+  const windowStartMs = currentWeekStartMs - (windowWeeks - 1) * MS_PER_WEEK;
+  const totals = new Map<string, number>();
+
+  for (const spend of spends) {
+    if (spend.eventWeekStartMs < windowStartMs || spend.eventWeekStartMs > currentWeekStartMs) continue;
+    totals.set(spend.userId, (totals.get(spend.userId) ?? 0) + spend.cost);
+  }
+
+  return totals;
+}
+
 function groupByUser(spends: readonly FifoSpend[]): Map<string, FifoSpend[]> {
   const byUser = new Map<string, FifoSpend[]>();
   for (const spend of spends) {

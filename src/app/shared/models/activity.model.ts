@@ -70,7 +70,14 @@ export interface UserScore {
   displayName: string;
   weeklyScores: WeeklyScore[];
   totalScore: number;
-  /** Points deducted for MG event selections (DKP). Undefined/0 = no deduction. */
+  /**
+   * DISPLAY ONLY — the flat slot cost of the player's in-window TMG purchases
+   * (e.g. slot #20 → 100), the red "−N" chip on the leaderboard. This is NOT the
+   * amount subtracted from totalScore: the balance follows the FIFO rolling-window
+   * mechanic (computeFifoDeductions) and is already baked into totalScore, whereas
+   * this field is the flat "what they bought" figure (computeWindowSpendTotals).
+   * The two intentionally differ. Undefined/0 = nothing bought in-window.
+   */
   mgDeduction?: number;
   /**
    * Total points earned across the full current season, independent of the

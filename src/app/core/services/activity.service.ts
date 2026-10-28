@@ -14,7 +14,12 @@ import { AuthService } from './auth.service';
 import { ServerService } from './server.service';
 import { APP_CONSTANTS } from '@shared/constants/constants';
 import { getDateForWeeksAgo, getWeekEnd, getWeekStart } from '@shared/utils/date.util';
-import { computeFifoDeductions, type FifoEarningWeek, type FifoSpend } from '@shared/utils/mg-dkp.util';
+import {
+  computeFifoDeductions,
+  computeWindowSpendTotals,
+  type FifoEarningWeek,
+  type FifoSpend,
+} from '@shared/utils/mg-dkp.util';
 
 @Injectable({
   providedIn: 'root',
@@ -446,14 +451,26 @@ export class ActivityService {
    * stays the single owner of "how the leaderboard total/ranking is
    * computed" (it already owns compareByScoreDesc's tiebreak rule).
    */
-  applyMgDeductions(scores: UserScore[], deductions: Map<string, number>): UserScore[] {
+  /**
+   * Applies MG slot-cost DKP to scores. Two distinct numbers:
+   *  - `fifoDeductions` (computeFifoDeductions) drives the **balance**: subtracted
+   *    from totalScore, clamped at the available total so a balance never goes
+   *    negative, then re-sorted since rank can change.
+   *  - `displayDeductions` (computeWindowSpendTotals) is the **displayed** figure:
+   *    the flat slot cost of in-window spends, shown on the leaderboard as the
+   *    "bought slot #20 → −100" chip. It is NOT subtracted from the total — it's
+   *    informational — so the chip stays at the flat cost while the balance
+   *    follows FIFO. The two intentionally differ.
+   */
+  applyMgDeductions(
+    scores: UserScore[],
+    fifoDeductions: Map<string, number>,
+    displayDeductions: Map<string, number>
+  ): UserScore[] {
     return scores
       .map(s => {
-        // FIFO deductions (computeFifoDeductions) already never exceed the points still
-        // in the window, but clamp the applied amount to the available total as a floor
-        // so the displayed balance can never go negative regardless of the map's source.
-        const mgDeduction = Math.min(deductions.get(s.userId) ?? 0, Math.max(0, s.totalScore));
-        return { ...s, mgDeduction, totalScore: s.totalScore - mgDeduction };
+        const applied = Math.min(fifoDeductions.get(s.userId) ?? 0, Math.max(0, s.totalScore));
+        return { ...s, mgDeduction: displayDeductions.get(s.userId) ?? 0, totalScore: s.totalScore - applied };
       })
       .sort((a, b) => this.compareByScoreDesc(a, b));
   }
@@ -490,6 +507,18 @@ export class ActivityService {
     const earningsByUser = await this.loadEarningsByUser(serverId, earningsCutoff, tiebreaker);
 
     return computeFifoDeductions(earningsByUser, spends, scoringWeeks, currentWeekStart.getTime());
+  }
+
+  /**
+   * The displayed (flat, in-window) slot-cost total per user — the leaderboard
+   * "bought slot #20 → −100" chip. Pure + synchronous: derived from the same
+   * `spends` already loaded for loadFifoDeductions, no extra query. Distinct from
+   * the balance deduction (see applyMgDeductions).
+   */
+  computeDisplayDeductions(spends: FifoSpend[]): Map<string, number> {
+    const scoringWeeks = this.serverService.scoringWeeks();
+    const currentWeekStart = getWeekStart(new Date());
+    return computeWindowSpendTotals(spends, scoringWeeks, currentWeekStart.getTime());
   }
 
   /**
