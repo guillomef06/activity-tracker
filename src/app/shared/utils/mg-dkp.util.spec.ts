@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeFifoDeductions, type FifoEarningWeek, type FifoSpend } from './mg-dkp.util';
+import { computeFifoDeductions, computeWindowSpendTotals, type FifoEarningWeek, type FifoSpend } from './mg-dkp.util';
 
 const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
@@ -113,5 +113,55 @@ describe('computeFifoDeductions', () => {
     const spends: FifoSpend[] = [{ userId: 'ghost', eventWeekStartMs: weekMs(-1), cost: 50 }];
     const result = computeFifoDeductions(new Map(), spends, WINDOW, CURRENT_WEEK_MS);
     expect(result.get('ghost') ?? 0).toBe(0);
+  });
+});
+
+describe('computeWindowSpendTotals (displayed deduction)', () => {
+  const WINDOW = 12;
+
+  it('shows the flat slot cost of an in-window spend (not a shrunk FIFO remainder)', () => {
+    const spends: FifoSpend[] = [{ userId: 'u', eventWeekStartMs: weekMs(-1), cost: 100 }];
+    const result = computeWindowSpendTotals(spends, WINDOW, CURRENT_WEEK_MS);
+    expect(result.get('u')).toBe(100);
+  });
+
+  it('takes the cost at face value regardless of how little the player earned', () => {
+    // The whole point of the fix: a 100-cost slot shows -100 even if the player
+    // barely earned anything (earnings are not an input here).
+    const spends: FifoSpend[] = [{ userId: 'u', eventWeekStartMs: weekMs(-5), cost: 100 }];
+    const result = computeWindowSpendTotals(spends, WINDOW, CURRENT_WEEK_MS);
+    expect(result.get('u')).toBe(100);
+  });
+
+  it('stacks multiple in-window spends', () => {
+    const spends: FifoSpend[] = [
+      { userId: 'u', eventWeekStartMs: weekMs(-1), cost: 100 },
+      { userId: 'u', eventWeekStartMs: weekMs(-3), cost: 100 },
+    ];
+    const result = computeWindowSpendTotals(spends, WINDOW, CURRENT_WEEK_MS);
+    expect(result.get('u')).toBe(200);
+  });
+
+  it('excludes a spend whose event week has aged out of the window', () => {
+    // 12-week window → weeks 0..-11 are in; -12 is out.
+    const spends: FifoSpend[] = [{ userId: 'u', eventWeekStartMs: weekMs(-12), cost: 100 }];
+    const result = computeWindowSpendTotals(spends, WINDOW, CURRENT_WEEK_MS);
+    expect(result.get('u') ?? 0).toBe(0);
+  });
+
+  it('keeps the oldest-still-in-window spend (boundary at -11)', () => {
+    const spends: FifoSpend[] = [{ userId: 'u', eventWeekStartMs: weekMs(-11), cost: 70 }];
+    const result = computeWindowSpendTotals(spends, WINDOW, CURRENT_WEEK_MS);
+    expect(result.get('u')).toBe(70);
+  });
+
+  it('sums per user independently', () => {
+    const spends: FifoSpend[] = [
+      { userId: 'a', eventWeekStartMs: weekMs(-1), cost: 100 },
+      { userId: 'b', eventWeekStartMs: weekMs(-2), cost: 60 },
+    ];
+    const result = computeWindowSpendTotals(spends, WINDOW, CURRENT_WEEK_MS);
+    expect(result.get('a')).toBe(100);
+    expect(result.get('b')).toBe(60);
   });
 });
