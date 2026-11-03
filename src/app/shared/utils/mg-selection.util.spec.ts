@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { buildSelectionPayload, EMPTY_SLOT_PREFIX, DEFAULT_EMPTY_LABEL } from './mg-selection.util';
+import {
+  buildSavedEmptyLabels,
+  buildSelectionPayload,
+  EMPTY_SLOT_PREFIX,
+  DEFAULT_EMPTY_LABEL,
+  isEmptySlotId,
+  savedEmptySlotId,
+} from './mg-selection.util';
 import { buildMgSlotRows } from './mg-slot.util';
 import type { MgSelection } from '@shared/models';
 
@@ -110,7 +117,7 @@ describe('buildSelectionPayload', () => {
       ]);
     });
 
-    it('should bill a newly added (FFA) player their final slot by default', () => {
+    it('should bill a newly added (off-list) player their final slot by default', () => {
       // Arrange — list of 1 approved player; z added was never approved.
       const previous = [makePrevious('a', 1, 999)];
 
@@ -181,7 +188,7 @@ describe('buildSelectionPayload', () => {
       expect(result[0].cost).toBe(90);
     });
 
-    it('should bill a brand-new (FFA) player their final slot by default', () => {
+    it('should bill a brand-new (off-list) player their final slot by default', () => {
       // Arrange — 'z' was never approved; the list had 1 approved player (a).
       const previous = [makePrevious('a', 1, 150, { rank: 1, cost: 150 })];
 
@@ -235,14 +242,14 @@ describe('buildSelectionPayload', () => {
     });
   });
 
-  describe('FFA players added during a correction (not on the original list)', () => {
+  describe('off-list players added during a correction (not on the original list)', () => {
     // Original published list: 2 approved players (a, b).
     const approvedTwo = () => [
       makePrevious('a', 1, 150, { rank: 1, cost: 150 }),
       makePrevious('b', 2, 140, { rank: 2, cost: 140 }),
     ];
 
-    it('should bill an FFA player their final slot by default, even below the original list', () => {
+    it('should bill an off-list player their final slot by default, even below the original list', () => {
       // Arrange — list of 2; 'z' (never approved) lands at rank 3, below both. A
       // rule-breaker who snuck in must still be punished unless an admin forgives them.
       const result = buildSelectionPayload('event-1', ['a', 'b', 'z'], 3, slotRows, 'manual', {
@@ -253,7 +260,7 @@ describe('buildSelectionPayload', () => {
       expect(result.find(p => p.user_id === 'z')?.cost).toBe(130);
     });
 
-    it('should bill an FFA player who displaces the approved order', () => {
+    it('should bill an off-list player who displaces the approved order', () => {
       // Arrange — 'z' jumps to rank 1, pushing a and b down.
       const result = buildSelectionPayload('event-1', ['z', 'a', 'b'], 3, slotRows, 'manual', {
         previous: approvedTwo(),
@@ -263,7 +270,7 @@ describe('buildSelectionPayload', () => {
       expect(result.find(p => p.user_id === 'z')?.cost).toBe(150);
     });
 
-    it('should waive an FFA player to 0 only when explicitly forgiven', () => {
+    it('should waive an off-list player to 0 only when explicitly forgiven', () => {
       // Arrange — z at rank 3 (would be billed 130), forgiven
       const result = buildSelectionPayload('event-1', ['a', 'b', 'z'], 3, slotRows, 'manual', {
         previous: approvedTwo(),
@@ -272,6 +279,31 @@ describe('buildSelectionPayload', () => {
 
       // Assert — forgiven FFA player pays nothing (no approved slot to fall back to)
       expect(result.find(p => p.user_id === 'z')?.cost).toBe(0);
+    });
+  });
+
+  describe('saved empty slots', () => {
+    it('should label saved empty slots by rank order, defaulting a missing label', () => {
+      // Arrange — returned out of rank order on purpose
+      const selection = [
+        { ...makePrevious(null, 5, 90), selection_type: 'empty' as const, label: 'Later' },
+        { ...makePrevious(null, 2, 140), selection_type: 'empty' as const, label: null },
+        makePrevious('a', 1, 150),
+      ];
+
+      // Act
+      const labels = buildSavedEmptyLabels(selection);
+
+      // Assert
+      expect([...labels.entries()]).toEqual([
+        [savedEmptySlotId(0), DEFAULT_EMPTY_LABEL],
+        [savedEmptySlotId(1), 'Later'],
+      ]);
+    });
+
+    it('should give saved empty slots sentinel ids recognised as empty slots', () => {
+      // Act / Assert
+      expect(isEmptySlotId(savedEmptySlotId(3))).toBe(true);
     });
   });
 

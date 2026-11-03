@@ -155,6 +155,7 @@ interface PanelInternals {
   drop: (event: CdkDragDrop<string[]>) => void;
   addEmpty: () => void;
   setEmptyLabel: (id: string, label: string) => void;
+  onEmptyLabelInput: (id: string, event: Event) => void;
   toggleForgive: (userId: string) => void;
   onPoolSearch: (value: string) => void;
   reset: () => void;
@@ -712,7 +713,7 @@ describe('MgSelectionPanelComponent', () => {
       // Act
       await panel.save();
 
-      // Assert — a/b unchanged; c is an FFA joiner billed their rank by default (admin may waive)
+      // Assert — a/b unchanged; c is an off-list joiner billed their rank by default (admin may waive)
       const saved = mockMgEventService.saveSelection.mock.calls[0][1] as MgSelectionPayload[];
       expect(saved.slice(0, 2).map(p => [p.user_id, p.cost])).toEqual([
         ['a', 999],
@@ -883,9 +884,38 @@ describe('MgSelectionPanelComponent', () => {
         panel.setEmptyLabel(emptyId, 'Ghost');
         expect(panel.draftRows().find(r => r.isEmpty)!.nameCollision).toBe(false);
       });
+
+      it('should rename the empty slot from the text typed in its input', () => {
+        // Arrange
+        create({ kind: 'correction', status: 'finished', selection: finishedSelection, capacity: 5 });
+        panel.addEmpty();
+        const emptyId = panel.draftOrder().find(e => e.startsWith('empty:'))!;
+        const input = document.createElement('input');
+        input.value = 'Ghost';
+        input.addEventListener('input', event => panel.onEmptyLabelInput(emptyId, event));
+
+        // Act
+        input.dispatchEvent(new Event('input'));
+
+        // Assert
+        expect(panel.draftRows().find(r => r.isEmpty)!.displayName).toBe('Ghost');
+      });
+
+      it('should ignore an input event that does not come from an input element', () => {
+        // Arrange
+        create({ kind: 'correction', status: 'finished', selection: finishedSelection, capacity: 5 });
+        panel.addEmpty();
+        const emptyId = panel.draftOrder().find(e => e.startsWith('empty:'))!;
+
+        // Act
+        panel.onEmptyLabelInput(emptyId, new Event('input'));
+
+        // Assert
+        expect(panel.draftRows().find(r => r.isEmpty)!.displayName).toBe('Empty');
+      });
     });
 
-    describe('FFA players added during correction', () => {
+    describe('off-list players added during correction', () => {
       // Original list of 2 approved players; 'x' is an unregistered member added later.
       const members: MgMemberOption[] = [
         { userId: 'a', displayName: 'Alice' },
@@ -902,7 +932,7 @@ describe('MgSelectionPanelComponent', () => {
         makeFfa(5),
       ];
 
-      it('should bill an FFA player added below the list by default, and offer the forgiveness toggle', () => {
+      it('should bill an off-list player added below the list by default, and offer the forgiveness toggle', () => {
         // Arrange
         create({
           kind: 'correction',
@@ -926,7 +956,7 @@ describe('MgSelectionPanelComponent', () => {
         expect(rowX().cost).toBe(0);
       });
 
-      it('should bill an FFA player who moves above the approved players, and waive to zero when forgiven', () => {
+      it('should bill an off-list player who moves above the approved players, and waive to zero when forgiven', () => {
         // Arrange
         create({
           kind: 'correction',
