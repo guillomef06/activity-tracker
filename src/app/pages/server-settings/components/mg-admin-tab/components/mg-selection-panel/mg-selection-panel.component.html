@@ -66,7 +66,7 @@
                   [class.name-collision]="row.nameCollision"
                   [value]="row.displayName"
                   [attr.aria-label]="'mg.admin.correction.emptyLabel' | translate"
-                  (input)="setEmptyLabel(row.id, $any($event.target).value)"
+                  (input)="onEmptyLabelInput(row.id, $event)"
                 />
               } @else {
                 <span class="player-name">{{ row.displayName }}</span>
