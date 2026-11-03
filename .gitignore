@@ -65,3 +65,10 @@ ctx7.txt
 .specify/templates/tasks-template.md
 .specify/workflows/workflow-registry.json
 .specify/workflows/speckit/workflow.yml
+
+# Playwright e2e artifacts
+e2e/.auth/
+e2e/.report/
+e2e/.results/
+test-results/
+playwright-report/
