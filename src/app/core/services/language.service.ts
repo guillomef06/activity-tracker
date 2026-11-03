@@ -8,20 +8,7 @@ import type { UserPreferences } from '@app/shared/models/user.model';
  * Supported languages in the application
  */
 export type SupportedLanguage =
-  | 'en'
-  | 'fr'
-  | 'es'
-  | 'it'
-  | 'de'
-  | 'tr'
-  | 'pt'
-  | 'el'
-  | 'ko'
-  | 'hi'
-  | 'zh'
-  | 'ku'
-  | 'ar'
-  | 'id';
+  'en' | 'fr' | 'es' | 'it' | 'de' | 'tr' | 'pt' | 'el' | 'ko' | 'hi' | 'zh' | 'ku' | 'ar' | 'id';
 
 /**
  * Language information with metadata
