@@ -1,4 +1,11 @@
-import { resolveSlotForRank, type MgSlotRow } from './mg-slot.util';
+import type { MgSlotRow } from './mg-slot.util';
+import {
+  indexApprovedPlayers,
+  isOffListPlayer,
+  resolveApprovedBaseline,
+  resolvePlayerCost,
+  slotCostForRank,
+} from './mg-pricing.util';
 import type { MgSelection, MgSelectedBy, MgSelectionPayload } from '@shared/models';
 
 /** Prefix marking an entry in the order array as an empty placeholder slot rather than a userId. */
@@ -8,6 +15,19 @@ export const isEmptySlotId = (entry: string): boolean => entry.startsWith(EMPTY_
 
 /** Default label shown for a freshly-added empty slot (admin can edit it). */
 export const DEFAULT_EMPTY_LABEL = 'Empty';
+
+/** Sentinel id of the n-th (by rank) empty slot loaded from a saved selection. */
+export const savedEmptySlotId = (index: number): string => `${EMPTY_SLOT_PREFIX}saved-${index}`;
+
+/** Labels of the saved empty slots, keyed by the sentinel id `savedEmptySlotId` gives them. */
+export function buildSavedEmptyLabels(selection: readonly MgSelection[]): Map<string, string> {
+  const labels = new Map<string, string>();
+  selection
+    .filter(row => row.selection_type === 'empty')
+    .sort((a, b) => a.rank - b.rank)
+    .forEach((row, index) => labels.set(savedEmptySlotId(index), row.label ?? DEFAULT_EMPTY_LABEL));
+  return labels;
+}
 
 export interface BuildSelectionPayloadOptions {
   /**
@@ -19,11 +39,75 @@ export interface BuildSelectionPayloadOptions {
   /**
    * UserIds whose rank change is forgiven: billed at their approved_cost (the
    * cost of the slot they were approved for on the published list) instead of
-   * the dearer final-rank cost. Ignored for a player with no approved snapshot.
+   * the dearer final-rank cost. For an off-list player it waives the cost to 0.
    */
   forgiven?: ReadonlySet<string>;
   /** Label for each empty-slot entry (EMPTY_SLOT_PREFIX id → name). */
   emptyLabels?: ReadonlyMap<string, string>;
+}
+
+interface PayloadContext {
+  readonly mgEventId: string;
+  readonly selectedBy: MgSelectedBy;
+  readonly slotRows: readonly MgSlotRow[];
+  /** The approved list, by userId. Empty for a fresh draft. */
+  readonly approved: ReadonlyMap<string, MgSelection>;
+  readonly forgiven: ReadonlySet<string> | undefined;
+  readonly emptyLabels: ReadonlyMap<string, string> | undefined;
+}
+
+function buildEmptyPayload(entry: string, rank: number, ctx: PayloadContext): MgSelectionPayload {
+  return {
+    mg_event_id: ctx.mgEventId,
+    user_id: null,
+    rank,
+    selection_type: 'empty',
+    selected_by: ctx.selectedBy,
+    cost: slotCostForRank(rank, ctx.slotRows),
+    label: ctx.emptyLabels?.get(entry)?.trim() || DEFAULT_EMPTY_LABEL,
+    approved_rank: null,
+    approved_cost: null,
+  };
+}
+
+function buildPlayerPayload(userId: string, rank: number, ctx: PayloadContext): MgSelectionPayload {
+  const saved = ctx.approved.get(userId);
+  // The baseline is stamped on every save, making it durable for the next correction.
+  const baseline = saved ? resolveApprovedBaseline(saved) : undefined;
+
+  return {
+    mg_event_id: ctx.mgEventId,
+    user_id: userId,
+    rank,
+    selection_type: 'selected',
+    selected_by: ctx.selectedBy,
+    cost: resolvePlayerCost({
+      rank,
+      finalRankCost: slotCostForRank(rank, ctx.slotRows),
+      saved,
+      offList: isOffListPlayer(userId, ctx.approved),
+      forgiven: ctx.forgiven?.has(userId) ?? false,
+    }),
+    label: null,
+    approved_rank: baseline?.rank ?? null,
+    approved_cost: baseline?.cost ?? null,
+  };
+}
+
+/** Free-for-all filler rows: they pad the selection up to the event capacity and cost nothing. */
+function buildFfaPayloads(ctx: PayloadContext, placedCount: number, capacity: number): MgSelectionPayload[] {
+  const ffaCount = Math.max(0, capacity - placedCount);
+  return Array.from({ length: ffaCount }, (_, index) => ({
+    mg_event_id: ctx.mgEventId,
+    user_id: null,
+    rank: placedCount + index + 1,
+    selection_type: 'ffa' as const,
+    selected_by: ctx.selectedBy,
+    cost: 0,
+    label: null,
+    approved_rank: null,
+    approved_cost: null,
+  }));
 }
 
 /**
@@ -36,14 +120,9 @@ export interface BuildSelectionPayloadOptions {
  * for accounting, but carry `user_id: null` so they never bill anyone (loadSpends
  * filters user_id IS NULL).
  *
- * `cost` is snapshotted from `slotRows` at build time. When `previous` is given
- * (correcting a published selection):
- *  - a player's `approved_rank`/`approved_cost` carry forward unchanged;
- *  - a forgiven player is billed their `approved_cost` (the approved slot),
- *    so a legitimate upward move isn't penalised;
- *  - otherwise a player who keeps the exact same rank keeps the cost already
- *    charged, and only a player whose rank actually changed is re-priced to the
- *    final rank — unchanged from the original behaviour.
+ * `cost` is snapshotted from `slotRows` at build time; when `previous` is given
+ * (correcting a published selection) the rules in `resolvePlayerCost` apply, and a
+ * player's `approved_rank`/`approved_cost` carry forward unchanged.
  */
 export function buildSelectionPayload(
   mgEventId: string,
@@ -54,91 +133,20 @@ export function buildSelectionPayload(
   options: BuildSelectionPayloadOptions = {}
 ): MgSelectionPayload[] {
   const { previous = [], forgiven, emptyLabels } = options;
+  const ctx: PayloadContext = {
+    mgEventId,
+    selectedBy,
+    slotRows,
+    approved: indexApprovedPlayers(previous),
+    forgiven,
+    emptyLabels,
+  };
 
-  const previousByUserId = new Map<string, MgSelection>();
-  for (const row of previous) {
-    if (row.user_id !== null && row.selection_type === 'selected') previousByUserId.set(row.user_id, row);
-  }
-  // Whether there was an original published list to compare against. A fresh draft
-  // has none, so every player there is priced normally by rank.
-  const hasApprovedList = previousByUserId.size > 0;
+  const placed = orderedEntries
+    .slice(0, capacity)
+    .map((entry, index) =>
+      isEmptySlotId(entry) ? buildEmptyPayload(entry, index + 1, ctx) : buildPlayerPayload(entry, index + 1, ctx)
+    );
 
-  const placed = orderedEntries.slice(0, capacity).map<MgSelectionPayload>((entry, index) => {
-    const rank = index + 1;
-
-    if (isEmptySlotId(entry)) {
-      return {
-        mg_event_id: mgEventId,
-        user_id: null,
-        rank,
-        selection_type: 'empty',
-        selected_by: selectedBy,
-        cost: resolveSlotForRank(rank, slotRows)?.cost ?? 0,
-        label: emptyLabels?.get(entry)?.trim() || DEFAULT_EMPTY_LABEL,
-        approved_rank: null,
-        approved_cost: null,
-      };
-    }
-
-    const snapshot = previousByUserId.get(entry);
-    // An "FFA player" is one added during a correction who was NOT on the original
-    // published list (no prior selected snapshot). Only meaningful when there WAS a
-    // published list to compare against — a fresh draft has no baseline, so every
-    // player there is priced normally by rank.
-    const isFfaPlayer = hasApprovedList && snapshot === undefined;
-    const finalRankCost = resolveSlotForRank(rank, slotRows)?.cost ?? 0;
-
-    // Approved baseline. For events published AFTER migration 46 it's the stamped
-    // snapshot. For a legacy event (published before the migration, columns null)
-    // we fall back to the player's own CURRENT saved rank/cost — which, on a
-    // not-yet-corrected published selection, IS the approved list. Saving then
-    // persists these as approved_rank/approved_cost, making the baseline durable.
-    const approvedRank = snapshot?.approved_rank ?? snapshot?.rank ?? null;
-    const approvedCost = snapshot?.approved_cost ?? snapshot?.cost ?? null;
-
-    let cost: number;
-    if (isFfaPlayer) {
-      // Not on the approved list — a player who wasn't selected but ended up in the
-      // ranking. Bill them their final slot by DEFAULT so a rule-breaker is punished;
-      // an admin can waive it with "No penalty" when the placement is legitimate.
-      cost = forgiven?.has(entry) ? 0 : finalRankCost;
-    } else if (forgiven?.has(entry) && approvedCost !== null) {
-      // A forgiven move never costs more than the slot they were approved for,
-      // nor more than the slot they actually ended in: a player who moved UP is
-      // billed their (cheaper) approved cost, and one who moved DOWN keeps the
-      // (cheaper) final-slot cost. min() makes forgiveness safe in both directions.
-      cost = Math.min(approvedCost, finalRankCost);
-    } else if (snapshot?.rank === rank) {
-      cost = snapshot.cost;
-    } else {
-      cost = finalRankCost;
-    }
-
-    return {
-      mg_event_id: mgEventId,
-      user_id: entry,
-      rank,
-      selection_type: 'selected',
-      selected_by: selectedBy,
-      cost,
-      label: null,
-      approved_rank: approvedRank,
-      approved_cost: approvedCost,
-    };
-  });
-
-  const ffaCount = Math.max(0, capacity - placed.length);
-  const ffa = Array.from({ length: ffaCount }, (_, index) => ({
-    mg_event_id: mgEventId,
-    user_id: null,
-    rank: placed.length + index + 1,
-    selection_type: 'ffa' as const,
-    selected_by: selectedBy,
-    cost: 0,
-    label: null,
-    approved_rank: null,
-    approved_cost: null,
-  }));
-
-  return [...placed, ...ffa];
+  return [...placed, ...buildFfaPayloads(ctx, placed.length, capacity)];
 }

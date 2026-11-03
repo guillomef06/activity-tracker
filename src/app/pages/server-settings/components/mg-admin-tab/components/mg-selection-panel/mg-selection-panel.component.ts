@@ -23,11 +23,20 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MgEventService } from '@app/core/services/mg-event.service';
 import { SnackbarService } from '@app/core/services';
 import {
+  buildSavedEmptyLabels,
   buildSelectionPayload,
   EMPTY_SLOT_PREFIX,
   isEmptySlotId,
   DEFAULT_EMPTY_LABEL,
+  savedEmptySlotId,
 } from '@shared/utils/mg-selection.util';
+import {
+  canForgiveMove,
+  deriveForgivenUserIds,
+  indexApprovedPlayers,
+  isOffListPlayer,
+  resolveApprovedBaseline,
+} from '@shared/utils/mg-pricing.util';
 import { resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
 import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
 import type {
@@ -46,6 +55,9 @@ import type {
  * - `locked`: published or in progress, read-only.
  */
 export type MgSelectionPanelKind = 'draft' | 'correction' | 'locked';
+
+/** Fields every draft row shares, whether it holds a player or an empty slot. */
+type DraftRowBase = Pick<DraftRow, 'id' | 'rank' | 'slotLabel' | 'cost' | 'isFirst' | 'isLast'>;
 
 interface DraftRow {
   /** Real userId, or an EMPTY_SLOT_PREFIX sentinel for a placeholder slot. */
@@ -149,7 +161,7 @@ export class MgSelectionPanelComponent {
       .filter(row => row.selection_type === 'selected' || row.selection_type === 'empty')
       .sort((a, b) => a.rank - b.rank)
       .flatMap(row => {
-        if (row.selection_type === 'empty') return [EMPTY_SLOT_PREFIX + 'saved-' + emptyIndex++];
+        if (row.selection_type === 'empty') return [savedEmptySlotId(emptyIndex++)];
         return row.user_id ? [row.user_id] : [];
       });
   });
@@ -163,74 +175,20 @@ export class MgSelectionPanelComponent {
   );
 
   /** Labels for empty placeholder slots (EMPTY_SLOT_PREFIX id → name). Resets with the selection. */
-  private readonly emptyLabels = linkedSignal<Map<string, string>>(() => {
-    const map = new Map<string, string>();
-    this.selection()
-      .filter(row => row.selection_type === 'empty')
-      .sort((a, b) => a.rank - b.rank)
-      .forEach((row, index) => map.set(EMPTY_SLOT_PREFIX + 'saved-' + index, row.label ?? DEFAULT_EMPTY_LABEL));
-    return map;
-  });
+  private readonly emptyLabels = linkedSignal<Map<string, string>>(() => buildSavedEmptyLabels(this.selection()));
 
   /** UserIds whose rank change is forgiven (billed at approved cost). Derived from the
-   * saved selection: a row already charged at its approved cost (and whose current rank
-   * differs from approved) is treated as forgiven so reloading preserves the decision. */
-  private readonly forgiven = linkedSignal<Set<string>>(() => {
-    const set = new Set<string>();
-    for (const row of this.selection()) {
-      if (
-        row.user_id &&
-        row.selection_type === 'selected' &&
-        row.approved_cost !== null &&
-        row.approved_rank !== null &&
-        row.rank !== row.approved_rank &&
-        row.cost === row.approved_cost
-      ) {
-        set.add(row.user_id);
-      }
-    }
-    return set;
-  });
+   * saved selection so reloading preserves the admin's decision. */
+  private readonly forgiven = linkedSignal<Set<string>>(() => deriveForgivenUserIds(this.selection()));
 
   /** Monotonic counter so each freshly-added empty slot gets a unique sentinel id. */
   private readonly nextEmptyId = signal(0);
 
-  // Approved baseline per userId. For events published after migration 46 it's the
-  // stamped snapshot; for a legacy event (columns null) we fall back to the player's
-  // current saved rank/cost, which on a not-yet-corrected published selection IS the
-  // approved list — so forgiveness works on old events too, not just post-migration ones.
-  private readonly approvedRankByUserId = computed<Map<string, number>>(() => {
-    const map = new Map<string, number>();
-    if (!this.isCorrection()) return map; // forgiveness only applies to a finished event's correction
-    for (const row of this.selection()) {
-      if (!row.user_id || row.selection_type !== 'selected') continue;
-      const approved = row.approved_rank ?? row.rank;
-      if (approved !== null) map.set(row.user_id, approved);
-    }
-    return map;
-  });
-
-  private readonly approvedCostByUserId = computed<Map<string, number>>(() => {
-    const map = new Map<string, number>();
-    if (!this.isCorrection()) return map;
-    for (const row of this.selection()) {
-      if (!row.user_id || row.selection_type !== 'selected') continue;
-      const approved = row.approved_cost ?? row.cost;
-      if (approved !== null) map.set(row.user_id, approved);
-    }
-    return map;
-  });
-
-  /** UserIds on the original published list. A placed player NOT in this set is an
-   * "FFA player" (added during the correction, never approved for a slot). */
-  private readonly approvedUserIds = computed<Set<string>>(() => {
-    const set = new Set<string>();
-    if (!this.isCorrection()) return set;
-    for (const row of this.selection()) {
-      if (row.user_id && row.selection_type === 'selected') set.add(row.user_id);
-    }
-    return set;
-  });
+  /** The originally published list, by userId. Empty outside a correction (forgiveness only
+   * applies to a finished event); a placed player missing from it is an off-list player. */
+  private readonly approvedPlayers = computed<ReadonlyMap<string, MgSelectionWithUser>>(() =>
+    this.isCorrection() ? indexApprovedPlayers(this.selection()) : new Map()
+  );
 
   protected readonly isEditable = computed(() => this.kind() !== 'locked');
   protected readonly isCorrection = computed(() => this.kind() === 'correction');
@@ -285,44 +243,20 @@ export class MgSelectionPanelComponent {
 
   protected readonly draftRows = computed<DraftRow[]>(() => {
     const order = this.draftOrder();
-    // Cost per placed entry, indexed by position (handles empties + duplicate nulls).
-    const payloadByRank = new Map(this.draftPayloads().map(p => [p.rank, p]));
-    const approvedRanks = this.approvedRankByUserId();
-    const approvedCosts = this.approvedCostByUserId();
-    const approvedIds = this.approvedUserIds();
-    const hasApprovedList = approvedIds.size > 0;
-    const forgiven = this.forgiven();
+    const costByRank = new Map(this.draftPayloads().map(p => [p.rank, p.cost]));
 
     return order.map((entry, index) => {
       const rank = index + 1;
-      const empty = isEmptySlotId(entry);
-      const approvedRank = empty ? null : (approvedRanks.get(entry) ?? null);
-      const approvedCost = empty ? null : (approvedCosts.get(entry) ?? null);
-      const finalRankCost = resolveSlotForRank(rank, this.slotRows())?.cost ?? 0;
-      // An FFA player (added during a correction, not on the original published list)
-      // is billed their slot by default so a rule-breaker is punished; "No penalty"
-      // can always waive them to 0 when the placement is legitimate. A ranked player
-      // can only be forgiven for an UP-move (final slot dearer than their approved one).
-      const isFfaPlayer = !empty && this.isCorrection() && hasApprovedList && !approvedIds.has(entry);
-      const canForgive = isFfaPlayer ? true : approvedCost !== null && finalRankCost > approvedCost;
-      const emptyLabel = empty ? (this.emptyLabels().get(entry) ?? DEFAULT_EMPTY_LABEL) : '';
-      return {
+      const slot = resolveSlotForRank(rank, this.slotRows());
+      const base: DraftRowBase = {
         id: entry,
-        isEmpty: empty,
-        userId: empty ? null : entry,
         rank,
-        displayName: empty ? emptyLabel : (this.displayNameByUserId().get(entry) ?? entry),
-        totalScore: empty ? 0 : (this.totalScores().get(entry) ?? 0),
-        slotLabel: resolveSlotForRank(rank, this.slotRows())?.rankLabel ?? null,
-        cost: payloadByRank.get(rank)?.cost ?? 0,
-        approvedSlotLabel:
-          approvedRank !== null ? (resolveSlotForRank(approvedRank, this.slotRows())?.rankLabel ?? null) : null,
-        canForgive,
-        forgiven: !empty && forgiven.has(entry),
-        nameCollision: empty && this.knownPlayerNames().has(emptyLabel.trim().toLowerCase()),
+        slotLabel: slot?.rankLabel ?? null,
+        cost: costByRank.get(rank) ?? 0,
         isFirst: index === 0,
         isLast: index === order.length - 1,
       };
+      return isEmptySlotId(entry) ? this.toEmptyRow(base) : this.toPlayerRow(base, slot?.cost ?? 0);
     });
   });
 
@@ -405,6 +339,39 @@ export class MgSelectionPanelComponent {
       this.selection().length > 0 &&
       !this.isDirty()
   );
+
+  private toEmptyRow(base: DraftRowBase): DraftRow {
+    const label = this.emptyLabels().get(base.id) ?? DEFAULT_EMPTY_LABEL;
+    return {
+      ...base,
+      isEmpty: true,
+      userId: null,
+      displayName: label,
+      totalScore: 0,
+      approvedSlotLabel: null,
+      canForgive: false,
+      forgiven: false,
+      nameCollision: this.knownPlayerNames().has(label.trim().toLowerCase()),
+    };
+  }
+
+  private toPlayerRow(base: DraftRowBase, finalRankCost: number): DraftRow {
+    const userId = base.id;
+    const saved = this.approvedPlayers().get(userId);
+    const approved = saved ? resolveApprovedBaseline(saved) : undefined;
+    const offList = isOffListPlayer(userId, this.approvedPlayers());
+    return {
+      ...base,
+      isEmpty: false,
+      userId,
+      displayName: this.displayNameByUserId().get(userId) ?? userId,
+      totalScore: this.totalScores().get(userId) ?? 0,
+      approvedSlotLabel: approved ? (resolveSlotForRank(approved.rank, this.slotRows())?.rankLabel ?? null) : null,
+      canForgive: canForgiveMove({ offList, approved, finalRankCost }),
+      forgiven: this.forgiven().has(userId),
+      nameCollision: false,
+    };
+  }
 
   private unregisteredRows(inDraft: ReadonlySet<string>): AvailableRow[] {
     if (!this.isCorrection()) return [];
@@ -501,6 +468,10 @@ export class MgSelectionPanelComponent {
     this.draftSource.set('manual');
   }
 
+  protected onEmptyLabelInput(id: string, event: Event): void {
+    if (event.target instanceof HTMLInputElement) this.setEmptyLabel(id, event.target.value);
+  }
+
   protected setEmptyLabel(id: string, label: string): void {
     this.emptyLabels.update(labels => new Map(labels).set(id, label));
     this.draftSource.set('manual');
@@ -524,28 +495,8 @@ export class MgSelectionPanelComponent {
   protected reset(): void {
     // Re-derive every working signal from the saved selection (they're linkedSignals,
     // but an explicit edit overrides them until the source input changes).
-    const labels = new Map<string, string>();
-    this.selection()
-      .filter(row => row.selection_type === 'empty')
-      .sort((a, b) => a.rank - b.rank)
-      .forEach((row, index) => labels.set(EMPTY_SLOT_PREFIX + 'saved-' + index, row.label ?? DEFAULT_EMPTY_LABEL));
-    this.emptyLabels.set(labels);
-
-    const forgivenSet = new Set<string>();
-    for (const row of this.selection()) {
-      if (
-        row.user_id &&
-        row.selection_type === 'selected' &&
-        row.approved_cost !== null &&
-        row.approved_rank !== null &&
-        row.rank !== row.approved_rank &&
-        row.cost === row.approved_cost
-      ) {
-        forgivenSet.add(row.user_id);
-      }
-    }
-    this.forgiven.set(forgivenSet);
-
+    this.emptyLabels.set(buildSavedEmptyLabels(this.selection()));
+    this.forgiven.set(deriveForgivenUserIds(this.selection()));
     this.draftOrder.set(this.savedOrder());
     this.draftSource.set(this.selection()[0]?.selected_by ?? this.assignmentMode());
   }
