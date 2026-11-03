@@ -24,7 +24,6 @@ const DEFAULT_ERROR_KEYS: Record<string, string> = {
   max: 'errors.max',
   email: 'errors.email',
   pattern: 'errors.pattern',
-  // eslint-disable-next-line sonarjs/no-hardcoded-passwords -- i18n translation key, not a credential
   passwordMismatch: 'errors.passwordMismatch',
   usernameTaken: 'auth.errors.usernameExists',
 };
