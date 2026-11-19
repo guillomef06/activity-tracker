@@ -1,0 +1,50 @@
+{
+  "a": {
+    "topLevelBlocks": 2,
+    "matCards": 1,
+    "expansionPanels": 1,
+    "saveButtonsInDom": 2,
+    "saveButtonsVisible": 1,
+    "contentHeight": 865,
+    "registrantOffset": 554.2,
+    "publishOffset": 789.1,
+    "correctionOffset": null,
+    "settingsOffset": 24
+  },
+  "b": {
+    "topLevelBlocks": 2,
+    "matCards": 1,
+    "expansionPanels": 1,
+    "saveButtonsInDom": 2,
+    "saveButtonsVisible": 1,
+    "contentHeight": 777,
+    "registrantOffset": 319.7,
+    "publishOffset": 700.7,
+    "correctionOffset": null,
+    "settingsOffset": 24
+  },
+  "c": {
+    "topLevelBlocks": 2,
+    "matCards": 1,
+    "expansionPanels": 2,
+    "saveButtonsInDom": 1,
+    "saveButtonsVisible": 0,
+    "contentHeight": 560,
+    "registrantOffset": 435.4,
+    "publishOffset": null,
+    "correctionOffset": null,
+    "settingsOffset": 24
+  },
+  "d": {
+    "topLevelBlocks": 3,
+    "matCards": 1,
+    "expansionPanels": 2,
+    "saveButtonsInDom": 3,
+    "saveButtonsVisible": 1,
+    "contentHeight": 985,
+    "registrantOffset": 554.2,
+    "publishOffset": 789.1,
+    "correctionOffset": 873.1,
+    "settingsOffset": 24
+  }
+}

@@ -13,8 +13,104 @@
   padding: 3rem;
 }
 
-.section-card {
+.current-event-card {
   width: 100%;
+
+  mat-card-header {
+    gap: 0.25rem;
+    padding-bottom: 0.5rem;
+  }
+
+  mat-card-subtitle {
+    margin-top: 0.25rem;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+// Headers hold a title, a description and a chip: let them grow instead of clipping at 320px.
+.correction-panel,
+.settings-panel {
+  --mat-expansion-header-collapsed-state-height: auto;
+  --mat-expansion-header-expanded-state-height: auto;
+
+  // One column (title line, meta line): the title is never squeezed by the meta.
+  .panel-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    min-width: 0;
+    margin-right: 0;
+    white-space: normal;
+  }
+
+  .panel-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .panel-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    min-width: 0;
+    font-size: 0.875rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+mat-expansion-panel-header {
+  min-height: 3rem;
+  padding-block: 0.5rem;
+}
+
+.badge-chip,
+.unsaved-chip,
+.count-chip {
+  font-size: 0.75rem;
+}
+
+.badge-chip {
+  background-color: var(--mat-sys-tertiary-container);
+}
+
+.unsaved-chip {
+  background-color: var(--mat-sys-secondary-container);
+}
+
+// Nested in the card: flat, outlined instead of elevated.
+.current-event-card .registrations-panel {
+  box-shadow: none;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.settings-subheading {
+  margin: 1rem 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+
+  button {
+    min-height: 2.75rem;
+  }
 }
 
 .config-form {
@@ -106,9 +202,7 @@
   }
 }
 
-.registration-list,
-.selection-list,
-.preview-list {
+.registration-list {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -126,17 +220,8 @@
     background-color: var(--mat-sys-surface-container);
   }
 
-  &.ffa-row {
-    color: var(--mat-sys-on-surface-variant);
-    font-style: italic;
-  }
-
-  .rank {
-    min-width: 1.5rem;
-    font-weight: 600;
-    color: var(--mat-sys-on-surface-variant);
-    text-align: right;
-    font-size: 0.875rem;
+  &.registration-row {
+    flex-wrap: wrap;
   }
 
   .displayname {
@@ -151,10 +236,6 @@
     white-space: nowrap;
   }
 
-  &.registration-row {
-    flex-wrap: wrap;
-  }
-
   .desired-position {
     margin-left: auto;
     font-size: 0.8rem;
@@ -164,73 +245,9 @@
 
   .registration-comment {
     flex-basis: 100%;
-    padding-left: 1.75rem;
     font-size: 0.8rem;
     font-style: italic;
     color: var(--mat-sys-on-surface-variant);
-  }
-
-  mat-chip {
-    font-size: 0.7rem;
-    height: 1.4rem;
-    margin-left: auto;
-
-    &.selected {
-      background-color: var(--mat-sys-primary-container);
-    }
-    &.ffa {
-      background-color: var(--mat-sys-secondary-container);
-    }
-  }
-}
-
-.preview-label {
-  margin: 0 0 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--mat-sys-on-surface-variant);
-}
-
-.preview-actions {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-}
-
-.section-divider {
-  margin: 1rem 0;
-}
-
-.section-label {
-  margin: 0 0 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--mat-sys-on-surface-variant);
-}
-
-.ffa-info {
-  margin: 0.5rem 0 0;
-  font-size: 0.875rem;
-  color: var(--mat-sys-on-surface-variant);
-}
-
-.locked-state {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--mat-sys-on-surface-variant);
-  padding: 0.5rem 0;
-
-  mat-icon {
-    flex-shrink: 0;
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.875rem;
   }
 }
 

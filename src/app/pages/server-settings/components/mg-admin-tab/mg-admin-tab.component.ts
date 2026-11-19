@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MgEventService } from '@app/core/services/mg-event.service';
@@ -49,6 +50,10 @@ interface SlotConfigFormModel {
   rows: MgSlotRow[];
 }
 
+function isSameSlotRow(a: MgSlotRow, b: MgSlotRow | undefined): boolean {
+  return !!b && a.cost === b.cost && a.targetMin === b.targetMin && a.targetMax === b.targetMax;
+}
+
 /** A registration row enriched with its precomputed desired-position rank label and total score. */
 interface MgRegistrationRow extends MgRegistrationWithUser {
   positionLabel: string | null;
@@ -68,6 +73,7 @@ interface MgRegistrationRow extends MgRegistrationWithUser {
     MatSelectModule,
     MatSlideToggleModule,
     MatChipsModule,
+    MatExpansionModule,
     MatProgressSpinnerModule,
     TranslateModule,
     MgSelectionPanelComponent,
@@ -85,8 +91,7 @@ export class MgAdminTabComponent implements OnInit {
   private readonly translate = inject(TranslateService);
 
   protected readonly isLoading = signal(false);
-  protected readonly isSavingConfig = signal(false);
-  protected readonly isSavingSlotConfig = signal(false);
+  protected readonly isSavingSettings = signal(false);
 
   protected readonly mgEvent = signal<MgEvent | null>(null);
   protected readonly serverConfig = signal<ServerMgConfig | null>(null);
@@ -154,6 +159,30 @@ export class MgAdminTabComponent implements OnInit {
     this.serverService.members().map(member => ({ userId: member.id, displayName: member.display_name }))
   );
 
+  /** The Registrations list is only useful once the selection is locked: in draft, the pool is the list. */
+  protected readonly registrationCount = computed(() => this.registrations().length);
+  protected readonly showRegistrationsList = computed(
+    () => this.currentPanelKind() === 'locked' && this.registrationCount() > 0
+  );
+
+  /** Dirty = the form differs from the SAVED values (defaults when nothing is saved yet). */
+  protected readonly configDirty = computed(() => {
+    const model = this.configModel();
+    return (
+      model.capacity !== this.savedCapacity() ||
+      model.assignment_mode !== this.savedAssignmentMode() ||
+      model.dkp_enabled !== this.savedDkpEnabled()
+    );
+  });
+  protected readonly slotDirty = computed(() => {
+    const saved = this.savedSlotRows();
+    return this.slotConfigModel().rows.some((row, index) => !isSameSlotRow(row, saved[index]));
+  });
+  protected readonly settingsDirty = computed(() => this.configDirty() || this.slotDirty());
+  protected readonly canSaveSettings = computed(
+    () => this.settingsDirty() && this.configForm().valid() && this.slotConfigForm().valid() && !this.isSavingSettings()
+  );
+
   /**
    * Registrations enriched with a precomputed rank label and total score, so the template
    * never needs to call a method (project convention: no function calls in templates).
@@ -207,41 +236,54 @@ export class MgAdminTabComponent implements OnInit {
     }
   }
 
-  protected async saveConfig(): Promise<void> {
-    if (this.configForm().invalid()) {
-      this.configForm().markAsTouched();
-      return;
-    }
-    const serverId = this.authService.getServerId();
-    if (!serverId) return;
-
-    this.isSavingConfig.set(true);
-    try {
-      const { error } = await this.mgEventService.saveServerConfig(serverId, this.configModel());
-      if (error) throw error;
-      this.snackbarService.success(this.translate.instant('mg.admin.configSaved'));
-      const config = await this.mgEventService.loadServerConfig(serverId);
-      this.serverConfig.set(config);
-    } catch {
-      this.snackbarService.error(this.translate.instant('mg.admin.configSaveError'));
-    } finally {
-      this.isSavingConfig.set(false);
-    }
-  }
-
   private rebuildSlotConfigForm(config: readonly ServerMgSlotConfig[]): void {
     this.slotConfigModel.set({ rows: buildMgSlotRows(config) });
   }
 
-  protected async saveSlotConfig(): Promise<void> {
-    if (this.slotConfigForm().invalid()) {
+  /** One Save for both settings blocks: only the blocks that changed are written, in parallel. */
+  protected async saveSettings(): Promise<void> {
+    if (this.configForm().invalid() || this.slotConfigForm().invalid()) {
+      this.configForm().markAsTouched();
       this.slotConfigForm().markAsTouched();
       return;
     }
     const serverId = this.authService.getServerId();
     if (!serverId) return;
 
-    this.isSavingSlotConfig.set(true);
+    const saveConfig = this.configDirty();
+    const saveSlots = this.slotDirty();
+    if (!saveConfig && !saveSlots) return;
+
+    this.isSavingSettings.set(true);
+    try {
+      const [configSaved, slotsSaved] = await Promise.all([
+        saveConfig ? this.persistConfig(serverId) : true,
+        saveSlots ? this.persistSlotConfig(serverId) : true,
+      ]);
+      this.notifySettingsResult(configSaved, slotsSaved);
+    } finally {
+      this.isSavingSettings.set(false);
+    }
+  }
+
+  /** Resolves true when the write succeeded; the form is kept as is (never rebuilt) so no edit is lost. */
+  private async persistConfig(serverId: string): Promise<boolean> {
+    try {
+      const { error } = await this.mgEventService.saveServerConfig(serverId, this.configModel());
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error saving MG server config:', error);
+      return false;
+    }
+    try {
+      this.serverConfig.set(await this.mgEventService.loadServerConfig(serverId));
+    } catch (error) {
+      console.error('Error reloading MG server config:', error);
+    }
+    return true;
+  }
+
+  private async persistSlotConfig(serverId: string): Promise<boolean> {
     try {
       const rows: UpsertMgSlotConfigRow[] = this.slotRows.map(row => ({
         slot_order: row.slotOrder,
@@ -251,14 +293,28 @@ export class MgAdminTabComponent implements OnInit {
       }));
       const { error } = await this.mgEventService.saveSlotConfig(serverId, rows);
       if (error) throw error;
-      this.snackbarService.success(this.translate.instant('mg.admin.slotConfigSaved'));
-      const slotConfig = await this.mgEventService.loadSlotConfig(serverId);
-      this.slotConfig.set(slotConfig);
-    } catch {
-      this.snackbarService.error(this.translate.instant('mg.admin.slotConfigSaveError'));
-    } finally {
-      this.isSavingSlotConfig.set(false);
+    } catch (error) {
+      console.error('Error saving MG slot config:', error);
+      return false;
     }
+    try {
+      this.slotConfig.set(await this.mgEventService.loadSlotConfig(serverId));
+    } catch (error) {
+      console.error('Error reloading MG slot config:', error);
+    }
+    return true;
+  }
+
+  private notifySettingsResult(configSaved: boolean, slotsSaved: boolean): void {
+    if (configSaved && slotsSaved) {
+      this.snackbarService.success(this.translate.instant('mg.admin.settings.saved'));
+      return;
+    }
+    const errors = [
+      configSaved ? null : this.translate.instant('mg.admin.configSaveError'),
+      slotsSaved ? null : this.translate.instant('mg.admin.slotConfigSaveError'),
+    ].filter(message => message !== null);
+    this.snackbarService.error(errors.join(' '));
   }
 
   private async loadEventData(event: MgEvent | null): Promise<void> {
@@ -299,9 +355,5 @@ export class MgAdminTabComponent implements OnInit {
     const serverId = this.authService.getServerId();
     if (!serverId) return;
     this.mgEvent.set(await this.mgEventService.loadCurrentEvent(serverId));
-  }
-
-  protected trackByReg(_: number, reg: MgRegistrationRow): string {
-    return reg.id;
   }
 }

@@ -50,8 +50,8 @@ test.describe('MG registration, selection and publication', () => {
     const admin = new MgEventAdminPage(page);
     await admin.open();
     await expect(admin.statusChip).toHaveText('Registration open');
-    await expect(admin.registrations).toContainText('Registrations (1)');
-    await expect(admin.registrationRow(ADMIN_NAME)).toBeVisible();
+    await expect(admin.countChip).toHaveText('1 registered');
+    await expect(admin.poolRow(ADMIN_NAME)).toBeVisible();
 
     // When the player withdraws
     await player.open();
@@ -91,7 +91,7 @@ test.describe('MG registration, selection and publication', () => {
     await seeder.closeRegistration(eventId);
     const admin = new MgEventAdminPage(page);
     await admin.open();
-    await expect(admin.registrations).toContainText('Registrations (2)');
+    await expect(admin.countChip).toHaveText('2 registered');
 
     // When the admin generates the selection, saves it and publishes it
     await admin.generate.click();
@@ -112,6 +112,7 @@ test.describe('MG registration, selection and publication', () => {
     // Then the event is published and its selection is locked for admins
     await expect(admin.statusChip).toHaveText('Selection published');
     await expect(admin.selection).toContainText('The selection is published and locked');
+    await expect(admin.registrationsPanel).toContainText('Registrations (2)');
     expect(await seeder.eventStatus(eventId)).toBe('selection_published');
 
     // And players see the published list with the remaining FFA slots

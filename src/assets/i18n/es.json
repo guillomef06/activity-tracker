@@ -917,7 +917,6 @@
       "eventTitle": "Evento actual",
       "selectionLocked": "La selección está bloqueada — el evento está en curso.",
       "selectionPublishedLocked": "La selección está publicada y bloqueada. Se podrá corregir cuando termine el evento.",
-      "configSaved": "Configuración guardada.",
       "configSaveError": "Error al guardar la configuración.",
       "slotConfig": {
         "title": "Configuración de costes y objetivos por rango",
@@ -927,10 +926,8 @@
         "targetMin": "Objetivo mín.",
         "targetMax": "Objetivo máx.",
         "targetRangeError": "El objetivo máximo debe ser mayor o igual que el objetivo mínimo",
-        "required": "Campo obligatorio",
-        "save": "Guardar"
+        "required": "Campo obligatorio"
       },
-      "slotConfigSaved": "Configuración de plazas guardada.",
       "slotConfigSaveError": "Error al guardar la configuración de plazas.",
       "selectionSaved": "Selección guardada.",
       "selectionSaveError": "Error al guardar la selección.",
@@ -942,19 +939,24 @@
         "mode": "Modo de selección",
         "modeAutomatic": "Automático",
         "modeManual": "Manual",
-        "save": "Guardar",
         "dkpEnabled": "Activar el sistema DKP",
         "dkpEnabledHint": "Una vez activado, el coste del puesto de los jugadores seleccionados se deduce de su total en el marcador."
       },
+      "settings": {
+        "title": "Ajustes",
+        "save": "Guardar ajustes",
+        "saved": "Ajustes guardados.",
+        "unsaved": "Cambios sin guardar",
+        "dkpOn": "DKP activado"
+      },
       "registrations": {
         "title": "Inscripciones",
-        "empty": "No hay inscripciones todavía.",
+        "count": "{{count}} inscrito(s)",
         "position": "Posición deseada",
         "noPosition": "No especificada",
         "totalScore": "Puntuación total"
       },
       "selection": {
-        "title": "Selección",
         "generate": "Generar selección automática",
         "publish": "Publicar selección",
         "current": "Selección actual",
@@ -975,6 +977,7 @@
       },
       "correction": {
         "title": "Corregir el último evento",
+        "badge": "Corrección disponible",
         "hint": "El evento ha terminado. Reordenar solo recalcula el coste de los jugadores cuyo puesto cambia; su DKP en la clasificación se recalcula.",
         "available": "Jugadores aún sin colocar (inscritos o no)",
         "noneAvailable": "Todos los jugadores ya están en la selección.",
