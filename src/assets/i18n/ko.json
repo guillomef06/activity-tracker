@@ -917,7 +917,6 @@
       "eventTitle": "현재 이벤트",
       "selectionLocked": "선발이 잠겼습니다 — 이벤트가 진행 중입니다.",
       "selectionPublishedLocked": "선발이 게시되어 잠겼습니다. 이벤트가 끝나면 수정할 수 있습니다.",
-      "configSaved": "설정이 저장되었습니다.",
       "configSaveError": "설정 저장에 실패했습니다.",
       "slotConfig": {
         "title": "슬롯 비용 및 목표 설정",
@@ -927,10 +926,8 @@
         "targetMin": "최소 목표",
         "targetMax": "최대 목표",
         "targetRangeError": "최대 목표는 최소 목표보다 크거나 같아야 합니다",
-        "required": "필수 항목",
-        "save": "저장"
+        "required": "필수 항목"
       },
-      "slotConfigSaved": "슬롯 설정이 저장되었습니다.",
       "slotConfigSaveError": "슬롯 설정 저장에 실패했습니다.",
       "selectionSaved": "선발이 저장되었습니다.",
       "selectionSaveError": "선발 저장에 실패했습니다.",
@@ -942,19 +939,24 @@
         "mode": "선발 방식",
         "modeAutomatic": "자동",
         "modeManual": "수동",
-        "save": "저장",
         "dkpEnabled": "DKP 시스템 활성화",
         "dkpEnabledHint": "활성화하면 선택된 플레이어의 슬롯 비용이 리더보드 총점에서 차감됩니다."
       },
+      "settings": {
+        "title": "설정",
+        "save": "설정 저장",
+        "saved": "설정이 저장되었습니다.",
+        "unsaved": "저장되지 않은 변경 사항",
+        "dkpOn": "DKP 켜짐"
+      },
       "registrations": {
         "title": "등록 현황",
-        "empty": "아직 등록자가 없습니다.",
+        "count": "{{count}}명 등록",
         "position": "희망 순위",
         "noPosition": "지정되지 않음",
         "totalScore": "총 점수"
       },
       "selection": {
-        "title": "선발",
         "generate": "자동 선발 생성",
         "publish": "선발 명단 공개",
         "current": "현재 선발 명단",
@@ -975,6 +977,7 @@
       },
       "correction": {
         "title": "지난 이벤트 수정",
+        "badge": "수정 가능",
         "hint": "이벤트가 끝났습니다. 순서를 바꾸면 순위가 바뀐 플레이어의 비용만 다시 계산되며, 순위표의 DKP도 다시 계산됩니다.",
         "available": "아직 배치되지 않은 플레이어 (등록 여부 무관)",
         "noneAvailable": "모든 플레이어가 이미 선택에 포함되어 있습니다.",

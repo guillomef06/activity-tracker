@@ -1,15 +1,5 @@
-<mat-card class="section-card">
-  <mat-card-header>
-    <mat-icon mat-card-avatar>{{ isEditable() ? 'groups' : 'lock' }}</mat-icon>
-    <mat-card-title>{{ titleKey() | translate }}</mat-card-title>
-    @if (isCorrection()) {
-      <mat-card-subtitle>
-        {{ event().start_date | date: 'dd/MM/yyyy' }} – {{ event().end_date | date: 'dd/MM/yyyy' }}
-      </mat-card-subtitle>
-    }
-  </mat-card-header>
-
-  <mat-card-content>
+<div class="selection-panel">
+  <div class="panel-content">
     @if (!isEditable()) {
       <!-- Locked: published or in progress, read-only -->
       <div class="locked-state">
@@ -212,10 +202,10 @@
         </ul>
       }
     }
-  </mat-card-content>
+  </div>
 
   @if (isEditable()) {
-    <mat-card-actions align="end">
+    <div class="panel-actions">
       @if (isDirty()) {
         <span class="unsaved-hint">{{ 'mg.admin.selection.unsaved' | translate }}</span>
         <button mat-button type="button" [disabled]="isSaving()" (click)="reset()">
@@ -240,6 +230,6 @@
           {{ 'mg.admin.selection.publish' | translate }}
         </button>
       }
-    </mat-card-actions>
+    </div>
   }
-</mat-card>
+</div>

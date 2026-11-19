@@ -917,7 +917,6 @@
       "eventTitle": "Acara saat ini",
       "selectionLocked": "Seleksi terkunci — acara sedang berlangsung.",
       "selectionPublishedLocked": "Seleksi sudah dipublikasikan dan terkunci. Dapat dikoreksi setelah event selesai.",
-      "configSaved": "Konfigurasi disimpan.",
       "configSaveError": "Gagal menyimpan konfigurasi.",
       "slotConfig": {
         "title": "Konfigurasi Biaya & Target Slot",
@@ -927,10 +926,8 @@
         "targetMin": "Target Min",
         "targetMax": "Target Maks",
         "targetRangeError": "Target maks harus lebih besar atau sama dengan target min",
-        "required": "Wajib diisi",
-        "save": "Simpan"
+        "required": "Wajib diisi"
       },
-      "slotConfigSaved": "Konfigurasi slot disimpan.",
       "slotConfigSaveError": "Gagal menyimpan konfigurasi slot.",
       "selectionSaved": "Seleksi disimpan.",
       "selectionSaveError": "Gagal menyimpan seleksi.",
@@ -942,19 +939,24 @@
         "mode": "Mode seleksi",
         "modeAutomatic": "Otomatis",
         "modeManual": "Manual",
-        "save": "Simpan",
         "dkpEnabled": "Aktifkan sistem DKP",
         "dkpEnabledHint": "Saat diaktifkan, biaya slot pemain yang terpilih dikurangi dari total mereka di papan peringkat."
       },
+      "settings": {
+        "title": "Pengaturan",
+        "save": "Simpan pengaturan",
+        "saved": "Pengaturan disimpan.",
+        "unsaved": "Perubahan belum disimpan",
+        "dkpOn": "DKP aktif"
+      },
       "registrations": {
         "title": "Pendaftaran",
-        "empty": "Belum ada pendaftaran.",
+        "count": "{{count}} terdaftar",
         "position": "Posisi yang diinginkan",
         "noPosition": "Belum ditentukan",
         "totalScore": "Skor total"
       },
       "selection": {
-        "title": "Seleksi",
         "generate": "Buat seleksi otomatis",
         "publish": "Publikasikan seleksi",
         "current": "Seleksi saat ini",
@@ -975,6 +977,7 @@
       },
       "correction": {
         "title": "Koreksi event terakhir",
+        "badge": "Koreksi tersedia",
         "hint": "Event telah selesai. Pengurutan ulang hanya menghitung ulang biaya pemain yang peringkatnya berubah; DKP mereka di papan peringkat juga dihitung ulang.",
         "available": "Pemain yang belum ditempatkan (terdaftar atau tidak)",
         "noneAvailable": "Semua pemain sudah ada dalam seleksi.",

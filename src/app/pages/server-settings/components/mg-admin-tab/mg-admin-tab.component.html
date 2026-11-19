@@ -4,208 +4,218 @@
       <mat-spinner diameter="40" />
     </div>
   } @else {
-    <!-- Config section -->
-    <mat-card class="section-card">
-      <mat-card-header>
-        <mat-icon mat-card-avatar>settings</mat-icon>
-        <mat-card-title>{{ 'mg.admin.config.title' | translate }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form class="config-form">
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'mg.admin.config.capacity' | translate }}</mat-label>
-            <mat-select [formField]="configForm.capacity">
-              <mat-option [value]="10">10</mat-option>
-              <mat-option [value]="50">50</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'mg.admin.config.mode' | translate }}</mat-label>
-            <mat-select [formField]="configForm.assignment_mode">
-              <mat-option value="automatic">{{ 'mg.admin.config.modeAutomatic' | translate }}</mat-option>
-              <mat-option value="manual">{{ 'mg.admin.config.modeManual' | translate }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <div class="dkp-toggle">
-            <mat-slide-toggle [formField]="configForm.dkp_enabled">
-              {{ 'mg.admin.config.dkpEnabled' | translate }}
-            </mat-slide-toggle>
-            <p class="dkp-hint">{{ 'mg.admin.config.dkpEnabledHint' | translate }}</p>
-          </div>
-        </form>
-      </mat-card-content>
-      <mat-card-actions align="end">
-        <button
-          mat-flat-button
-          color="primary"
-          [disabled]="isSavingConfig() || configForm().invalid()"
-          (click)="saveConfig()"
-        >
-          {{ 'mg.admin.config.save' | translate }}
-        </button>
-      </mat-card-actions>
-    </mat-card>
-
-    <!-- Slot configuration -->
-    <mat-card class="section-card">
-      <mat-card-header>
-        <mat-icon mat-card-avatar>tune</mat-icon>
-        <mat-card-title>{{ 'mg.admin.slotConfig.title' | translate }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form>
-          <div class="slot-config-list">
-            @for (row of slotConfigForm.rows; track row.slotOrder().value()) {
-              <div class="slot-config-row">
-                <div class="slot-config-identity">
-                  <span
-                    class="slot-rank"
-                    [attr.aria-label]="('mg.admin.slotConfig.rank' | translate) + ': ' + row.rankLabel().value()"
-                  >
-                    {{ row.rankLabel().value() }}
-                  </span>
-                  <span
-                    class="slot-medal"
-                    [attr.aria-label]="('mg.admin.slotConfig.medal' | translate) + ': ' + row.medal().value()"
-                  >
-                    {{ row.medal().value() }}
-                  </span>
-                </div>
-
-                <mat-form-field appearance="outline" class="slot-field">
-                  <mat-label>{{ 'mg.admin.slotConfig.cost' | translate }}</mat-label>
-                  <input matInput type="number" [formField]="row.cost" />
-                  @if (row.cost().touched() && row.cost().invalid()) {
-                    <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
-                  }
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="slot-field">
-                  <mat-label>{{ 'mg.admin.slotConfig.targetMin' | translate }}</mat-label>
-                  <input matInput type="number" [formField]="row.targetMin" />
-                  @if (row.targetMin().touched() && row.targetMin().invalid()) {
-                    <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
-                  }
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="slot-field">
-                  <mat-label>{{ 'mg.admin.slotConfig.targetMax' | translate }}</mat-label>
-                  <input matInput type="number" [formField]="row.targetMax" />
-                  @if (row.targetMax().touched() && row.targetMax().errors()[0]?.kind === 'required') {
-                    <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
-                  } @else if (row.targetMax().touched() && row.targetMax().errors()[0]?.kind === 'targetRange') {
-                    <mat-error>{{ 'mg.admin.slotConfig.targetRangeError' | translate }}</mat-error>
-                  }
-                </mat-form-field>
-              </div>
-            }
-          </div>
-        </form>
-      </mat-card-content>
-      <mat-card-actions align="end">
-        <button
-          mat-flat-button
-          color="primary"
-          [disabled]="isSavingSlotConfig() || slotConfigForm().invalid()"
-          (click)="saveSlotConfig()"
-        >
-          {{ 'mg.admin.slotConfig.save' | translate }}
-        </button>
-      </mat-card-actions>
-    </mat-card>
-
-    <!-- No event -->
-    @if (!mgEvent()) {
-      <mat-card class="section-card">
-        <mat-card-content>
-          <p class="empty-state">{{ 'mg.admin.noEvent' | translate }}</p>
-        </mat-card-content>
-      </mat-card>
-    } @else {
-      <!-- Event info -->
-      <mat-card class="section-card">
-        <mat-card-header>
-          <mat-icon mat-card-avatar>event</mat-icon>
-          <mat-card-title>{{ 'mg.admin.eventTitle' | translate }}</mat-card-title>
-          <mat-card-subtitle>
-            {{ mgEvent()!.start_date | date: 'dd/MM/yyyy' }} – {{ mgEvent()!.end_date | date: 'dd/MM/yyyy' }}
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <mat-chip class="status-chip status-{{ mgEvent()!.status }}">
-            {{ 'mg.event.' + mgEvent()!.status | translate }}
-          </mat-chip>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Registrations -->
-      <mat-card class="section-card">
-        <mat-card-header>
-          <mat-icon mat-card-avatar>how_to_reg</mat-icon>
-          <mat-card-title
-            >{{ 'mg.admin.registrations.title' | translate }} ({{ registrations().length }})</mat-card-title
-          >
-        </mat-card-header>
-        <mat-card-content>
-          @if (registrations().length === 0) {
-            <p class="empty-state">{{ 'mg.admin.registrations.empty' | translate }}</p>
-          } @else {
-            <div class="registration-list">
-              @for (reg of registrationRows(); track trackByReg($index, reg)) {
-                <div class="list-row registration-row">
-                  <span class="displayname">{{ reg.user_profiles.display_name }}</span>
-                  <span class="total-score">
-                    {{ 'mg.admin.registrations.totalScore' | translate }}:
-                    {{ reg.totalScore ?? 0 }}
-                  </span>
-                  <span class="desired-position">
-                    {{ 'mg.admin.registrations.position' | translate }}:
-                    {{ reg.positionLabel ?? ('mg.admin.registrations.noPosition' | translate) }}
-                  </span>
-                  @if (reg.comment) {
-                    <span class="registration-comment">{{ reg.comment }}</span>
-                  }
-                </div>
+    <!-- Settings: rarely changed, kept first but collapsed, one Save for both blocks -->
+    <mat-expansion-panel class="settings-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="panel-stack">
+          <span class="panel-heading">
+            <mat-icon>settings</mat-icon>
+            {{ 'mg.admin.settings.title' | translate }}
+          </span>
+          <span class="panel-meta">
+            <span class="settings-summary">
+              {{ 'mg.admin.config.capacity' | translate }}: {{ savedCapacity() }} ·
+              @if (savedAssignmentMode() === 'manual') {
+                {{ 'mg.admin.config.modeManual' | translate }}
+              } @else {
+                {{ 'mg.admin.config.modeAutomatic' | translate }}
               }
+              @if (savedDkpEnabled()) {
+                · {{ 'mg.admin.settings.dkpOn' | translate }}
+              }
+            </span>
+            @if (settingsDirty()) {
+              <mat-chip class="unsaved-chip">{{ 'mg.admin.settings.unsaved' | translate }}</mat-chip>
+            }
+          </span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <h3 class="settings-subheading">{{ 'mg.admin.config.title' | translate }}</h3>
+      <form class="config-form">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'mg.admin.config.capacity' | translate }}</mat-label>
+          <mat-select [formField]="configForm.capacity">
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="50">50</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'mg.admin.config.mode' | translate }}</mat-label>
+          <mat-select [formField]="configForm.assignment_mode">
+            <mat-option value="automatic">{{ 'mg.admin.config.modeAutomatic' | translate }}</mat-option>
+            <mat-option value="manual">{{ 'mg.admin.config.modeManual' | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="dkp-toggle">
+          <mat-slide-toggle [formField]="configForm.dkp_enabled">
+            {{ 'mg.admin.config.dkpEnabled' | translate }}
+          </mat-slide-toggle>
+          <p class="dkp-hint">{{ 'mg.admin.config.dkpEnabledHint' | translate }}</p>
+        </div>
+      </form>
+
+      <h3 class="settings-subheading">{{ 'mg.admin.slotConfig.title' | translate }}</h3>
+      <form>
+        <div class="slot-config-list">
+          @for (row of slotConfigForm.rows; track row.slotOrder().value()) {
+            <div class="slot-config-row">
+              <div class="slot-config-identity">
+                <span
+                  class="slot-rank"
+                  [attr.aria-label]="('mg.admin.slotConfig.rank' | translate) + ': ' + row.rankLabel().value()"
+                >
+                  {{ row.rankLabel().value() }}
+                </span>
+                <span
+                  class="slot-medal"
+                  [attr.aria-label]="('mg.admin.slotConfig.medal' | translate) + ': ' + row.medal().value()"
+                >
+                  {{ row.medal().value() }}
+                </span>
+              </div>
+
+              <mat-form-field appearance="outline" class="slot-field">
+                <mat-label>{{ 'mg.admin.slotConfig.cost' | translate }}</mat-label>
+                <input matInput type="number" [formField]="row.cost" />
+                @if (row.cost().touched() && row.cost().invalid()) {
+                  <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="slot-field">
+                <mat-label>{{ 'mg.admin.slotConfig.targetMin' | translate }}</mat-label>
+                <input matInput type="number" [formField]="row.targetMin" />
+                @if (row.targetMin().touched() && row.targetMin().invalid()) {
+                  <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="slot-field">
+                <mat-label>{{ 'mg.admin.slotConfig.targetMax' | translate }}</mat-label>
+                <input matInput type="number" [formField]="row.targetMax" />
+                @if (row.targetMax().touched() && row.targetMax().errors()[0]?.kind === 'required') {
+                  <mat-error>{{ 'mg.admin.slotConfig.required' | translate }}</mat-error>
+                } @else if (row.targetMax().touched() && row.targetMax().errors()[0]?.kind === 'targetRange') {
+                  <mat-error>{{ 'mg.admin.slotConfig.targetRangeError' | translate }}</mat-error>
+                }
+              </mat-form-field>
             </div>
           }
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </form>
 
-      <!-- Selection: editable draft, or read-only once published / in progress -->
-      <app-mg-selection-panel
-        [event]="mgEvent()!"
-        [kind]="currentPanelKind()"
-        [registrations]="registrations()"
-        [selection]="currentSelection()"
-        [capacity]="savedCapacity()"
-        [assignmentMode]="savedAssignmentMode()"
-        [slotRows]="savedSlotRows()"
-        [dkpEnabled]="savedDkpEnabled()"
-        [totalScores]="totalScoreByUserId()"
-        (selectionSaved)="reloadCurrentSelection()"
-        (published)="reloadCurrentEvent()"
-      />
-    }
+      <div class="settings-actions">
+        <button mat-flat-button color="primary" type="button" [disabled]="!canSaveSettings()" (click)="saveSettings()">
+          {{ 'mg.admin.settings.save' | translate }}
+        </button>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- Current event: dates, status, registrations and the selection panel in one card -->
+    <mat-card class="current-event-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>event</mat-icon>
+        <mat-card-title>{{ 'mg.admin.eventTitle' | translate }}</mat-card-title>
+        @if (mgEvent(); as event) {
+          <mat-card-subtitle>
+            {{ event.start_date | date: 'dd/MM/yyyy' }} – {{ event.end_date | date: 'dd/MM/yyyy' }}
+          </mat-card-subtitle>
+        }
+      </mat-card-header>
+      <mat-card-content>
+        @if (mgEvent(); as event) {
+          <div class="chip-row">
+            <mat-chip class="status-chip status-{{ event.status }}">
+              {{ 'mg.event.' + event.status | translate }}
+            </mat-chip>
+            <mat-chip class="count-chip">
+              {{ 'mg.admin.registrations.count' | translate: { count: registrationCount() } }}
+            </mat-chip>
+          </div>
+
+          @if (showRegistrationsList()) {
+            <mat-expansion-panel class="registrations-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{ 'mg.admin.registrations.title' | translate }} ({{ registrationCount() }})
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="registration-list">
+                @for (reg of registrationRows(); track reg.id) {
+                  <div class="list-row registration-row">
+                    <span class="displayname">{{ reg.user_profiles.display_name }}</span>
+                    <span class="total-score">
+                      {{ 'mg.admin.registrations.totalScore' | translate }}:
+                      {{ reg.totalScore ?? 0 }}
+                    </span>
+                    <span class="desired-position">
+                      {{ 'mg.admin.registrations.position' | translate }}:
+                      {{ reg.positionLabel ?? ('mg.admin.registrations.noPosition' | translate) }}
+                    </span>
+                    @if (reg.comment) {
+                      <span class="registration-comment">{{ reg.comment }}</span>
+                    }
+                  </div>
+                }
+              </div>
+            </mat-expansion-panel>
+          }
+
+          <!-- Selection: editable draft, or read-only once published / in progress -->
+          <app-mg-selection-panel
+            [event]="event"
+            [kind]="currentPanelKind()"
+            [registrations]="registrations()"
+            [selection]="currentSelection()"
+            [capacity]="savedCapacity()"
+            [assignmentMode]="savedAssignmentMode()"
+            [slotRows]="savedSlotRows()"
+            [dkpEnabled]="savedDkpEnabled()"
+            [totalScores]="totalScoreByUserId()"
+            (selectionSaved)="reloadCurrentSelection()"
+            (published)="reloadCurrentEvent()"
+          />
+        } @else {
+          <p class="empty-state">{{ 'mg.admin.noEvent' | translate }}</p>
+        }
+      </mat-card-content>
+    </mat-card>
 
     <!-- Correction of the last finished event (players don't always follow the planned order) -->
     @if (lastFinishedEvent(); as finished) {
       @if (lastFinishedSelection().length > 0) {
-        <app-mg-selection-panel
-          [event]="finished"
-          kind="correction"
-          [registrations]="lastFinishedRegistrations()"
-          [members]="memberOptions()"
-          [selection]="lastFinishedSelection()"
-          [capacity]="savedCapacity()"
-          [assignmentMode]="savedAssignmentMode()"
-          [slotRows]="savedSlotRows()"
-          [dkpEnabled]="savedDkpEnabled()"
-          [totalScores]="totalScoreByUserId()"
-          (selectionSaved)="reloadLastFinishedSelection()"
-        />
+        <mat-expansion-panel class="correction-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-stack">
+              <span class="panel-heading">
+                <mat-icon>edit_note</mat-icon>
+                {{ 'mg.admin.correction.title' | translate }}
+              </span>
+              <span class="panel-meta">
+                <span>
+                  {{ finished.start_date | date: 'dd/MM/yyyy' }} – {{ finished.end_date | date: 'dd/MM/yyyy' }}
+                </span>
+                <mat-chip class="badge-chip">{{ 'mg.admin.correction.badge' | translate }}</mat-chip>
+              </span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-mg-selection-panel
+            [event]="finished"
+            kind="correction"
+            [registrations]="lastFinishedRegistrations()"
+            [members]="memberOptions()"
+            [selection]="lastFinishedSelection()"
+            [capacity]="savedCapacity()"
+            [assignmentMode]="savedAssignmentMode()"
+            [slotRows]="savedSlotRows()"
+            [dkpEnabled]="savedDkpEnabled()"
+            [totalScores]="totalScoreByUserId()"
+            (selectionSaved)="reloadLastFinishedSelection()"
+          />
+        </mat-expansion-panel>
       }
     }
   }

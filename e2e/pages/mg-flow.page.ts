@@ -50,10 +50,11 @@ export class MgPlayerPage {
   }
 }
 
-/** Server settings > "MG Event" tab: current event, registrations and the selection draft. */
+/** Server settings > "MG Event" tab: current event card (status, registrations, selection draft). */
 export class MgEventAdminPage {
   readonly statusChip: Locator;
-  readonly registrations: Locator;
+  readonly countChip: Locator;
+  readonly registrationsPanel: Locator;
   readonly selection: Locator;
   readonly generate: Locator;
   readonly save: Locator;
@@ -61,9 +62,11 @@ export class MgEventAdminPage {
 
   constructor(private readonly page: Page) {
     this.statusChip = page.locator('.status-chip');
-    this.registrations = page.locator('mat-card').filter({ has: page.getByText(/^Registrations \(\d+\)$/) });
-    // The correction panel of the last finished event shares the component; this is the current event's.
-    this.selection = page.locator('app-mg-selection-panel').filter({ hasNotText: 'Correct the last event' });
+    this.countChip = page.locator('.count-chip');
+    // Only present once the selection is locked (published / in progress); in draft the pool is the list.
+    this.registrationsPanel = page.locator('.registrations-panel');
+    // The correction panel of the last finished event is a separate panel outside the current event card.
+    this.selection = page.locator('.current-event-card app-mg-selection-panel');
     this.generate = this.selection.getByRole('button', { name: 'Generate auto selection' });
     this.save = this.selection.getByRole('button', { name: 'Save changes' });
     this.publish = this.selection.getByRole('button', { name: 'Publish selection' });
@@ -77,8 +80,20 @@ export class MgEventAdminPage {
     await expect(this.statusChip).toBeVisible();
   }
 
+  /** In draft states the "registered, not yet placed" pool is the registrations list. */
+  poolRow(name: string): Locator {
+    return this.selection.locator('ul .draft-row').filter({ has: this.page.getByText(name, { exact: true }) });
+  }
+
+  /** Locked states only: expands the "Registrations (N)" panel (idempotent). */
+  async expandRegistrations(): Promise<void> {
+    const header = this.registrationsPanel.locator('mat-expansion-panel-header');
+    if ((await header.getAttribute('aria-expanded')) !== 'true') await header.click();
+    await expect(header).toHaveAttribute('aria-expanded', 'true');
+  }
+
   registrationRow(name: string): Locator {
-    return this.registrations.locator('.registration-row').filter({ hasText: name });
+    return this.registrationsPanel.locator('.registration-row').filter({ hasText: name });
   }
 
   draftPlayers(): Locator {

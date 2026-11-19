@@ -917,7 +917,6 @@
       "eventTitle": "Evento atual",
       "selectionLocked": "A seleção está bloqueada — o evento está em andamento.",
       "selectionPublishedLocked": "A seleção está publicada e bloqueada. Pode ser corrigida quando o evento terminar.",
-      "configSaved": "Configuração salva.",
       "configSaveError": "Falha ao salvar configuração.",
       "slotConfig": {
         "title": "Configuração de Custo e Meta por Slot",
@@ -927,10 +926,8 @@
         "targetMin": "Meta mín.",
         "targetMax": "Meta máx.",
         "targetRangeError": "A meta máxima deve ser maior ou igual à meta mínima",
-        "required": "Obrigatório",
-        "save": "Salvar"
+        "required": "Obrigatório"
       },
-      "slotConfigSaved": "Configuração de slots salva.",
       "slotConfigSaveError": "Falha ao salvar configuração de slots.",
       "selectionSaved": "Seleção salva.",
       "selectionSaveError": "Falha ao salvar seleção.",
@@ -942,19 +939,24 @@
         "mode": "Modo de seleção",
         "modeAutomatic": "Automático",
         "modeManual": "Manual",
-        "save": "Salvar",
         "dkpEnabled": "Ativar o sistema DKP",
         "dkpEnabledHint": "Quando ativado, o custo do slot dos jogadores selecionados é deduzido do seu total na tabela de classificação."
       },
+      "settings": {
+        "title": "Definições",
+        "save": "Guardar definições",
+        "saved": "Definições guardadas.",
+        "unsaved": "Alterações por guardar",
+        "dkpOn": "DKP ativo"
+      },
       "registrations": {
         "title": "Inscrições",
-        "empty": "Nenhuma inscrição ainda.",
+        "count": "{{count}} inscrito(s)",
         "position": "Posição desejada",
         "noPosition": "Não especificada",
         "totalScore": "Pontuação total"
       },
       "selection": {
-        "title": "Seleção",
         "generate": "Gerar seleção automática",
         "publish": "Publicar seleção",
         "current": "Seleção atual",
@@ -975,6 +977,7 @@
       },
       "correction": {
         "title": "Corrigir o último evento",
+        "badge": "Correção disponível",
         "hint": "O evento terminou. Reordenar só recalcula o custo dos jogadores cuja posição muda; o respetivo DKP na classificação é recalculado.",
         "available": "Jogadores ainda não colocados (inscritos ou não)",
         "noneAvailable": "Todos os jogadores já estão na seleção.",

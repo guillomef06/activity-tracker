@@ -26,12 +26,22 @@ export class DraftRow {
   }
 }
 
-/** Server settings > "MG Event" tab, correction panel of the last finished event. */
+/** Server settings > "MG Event" tab, correction panel (collapsed by default) of the last finished event. */
 export class MgAdminPage {
+  readonly section: Locator;
   readonly panel: Locator;
 
   constructor(private readonly page: Page) {
-    this.panel = page.locator('app-mg-selection-panel').filter({ hasText: 'Correct the last event' });
+    this.section = page.locator('.correction-panel');
+    this.panel = this.section.locator('app-mg-selection-panel');
+  }
+
+  /** Expands the correction panel (idempotent) and waits until its content is visible. */
+  async expand(): Promise<void> {
+    const header = this.section.locator('mat-expansion-panel-header');
+    if ((await header.getAttribute('aria-expanded')) !== 'true') await header.click();
+    await expect(header).toHaveAttribute('aria-expanded', 'true');
+    await expect(this.panel).toBeVisible();
   }
 
   /** Opens the tab and refuses to continue unless the active server is ERA008-DEMO. */
@@ -39,7 +49,8 @@ export class MgAdminPage {
     await this.page.goto('/app/server-settings');
     await expect(this.page.getByText(DEMO_SERVER_NAME, { exact: true }).first()).toBeVisible();
     await this.page.getByRole('tab', { name: 'MG Event' }).click();
-    await expect(this.panel).toBeVisible();
+    await expect(this.section).toBeVisible();
+    await this.expand();
   }
 
   private get orderedList(): Locator {
