@@ -72,3 +72,6 @@ e2e/.report/
 e2e/.results/
 test-results/
 playwright-report/
+
+# MG rehearsal: production snapshot, never committed
+supabase/tests/rehearsal/*.local.sql
