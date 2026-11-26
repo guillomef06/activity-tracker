@@ -1045,7 +1045,6 @@
       "eventTitle": "当前赛事",
       "selectionLocked": "名单已锁定——赛事正在进行中。",
       "selectionPublishedLocked": "选拔已发布并锁定。活动结束后可以更正。",
-      "configSaved": "配置已保存。",
       "configSaveError": "配置保存失败。",
       "slotConfig": {
         "title": "槽位费用与目标配置",
@@ -1055,10 +1054,8 @@
         "targetMin": "最低目标",
         "targetMax": "最高目标",
         "targetRangeError": "最高目标必须大于或等于最低目标",
-        "required": "必填",
-        "save": "保存"
+        "required": "必填"
       },
-      "slotConfigSaved": "槽位配置已保存。",
       "slotConfigSaveError": "槽位配置保存失败。",
       "selectionSaved": "名单已保存。",
       "selectionSaveError": "名单保存失败。",
@@ -1070,19 +1067,24 @@
         "mode": "选拔方式",
         "modeAutomatic": "自动",
         "modeManual": "手动",
-        "save": "保存",
         "dkpEnabled": "启用 DKP 系统",
         "dkpEnabledHint": "启用后，被选中玩家的位置费用将从其排行榜总分中扣除。"
       },
+      "settings": {
+        "title": "设置",
+        "save": "保存设置",
+        "saved": "设置已保存。",
+        "unsaved": "有未保存的更改",
+        "dkpOn": "DKP 已启用"
+      },
       "registrations": {
         "title": "报名情况",
-        "empty": "暂无报名。",
+        "count": "{{count}} 人已报名",
         "position": "期望位置",
         "noPosition": "未填写",
         "totalScore": "总积分"
       },
       "selection": {
-        "title": "入选名单",
         "generate": "生成自动名单",
         "publish": "公布名单",
         "current": "当前名单",
@@ -1103,6 +1105,7 @@
       },
       "correction": {
         "title": "更正上一场活动",
+        "badge": "可更正",
         "hint": "活动已结束。调整顺序时，只会重新计算名次发生变化的玩家的费用；他们在排行榜上的 DKP 也会重新计算。",
         "available": "尚未安排的玩家（无论是否已报名）",
         "noneAvailable": "所有玩家都已在名单中。",

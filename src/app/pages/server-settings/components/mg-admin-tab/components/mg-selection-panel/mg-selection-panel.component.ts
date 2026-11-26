@@ -8,9 +8,7 @@ import {
   computed,
   linkedSignal,
 } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { DragDropModule, moveItemInArray, type CdkDragDrop } from '@angular/cdk/drag-drop';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -106,9 +104,7 @@ interface LockedRow {
 @Component({
   selector: 'app-mg-selection-panel',
   imports: [
-    DatePipe,
     DragDropModule,
-    MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
@@ -197,10 +193,6 @@ export class MgSelectionPanelComponent {
   /** A corrected selection keeps its original size even if the server capacity changed since. */
   protected readonly effectiveCapacity = computed(() =>
     this.isCorrection() && this.selection().length > 0 ? this.selection().length : this.capacity()
-  );
-
-  protected readonly titleKey = computed(() =>
-    this.isCorrection() ? 'mg.admin.correction.title' : 'mg.admin.selection.title'
   );
 
   protected readonly lockedMessageKey = computed(() =>

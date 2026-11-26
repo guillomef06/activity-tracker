@@ -42,6 +42,8 @@ export type FlowEventStatus = 'registration_open' | 'registration_closed';
 export interface FlowEventOptions {
   /** Members of ERA008-DEMO registered by the seeder (by display name), as if they signed up. */
   registeredPlayers?: readonly string[];
+  /** Optional per-player registration details (keyed by display name), e.g. to make screenshots richer. */
+  registrationDetails?: Readonly<Record<string, { desiredSlotOrder?: number; comment?: string }>>;
 }
 
 export interface SavedSelectionRow {
@@ -51,6 +53,25 @@ export interface SavedSelectionRow {
   cost: number;
   approved_cost: number | null;
   display_name: string | null;
+}
+
+export interface ConfigSnapshotRow {
+  capacity: number;
+  assignment_mode: string;
+  dkp_enabled: boolean;
+}
+
+export interface SlotSnapshotRow {
+  slot_order: number;
+  cost: number;
+  target_min: number;
+  target_max: number;
+}
+
+/** What ERA008-DEMO's MG settings looked like: `config` is null when the row did not exist. */
+export interface SettingsSnapshot {
+  config: ConfigSnapshotRow | null;
+  slots: SlotSnapshotRow[];
 }
 
 /**
@@ -176,11 +197,65 @@ export class MgSeeder {
         const rows = names.map(name => {
           const userId = idByName.get(name);
           if (!userId) throw new Error(`Seed player "${name}" not found on ${DEMO_SERVER_NAME}`);
-          return { mg_event_id: eventId, user_id: userId, desired_slot_order: 1, comment: null };
+          const detail = options.registrationDetails?.[name];
+          return {
+            mg_event_id: eventId,
+            user_id: userId,
+            desired_slot_order: detail?.desiredSlotOrder ?? 1,
+            comment: detail?.comment ?? null,
+          };
         });
         const { error: regError } = await this.client.from('mg_registrations').insert(rows);
         if (regError) throw new Error(`seed registrations failed: ${regError.message}`);
       }
+    } catch (e) {
+      await this.cleanup(FLOW_EVENT_START);
+      throw e;
+    }
+    return eventId;
+  }
+
+  /**
+   * Flow event (FLOW_EVENT_START only) already published: the registrants are the selected
+   * players (rank order, default slot costs), the remaining slots up to capacity are FFA.
+   */
+  async seedPublishedFlowEvent(options: FlowEventOptions = {}): Promise<string> {
+    await this.assertDefaultSlotCosts();
+    const eventId = await this.seedFlowEvent(options);
+    try {
+      const names = options.registeredPlayers ?? [];
+      const idByName = await this.memberIdsByName();
+      const selected = names.map((name, i) => {
+        const defaults = SEEDED_PLAYERS[i];
+        const userId = idByName.get(name);
+        if (!defaults || !userId) throw new Error(`Cannot select "${name}" for the published flow event`);
+        return {
+          mg_event_id: eventId,
+          user_id: userId,
+          rank: defaults.rank,
+          selection_type: 'selected',
+          selected_by: 'automatic',
+          cost: defaults.cost,
+          approved_rank: defaults.rank,
+          approved_cost: defaults.cost,
+        };
+      });
+      const ffa = Array.from({ length: CAPACITY - names.length }, (_, i) => ({
+        mg_event_id: eventId,
+        user_id: null,
+        rank: names.length + i + 1,
+        selection_type: 'ffa',
+        selected_by: 'automatic',
+        cost: 0,
+      }));
+      const { error: selError } = await this.client.from('mg_selections').insert([...selected, ...ffa]);
+      if (selError) throw new Error(`seed published selection failed: ${selError.message}`);
+      const { error: updError } = await this.client
+        .from('mg_events')
+        .update({ status: 'selection_published', selection_published_at: new Date().toISOString() })
+        .eq('id', eventId)
+        .eq('start_date', FLOW_EVENT_START);
+      if (updError) throw new Error(`publish flow event failed: ${updError.message}`);
     } catch (e) {
       await this.cleanup(FLOW_EVENT_START);
       throw e;
@@ -237,6 +312,54 @@ export class MgSeeder {
       approved_cost: row.approved_cost as number | null,
       display_name: (row.user_profiles as unknown as { display_name: string } | null)?.display_name ?? null,
     }));
+  }
+
+  /** Captures server_mg_config (row or absence) and server_mg_slot_config of the demo server. */
+  async snapshotSettings(): Promise<SettingsSnapshot> {
+    const { data: config, error: configError } = await this.client
+      .from('server_mg_config')
+      .select('capacity, assignment_mode, dkp_enabled')
+      .eq('server_id', this.serverId)
+      .maybeSingle();
+    if (configError) throw new Error(`snapshot config failed: ${configError.message}`);
+    const { data: slots, error: slotsError } = await this.client
+      .from('server_mg_slot_config')
+      .select('slot_order, cost, target_min, target_max')
+      .eq('server_id', this.serverId)
+      .order('slot_order');
+    if (slotsError) throw new Error(`snapshot slots failed: ${slotsError.message}`);
+    return { config: (config as ConfigSnapshotRow | null) ?? null, slots: (slots ?? []) as SlotSnapshotRow[] };
+  }
+
+  /**
+   * Puts the MG settings of the demo server back to `snapshot` and re-reads them: throws if the
+   * restored state is not strictly equal, so a test can never leave a customised DEMO config behind.
+   */
+  async restoreSettings(snapshot: SettingsSnapshot): Promise<void> {
+    if (snapshot.config) {
+      const { error } = await this.client
+        .from('server_mg_config')
+        .upsert({ server_id: this.serverId, ...snapshot.config }, { onConflict: 'server_id' });
+      if (error) throw new Error(`restore config failed: ${error.message}`);
+    } else {
+      const { error } = await this.client.from('server_mg_config').delete().eq('server_id', this.serverId);
+      if (error) throw new Error(`restore config (delete) failed: ${error.message}`);
+    }
+    const { error: deleteError } = await this.client
+      .from('server_mg_slot_config')
+      .delete()
+      .eq('server_id', this.serverId);
+    if (deleteError) throw new Error(`restore slots (delete) failed: ${deleteError.message}`);
+    if (snapshot.slots.length > 0) {
+      const { error } = await this.client
+        .from('server_mg_slot_config')
+        .insert(snapshot.slots.map(s => ({ server_id: this.serverId, ...s })));
+      if (error) throw new Error(`restore slots failed: ${error.message}`);
+    }
+    const after = await this.snapshotSettings();
+    if (JSON.stringify(after) !== JSON.stringify(snapshot)) {
+      throw new Error(`E2E settings restore NOT verified on ${DEMO_SERVER_NAME}: manual check required.`);
+    }
   }
 
   /** The tests assume the built-in slot costs; a customised DEMO config would silently skew them. */

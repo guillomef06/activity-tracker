@@ -50,6 +50,22 @@ const mockSnackbarService = {
   error: vi.fn(),
 };
 
+const makeSelection = (eventId: string) => [
+  {
+    id: 'sel-1',
+    mg_event_id: eventId,
+    user_id: 'user-1',
+    rank: 1,
+    selection_type: 'selected',
+    selected_by: 'automatic',
+    cost: 150,
+    label: null,
+    approved_rank: null,
+    approved_cost: null,
+    user_profiles: { display_name: 'Alice', username: 'alice' },
+  },
+];
+
 describe('MgAdminTabComponent', () => {
   let component: MgAdminTabComponent;
   let fixture: ComponentFixture<MgAdminTabComponent>;
@@ -218,27 +234,9 @@ describe('MgAdminTabComponent', () => {
         rows: current.rows.map((row, i) => (i === 0 ? { ...row, cost: -1 } : row)),
       }));
 
-      await (component as unknown as { saveSlotConfig: () => Promise<void> }).saveSlotConfig();
+      await (component as unknown as { saveSettings: () => Promise<void> }).saveSettings();
 
       expect(mockMgEventService.saveSlotConfig).not.toHaveBeenCalled();
-    });
-
-    it('should save slot config and show success snackbar', async () => {
-      await (component as unknown as { saveSlotConfig: () => Promise<void> }).saveSlotConfig();
-
-      expect(mockMgEventService.saveSlotConfig).toHaveBeenCalledWith(
-        'server-1',
-        expect.arrayContaining([expect.objectContaining({ slot_order: 1, cost: 150, target_min: 30, target_max: 30 })])
-      );
-      expect(mockSnackbarService.success).toHaveBeenCalled();
-    });
-
-    it('should show error snackbar when saveSlotConfig fails', async () => {
-      mockMgEventService.saveSlotConfig.mockResolvedValueOnce({ error: new Error('failed') });
-
-      await (component as unknown as { saveSlotConfig: () => Promise<void> }).saveSlotConfig();
-
-      expect(mockSnackbarService.error).toHaveBeenCalled();
     });
   });
 
@@ -395,6 +393,7 @@ describe('MgAdminTabComponent', () => {
       expect(compiled.textContent).not.toContain('undefined');
     });
 
+    // The Registrations list (with .total-score) is only shown once the selection is locked.
     it("should display the registrant's total score", async () => {
       mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
         id: 'event-1',
@@ -403,7 +402,7 @@ describe('MgAdminTabComponent', () => {
         end_date: '2026-01-11',
         registration_open_at: '2025-12-29',
         registration_close_at: '2026-01-01',
-        status: 'registration_open',
+        status: 'selection_published',
         selection_published_at: null,
         created_at: '2026-01-01T00:00:00Z',
       });
@@ -440,7 +439,7 @@ describe('MgAdminTabComponent', () => {
         end_date: '2026-01-11',
         registration_open_at: '2025-12-29',
         registration_close_at: '2026-01-01',
-        status: 'registration_open',
+        status: 'selection_published',
         selection_published_at: null,
         created_at: '2026-01-01T00:00:00Z',
       });
@@ -519,22 +518,6 @@ describe('MgAdminTabComponent', () => {
       selection_published_at: status === 'registration_closed' ? null : '2026-01-05T00:00:00Z',
       created_at: '2026-01-01T00:00:00Z',
     });
-
-    const makeSelection = (eventId: string) => [
-      {
-        id: 'sel-1',
-        mg_event_id: eventId,
-        user_id: 'user-1',
-        rank: 1,
-        selection_type: 'selected',
-        selected_by: 'automatic',
-        cost: 150,
-        label: null,
-        approved_rank: null,
-        approved_cost: null,
-        user_profiles: { display_name: 'Alice', username: 'alice' },
-      },
-    ];
 
     const render = async (): Promise<HTMLElement> => {
       fixture = TestBed.createComponent(MgAdminTabComponent);
@@ -625,6 +608,353 @@ describe('MgAdminTabComponent', () => {
         { userId: 'u-1', displayName: 'Alice' },
         { userId: 'u-2', displayName: 'Intruder' },
       ]);
+    });
+  });
+
+  describe('layout and settings', () => {
+    interface ConfigModel {
+      capacity: 10 | 50;
+      assignment_mode: string;
+      dkp_enabled: boolean;
+    }
+    interface Internals {
+      configModel: { update: (fn: (c: ConfigModel) => ConfigModel) => void };
+      slotConfigModel: { update: (fn: (c: { rows: MgSlotRow[] }) => { rows: MgSlotRow[] }) => void };
+      configDirty: () => boolean;
+      slotDirty: () => boolean;
+      settingsDirty: () => boolean;
+      canSaveSettings: () => boolean;
+      showRegistrationsList: () => boolean;
+      saveSettings: () => Promise<void>;
+      isSavingSettings: () => boolean;
+    }
+
+    const internals = (): Internals => component as unknown as Internals;
+
+    const flush = async (): Promise<void> => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
+    };
+
+    const makeEvent = (id: string, status: string) => ({
+      id,
+      server_id: 'server-1',
+      start_date: '2026-01-05',
+      end_date: '2026-01-11',
+      registration_open_at: '2025-12-29',
+      registration_close_at: '2026-01-01',
+      status,
+      selection_published_at: null,
+      created_at: '2026-01-01T00:00:00Z',
+    });
+
+    const makeRegistration = (id: string) => ({
+      id,
+      mg_event_id: 'event-1',
+      user_id: `user-${id}`,
+      registered_at: '2026-01-01T00:00:00Z',
+      desired_slot_order: 1,
+      comment: null,
+      user_profiles: { display_name: `Player ${id}`, username: id },
+    });
+
+    const makeServerConfig = (capacity: 10 | 50, mode = 'automatic', dkp = false) => ({
+      server_id: 'server-1',
+      capacity,
+      assignment_mode: mode,
+      dkp_enabled: dkp,
+      created_at: '2026-01-01T00:00:00Z',
+      updated_at: '2026-01-01T00:00:00Z',
+    });
+
+    const render = async (): Promise<HTMLElement> => {
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flush();
+      fixture.detectChanges();
+      return fixture.nativeElement as HTMLElement;
+    };
+
+    const setCapacity = (capacity: 10 | 50): void =>
+      internals().configModel.update(current => ({ ...current, capacity }));
+    const setFirstSlotCost = (cost: number): void =>
+      internals().slotConfigModel.update(current => ({
+        rows: current.rows.map((row, i) => (i === 0 ? { ...row, cost } : row)),
+      }));
+
+    describe('sections', () => {
+      it('should render the settings, current event and correction sections in that order', async () => {
+        mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-2', 'registration_open'));
+        mockMgEventService.loadLastFinishedEvent.mockResolvedValueOnce(makeEvent('event-1', 'finished'));
+        mockMgEventService.loadSelection.mockResolvedValueOnce([]).mockResolvedValueOnce(makeSelection('event-1'));
+
+        const compiled = await render();
+
+        const container = compiled.querySelector('.mg-admin-container') as HTMLElement;
+        const classes = Array.from(container.children).map(child => child.className);
+        const order = ['settings-panel', 'current-event-card', 'correction-panel'].map(name =>
+          classes.findIndex(c => c.includes(name))
+        );
+        expect(order.every(i => i >= 0)).toBe(true);
+        expect(order).toEqual([...order].sort((x, y) => x - y));
+        expect(compiled.querySelector('.current-event-card')?.textContent).toContain('mg.admin.eventTitle');
+        expect(compiled.querySelector('.correction-panel')?.textContent).toContain('mg.admin.correction.title');
+        expect(compiled.querySelector('.settings-panel')?.textContent).toContain('mg.admin.settings.title');
+      });
+
+      it('should show only the empty message in the current event card when there is no event', async () => {
+        const compiled = await render();
+
+        const card = compiled.querySelector('.current-event-card') as HTMLElement;
+        expect(card.textContent).toContain('mg.admin.noEvent');
+        expect(card.querySelector('app-mg-selection-panel')).toBeNull();
+        expect(card.querySelector('.status-chip')).toBeNull();
+        expect(compiled.querySelector('.settings-panel')).not.toBeNull();
+      });
+
+      it('should show the status chip and the registration count chip', async () => {
+        mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-1', 'registration_open'));
+        mockMgEventService.loadRegistrations.mockResolvedValueOnce([makeRegistration('1'), makeRegistration('2')]);
+
+        const compiled = await render();
+
+        expect(compiled.querySelector('.status-chip.status-registration_open')).not.toBeNull();
+        expect(compiled.querySelector('.count-chip')?.textContent).toContain('mg.admin.registrations.count');
+      });
+
+      it('should not render the registrations list in draft status', async () => {
+        mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-1', 'registration_closed'));
+        mockMgEventService.loadRegistrations.mockResolvedValueOnce([makeRegistration('1')]);
+
+        const compiled = await render();
+
+        expect(internals().showRegistrationsList()).toBe(false);
+        expect(compiled.querySelector('.registrations-panel')).toBeNull();
+        expect(compiled.querySelector('.registration-row')).toBeNull();
+      });
+
+      it('should render a collapsed registrations list when locked with registrations', async () => {
+        mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-1', 'selection_published'));
+        mockMgEventService.loadRegistrations.mockResolvedValueOnce([makeRegistration('1')]);
+
+        const compiled = await render();
+
+        const panel = compiled.querySelector('.registrations-panel') as HTMLElement;
+        expect(internals().showRegistrationsList()).toBe(true);
+        expect(panel).not.toBeNull();
+        expect(panel.classList.contains('mat-expanded')).toBe(false);
+        expect(panel.querySelectorAll('.registration-row')).toHaveLength(1);
+      });
+
+      it('should not render the registrations list when locked without registrations', async () => {
+        mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-1', 'ongoing'));
+
+        const compiled = await render();
+
+        expect(internals().showRegistrationsList()).toBe(false);
+        expect(compiled.querySelector('.registrations-panel')).toBeNull();
+      });
+
+      it('should render the correction collapsed by default with its date range and badge', async () => {
+        mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-2', 'registration_open'));
+        mockMgEventService.loadLastFinishedEvent.mockResolvedValueOnce(makeEvent('event-1', 'finished'));
+        mockMgEventService.loadSelection.mockResolvedValueOnce([]).mockResolvedValueOnce(makeSelection('event-1'));
+
+        const compiled = await render();
+
+        const panel = compiled.querySelector('.correction-panel') as HTMLElement;
+        expect(panel.classList.contains('mat-expanded')).toBe(false);
+        expect(panel.textContent).toContain('05/01/2026');
+        expect(panel.textContent).toContain('mg.admin.correction.badge');
+        // Content is rendered eagerly so it is reachable as soon as the panel opens.
+        expect(panel.querySelector('app-mg-selection-panel')).not.toBeNull();
+      });
+
+      it('should not render the correction section without a finished event selection', async () => {
+        mockMgEventService.loadCurrentEvent.mockResolvedValueOnce(makeEvent('event-2', 'registration_open'));
+        mockMgEventService.loadLastFinishedEvent.mockResolvedValueOnce(makeEvent('event-1', 'finished'));
+
+        const compiled = await render();
+
+        expect(compiled.querySelector('.correction-panel')).toBeNull();
+      });
+
+      it('should render the settings collapsed by default with a summary of the saved values', async () => {
+        mockMgEventService.loadServerConfig.mockResolvedValueOnce(makeServerConfig(50, 'manual', true));
+
+        const compiled = await render();
+
+        const panel = compiled.querySelector('.settings-panel') as HTMLElement;
+        const summary = panel.querySelector('.settings-summary')?.textContent ?? '';
+        expect(panel.classList.contains('mat-expanded')).toBe(false);
+        expect(summary).toContain('50');
+        expect(summary).toContain('mg.admin.config.modeManual');
+        expect(summary).toContain('mg.admin.settings.dkpOn');
+      });
+    });
+
+    describe('dirty detection', () => {
+      it('should be clean right after loading', async () => {
+        await render();
+
+        expect(internals().settingsDirty()).toBe(false);
+        expect(internals().canSaveSettings()).toBe(false);
+      });
+
+      it('should flag the config as dirty when a config field changes, and show the indicator', async () => {
+        const compiled = await render();
+
+        setCapacity(50);
+        fixture.detectChanges();
+
+        expect(internals().configDirty()).toBe(true);
+        expect(internals().slotDirty()).toBe(false);
+        expect(internals().canSaveSettings()).toBe(true);
+        expect(compiled.querySelector('.unsaved-chip')).not.toBeNull();
+      });
+
+      it('should flag the slots as dirty when a slot value changes', async () => {
+        await render();
+
+        setFirstSlotCost(999);
+
+        expect(internals().slotDirty()).toBe(true);
+        expect(internals().configDirty()).toBe(false);
+      });
+
+      it('should become clean again when the edit is reverted', async () => {
+        await render();
+
+        setCapacity(50);
+        setCapacity(10);
+
+        expect(internals().settingsDirty()).toBe(false);
+      });
+
+      it('should disable Save while a slot form value is invalid', async () => {
+        await render();
+
+        setFirstSlotCost(-1);
+
+        expect(internals().settingsDirty()).toBe(true);
+        expect(internals().canSaveSettings()).toBe(false);
+      });
+    });
+
+    describe('saveSettings', () => {
+      beforeEach(async () => {
+        await render();
+      });
+
+      it('should save only the config when only the config is dirty', async () => {
+        setCapacity(50);
+
+        await internals().saveSettings();
+
+        expect(mockMgEventService.saveServerConfig).toHaveBeenCalledWith(
+          'server-1',
+          expect.objectContaining({ capacity: 50 })
+        );
+        expect(mockMgEventService.saveSlotConfig).not.toHaveBeenCalled();
+        expect(mockSnackbarService.success).toHaveBeenCalledWith('mg.admin.settings.saved');
+      });
+
+      it('should save only the slots when only the slots are dirty', async () => {
+        setFirstSlotCost(999);
+
+        await internals().saveSettings();
+
+        expect(mockMgEventService.saveSlotConfig).toHaveBeenCalledWith(
+          'server-1',
+          expect.arrayContaining([expect.objectContaining({ slot_order: 1, cost: 999 })])
+        );
+        expect(mockMgEventService.saveServerConfig).not.toHaveBeenCalled();
+        expect(mockSnackbarService.success).toHaveBeenCalledWith('mg.admin.settings.saved');
+      });
+
+      it('should save both parts with one click and reload the saved signals', async () => {
+        setCapacity(50);
+        setFirstSlotCost(999);
+        mockMgEventService.loadServerConfig.mockResolvedValueOnce(makeServerConfig(50));
+        mockMgEventService.loadSlotConfig.mockResolvedValueOnce([
+          {
+            id: 'cfg-1',
+            server_id: 'server-1',
+            slot_order: 1,
+            cost: 999,
+            target_min: 30,
+            target_max: 30,
+            created_at: '2026-01-01T00:00:00Z',
+            updated_at: '2026-01-01T00:00:00Z',
+          },
+        ]);
+
+        await internals().saveSettings();
+
+        expect(mockMgEventService.saveServerConfig).toHaveBeenCalledTimes(1);
+        expect(mockMgEventService.saveSlotConfig).toHaveBeenCalledTimes(1);
+        expect(internals().settingsDirty()).toBe(false);
+        expect(internals().isSavingSettings()).toBe(false);
+        expect(mockSnackbarService.success).toHaveBeenCalledTimes(1);
+      });
+
+      it('should keep the slot form dirty and report only the slot error when the slot save fails', async () => {
+        setCapacity(50);
+        setFirstSlotCost(999);
+        mockMgEventService.saveSlotConfig.mockResolvedValueOnce({ error: new Error('boom') });
+        mockMgEventService.loadServerConfig.mockResolvedValueOnce(makeServerConfig(50));
+
+        await internals().saveSettings();
+
+        expect(internals().configDirty()).toBe(false);
+        expect(internals().slotDirty()).toBe(true);
+        expect(mockSnackbarService.error).toHaveBeenCalledTimes(1);
+        expect(mockSnackbarService.error).toHaveBeenCalledWith('mg.admin.slotConfigSaveError');
+        expect(mockSnackbarService.success).not.toHaveBeenCalled();
+      });
+
+      it('should keep the config form dirty and report only the config error when the config save fails', async () => {
+        setCapacity(50);
+        mockMgEventService.saveServerConfig.mockResolvedValueOnce({ error: new Error('boom') });
+
+        await internals().saveSettings();
+
+        expect(internals().configDirty()).toBe(true);
+        expect(mockSnackbarService.error).toHaveBeenCalledWith('mg.admin.configSaveError');
+      });
+
+      it('should report both errors in a single snackbar when both saves fail', async () => {
+        setCapacity(50);
+        setFirstSlotCost(999);
+        mockMgEventService.saveServerConfig.mockRejectedValueOnce(new Error('boom'));
+        mockMgEventService.saveSlotConfig.mockResolvedValueOnce({ error: new Error('boom') });
+
+        await internals().saveSettings();
+
+        expect(mockSnackbarService.error).toHaveBeenCalledTimes(1);
+        expect(mockSnackbarService.error).toHaveBeenCalledWith('mg.admin.configSaveError mg.admin.slotConfigSaveError');
+        expect(internals().settingsDirty()).toBe(true);
+      });
+
+      it('should keep the edits and report success when the reload after a successful save throws', async () => {
+        setCapacity(50);
+        mockMgEventService.loadServerConfig.mockRejectedValueOnce(new Error('reload failed'));
+
+        await internals().saveSettings();
+
+        expect(mockSnackbarService.success).toHaveBeenCalledWith('mg.admin.settings.saved');
+        expect(mockSnackbarService.error).not.toHaveBeenCalled();
+        const model = (component as unknown as { configModel: () => ConfigModel }).configModel();
+        expect(model.capacity).toBe(50);
+      });
+
+      it('should not call any service when nothing is dirty', async () => {
+        await internals().saveSettings();
+
+        expect(mockMgEventService.saveServerConfig).not.toHaveBeenCalled();
+        expect(mockMgEventService.saveSlotConfig).not.toHaveBeenCalled();
+      });
     });
   });
 

@@ -1045,7 +1045,6 @@
       "eventTitle": "Mevcut etkinlik",
       "selectionLocked": "Seçim kilitlendi — etkinlik devam ediyor.",
       "selectionPublishedLocked": "Seçim yayınlandı ve kilitlendi. Etkinlik bittikten sonra düzeltilebilir.",
-      "configSaved": "Yapılandırma kaydedildi.",
       "configSaveError": "Yapılandırma kaydedilemedi.",
       "slotConfig": {
         "title": "Slot Maliyeti ve Hedef Yapılandırması",
@@ -1055,10 +1054,8 @@
         "targetMin": "Min. Hedef",
         "targetMax": "Maks. Hedef",
         "targetRangeError": "Maksimum hedef, minimum hedeften büyük veya ona eşit olmalıdır",
-        "required": "Zorunlu",
-        "save": "Kaydet"
+        "required": "Zorunlu"
       },
-      "slotConfigSaved": "Slot yapılandırması kaydedildi.",
       "slotConfigSaveError": "Slot yapılandırması kaydedilemedi.",
       "selectionSaved": "Seçim kaydedildi.",
       "selectionSaveError": "Seçim kaydedilemedi.",
@@ -1070,19 +1067,24 @@
         "mode": "Seçim modu",
         "modeAutomatic": "Otomatik",
         "modeManual": "Manuel",
-        "save": "Kaydet",
         "dkpEnabled": "DKP sistemini etkinleştir",
         "dkpEnabledHint": "Etkinleştirildiğinde, seçilen oyuncuların slot maliyeti liderlik tablosundaki toplamlarından düşülür."
       },
+      "settings": {
+        "title": "Ayarlar",
+        "save": "Ayarları kaydet",
+        "saved": "Ayarlar kaydedildi.",
+        "unsaved": "Kaydedilmemiş değişiklikler",
+        "dkpOn": "DKP açık"
+      },
       "registrations": {
         "title": "Kayıtlar",
-        "empty": "Henüz kayıt yok.",
+        "count": "{{count}} kayıtlı",
         "position": "İstenen pozisyon",
         "noPosition": "Belirtilmemiş",
         "totalScore": "Toplam puan"
       },
       "selection": {
-        "title": "Seçim",
         "generate": "Otomatik seçim oluştur",
         "publish": "Seçimi yayınla",
         "current": "Mevcut seçim",
@@ -1103,6 +1105,7 @@
       },
       "correction": {
         "title": "Son etkinliği düzelt",
+        "badge": "Düzeltme yapılabilir",
         "hint": "Etkinlik bitti. Yeniden sıralama yalnızca sırası değişen oyuncuların maliyetini yeniden hesaplar; sıralamadaki DKP'leri de güncellenir.",
         "available": "Henüz yerleştirilmemiş oyuncular (kayıtlı veya değil)",
         "noneAvailable": "Tüm oyuncular zaten seçimde.",

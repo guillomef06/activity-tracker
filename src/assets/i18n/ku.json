@@ -1045,7 +1045,6 @@
       "eventTitle": "Bûyera niha",
       "selectionLocked": "Hilbijartî hat kilîtkirin — bûyer berdewam e.",
       "selectionPublishedLocked": "Hilbijartin hat weşandin û hate qefilandin. Piştî ku bûyer biqede dikare were rastkirin.",
-      "configSaved": "Mîheng hat tomarkirin.",
       "configSaveError": "Tomarkirina mîhengê têk çû.",
       "slotConfig": {
         "title": "Mîhengkirina Lêçûn û Armancên Slotê",
@@ -1055,10 +1054,8 @@
         "targetMin": "Armanca herî kêm",
         "targetMax": "Armanca herî zêde",
         "targetRangeError": "Armanca herî zêde divê ji armanca herî kêm mezintir an wek wê be",
-        "required": "Pêwîst e",
-        "save": "Tomar bike"
+        "required": "Pêwîst e"
       },
-      "slotConfigSaved": "Mîhenga slotê hat tomarkirin.",
       "slotConfigSaveError": "Tomarkirina mîhenga slotê têk çû.",
       "selectionSaved": "Hilbijartî hat tomarkirin.",
       "selectionSaveError": "Tomarkirina hilbijartinê têk çû.",
@@ -1070,19 +1067,24 @@
         "mode": "Moda hilbijartinê",
         "modeAutomatic": "Otomatîk",
         "modeManual": "Destî",
-        "save": "Tomar bike",
         "dkpEnabled": "چالاککردنی سیستەمی DKP",
         "dkpEnabledHint": "کاتێک چالاک بێت، تێچووی شوێنی یاریزانە هەڵبژێردراوەکان لە کۆی گشتی خشتەی پێشەنگیان کەم دەکرێتەوە."
       },
+      "settings": {
+        "title": "Mîheng",
+        "save": "Mîhengan tomar bike",
+        "saved": "Mîheng hatin tomarkirin.",
+        "unsaved": "Guhertinên netomarkirî",
+        "dkpOn": "DKP çalak e"
+      },
       "registrations": {
         "title": "Tescîl",
-        "empty": "Hîna tescîl tunene.",
+        "count": "{{count}} tescîlkirî",
         "position": "Pozîsyona xwestî",
         "noPosition": "Nehatiye diyarkirin",
         "totalScore": "Xala giştî"
       },
       "selection": {
-        "title": "Hilbijartî",
         "generate": "Hilbijartina otomatîk çêbike",
         "publish": "Hilbijartî weşan bike",
         "current": "Hilbijartina niha",
@@ -1103,6 +1105,7 @@
       },
       "correction": {
         "title": "Bûyera dawî rast bike",
+        "badge": "Rastkirin heye",
         "hint": "Bûyer qediya. Ji nû ve rêzkirin tenê lêçûna lîstikvanên ku rêza wan diguhere ji nû ve dihesibîne; DKP-ya wan di tabloya rêzê de jî ji nû ve tê hesibandin.",
         "available": "Lîstikvanên ku hê nehatine danîn (tomarkirî an na)",
         "noneAvailable": "Hemû lîstikvan jixwe di hilbijartinê de ne.",

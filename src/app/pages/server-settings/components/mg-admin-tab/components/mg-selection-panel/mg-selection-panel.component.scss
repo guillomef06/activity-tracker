@@ -1,4 +1,4 @@
-.section-card {
+.selection-panel {
   width: 100%;
 }
 
@@ -221,9 +221,17 @@
   }
 }
 
-mat-card-actions {
+.panel-actions {
+  display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
+  margin-top: 1rem;
+
+  button {
+    min-height: 2.75rem;
+  }
 }
 
 .unsaved-hint {
