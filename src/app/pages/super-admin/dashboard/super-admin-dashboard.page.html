@@ -12,6 +12,8 @@
     </mat-card-header>
   </mat-card>
 
+  <app-mg-calendar-banner [state]="calendarBanner()" [actionLink]="calendarRoute" />
+
   <!-- Statistics Cards -->
   <div class="stats-grid">
     <mat-card class="stat-card servers-card">
@@ -96,6 +98,14 @@
           <mat-icon>event</mat-icon>
           <h3>{{ 'superAdmin.dashboard.manageSeasons' | translate }}</h3>
           <p>{{ 'superAdmin.dashboard.manageSeasonsDesc' | translate }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="action-card" routerLink="/app/super-admin/calendar">
+        <mat-card-content>
+          <mat-icon>event_note</mat-icon>
+          <h3>{{ 'superAdmin.dashboard.manageCalendar' | translate }}</h3>
+          <p>{{ 'superAdmin.dashboard.manageCalendarDesc' | translate }}</p>
         </mat-card-content>
       </mat-card>
     </div>

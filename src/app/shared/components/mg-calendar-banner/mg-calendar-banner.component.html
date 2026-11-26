@@ -1,0 +1,52 @@
+@switch (state().kind) {
+  @case ('superAdminLow') {
+    <div class="banner banner--warning" role="status">
+      <mat-icon class="banner__icon" aria-hidden="true">warning</mat-icon>
+      <p class="banner__text">
+        {{ 'mg.calendar.banner.superAdminLow' | translate: { count: futureCount() } }}
+      </p>
+      <a mat-stroked-button class="banner__action" [routerLink]="link()">
+        {{ 'mg.calendar.banner.superAdminLowAction' | translate }}
+      </a>
+    </div>
+  }
+  @case ('serverAdminNone') {
+    <div class="banner banner--warning" role="status">
+      <mat-icon class="banner__icon" aria-hidden="true">event_busy</mat-icon>
+      <p class="banner__text">{{ 'mg.calendar.banner.serverAdminNone' | translate }}</p>
+    </div>
+  }
+  @case ('playerNext') {
+    @if (nextMg(); as next) {
+      <div class="banner banner--info" role="status">
+        <mat-icon class="banner__icon" aria-hidden="true">event</mat-icon>
+        <p class="banner__text">
+          {{
+            'mg.calendar.banner.playerNext'
+              | translate
+                : {
+                    start: (next.start | date: 'mediumDate'),
+                    opening: (next.opening | date: 'mediumDate'),
+                  }
+          }}
+        </p>
+      </div>
+    }
+  }
+  @case ('playerNotAnnounced') {
+    <div class="banner banner--info" role="status">
+      <mat-icon class="banner__icon" aria-hidden="true">event_note</mat-icon>
+      <p class="banner__text">{{ 'mg.calendar.banner.playerNotAnnounced' | translate }}</p>
+    </div>
+  }
+  @case ('cancelled') {
+    @if (cancelledStart(); as start) {
+      <div class="banner banner--error" role="status">
+        <mat-icon class="banner__icon" aria-hidden="true">event_busy</mat-icon>
+        <p class="banner__text">
+          {{ 'mg.calendar.banner.cancelledNotice' | translate: { start: (start | date: 'mediumDate') } }}
+        </p>
+      </div>
+    }
+  }
+}

@@ -1,0 +1,92 @@
+:host {
+  display: block;
+}
+
+.empty-state {
+  text-align: center;
+  opacity: 0.8;
+  padding: 1rem;
+}
+
+.entry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.entry-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.entry-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.entry-dates,
+.entry-times {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+
+  mat-icon {
+    flex-shrink: 0;
+  }
+}
+
+.entry-registration,
+.entry-impact {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.entry-impact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+.state-chip {
+  &.state-planned,
+  &.state-awaiting_start {
+    --mat-chip-label-text-color: var(--mat-sys-on-tertiary-container);
+    --mat-chip-elevated-container-color: var(--mat-sys-tertiary-container);
+  }
+
+  &.state-registration_open,
+  &.state-ongoing {
+    --mat-chip-label-text-color: var(--mat-sys-on-primary-container);
+    --mat-chip-elevated-container-color: var(--mat-sys-primary-container);
+  }
+
+  &.state-finished {
+    --mat-chip-label-text-color: var(--mat-sys-on-surface-variant);
+    --mat-chip-elevated-container-color: var(--mat-sys-surface-variant);
+  }
+
+  &.state-cancelled {
+    --mat-chip-label-text-color: var(--mat-sys-on-error-container);
+    --mat-chip-elevated-container-color: var(--mat-sys-error-container);
+  }
+}
