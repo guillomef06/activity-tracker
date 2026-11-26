@@ -1,0 +1,128 @@
+<section class="wizard" [attr.aria-label]="'superAdmin.calendar.wizard.title' | translate">
+  <h2 class="wizard-title">{{ 'superAdmin.calendar.wizard.title' | translate }}</h2>
+
+  <mat-stepper [selectedIndex]="stepIndex()" (selectedIndexChange)="stepIndex.set($event)">
+    <!-- Step 1: dates -->
+    <mat-step [label]="'superAdmin.calendar.wizard.stepDates' | translate">
+      <form novalidate class="step-form" (submit)="$event.preventDefault()">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'superAdmin.calendar.wizard.openingMonday' | translate }}</mat-label>
+          <input
+            matInput
+            readonly
+            class="opening-input"
+            [matDatepicker]="openingPicker"
+            [matDatepickerFilter]="mondayFilter"
+            [value]="wizardModel().openingMonday"
+            (dateChange)="onOpeningMondayChange($event)"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="openingPicker"></mat-datepicker-toggle>
+          <mat-datepicker #openingPicker></mat-datepicker>
+          <mat-hint>{{ 'superAdmin.calendar.wizard.openingMondayHint' | translate }}</mat-hint>
+        </mat-form-field>
+        @if (openingErrorKey(); as errorKey) {
+          <p class="field-error" role="alert">{{ errorKey | translate }}</p>
+        }
+
+        <mat-checkbox class="duplicate-toggle" [formField]="wizardForm.duplicate">
+          {{ 'superAdmin.calendar.wizard.duplicate' | translate }}
+        </mat-checkbox>
+
+        @if (isDuplicate()) {
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'superAdmin.calendar.wizard.weeks' | translate }}</mat-label>
+            <input matInput type="number" inputmode="numeric" class="weeks-input" [formField]="wizardForm.weeks" />
+            <mat-hint>{{ 'superAdmin.calendar.wizard.weeksHint' | translate }}</mat-hint>
+            @if (weeksErrorKey(); as errorKey) {
+              <mat-error>{{ errorKey | translate }}</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <div class="step-actions">
+          <button mat-button type="button" class="close-button" (click)="close()">
+            {{ 'common.cancel' | translate }}
+          </button>
+          <button mat-flat-button type="button" class="next-button" (click)="goToPreview()">
+            {{ 'common.next' | translate }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Step 2: preview -->
+    <mat-step [label]="'superAdmin.calendar.wizard.stepPreview' | translate">
+      <ul class="entry-list preview-list">
+        @for (row of previewRows(); track row.dates.opening) {
+          <li class="entry-card preview-row">
+            <dl class="entry-dates">
+              <div>
+                <dt>{{ 'superAdmin.calendar.wizard.previewOpening' | translate }}</dt>
+                <dd>{{ row.dates.opening | date: 'mediumDate' }}</dd>
+              </div>
+              <div>
+                <dt>{{ 'superAdmin.calendar.wizard.previewClosing' | translate }}</dt>
+                <dd>{{ row.dates.closing | date: 'mediumDate' }}</dd>
+              </div>
+              <div>
+                <dt>{{ 'superAdmin.calendar.wizard.previewStart' | translate }}</dt>
+                <dd>{{ row.dates.start | date: 'mediumDate' }}</dd>
+              </div>
+              <div>
+                <dt>{{ 'superAdmin.calendar.wizard.previewEnd' | translate }}</dt>
+                <dd>{{ row.dates.end | date: 'mediumDate' }}</dd>
+              </div>
+            </dl>
+            <p class="outcome outcome-{{ row.outcome.tone }}">
+              <mat-icon aria-hidden="true">{{ row.outcome.icon }}</mat-icon>
+              <span class="outcome-label">{{ row.outcome.labelKey | translate }}</span>
+            </p>
+          </li>
+        }
+      </ul>
+
+      <div class="step-actions">
+        <button mat-button type="button" class="back-button" (click)="goToDates()">
+          {{ 'common.back' | translate }}
+        </button>
+        <button mat-button type="button" class="close-button" (click)="close()">
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button mat-flat-button type="button" class="confirm-button" [disabled]="!canConfirm()" (click)="confirm()">
+          {{ 'superAdmin.calendar.wizard.confirm' | translate }}
+        </button>
+      </div>
+    </mat-step>
+
+    <!-- Step 3: result -->
+    <mat-step [label]="'superAdmin.calendar.wizard.stepResult' | translate">
+      <h3 class="result-title">{{ 'superAdmin.calendar.wizard.resultTitle' | translate }}</h3>
+      <ul class="entry-list result-list" aria-live="polite">
+        @for (row of resultRows(); track row.key) {
+          <li class="entry-card result-row">
+            <dl class="entry-dates">
+              <div>
+                <dt>{{ 'superAdmin.calendar.wizard.previewOpening' | translate }}</dt>
+                <dd>{{ row.opening | date: 'mediumDate' }}</dd>
+              </div>
+              <div>
+                <dt>{{ 'superAdmin.calendar.wizard.previewStart' | translate }}</dt>
+                <dd>{{ row.start | date: 'mediumDate' }}</dd>
+              </div>
+            </dl>
+            <p class="outcome outcome-{{ row.outcome.tone }}">
+              <mat-icon aria-hidden="true">{{ row.outcome.icon }}</mat-icon>
+              <span class="outcome-label">{{ row.outcome.labelKey | translate }}</span>
+            </p>
+          </li>
+        }
+      </ul>
+
+      <div class="step-actions">
+        <button mat-flat-button type="button" class="close-button" (click)="close()">
+          {{ 'common.close' | translate }}
+        </button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</section>

@@ -4,6 +4,9 @@
       <mat-spinner diameter="40" />
     </div>
   } @else {
+    <!-- Global calendar: neutral notice, no action (the super admin fills the calendar) -->
+    <app-mg-calendar-banner class="mg-banner" [state]="banner()" />
+
     <!-- Config section -->
     <mat-card class="section-card">
       <mat-card-header>

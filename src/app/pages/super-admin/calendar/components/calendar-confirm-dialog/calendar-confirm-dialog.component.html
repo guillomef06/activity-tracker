@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>
+  <mat-icon class="title-icon" aria-hidden="true">warning</mat-icon>
+  {{ titleKey | translate }}
+</h2>
+
+<mat-dialog-content class="mat-typography">
+  <p class="label">{{ data.label }}</p>
+  @if (isCancel) {
+    @if (hasEvents) {
+      <p class="impact">{{ 'superAdmin.calendar.dialog.cancelWithEvents' | translate: counts }}</p>
+      <p class="notice">{{ 'superAdmin.calendar.dialog.cancelNobodyNotified' | translate }}</p>
+    } @else {
+      <p>{{ 'superAdmin.calendar.dialog.cancelNoEvent' | translate }}</p>
+    }
+  } @else {
+    <p>{{ 'superAdmin.calendar.dialog.deleteBody' | translate }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" class="dialog-button" mat-dialog-close>
+    {{ 'superAdmin.calendar.dialog.back' | translate }}
+  </button>
+  <button mat-flat-button type="button" class="dialog-button" cdkFocusInitial (click)="onConfirm()">
+    {{ 'superAdmin.calendar.dialog.confirm' | translate }}
+  </button>
+</mat-dialog-actions>

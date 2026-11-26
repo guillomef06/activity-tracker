@@ -35,6 +35,11 @@
   font-size: 0.875rem;
 }
 
+// A hidden banner renders nothing: drop its host so it adds no flex gap.
+.mg-banner:empty {
+  display: none;
+}
+
 .mg-card {
   mat-card-content {
     // Flush top/sides so the table reaches the card edges, but a real bottom pad:

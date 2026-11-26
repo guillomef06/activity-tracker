@@ -1,13 +1,18 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, resource, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MgEventService } from '@app/core/services/mg-event.service';
+import { CalendarService } from '@app/core/services/calendar.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { SnackbarService } from '@app/core/services';
+import { MgCalendarBannerComponent } from '@shared/components/mg-calendar-banner/mg-calendar-banner.component';
+import { resolveCancellationNotice, resolvePlayerBanner, toIsoDate } from '@shared/utils/mg-calendar.util';
 import { MgEventCardComponent } from './components/mg-event-card/mg-event-card.component';
 import type {
+  MgBannerState,
+  MgEntryLike,
   MgEvent,
   MgRegistration,
   MgSelectionWithUser,
@@ -33,15 +38,25 @@ interface GovernorRow {
   targetLabel: string | null;
 }
 
+const NO_BANNER: MgBannerState = { kind: 'none' };
+
 @Component({
   selector: 'app-mightiest-governor',
-  imports: [MatCardModule, MatIconModule, MatDividerModule, TranslateModule, MgEventCardComponent],
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    TranslateModule,
+    MgEventCardComponent,
+    MgCalendarBannerComponent,
+  ],
   templateUrl: './mightiest-governor.component.html',
   styleUrl: './mightiest-governor.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MightiestGovernorComponent implements OnInit {
   private readonly mgEventService = inject(MgEventService);
+  private readonly calendarService = inject(CalendarService);
   private readonly authService = inject(AuthService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly translate = inject(TranslateService);
@@ -56,6 +71,50 @@ export class MightiestGovernorComponent implements OnInit {
   protected readonly registration = signal<MgRegistration | null>(null);
   protected readonly selection = signal<MgSelectionWithUser[]>([]);
   protected readonly isRegistering = signal(false);
+
+  // Each banner source is its own resource so one failure only hides its own banner (never an alarm).
+  // A server without a server_mg_config row (or whose config failed to load) shows no banner at all.
+  private readonly hasConfigResource = resource<boolean, void>({
+    loader: async () => {
+      const serverId = this.authService.getServerId();
+      return serverId ? (await this.mgEventService.loadServerConfig(serverId)) !== null : false;
+    },
+  });
+
+  private readonly entriesResource = resource<readonly MgEntryLike[], void>({
+    loader: () =>
+      this.calendarService.loadEntries().catch((error: unknown) => {
+        console.error('Error loading MG calendar entries:', error);
+        throw error;
+      }),
+  });
+
+  private readonly cancelledEventResource = resource<MgEvent | null, void>({
+    loader: async () => {
+      const serverId = this.authService.getServerId();
+      return serverId ? this.mgEventService.loadRecentCancelledEvent(serverId) : null;
+    },
+  });
+
+  /** Banner: next MG with its opening date, or "not announced yet". */
+  protected readonly nextMgBanner = computed<MgBannerState>(() => {
+    if (!this.hasConfigResource.hasValue() || !this.entriesResource.hasValue()) return NO_BANNER;
+    return resolvePlayerBanner({
+      hasConfig: this.hasConfigResource.value(),
+      entries: this.entriesResource.value(),
+      now: new Date(),
+    });
+  });
+
+  /** Notice shown above the next-MG banner until the end of the cancelled event's week. */
+  protected readonly cancellationNotice = computed<MgBannerState>(() => {
+    if (!this.hasConfigResource.hasValue() || !this.cancelledEventResource.hasValue()) return NO_BANNER;
+    return resolveCancellationNotice({
+      hasConfig: this.hasConfigResource.value(),
+      cancelledEvent: this.cancelledEventResource.value(),
+      today: toIsoDate(new Date()),
+    });
+  });
 
   protected readonly currentUserId = computed(() => this.authService.getUserId() ?? '');
 
@@ -188,10 +247,12 @@ export class MightiestGovernorComponent implements OnInit {
     const serverId = this.authService.getServerId();
     if (!serverId) return;
 
-    const [event, slotConfig] = await Promise.all([
+    const [loadedEvent, slotConfig] = await Promise.all([
       this.mgEventService.loadCurrentEvent(serverId),
       this.mgEventService.loadSlotConfig(serverId),
     ]);
+    // A cancelled event is never "the current event": it would otherwise render as a (full FFA) card.
+    const event = loadedEvent?.status === 'cancelled' ? null : loadedEvent;
     this.mgEvent.set(event);
     this.slotConfig.set(slotConfig);
 
