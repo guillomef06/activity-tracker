@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { vi } from 'vitest';
 import { MightiestGovernorComponent } from './mightiest-governor.component';
 import { MgEventService } from '@app/core/services/mg-event.service';
+import { CalendarService } from '@app/core/services/calendar.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { SnackbarService } from '@app/core/services';
 import type { MgSelectionWithUser } from '@shared/models';
@@ -14,8 +15,14 @@ const mockMgEventService = {
   loadUserRegistration: vi.fn().mockResolvedValue(null),
   loadSelection: vi.fn().mockResolvedValue([]),
   loadSlotConfig: vi.fn().mockResolvedValue([]),
+  loadServerConfig: vi.fn().mockResolvedValue(null),
+  loadRecentCancelledEvent: vi.fn().mockResolvedValue(null),
   registerPlayer: vi.fn().mockResolvedValue({ error: null }),
   unregisterPlayer: vi.fn().mockResolvedValue({ error: null }),
+};
+
+const mockCalendarService = {
+  loadEntries: vi.fn().mockResolvedValue([]),
 };
 
 const mockAuthService = {
@@ -41,10 +48,25 @@ describe('MightiestGovernorComponent', () => {
         provideAnimations(),
         provideZonelessChangeDetection(),
         { provide: MgEventService, useValue: mockMgEventService },
+        { provide: CalendarService, useValue: mockCalendarService },
         { provide: AuthService, useValue: mockAuthService },
         { provide: SnackbarService, useValue: mockSnackbarService },
       ],
     }).compileComponents();
+
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', {
+      mg: {
+        calendar: {
+          banner: {
+            playerNext: 'NEXT {{ start }} / {{ opening }}',
+            playerNotAnnounced: 'NOT ANNOUNCED',
+            cancelledNotice: 'CANCELLED {{ start }}',
+          },
+        },
+      },
+    });
+    translate.use('en');
 
     fixture = TestBed.createComponent(MightiestGovernorComponent);
     component = fixture.componentInstance;
@@ -419,6 +441,167 @@ describe('MightiestGovernorComponent', () => {
 
       // Assert
       expect(mockMgEventService.registerPlayer).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('calendar banners', () => {
+    const SERVER_CONFIG = { server_id: 'server-1', capacity: 10, assignment_mode: 'automatic', dkp_enabled: false };
+    const NEXT_ENTRY = { id: 'e-1', type: 'mg', starts_at: '2099-06-01T00:00:00Z', cancelled_at: null };
+    const cancelledEvent = (endDate: string) => ({
+      id: 'event-c',
+      server_id: 'server-1',
+      start_date: '2099-01-05',
+      end_date: endDate,
+      registration_open_at: '2098-12-29',
+      registration_close_at: '2099-01-01',
+      status: 'cancelled' as const,
+      selection_published_at: null,
+      created_at: '2026-01-01T00:00:00Z',
+    });
+
+    const flush = async (): Promise<void> => {
+      for (let i = 0; i < 4; i++) await new Promise(resolve => setTimeout(resolve, 0));
+    };
+
+    const render = async (): Promise<HTMLElement> => {
+      fixture = TestBed.createComponent(MightiestGovernorComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flush();
+      fixture.detectChanges();
+      return fixture.nativeElement as HTMLElement;
+    };
+
+    const statuses = (el: HTMLElement): string[] =>
+      Array.from(el.querySelectorAll('[role="status"]')).map(node => node.textContent?.trim() ?? '');
+
+    it('should show the next MG banner with start and opening dates when config and a future entry exist', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockCalendarService.loadEntries.mockResolvedValueOnce([NEXT_ENTRY]);
+
+      // Act
+      const el = await render();
+
+      // Assert
+      expect((component as unknown as { nextMgBanner: () => unknown }).nextMgBanner()).toEqual({
+        kind: 'playerNext',
+        mgStart: '2099-06-01',
+        openingDate: '2099-05-25',
+      });
+      expect(statuses(el)).toHaveLength(1);
+      expect(statuses(el)[0]).toContain('NEXT');
+    });
+
+    it('should show the not-announced banner when config exists but no entry is planned', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+
+      // Act
+      const el = await render();
+
+      // Assert
+      expect(statuses(el)).toHaveLength(1);
+      expect(statuses(el)[0]).toContain('NOT ANNOUNCED');
+    });
+
+    it('should show no banner at all when the server has no config row', async () => {
+      // Arrange
+      mockCalendarService.loadEntries.mockResolvedValueOnce([NEXT_ENTRY]);
+      mockMgEventService.loadRecentCancelledEvent.mockResolvedValueOnce(cancelledEvent('2099-01-11'));
+
+      // Act
+      const el = await render();
+
+      // Assert
+      expect(statuses(el)).toEqual([]);
+    });
+
+    it('should hide the next MG banner and log once when loadEntries fails', async () => {
+      // Arrange
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockCalendarService.loadEntries.mockRejectedValueOnce(new Error('boom'));
+
+      // Act
+      const el = await render();
+
+      // Assert
+      expect(statuses(el)).toEqual([]);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      errorSpy.mockRestore();
+    });
+
+    it('should show the cancellation notice above the next MG banner', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockCalendarService.loadEntries.mockResolvedValueOnce([NEXT_ENTRY]);
+      mockMgEventService.loadRecentCancelledEvent.mockResolvedValueOnce(cancelledEvent('2099-01-11'));
+
+      // Act
+      const el = await render();
+
+      // Assert
+      const texts = statuses(el);
+      expect(texts).toHaveLength(2);
+      expect(texts[0]).toContain('CANCELLED');
+      expect(texts[1]).toContain('NEXT');
+    });
+
+    it('should hide the cancellation notice after the end date of the cancelled event', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockMgEventService.loadRecentCancelledEvent.mockResolvedValueOnce(cancelledEvent('2000-01-11'));
+
+      // Act
+      const el = await render();
+
+      // Assert
+      expect(statuses(el).some(text => text.includes('CANCELLED'))).toBe(false);
+    });
+
+    it('should keep the next MG banner when no cancelled event is returned', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockCalendarService.loadEntries.mockResolvedValueOnce([NEXT_ENTRY]);
+
+      // Act
+      const el = await render();
+
+      // Assert
+      expect(statuses(el)).toHaveLength(1);
+      expect(statuses(el)[0]).toContain('NEXT');
+    });
+  });
+
+  describe('cancelled event audit', () => {
+    it('should treat a cancelled event as no current event: no card, no full FFA, no selection load', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-c',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'cancelled',
+        selection_published_at: '2026-01-02T00:00:00Z',
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      fixture = TestBed.createComponent(MightiestGovernorComponent);
+      component = fixture.componentInstance;
+
+      // Act
+      await component.ngOnInit();
+      fixture.detectChanges();
+
+      // Assert
+      const el = fixture.nativeElement as HTMLElement;
+      expect(component.isFullFfa()).toBe(false);
+      expect(el.querySelector('app-mg-event-card')).toBeNull();
+      expect(el.querySelector('.full-ffa-notice')).toBeNull();
+      expect(component.rows()).toHaveLength(10);
+      expect(mockMgEventService.loadSelection).not.toHaveBeenCalled();
     });
   });
 });

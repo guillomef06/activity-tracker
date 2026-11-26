@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+// Mobile-first: icon + text on one row, the action wraps below the text on narrow screens.
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+
+  &--warning {
+    background: var(--mat-sys-tertiary-container);
+    color: var(--mat-sys-on-tertiary-container);
+  }
+
+  &--error {
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+  }
+}
+
+.banner__icon {
+  flex-shrink: 0;
+}
+
+.banner__text {
+  flex: 1 1 12rem;
+  min-width: 0;
+  margin: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.banner__action {
+  flex: 0 0 auto;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+@media (min-width: 640px) {
+  .banner__text {
+    flex-basis: 0;
+  }
+}

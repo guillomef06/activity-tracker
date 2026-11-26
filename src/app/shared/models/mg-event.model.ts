@@ -3,7 +3,13 @@
  */
 
 export type MgEventStatus =
-  'upcoming' | 'registration_open' | 'registration_closed' | 'selection_published' | 'ongoing' | 'finished';
+  | 'upcoming'
+  | 'registration_open'
+  | 'registration_closed'
+  | 'selection_published'
+  | 'ongoing'
+  | 'finished'
+  | 'cancelled';
 
 export type MgAssignmentMode = 'automatic' | 'manual';
 /**
@@ -28,6 +34,8 @@ export interface MgEvent {
   status: MgEventStatus;
   selection_published_at: string | null;
   created_at: string;
+  /** Calendar entry that generated this event (null for events created outside the calendar). */
+  calendar_entry_id: string | null;
 }
 
 /**

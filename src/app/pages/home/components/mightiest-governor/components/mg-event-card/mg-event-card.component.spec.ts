@@ -16,6 +16,7 @@ const makeEvent = (status: MgEvent['status']): MgEvent => ({
   registration_close_at: '2026-04-30',
   status,
   selection_published_at: status === 'selection_published' ? '2026-05-01T10:00:00Z' : null,
+  calendar_entry_id: null,
   created_at: '2026-04-20T00:00:00Z',
 });
 

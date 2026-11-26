@@ -7,6 +7,9 @@
     </div>
   </div>
 
+  <app-mg-calendar-banner class="mg-banner" [state]="cancellationNotice()" />
+  <app-mg-calendar-banner class="mg-banner" [state]="nextMgBanner()" />
+
   <mat-card class="mg-card">
     @if (isFullFfa()) {
       <mat-card-content>

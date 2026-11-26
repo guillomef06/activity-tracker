@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, resource, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { form, required, min, validate, applyEach, FormField } from '@angular/forms/signals';
 import { MatCardModule } from '@angular/material/card';
@@ -12,12 +12,15 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MgEventService } from '@app/core/services/mg-event.service';
+import { CalendarService } from '@app/core/services/calendar.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { ActivityService } from '@app/core/services/activity.service';
 import { ServerService } from '@app/core/services/server.service';
 import { SnackbarService } from '@app/core/services';
 import { buildMgSlotRows, MgSlotRow } from '@shared/utils/mg-slot.util';
 import { MG_SLOT_DEFAULTS } from '@shared/constants/mg-slots.constant';
+import { resolveServerAdminBanner } from '@shared/utils/mg-calendar.util';
+import { MgCalendarBannerComponent } from '@shared/components/mg-calendar-banner/mg-calendar-banner.component';
 import {
   MgSelectionPanelComponent,
   type MgMemberOption,
@@ -31,9 +34,23 @@ import type {
   UpsertMgSlotConfigRow,
   MgRegistrationWithUser,
   MgSelectionWithUser,
+  MgEntryLike,
+  MgBannerState,
 } from '@shared/models';
 
 const MIN_SLOT_VALUE = 0;
+const NO_BANNER: MgBannerState = { kind: 'none' };
+
+/** What the server-admin banner needs from the global calendar and the current event. */
+interface CalendarBannerData {
+  entries: readonly MgEntryLike[];
+  hasCurrentEvent: boolean;
+}
+
+/** A cancelled event is never "the current event": it must not drive the event card or selection panel. */
+function excludeCancelled(event: MgEvent | null): MgEvent | null {
+  return event?.status === 'cancelled' ? null : event;
+}
 const DEFAULT_CAPACITY: MgEventCapacity = 10;
 const DEFAULT_ASSIGNMENT_MODE: MgAssignmentMode = 'automatic';
 
@@ -71,6 +88,7 @@ interface MgRegistrationRow extends MgRegistrationWithUser {
     MatProgressSpinnerModule,
     TranslateModule,
     MgSelectionPanelComponent,
+    MgCalendarBannerComponent,
   ],
   templateUrl: './mg-admin-tab.component.html',
   styleUrl: './mg-admin-tab.component.scss',
@@ -78,6 +96,7 @@ interface MgRegistrationRow extends MgRegistrationWithUser {
 })
 export class MgAdminTabComponent implements OnInit {
   private readonly mgEventService = inject(MgEventService);
+  private readonly calendarService = inject(CalendarService);
   private readonly authService = inject(AuthService);
   private readonly activityService = inject(ActivityService);
   private readonly serverService = inject(ServerService);
@@ -96,6 +115,24 @@ export class MgAdminTabComponent implements OnInit {
   protected readonly lastFinishedEvent = signal<MgEvent | null>(null);
   protected readonly lastFinishedRegistrations = signal<MgRegistrationWithUser[]>([]);
   protected readonly lastFinishedSelection = signal<MgSelectionWithUser[]>([]);
+
+  /** Genuine async load with loading/error state: a failure degrades the banner to hidden. */
+  private readonly bannerData = resource<CalendarBannerData | null, void>({
+    loader: () => this.loadBannerData(),
+  });
+
+  /** Banner shown only with a saved config, no current event and no future calendar entry (FR-060..063). */
+  protected readonly banner = computed<MgBannerState>(() => {
+    if (!this.bannerData.hasValue()) return NO_BANNER;
+    const data = this.bannerData.value();
+    if (data === null) return NO_BANNER;
+    return resolveServerAdminBanner({
+      hasConfig: this.serverConfig() !== null,
+      hasCurrentEvent: data.hasCurrentEvent,
+      entries: data.entries,
+      now: new Date(),
+    });
+  });
 
   protected readonly configModel = signal<ConfigFormModel>({
     capacity: DEFAULT_CAPACITY,
@@ -170,6 +207,22 @@ export class MgAdminTabComponent implements OnInit {
     }))
   );
 
+  private async loadBannerData(): Promise<CalendarBannerData | null> {
+    const serverId = this.authService.getServerId();
+    if (!serverId) return null;
+
+    // loadCurrentEventStrict logs its own failure; loadEntries does not, so log it here (one error per failure).
+    const entriesPromise = this.calendarService.loadEntries().catch((error: unknown) => {
+      console.error('Error loading MG calendar entries:', error);
+      throw error;
+    });
+    const [entries, currentEvent] = await Promise.all([
+      entriesPromise,
+      this.mgEventService.loadCurrentEventStrict(serverId),
+    ]);
+    return { entries, hasCurrentEvent: excludeCancelled(currentEvent) !== null };
+  }
+
   async ngOnInit(): Promise<void> {
     const serverId = this.authService.getServerId();
     if (!serverId) return;
@@ -182,7 +235,8 @@ export class MgAdminTabComponent implements OnInit {
         this.mgEventService.loadSlotConfig(serverId),
       ]);
 
-      this.mgEvent.set(event);
+      const activeEvent = excludeCancelled(event);
+      this.mgEvent.set(activeEvent);
       this.serverConfig.set(config);
       this.slotConfig.set(slotConfig);
 
@@ -196,7 +250,7 @@ export class MgAdminTabComponent implements OnInit {
 
       this.rebuildSlotConfigForm(slotConfig);
 
-      await Promise.all([this.loadEventData(event), this.loadLastFinishedData(serverId)]);
+      await Promise.all([this.loadEventData(activeEvent), this.loadLastFinishedData(serverId)]);
 
       await this.activityService.initialize();
     } catch (error) {
@@ -298,7 +352,7 @@ export class MgAdminTabComponent implements OnInit {
   protected async reloadCurrentEvent(): Promise<void> {
     const serverId = this.authService.getServerId();
     if (!serverId) return;
-    this.mgEvent.set(await this.mgEventService.loadCurrentEvent(serverId));
+    this.mgEvent.set(excludeCancelled(await this.mgEventService.loadCurrentEvent(serverId)));
   }
 
   protected trackByReg(_: number, reg: MgRegistrationRow): string {

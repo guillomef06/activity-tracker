@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>{{ 'superAdmin.calendar.dialog.shiftTitle' | translate }}</h2>
+
+<mat-dialog-content class="mat-typography">
+  <mat-form-field appearance="outline" class="date-field">
+    <mat-label>{{ 'superAdmin.calendar.dialog.shiftNewOpening' | translate }}</mat-label>
+    <input
+      matInput
+      readonly
+      [matDatepicker]="openingPicker"
+      [matDatepickerFilter]="mondayFilter"
+      [value]="picked()"
+      (dateChange)="onDateChange($event)"
+    />
+    <mat-datepicker-toggle matIconSuffix [for]="openingPicker"></mat-datepicker-toggle>
+    <mat-datepicker #openingPicker></mat-datepicker>
+  </mat-form-field>
+
+  @if (preview().errorKey; as errorKey) {
+    <p class="preview-error" role="alert">{{ errorKey | translate }}</p>
+  }
+
+  @if (preview().ok) {
+    <section class="moved" aria-live="polite">
+      <h3>{{ 'superAdmin.calendar.dialog.shiftMovedList' | translate }}</h3>
+      <ul>
+        @for (entry of preview().moved; track entry.id) {
+          <li>
+            <span>{{ entry.oldStart | date: 'mediumDate' }}</span>
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+            <span>{{ entry.newStart | date: 'mediumDate' }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (hasEvents) {
+    <p class="impact">{{ 'superAdmin.calendar.dialog.shiftWithEvents' | translate: counts }}</p>
+  }
+  <p class="notice">{{ 'superAdmin.calendar.dialog.shiftNotice' | translate }}</p>
+  <p class="notice">{{ 'superAdmin.calendar.dialog.shiftNobodyNotified' | translate }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" class="dialog-button" mat-dialog-close>
+    {{ 'superAdmin.calendar.dialog.back' | translate }}
+  </button>
+  <button mat-flat-button type="button" class="dialog-button" [disabled]="!preview().ok" (click)="onConfirm()">
+    {{ 'superAdmin.calendar.dialog.confirm' | translate }}
+  </button>
+</mat-dialog-actions>

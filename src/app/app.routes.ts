@@ -95,6 +95,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./pages/super-admin/seasons/super-admin-seasons.page').then(m => m.SuperAdminSeasonsPage),
           },
+          {
+            path: 'calendar',
+            loadComponent: () =>
+              import('./pages/super-admin/calendar/super-admin-calendar.page').then(m => m.SuperAdminCalendarPage),
+          },
         ],
       },
     ],
