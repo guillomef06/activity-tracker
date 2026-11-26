@@ -431,6 +431,22 @@ describe('mg-calendar.util', () => {
       expect(state).toEqual({ kind: 'playerNext', mgStart: '2026-12-07', openingDate: '2026-11-30' });
     });
 
+    it('should flag the banner as following the current event when one is displayed', () => {
+      const state = resolvePlayerBanner({
+        hasConfig: true,
+        entries: [entry('2026-12-07')],
+        now: NOW,
+        hasCurrentEvent: true,
+      });
+
+      expect(state).toEqual({
+        kind: 'playerNext',
+        mgStart: '2026-12-07',
+        openingDate: '2026-11-30',
+        afterCurrent: true,
+      });
+    });
+
     it('should skip cancelled entries', () => {
       const entries = [entry('2026-12-07', true), entry('2026-12-21')];
 

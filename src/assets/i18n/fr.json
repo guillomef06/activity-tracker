@@ -673,6 +673,7 @@
         "superAdminLowAction": "Gérer le calendrier",
         "serverAdminNone": "Aucun MG à venir n'est planifié pour le moment. Un super admin doit en ajouter un au calendrier.",
         "playerNext": "Prochain MG le {{ start }}. Les inscriptions ouvrent le {{ opening }}.",
+        "playerFollowing": "Le MG suivant a lieu le {{ start }}. Les inscriptions ouvriront le {{ opening }}.",
         "playerNotAnnounced": "Le prochain MG n'a pas encore été annoncé.",
         "cancelledNotice": "Le MG du {{ start }} a été annulé."
       }

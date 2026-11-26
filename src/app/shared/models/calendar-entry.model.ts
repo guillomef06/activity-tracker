@@ -104,7 +104,8 @@ export type MgBannerState =
   | { kind: 'none' }
   | { kind: 'superAdminLow'; futureCount: number }
   | { kind: 'serverAdminNone' }
-  | { kind: 'playerNext'; mgStart: IsoDate; openingDate: IsoDate }
+  // `afterCurrent`: an MG event is already shown on the page, so this one is "the following MG".
+  | { kind: 'playerNext'; mgStart: IsoDate; openingDate: IsoDate; afterCurrent?: boolean }
   | { kind: 'playerNotAnnounced' }
   | { kind: 'cancelled'; mgStart: IsoDate };
 

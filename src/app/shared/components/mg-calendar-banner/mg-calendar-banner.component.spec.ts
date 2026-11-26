@@ -15,6 +15,7 @@ const TRANSLATIONS = {
         superAdminLowAction: 'Plan MGs',
         serverAdminNone: 'No MG planned',
         playerNext: 'MG {{ start }}, opening {{ opening }}',
+        playerFollowing: 'Following MG {{ start }}, opening {{ opening }}',
         playerNotAnnounced: 'Not announced',
         cancelledNotice: 'MG of {{ start }} cancelled',
       },
@@ -83,6 +84,14 @@ describe('MgCalendarBannerComponent', () => {
     expect(text).toContain('May 31, 2027');
     expect(text).toContain('May 24, 2027');
     expect(el.querySelector('a')).toBeNull();
+  });
+
+  it('should use the "following MG" wording when a current event is already displayed', () => {
+    const el = render({ kind: 'playerNext', mgStart: '2027-05-31', openingDate: '2027-05-24', afterCurrent: true });
+
+    const text = el.querySelector('[role="status"]')?.textContent ?? '';
+    expect(text).toContain('Following MG');
+    expect(text).toContain('May 31, 2027');
   });
 
   it('should render the not announced message when state is playerNotAnnounced', () => {

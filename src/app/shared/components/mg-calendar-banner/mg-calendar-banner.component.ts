@@ -31,9 +31,11 @@ export class MgCalendarBannerComponent {
     return state.kind === 'superAdminLow' ? state.futureCount : 0;
   });
 
-  protected readonly nextMg = computed<{ start: IsoDate; opening: IsoDate } | null>(() => {
+  protected readonly nextMg = computed<{ start: IsoDate; opening: IsoDate; messageKey: string } | null>(() => {
     const state = this.state();
-    return state.kind === 'playerNext' ? { start: state.mgStart, opening: state.openingDate } : null;
+    if (state.kind !== 'playerNext') return null;
+    const messageKey = state.afterCurrent ? 'mg.calendar.banner.playerFollowing' : 'mg.calendar.banner.playerNext';
+    return { start: state.mgStart, opening: state.openingDate, messageKey };
   });
 
   protected readonly cancelledStart = computed<IsoDate | null>(() => {
