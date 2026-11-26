@@ -1045,7 +1045,6 @@
       "eventTitle": "Evento corrente",
       "selectionLocked": "La selezione è bloccata — l'evento è in corso.",
       "selectionPublishedLocked": "La selezione è pubblicata e bloccata. Potrà essere corretta al termine dell'evento.",
-      "configSaved": "Configurazione salvata.",
       "configSaveError": "Impossibile salvare la configurazione.",
       "slotConfig": {
         "title": "Configurazione costi e obiettivi per rango",
@@ -1055,10 +1054,8 @@
         "targetMin": "Obiettivo min.",
         "targetMax": "Obiettivo max.",
         "targetRangeError": "L'obiettivo massimo deve essere maggiore o uguale all'obiettivo minimo",
-        "required": "Campo obbligatorio",
-        "save": "Salva"
+        "required": "Campo obbligatorio"
       },
-      "slotConfigSaved": "Configurazione dei posti salvata.",
       "slotConfigSaveError": "Impossibile salvare la configurazione dei posti.",
       "selectionSaved": "Selezione salvata.",
       "selectionSaveError": "Impossibile salvare la selezione.",
@@ -1070,19 +1067,24 @@
         "mode": "Modalità selezione",
         "modeAutomatic": "Automatica",
         "modeManual": "Manuale",
-        "save": "Salva",
         "dkpEnabled": "Attiva il sistema DKP",
         "dkpEnabledHint": "Una volta attivato, il costo dello slot dei giocatori selezionati viene detratto dal loro totale in classifica."
       },
+      "settings": {
+        "title": "Impostazioni",
+        "save": "Salva impostazioni",
+        "saved": "Impostazioni salvate.",
+        "unsaved": "Modifiche non salvate",
+        "dkpOn": "DKP attivo"
+      },
       "registrations": {
         "title": "Iscrizioni",
-        "empty": "Nessuna iscrizione al momento.",
+        "count": "{{count}} iscritti",
         "position": "Posizione desiderata",
         "noPosition": "Non specificata",
         "totalScore": "Punteggio totale"
       },
       "selection": {
-        "title": "Selezione",
         "generate": "Genera selezione automatica",
         "publish": "Pubblica selezione",
         "current": "Selezione corrente",
@@ -1103,6 +1105,7 @@
       },
       "correction": {
         "title": "Correggi l'ultimo evento",
+        "badge": "Correzione disponibile",
         "hint": "L'evento è terminato. Riordinare ricalcola il costo solo dei giocatori il cui rango cambia; il loro DKP in classifica viene ricalcolato.",
         "available": "Giocatori non ancora inseriti (iscritti o no)",
         "noneAvailable": "Tutti i giocatori sono già nella selezione.",

@@ -1045,7 +1045,6 @@
       "eventTitle": "Aktuelles Event",
       "selectionLocked": "Die Auswahl ist gesperrt — das Event läuft.",
       "selectionPublishedLocked": "Die Auswahl ist veröffentlicht und gesperrt. Sie kann nach Ende des Events korrigiert werden.",
-      "configSaved": "Konfiguration gespeichert.",
       "configSaveError": "Konfiguration konnte nicht gespeichert werden.",
       "slotConfig": {
         "title": "Slot-Kosten- & Zielkonfiguration",
@@ -1055,10 +1054,8 @@
         "targetMin": "Ziel min.",
         "targetMax": "Ziel max.",
         "targetRangeError": "Das Zielmaximum muss größer oder gleich dem Zielminimum sein",
-        "required": "Erforderlich",
-        "save": "Speichern"
+        "required": "Erforderlich"
       },
-      "slotConfigSaved": "Slot-Konfiguration gespeichert.",
       "slotConfigSaveError": "Slot-Konfiguration konnte nicht gespeichert werden.",
       "selectionSaved": "Auswahl gespeichert.",
       "selectionSaveError": "Auswahl konnte nicht gespeichert werden.",
@@ -1070,19 +1067,24 @@
         "mode": "Auswahlmodus",
         "modeAutomatic": "Automatisch",
         "modeManual": "Manuell",
-        "save": "Speichern",
         "dkpEnabled": "DKP-System aktivieren",
         "dkpEnabledHint": "Wenn aktiviert, wird den ausgewählten Spielern der Slot-Kostenwert von ihrem Gesamtwert in der Rangliste abgezogen."
       },
+      "settings": {
+        "title": "Einstellungen",
+        "save": "Einstellungen speichern",
+        "saved": "Einstellungen gespeichert.",
+        "unsaved": "Nicht gespeicherte Änderungen",
+        "dkpOn": "DKP aktiv"
+      },
       "registrations": {
         "title": "Anmeldungen",
-        "empty": "Noch keine Anmeldungen.",
+        "count": "{{count}} angemeldet",
         "position": "Gewünschte Position",
         "noPosition": "Nicht angegeben",
         "totalScore": "Gesamtpunktzahl"
       },
       "selection": {
-        "title": "Auswahl",
         "generate": "Automatische Auswahl generieren",
         "publish": "Auswahl veröffentlichen",
         "current": "Aktuelle Auswahl",
@@ -1103,6 +1105,7 @@
       },
       "correction": {
         "title": "Letztes Event korrigieren",
+        "badge": "Korrektur möglich",
         "hint": "Das Event ist beendet. Beim Neuordnen werden nur die Kosten der Spieler neu berechnet, deren Rang sich ändert; ihre DKP in der Rangliste werden neu berechnet.",
         "available": "Noch nicht platzierte Spieler (angemeldet oder nicht)",
         "noneAvailable": "Alle Spieler sind bereits in der Auswahl.",

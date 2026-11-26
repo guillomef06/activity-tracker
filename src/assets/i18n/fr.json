@@ -713,10 +713,15 @@
         "modeAutomatic": "Automatique",
         "modeManual": "Manuel",
         "dkpEnabled": "Activer le système DKP",
-        "dkpEnabledHint": "Une fois activé, le coût du slot des joueurs sélectionnés est déduit de leur total sur le classement.",
-        "save": "Enregistrer"
+        "dkpEnabledHint": "Une fois activé, le coût du slot des joueurs sélectionnés est déduit de leur total sur le classement."
       },
-      "configSaved": "Configuration enregistrée.",
+      "settings": {
+        "title": "Réglages",
+        "save": "Enregistrer les réglages",
+        "saved": "Réglages enregistrés.",
+        "unsaved": "Modifications non enregistrées",
+        "dkpOn": "DKP activé"
+      },
       "configSaveError": "Échec de l'enregistrement de la configuration.",
       "slotConfig": {
         "title": "Configuration des coûts et objectifs par rang",
@@ -726,20 +731,17 @@
         "targetMin": "Objectif min.",
         "targetMax": "Objectif max.",
         "targetRangeError": "L'objectif max. doit être supérieur ou égal à l'objectif min.",
-        "required": "Champ requis",
-        "save": "Enregistrer"
+        "required": "Champ requis"
       },
-      "slotConfigSaved": "Configuration des créneaux enregistrée.",
       "slotConfigSaveError": "Échec de l'enregistrement de la configuration des créneaux.",
       "registrations": {
         "title": "Inscriptions",
-        "empty": "Aucune inscription pour le moment.",
+        "count": "{{count}} inscrit(s)",
         "position": "Position souhaitée",
         "noPosition": "Non renseignée",
         "totalScore": "Score total"
       },
       "selection": {
-        "title": "Sélection",
         "generate": "Générer la sélection automatique",
         "publish": "Publier la sélection",
         "current": "Sélection actuelle",
@@ -764,6 +766,7 @@
       "publishError": "Échec de la publication de la sélection.",
       "correction": {
         "title": "Corriger le dernier évènement",
+        "badge": "Correction possible",
         "hint": "L'évènement est terminé. Réordonner recalcule le coût des joueurs dont le rang a changé ; cochez « Sans pénalité » pour facturer un joueur au tarif du créneau approuvé plutôt qu'à son rang final. Le DKP sur le classement est recalculé.",
         "available": "Joueurs pas encore placés (inscrits ou non)",
         "noneAvailable": "Tous les joueurs sont déjà dans la sélection.",
