@@ -103,6 +103,7 @@ export class MightiestGovernorComponent implements OnInit {
       hasConfig: this.hasConfigResource.value(),
       entries: this.entriesResource.value(),
       now: new Date(),
+      hasCurrentEvent: this.showEventCard(),
     });
   });
 

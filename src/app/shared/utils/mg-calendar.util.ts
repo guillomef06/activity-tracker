@@ -318,6 +318,8 @@ export function resolvePlayerBanner(input: {
   hasConfig: boolean;
   entries: readonly MgEntryLike[];
   now: Date;
+  /** An MG event (registration open/closed, ongoing…) is displayed next to the banner. */
+  hasCurrentEvent?: boolean;
 }): MgBannerState {
   if (!input.hasConfig) return { kind: 'none' };
   const today = toIsoDate(input.now);
@@ -326,7 +328,12 @@ export function resolvePlayerBanner(input: {
     .sort(byStartAscending)[0];
   if (!next) return { kind: 'playerNotAnnounced' };
   const mgStart = startOf(next);
-  return { kind: 'playerNext', mgStart, openingDate: addDays(mgStart, -OPENING_TO_START_DAYS) };
+  const state: MgBannerState = {
+    kind: 'playerNext',
+    mgStart,
+    openingDate: addDays(mgStart, -OPENING_TO_START_DAYS),
+  };
+  return input.hasCurrentEvent ? { ...state, afterCurrent: true } : state;
 }
 
 /** Shown until the end of the cancelled event's planned week, `end_date` included. */

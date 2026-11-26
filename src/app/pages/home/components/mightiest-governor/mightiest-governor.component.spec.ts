@@ -60,6 +60,7 @@ describe('MightiestGovernorComponent', () => {
         calendar: {
           banner: {
             playerNext: 'NEXT {{ start }} / {{ opening }}',
+            playerFollowing: 'FOLLOWING {{ start }} / {{ opening }}',
             playerNotAnnounced: 'NOT ANNOUNCED',
             cancelledNotice: 'CANCELLED {{ start }}',
           },
@@ -491,6 +492,33 @@ describe('MightiestGovernorComponent', () => {
       });
       expect(statuses(el)).toHaveLength(1);
       expect(statuses(el)[0]).toContain('NEXT');
+    });
+
+    it('should word the banner as the following MG while an event is open for registration', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockCalendarService.loadEntries.mockResolvedValueOnce([NEXT_ENTRY]);
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-open',
+        server_id: 'server-1',
+        start_date: '2098-12-01',
+        end_date: '2098-12-07',
+        registration_open_at: '2098-11-24',
+        registration_close_at: '2098-11-27',
+        status: 'registration_open',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+
+      // Act
+      const el = await render();
+
+      // Assert
+      expect((component as unknown as { nextMgBanner: () => unknown }).nextMgBanner()).toMatchObject({
+        kind: 'playerNext',
+        afterCurrent: true,
+      });
+      expect(statuses(el)[0]).toContain('FOLLOWING');
     });
 
     it('should show the not-announced banner when config exists but no entry is planned', async () => {
