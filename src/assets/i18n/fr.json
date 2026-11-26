@@ -367,6 +367,121 @@
   },
   "superAdmin": {
     "backToDashboard": "Retour au tableau de bord",
+    "calendar": {
+      "title": "Calendrier MG",
+      "subtitle": "Planifiez les Mightiest Governor de tous les serveurs",
+      "newMg": "Nouveau MG",
+      "newOther": "Nouvel événement",
+      "futureSection": "À venir",
+      "historySection": "Historique",
+      "empty": "Aucune entrée au calendrier pour le moment.",
+      "loadFailed": "Échec du chargement du calendrier.",
+      "type": {
+        "mg": "Mightiest Governor",
+        "pvp": "PvP"
+      },
+      "state": {
+        "planned": "Planifié",
+        "registrationOpen": "Inscriptions ouvertes",
+        "awaitingStart": "En attente du début",
+        "ongoing": "En cours",
+        "finished": "Terminé",
+        "cancelled": "Annulé"
+      },
+      "list": {
+        "columnServers": "Serveurs",
+        "columnRegistrations": "Inscriptions",
+        "shift": "Décaler",
+        "cancel": "Annuler",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "registrationOpenOn": "Inscriptions ouvertes le {{ date }}",
+        "closesOn": "Clôture le {{ date }}"
+      },
+      "wizard": {
+        "title": "Ajouter des MG",
+        "stepDates": "Dates",
+        "stepPreview": "Aperçu",
+        "stepResult": "Résultat",
+        "openingMonday": "Lundi d'ouverture des inscriptions",
+        "duplicate": "Dupliquer toutes les 2 semaines",
+        "weeks": "Nombre de semaines",
+        "weeksHint": "Nombre pair, de 2 à 26",
+        "previewOpening": "Ouverture",
+        "previewClosing": "Clôture",
+        "previewStart": "Début",
+        "previewEnd": "Fin",
+        "confirm": "Créer",
+        "resultTitle": "Résultat par date",
+        "outcome": {
+          "created": "Créé",
+          "alreadyExists": "Existe déjà, ignoré",
+          "rejectedNotMonday": "Refusé : ce n'est pas un lundi",
+          "rejectedOpeningPassed": "Refusé : date d'ouverture déjà passée",
+          "rejectedTooClose": "Refusé : moins de 14 jours d'un autre MG"
+        },
+        "openingMondayHint": "Les inscriptions ouvrent ce lundi. Le MG commence 7 jours plus tard, le lundi suivant."
+      },
+      "dialog": {
+        "shiftTitle": "Décaler ce MG",
+        "shiftNewOpening": "Nouveau lundi d'ouverture",
+        "shiftMovedList": "Entrées qui seront décalées",
+        "shiftNotice": "Tous les MG suivants sont décalés du même nombre de semaines.",
+        "cancelTitle": "Annuler ce MG",
+        "cancelNoEvent": "Aucun serveur n'a encore ouvert ce MG. Il sera simplement annulé.",
+        "cancelWithEvents": "Ce MG est ouvert sur {{ servers }} serveur(s) avec {{ registrations }} inscription(s). Elles seront annulées.",
+        "cancelNobodyNotified": "Les joueurs ne sont pas notifiés : ils verront un avis dans l'application.",
+        "deleteTitle": "Supprimer cette entrée",
+        "deleteBody": "Cette entrée sera supprimée définitivement.",
+        "confirm": "Confirmer",
+        "back": "Retour",
+        "shiftWithEvents": "Ce MG est ouvert sur {{ servers }} serveur(s) avec {{ registrations }} inscription(s) : leurs événements sont aussi décalés.",
+        "shiftNobodyNotified": "Les joueurs ne sont pas notifiés des nouvelles dates."
+      },
+      "form": {
+        "type": "Type",
+        "title": "Titre",
+        "allDay": "Toute la journée",
+        "startsAt": "Début (UTC)",
+        "endsAt": "Fin (UTC)",
+        "utcHint": "Les dates et heures sont saisies en UTC.",
+        "save": "Enregistrer"
+      },
+      "saved": "Entrée enregistrée.",
+      "cancelled": "Entrée annulée.",
+      "deleted": "Entrée supprimée.",
+      "shifted": "Entrées décalées.",
+      "errors": {
+        "forbidden": "Vous n'avez pas le droit de gérer le calendrier.",
+        "invalidInput": "Requête invalide. Vérifiez les valeurs et réessayez.",
+        "notFound": "Cette entrée du calendrier n'existe plus.",
+        "notMonday": "La date doit être un lundi.",
+        "openingPassed": "La date d'ouverture des inscriptions est déjà passée.",
+        "alreadyExists": "Un MG existe déjà à cette date.",
+        "tooClose": "Deux MG doivent être espacés d'au moins 14 jours.",
+        "notShiftable": "Cette entrée ne peut pas être décalée.",
+        "notCancellable": "Cette entrée ne peut pas être annulée.",
+        "unknown": "Une erreur est survenue. Veuillez réessayer.",
+        "weeksEven": "Le nombre de semaines doit être pair.",
+        "weeksRange": "Le nombre de semaines doit être compris entre 2 et 26.",
+        "endsAfterStart": "La fin doit être postérieure au début.",
+        "reason": {
+          "cancelled": "Cette entrée est annulée.",
+          "read_only": "Cette entrée a commencé ou est terminée et ne peut plus être modifiée.",
+          "event_not_open": "Un événement lié à cette entrée n'est plus ouvert aux inscriptions.",
+          "must_move_later": "Une entrée dont les inscriptions sont ouvertes ne peut qu'être reportée plus tard.",
+          "following_entry_opened": "Une entrée suivante est déjà ouverte : le décalage est refusé.",
+          "event_date_conflict": "Les nouvelles dates entrent en conflit avec un événement de serveur existant.",
+          "already_cancelled": "Cette entrée est déjà annulée.",
+          "event_ongoing_or_finished": "Un événement lié à cette entrée est en cours ou terminé.",
+          "empty_array": "Aucune date fournie.",
+          "too_many": "Trop de dates dans une seule requête.",
+          "null_element": "Une des dates est vide.",
+          "duplicate": "La même date apparaît deux fois.",
+          "zero_offset": "La nouvelle date est identique à l'actuelle."
+        }
+      }
+    },
     "dashboard": {
       "title": "Tableau de Bord Super Admin",
       "subtitle": "Vue d'ensemble et gestion globale du système",
@@ -382,7 +497,9 @@
       "manageGuidesData": "Données de Référence Guides",
       "manageGuidesDataDesc": "Gérer les champions, skills, chevaux et gemmes",
       "manageSeasons": "Gérer les Saisons",
-      "manageSeasonsDesc": "Configurer les saisons d'activités et leurs plannings hebdomadaires"
+      "manageSeasonsDesc": "Configurer les saisons d'activités et leurs plannings hebdomadaires",
+      "manageCalendar": "Calendrier",
+      "manageCalendarDesc": "Planifier et gérer le calendrier global des MG"
     },
     "servers": {
       "title": "Gestion des Serveurs",
@@ -546,8 +663,19 @@
       "selection_published": "Sélection publiée",
       "ongoing": "Évènement en cours",
       "finished": "Terminé",
+      "cancelled": "Annulé",
       "deadlineLabel": "Date limite d'inscription :",
       "waitingMessage": "La liste des sélectionnés sera bientôt publiée."
+    },
+    "calendar": {
+      "banner": {
+        "superAdminLow": "Seulement {{ count }} MG à venir planifié(s). Pensez à planifier les suivants.",
+        "superAdminLowAction": "Gérer le calendrier",
+        "serverAdminNone": "Aucun MG à venir n'est planifié pour le moment. Un super admin doit en ajouter un au calendrier.",
+        "playerNext": "Prochain MG le {{ start }}. Les inscriptions ouvrent le {{ opening }}.",
+        "playerNotAnnounced": "Le prochain MG n'a pas encore été annoncé.",
+        "cancelledNotice": "Le MG du {{ start }} a été annulé."
+      }
     },
     "registration": {
       "register": "S'inscrire",

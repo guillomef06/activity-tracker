@@ -7,6 +7,7 @@ import { SupabaseService } from './supabase.service';
 import { AuthService } from './auth.service';
 import { buildMgSlotRows, resolveSlotForRank, type MgSlotRow } from '@shared/utils/mg-slot.util';
 import { getWeekStart } from '@shared/utils/date.util';
+import { MG_ACTIVE_STATUSES, MG_NON_CANCELLED_STATUSES } from '@shared/constants/mg-calendar.constant';
 
 function generateAutoSelectionPayload(
   mgEventId: string,
@@ -340,6 +341,7 @@ describe('MgEventService', () => {
       chain['select'] = vi.fn().mockReturnThis();
       chain['eq'] = vi.fn().mockReturnThis();
       chain['not'] = vi.fn().mockReturnThis();
+      chain['in'] = vi.fn().mockReturnThis();
       chain['gte'] = vi.fn().mockResolvedValue({
         data: [
           { user_id: 'a', cost: 150, mg_events: { start_date: pastWeekStart } },
@@ -372,6 +374,7 @@ describe('MgEventService', () => {
       chain['select'] = vi.fn().mockReturnThis();
       chain['eq'] = vi.fn().mockReturnThis();
       chain['not'] = vi.fn().mockReturnThis();
+      chain['in'] = vi.fn().mockReturnThis();
       chain['gte'] = vi.fn().mockResolvedValue({
         data: [{ user_id: 'a', cost: 150, mg_events: { start_date: futureWeekStart } }],
         error: null,
@@ -391,6 +394,7 @@ describe('MgEventService', () => {
       chain['select'] = vi.fn().mockReturnThis();
       chain['eq'] = vi.fn().mockReturnThis();
       chain['not'] = vi.fn().mockReturnThis();
+      chain['in'] = vi.fn().mockReturnThis();
       chain['gte'] = vi.fn().mockResolvedValue({ data: null, error: { message: 'DB error' } });
       fromMock.mockReturnValue(chain);
 
@@ -399,6 +403,26 @@ describe('MgEventService', () => {
 
       // Assert
       expect(result).toHaveLength(0);
+    });
+
+    it('should restrict spends to non-cancelled events', async () => {
+      // Arrange
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['select'] = vi.fn().mockReturnThis();
+      chain['eq'] = vi.fn().mockReturnThis();
+      chain['not'] = vi.fn().mockReturnThis();
+      chain['in'] = vi.fn().mockReturnThis();
+      chain['gte'] = vi.fn().mockResolvedValue({ data: [], error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      await service.loadSpends('server-1', new Date(0));
+
+      // Assert
+      const [column, statuses] = chain['in'].mock.calls[0] as [string, string[]];
+      expect(column).toBe('mg_events.status');
+      expect(statuses).toEqual([...MG_NON_CANCELLED_STATUSES]);
+      expect(statuses).not.toContain('cancelled');
     });
   });
 
@@ -622,6 +646,133 @@ describe('MgEventService', () => {
 
       // Act
       const result = await service.loadLastFinishedEvent('server-1');
+
+      // Assert
+      expect(result).toBeNull();
+    });
+  });
+
+  // ============================================
+  describe('loadCurrentEvent / loadCurrentEventStrict', () => {
+    const makeChain = (result: { data: unknown; error: unknown }) => {
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['select'] = vi.fn().mockReturnThis();
+      chain['eq'] = vi.fn().mockReturnThis();
+      chain['in'] = vi.fn().mockReturnThis();
+      chain['order'] = vi.fn().mockReturnThis();
+      chain['limit'] = vi.fn().mockReturnThis();
+      chain['maybeSingle'] = vi.fn().mockResolvedValue(result);
+      return chain;
+    };
+
+    it('should query active statuses by ascending start_date with limit 1', async () => {
+      // Arrange
+      const event = { id: 'event-1', status: 'upcoming' };
+      const chain = makeChain({ data: event, error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.loadCurrentEvent('server-1');
+
+      // Assert
+      expect(result).toEqual(event);
+      expect(chain['eq']).toHaveBeenCalledWith('server_id', 'server-1');
+      expect(chain['order']).toHaveBeenCalledWith('start_date', { ascending: true });
+      expect(chain['limit']).toHaveBeenCalledWith(1);
+    });
+
+    it('should filter with an inclusion list that never contains cancelled or finished', async () => {
+      // Arrange
+      const chain = makeChain({ data: null, error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      await service.loadCurrentEvent('server-1');
+
+      // Assert
+      const [column, statuses] = chain['in'].mock.calls[0] as [string, string[]];
+      expect(column).toBe('status');
+      expect(statuses).toEqual([...MG_ACTIVE_STATUSES]);
+      expect(statuses).not.toContain('cancelled');
+      expect(statuses).not.toContain('finished');
+    });
+
+    it('should return null on Supabase error for the lenient variant', async () => {
+      // Arrange
+      fromMock.mockReturnValue(makeChain({ data: null, error: { message: 'DB error' } }));
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+      // Act
+      const result = await service.loadCurrentEvent('server-1');
+
+      // Assert
+      expect(result).toBeNull();
+    });
+
+    it('should throw on Supabase error for the strict variant', async () => {
+      // Arrange
+      const error = { message: 'DB error' };
+      fromMock.mockReturnValue(makeChain({ data: null, error }));
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+      // Act / Assert
+      await expect(service.loadCurrentEventStrict('server-1')).rejects.toBe(error);
+    });
+
+    it('should return the event for the strict variant on success', async () => {
+      // Arrange
+      const event = { id: 'event-2', status: 'ongoing' };
+      fromMock.mockReturnValue(makeChain({ data: event, error: null }));
+
+      // Act
+      const result = await service.loadCurrentEventStrict('server-1');
+
+      // Assert
+      expect(result).toEqual(event);
+    });
+  });
+
+  // ============================================
+  describe('loadRecentCancelledEvent', () => {
+    const makeChain = (result: { data: unknown; error: unknown }) => {
+      const chain: Record<string, ReturnType<typeof vi.fn>> = {};
+      chain['select'] = vi.fn().mockReturnThis();
+      chain['eq'] = vi.fn().mockReturnThis();
+      chain['gte'] = vi.fn().mockReturnThis();
+      chain['order'] = vi.fn().mockReturnThis();
+      chain['limit'] = vi.fn().mockReturnThis();
+      chain['maybeSingle'] = vi.fn().mockResolvedValue(result);
+      return chain;
+    };
+
+    it('should query cancelled events ending today or later, latest start first', async () => {
+      // Arrange
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2027-06-10T22:00:00Z'));
+      const event = { id: 'event-3', status: 'cancelled' };
+      const chain = makeChain({ data: event, error: null });
+      fromMock.mockReturnValue(chain);
+
+      // Act
+      const result = await service.loadRecentCancelledEvent('server-1');
+      vi.useRealTimers();
+
+      // Assert
+      expect(result).toEqual(event);
+      expect(chain['eq']).toHaveBeenCalledWith('server_id', 'server-1');
+      expect(chain['eq']).toHaveBeenCalledWith('status', 'cancelled');
+      expect(chain['gte']).toHaveBeenCalledWith('end_date', '2027-06-10');
+      expect(chain['order']).toHaveBeenCalledWith('start_date', { ascending: false });
+      expect(chain['limit']).toHaveBeenCalledWith(1);
+    });
+
+    it('should return null on Supabase error', async () => {
+      // Arrange
+      fromMock.mockReturnValue(makeChain({ data: null, error: { message: 'DB error' } }));
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+      // Act
+      const result = await service.loadRecentCancelledEvent('server-1');
 
       // Assert
       expect(result).toBeNull();

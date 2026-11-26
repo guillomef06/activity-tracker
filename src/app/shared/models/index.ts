@@ -78,6 +78,25 @@ export type {
   RegisterMgPlayerPayload,
 } from './mg-event.model';
 
+// Global calendar models
+export type {
+  IsoDate,
+  CalendarEntryType,
+  CalendarEntry,
+  CalendarEntryEventImpact,
+  CalendarEntryWithImpact,
+  CalendarEntryState,
+  MgEntryLike,
+  OtherEntryInput,
+  MgDerivedDates,
+  MgCalErrorCode,
+  CalendarOperationError,
+  CreateOutcome,
+  CreateEntryResult,
+  ShiftedEntry,
+  MgBannerState,
+} from './calendar-entry.model';
+
 // Guide models
 export type {
   Guide,

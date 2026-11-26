@@ -367,6 +367,121 @@
   },
   "superAdmin": {
     "backToDashboard": "डैशबोर्ड पर वापस जाएँ",
+    "calendar": {
+      "title": "MG calendar",
+      "subtitle": "Plan Mightiest Governor events for every server",
+      "newMg": "New MG",
+      "newOther": "New event",
+      "futureSection": "Upcoming",
+      "historySection": "History",
+      "empty": "No calendar entry yet.",
+      "loadFailed": "Failed to load the calendar.",
+      "type": {
+        "mg": "Mightiest Governor",
+        "pvp": "PvP"
+      },
+      "state": {
+        "planned": "Planned",
+        "registrationOpen": "Registration open",
+        "awaitingStart": "Awaiting start",
+        "ongoing": "In progress",
+        "finished": "Finished",
+        "cancelled": "Cancelled"
+      },
+      "list": {
+        "columnServers": "Servers",
+        "columnRegistrations": "Registrations",
+        "shift": "Shift",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "delete": "Delete",
+        "registrationOpenOn": "Registration opens on {{ date }}",
+        "closesOn": "Closes on {{ date }}"
+      },
+      "wizard": {
+        "title": "Add MG events",
+        "stepDates": "Dates",
+        "stepPreview": "Preview",
+        "stepResult": "Result",
+        "openingMonday": "Registration opening Monday",
+        "duplicate": "Duplicate every 2 weeks",
+        "weeks": "Number of weeks",
+        "weeksHint": "Even number, from 2 to 26",
+        "previewOpening": "Opening",
+        "previewClosing": "Closing",
+        "previewStart": "Start",
+        "previewEnd": "End",
+        "confirm": "Create",
+        "resultTitle": "Result per date",
+        "outcome": {
+          "created": "Created",
+          "alreadyExists": "Already exists, ignored",
+          "rejectedNotMonday": "Refused: not a Monday",
+          "rejectedOpeningPassed": "Refused: opening date already passed",
+          "rejectedTooClose": "Refused: less than 14 days from another MG"
+        },
+        "openingMondayHint": "Registrations open on this Monday. The MG starts 7 days later, the following Monday."
+      },
+      "dialog": {
+        "shiftTitle": "Shift this MG",
+        "shiftNewOpening": "New opening Monday",
+        "shiftMovedList": "Entries that will move",
+        "shiftNotice": "Every following MG is moved by the same number of weeks.",
+        "cancelTitle": "Cancel this MG",
+        "cancelNoEvent": "No server has opened this MG yet. It will simply be cancelled.",
+        "cancelWithEvents": "This MG is open on {{ servers }} server(s) with {{ registrations }} registration(s). They will be cancelled.",
+        "cancelNobodyNotified": "Players are not notified: they will see a notice in the app.",
+        "deleteTitle": "Delete this entry",
+        "deleteBody": "This entry will be permanently deleted.",
+        "confirm": "Confirm",
+        "back": "Back",
+        "shiftWithEvents": "This MG is open on {{ servers }} server(s) with {{ registrations }} registration(s): their events are moved too.",
+        "shiftNobodyNotified": "Players are not notified of the new dates."
+      },
+      "form": {
+        "type": "Type",
+        "title": "Title",
+        "allDay": "All day",
+        "startsAt": "Starts at (UTC)",
+        "endsAt": "Ends at (UTC)",
+        "utcHint": "Dates and times are entered in UTC.",
+        "save": "Save"
+      },
+      "saved": "Entry saved.",
+      "cancelled": "Entry cancelled.",
+      "deleted": "Entry deleted.",
+      "shifted": "Entries shifted.",
+      "errors": {
+        "forbidden": "You are not allowed to manage the calendar.",
+        "invalidInput": "Invalid request. Check the values and try again.",
+        "notFound": "This calendar entry no longer exists.",
+        "notMonday": "The date must be a Monday.",
+        "openingPassed": "The registration opening date has already passed.",
+        "alreadyExists": "An MG already exists on this date.",
+        "tooClose": "Two MG must be at least 14 days apart.",
+        "notShiftable": "This entry cannot be shifted.",
+        "notCancellable": "This entry cannot be cancelled.",
+        "unknown": "Something went wrong. Please try again.",
+        "weeksEven": "The number of weeks must be even.",
+        "weeksRange": "The number of weeks must be between 2 and 26.",
+        "endsAfterStart": "The end must be after the start.",
+        "reason": {
+          "cancelled": "This entry is cancelled.",
+          "read_only": "This entry has started or finished and can no longer be changed.",
+          "event_not_open": "An event linked to this entry is no longer open for registration.",
+          "must_move_later": "An entry whose registration is open can only be moved later.",
+          "following_entry_opened": "A following entry has already opened, so the shift is refused.",
+          "event_date_conflict": "The new dates conflict with an existing server event.",
+          "already_cancelled": "This entry is already cancelled.",
+          "event_ongoing_or_finished": "An event linked to this entry is in progress or finished.",
+          "empty_array": "No date provided.",
+          "too_many": "Too many dates in one request.",
+          "null_element": "One of the dates is empty.",
+          "duplicate": "The same date appears twice.",
+          "zero_offset": "The new date is the same as the current one."
+        }
+      }
+    },
     "dashboard": {
       "title": "सुपर एडमिन डैशबोर्ड",
       "subtitle": "वैश्विक सिस्टम अवलोकन और प्रबंधन",
@@ -382,7 +497,9 @@
       "manageGuidesData": "गाइड संदर्भ डेटा",
       "manageGuidesDataDesc": "चैंपियन, कौशल, घोड़े और रत्न प्रबंधित करें",
       "manageSeasons": "सीज़न प्रबंधित करें",
-      "manageSeasonsDesc": "गतिविधि सीज़न और साप्ताहिक शेड्यूल कॉन्फ़िगर करें"
+      "manageSeasonsDesc": "गतिविधि सीज़न और साप्ताहिक शेड्यूल कॉन्फ़िगर करें",
+      "manageCalendar": "Calendar",
+      "manageCalendarDesc": "Plan and manage the global MG calendar"
     },
     "servers": {
       "title": "सर्वर प्रबंधन",
@@ -885,8 +1002,19 @@
       "selection_published": "चयन प्रकाशित",
       "ongoing": "इवेंट जारी है",
       "finished": "समाप्त",
+      "cancelled": "Cancelled",
       "deadlineLabel": "पंजीकरण की अंतिम तिथि:",
       "waitingMessage": "चुने गए खिलाड़ियों की सूची जल्द ही प्रकाशित होगी।"
+    },
+    "calendar": {
+      "banner": {
+        "superAdminLow": "Only {{ count }} upcoming MG event(s) scheduled. Plan the next ones.",
+        "superAdminLowAction": "Manage the calendar",
+        "serverAdminNone": "No upcoming MG is planned yet. A super admin has to add one to the calendar.",
+        "playerNext": "Next MG starts on {{ start }}. Registration opens on {{ opening }}.",
+        "playerNotAnnounced": "The next MG has not been announced yet.",
+        "cancelledNotice": "The MG of {{ start }} has been cancelled."
+      }
     },
     "registration": {
       "register": "पंजीकरण करें",

@@ -2,9 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MgAdminTabComponent } from './mg-admin-tab.component';
 import { MgEventService } from '@app/core/services/mg-event.service';
+import { CalendarService } from '@app/core/services/calendar.service';
 import { AuthService } from '@app/core/services/auth.service';
 import { ActivityService } from '@app/core/services/activity.service';
 import { ServerService } from '@app/core/services/server.service';
@@ -13,6 +14,7 @@ import type { MgSlotRow } from '@shared/utils/mg-slot.util';
 
 const mockMgEventService = {
   loadCurrentEvent: vi.fn().mockResolvedValue(null),
+  loadCurrentEventStrict: vi.fn().mockResolvedValue(null),
   loadLastFinishedEvent: vi.fn().mockResolvedValue(null),
   loadServerConfig: vi.fn().mockResolvedValue(null),
   saveServerConfig: vi.fn().mockResolvedValue({ error: null }),
@@ -24,6 +26,12 @@ const mockMgEventService = {
   saveSelection: vi.fn().mockResolvedValue({ error: null }),
   publishSelection: vi.fn().mockResolvedValue({ error: null }),
 };
+
+const mockCalendarService = {
+  loadEntries: vi.fn().mockResolvedValue([]),
+};
+
+const BANNER_TEXT = 'No MG planned';
 
 const mockAuthService = {
   getServerId: vi.fn().mockReturnValue('server-1'),
@@ -71,12 +79,17 @@ describe('MgAdminTabComponent', () => {
         provideAnimations(),
         provideZonelessChangeDetection(),
         { provide: MgEventService, useValue: mockMgEventService },
+        { provide: CalendarService, useValue: mockCalendarService },
         { provide: AuthService, useValue: mockAuthService },
         { provide: ActivityService, useValue: mockActivityService },
         { provide: ServerService, useValue: mockServerService },
         { provide: SnackbarService, useValue: mockSnackbarService },
       ],
     }).compileComponents();
+
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', { mg: { calendar: { banner: { serverAdminNone: BANNER_TEXT } } } });
+    translate.use('en');
 
     fixture = TestBed.createComponent(MgAdminTabComponent);
     component = fixture.componentInstance;
@@ -942,6 +955,132 @@ describe('MgAdminTabComponent', () => {
         expect(mockMgEventService.saveServerConfig).not.toHaveBeenCalled();
         expect(mockMgEventService.saveSlotConfig).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('calendar banner', () => {
+    const SERVER_CONFIG = {
+      server_id: 'server-1',
+      capacity: 10,
+      assignment_mode: 'automatic',
+      dkp_enabled: false,
+      created_at: '2026-01-01T00:00:00Z',
+      updated_at: '2026-01-01T00:00:00Z',
+    };
+    const FUTURE_ENTRY = { id: 'e-1', type: 'mg', starts_at: '2099-06-01T00:00:00Z', cancelled_at: null };
+    const flush = async (): Promise<void> => {
+      for (let i = 0; i < 4; i++) await new Promise(resolve => setTimeout(resolve, 0));
+    };
+
+    const renderBanner = async (): Promise<HTMLElement> => {
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      await flush();
+      fixture.detectChanges();
+      return fixture.nativeElement as HTMLElement;
+    };
+
+    it('should show the neutral banner when config exists, no current event and no future entry', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+
+      // Act
+      const el = await renderBanner();
+
+      // Assert
+      expect(el.querySelector('[role="status"]')?.textContent).toContain(BANNER_TEXT);
+      expect(el.querySelector('app-mg-calendar-banner a')).toBeNull();
+    });
+
+    it('should hide the banner when the server has no config row', async () => {
+      // Act
+      const el = await renderBanner();
+
+      // Assert
+      expect(el.querySelector('[role="status"]')).toBeNull();
+    });
+
+    it('should hide the banner when a future entry exists', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockCalendarService.loadEntries.mockResolvedValueOnce([FUTURE_ENTRY]);
+
+      // Act
+      const el = await renderBanner();
+
+      // Assert
+      expect(el.querySelector('[role="status"]')).toBeNull();
+    });
+
+    it('should hide the banner when a current event exists', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockMgEventService.loadCurrentEventStrict.mockResolvedValueOnce({ id: 'event-1', status: 'registration_open' });
+
+      // Act
+      const el = await renderBanner();
+
+      // Assert
+      expect(el.querySelector('[role="status"]')).toBeNull();
+    });
+
+    it('should hide the banner and log once when loadEntries fails', async () => {
+      // Arrange
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockCalendarService.loadEntries.mockRejectedValueOnce(new Error('boom'));
+
+      // Act
+      const el = await renderBanner();
+
+      // Assert
+      expect(el.querySelector('[role="status"]')).toBeNull();
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+      errorSpy.mockRestore();
+    });
+
+    it('should hide the banner when loadCurrentEventStrict fails', async () => {
+      // Arrange
+      mockMgEventService.loadServerConfig.mockResolvedValueOnce(SERVER_CONFIG);
+      mockMgEventService.loadCurrentEventStrict.mockRejectedValueOnce(new Error('boom'));
+
+      // Act
+      const el = await renderBanner();
+
+      // Assert
+      expect(el.querySelector('[role="status"]')).toBeNull();
+    });
+  });
+
+  describe('cancelled event audit', () => {
+    it('should render no selection panel or status chip when the loaded event is cancelled', async () => {
+      // Arrange
+      mockMgEventService.loadCurrentEvent.mockResolvedValueOnce({
+        id: 'event-1',
+        server_id: 'server-1',
+        start_date: '2026-01-05',
+        end_date: '2026-01-11',
+        registration_open_at: '2025-12-29',
+        registration_close_at: '2026-01-01',
+        status: 'cancelled',
+        selection_published_at: null,
+        created_at: '2026-01-01T00:00:00Z',
+      });
+      fixture = TestBed.createComponent(MgAdminTabComponent);
+      component = fixture.componentInstance;
+
+      // Act
+      fixture.detectChanges();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
+      fixture.detectChanges();
+
+      // Assert
+      const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('app-mg-selection-panel')).toBeNull();
+      expect(el.querySelector('.status-chip')).toBeNull();
+      expect(mockMgEventService.loadRegistrations).not.toHaveBeenCalled();
     });
   });
 });

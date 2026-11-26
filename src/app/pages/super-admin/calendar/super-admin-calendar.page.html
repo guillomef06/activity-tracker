@@ -1,0 +1,111 @@
+<div class="calendar-page">
+  <mat-card class="page-header">
+    <mat-card-header>
+      <app-back-to-dashboard-button />
+      <mat-icon class="header-icon" aria-hidden="true">event_note</mat-icon>
+      <div class="header-content">
+        <h1 class="page-title">{{ 'superAdmin.calendar.title' | translate }}</h1>
+        <p class="page-subtitle">{{ 'superAdmin.calendar.subtitle' | translate }}</p>
+      </div>
+      <div class="header-actions">
+        <button
+          mat-flat-button
+          type="button"
+          class="action-button"
+          [disabled]="entriesResource.isLoading() || busy()"
+          (click)="openWizard()"
+        >
+          <mat-icon>add</mat-icon>
+          {{ 'superAdmin.calendar.newMg' | translate }}
+        </button>
+        <button
+          mat-stroked-button
+          type="button"
+          class="action-button"
+          [disabled]="entriesResource.isLoading() || busy()"
+          (click)="openForm()"
+        >
+          <mat-icon>add</mat-icon>
+          {{ 'superAdmin.calendar.newOther' | translate }}
+        </button>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  @if (mode() === 'wizard') {
+    <mat-card class="editor-card">
+      <mat-card-content>
+        <app-mg-entry-wizard
+          [existing]="entries()"
+          [today]="today()"
+          [results]="wizardResults()"
+          [busy]="busy()"
+          (submitted)="onWizardSubmitted($event)"
+          (closed)="closeEditor()"
+        />
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (mode() === 'form') {
+    <mat-card class="editor-card">
+      <mat-card-content>
+        <app-other-entry-form
+          [initial]="editingInitial()"
+          [busy]="busy()"
+          (saved)="onFormSaved($event)"
+          (cancelled)="closeEditor()"
+        />
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (entriesResource.isLoading() && entries().length === 0) {
+    <div class="loading-row" role="status">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  }
+
+  @if (entriesResource.error()) {
+    <mat-card class="error-card" role="alert">
+      <mat-card-content>
+        <p>{{ 'superAdmin.calendar.loadFailed' | translate }}</p>
+        <button mat-button type="button" class="action-button" (click)="entriesResource.reload()">
+          {{ 'common.retry' | translate }}
+        </button>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    @if (upcomingRows().length > 0) {
+      <section class="calendar-section" aria-labelledby="calendar-upcoming-title">
+        <h2 id="calendar-upcoming-title">{{ 'superAdmin.calendar.futureSection' | translate }}</h2>
+        <app-calendar-entry-list
+          [rows]="upcomingRows()"
+          (shiftRequested)="onShift($event)"
+          (cancelRequested)="onCancel($event)"
+          (editRequested)="onEdit($event)"
+          (deleteRequested)="onDelete($event)"
+        />
+      </section>
+    }
+
+    @if (historyRows().length > 0) {
+      <section class="calendar-section" aria-labelledby="calendar-history-title">
+        <h2 id="calendar-history-title">{{ 'superAdmin.calendar.historySection' | translate }}</h2>
+        <app-calendar-entry-list
+          [rows]="historyRows()"
+          (shiftRequested)="onShift($event)"
+          (cancelRequested)="onCancel($event)"
+          (editRequested)="onEdit($event)"
+          (deleteRequested)="onDelete($event)"
+        />
+      </section>
+    }
+
+    @if (isEmpty()) {
+      <mat-card class="empty-card">
+        <mat-card-content>{{ 'superAdmin.calendar.empty' | translate }}</mat-card-content>
+      </mat-card>
+    }
+  }
+</div>

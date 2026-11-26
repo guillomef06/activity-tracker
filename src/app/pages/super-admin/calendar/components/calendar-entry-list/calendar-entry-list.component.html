@@ -1,0 +1,113 @@
+@if (views().length === 0) {
+  <p class="empty-state" role="status">{{ 'superAdmin.calendar.empty' | translate }}</p>
+} @else {
+  <ul class="entry-list">
+    @for (view of views(); track view.row.id) {
+      <li>
+        <mat-card appearance="outlined" class="entry-card">
+          <mat-card-content>
+            <div class="entry-header">
+              <mat-chip class="type-chip" [attr.data-type]="view.row.type">{{ view.typeKey | translate }}</mat-chip>
+              <mat-chip class="state-chip" [class]="view.stateClass">
+                {{ view.stateKey | translate }}
+              </mat-chip>
+            </div>
+
+            <p class="entry-title">
+              @if (view.title) {
+                {{ view.title }}
+              } @else {
+                {{ view.typeKey | translate }}
+              }
+            </p>
+
+            <p class="entry-dates">
+              <mat-icon aria-hidden="true">event</mat-icon>
+              <span class="entry-dates-text">{{ view.datesLabel }}</span>
+            </p>
+
+            @if (view.timeLabels) {
+              <p class="entry-times">
+                <mat-icon aria-hidden="true">schedule</mat-icon>
+                <span class="entry-times-text">{{ view.timeLabels.start }} – {{ view.timeLabels.end }}</span>
+              </p>
+            }
+
+            @if (view.openingLabel && view.closingLabel) {
+              <p class="entry-registration">
+                {{ 'superAdmin.calendar.list.registrationOpenOn' | translate: { date: view.openingLabel } }}
+                ·
+                {{ 'superAdmin.calendar.list.closesOn' | translate: { date: view.closingLabel } }}
+              </p>
+            }
+
+            @if (view.showImpact) {
+              <p class="entry-impact">
+                <span class="impact-servers"
+                  >{{ 'superAdmin.calendar.list.columnServers' | translate }}: {{ view.row.servers }}</span
+                >
+                <span class="impact-registrations"
+                  >{{ 'superAdmin.calendar.list.columnRegistrations' | translate }}: {{ view.row.registrations }}</span
+                >
+              </p>
+            }
+          </mat-card-content>
+
+          <mat-card-actions class="entry-actions">
+            @if (view.isMg) {
+              <button
+                mat-stroked-button
+                type="button"
+                class="action-shift"
+                [disabled]="!view.row.canShift"
+                [attr.aria-label]="('superAdmin.calendar.list.shift' | translate) + ' ' + view.row.startDay"
+                (click)="shiftRequested.emit(view.row.id)"
+              >
+                <mat-icon aria-hidden="true">event_repeat</mat-icon>
+                {{ 'superAdmin.calendar.list.shift' | translate }}
+              </button>
+              <button
+                mat-stroked-button
+                type="button"
+                class="action-cancel"
+                [disabled]="!view.row.canCancel"
+                [attr.aria-label]="('superAdmin.calendar.list.cancel' | translate) + ' ' + view.row.startDay"
+                (click)="cancelRequested.emit(view.row.id)"
+              >
+                <mat-icon aria-hidden="true">event_busy</mat-icon>
+                {{ 'superAdmin.calendar.list.cancel' | translate }}
+              </button>
+            } @else {
+              <button
+                mat-stroked-button
+                type="button"
+                class="action-edit"
+                [disabled]="!view.row.canEdit"
+                [attr.aria-label]="
+                  ('superAdmin.calendar.list.edit' | translate) + ' ' + (view.title ?? '') + ' ' + view.row.startDay
+                "
+                (click)="editRequested.emit(view.row.id)"
+              >
+                <mat-icon aria-hidden="true">edit</mat-icon>
+                {{ 'superAdmin.calendar.list.edit' | translate }}
+              </button>
+              <button
+                mat-stroked-button
+                type="button"
+                class="action-delete"
+                [disabled]="!view.row.canDelete"
+                [attr.aria-label]="
+                  ('superAdmin.calendar.list.delete' | translate) + ' ' + (view.title ?? '') + ' ' + view.row.startDay
+                "
+                (click)="deleteRequested.emit(view.row.id)"
+              >
+                <mat-icon aria-hidden="true">delete</mat-icon>
+                {{ 'superAdmin.calendar.list.delete' | translate }}
+              </button>
+            }
+          </mat-card-actions>
+        </mat-card>
+      </li>
+    }
+  </ul>
+}

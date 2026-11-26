@@ -1,0 +1,67 @@
+<form class="other-entry-form" novalidate (submit)="onSubmit($event)">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ 'superAdmin.calendar.form.type' | translate }}</mat-label>
+    <mat-select [formField]="entryForm.type">
+      <mat-option value="pvp">{{ 'superAdmin.calendar.type.pvp' | translate }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ 'superAdmin.calendar.form.title' | translate }}</mat-label>
+    <input matInput type="text" autocomplete="off" [formField]="entryForm.title" />
+    @if (entryForm.title().touched() && entryForm.title().invalid()) {
+      <mat-error>{{ titleErrorKey() | translate: { max: titleMaxLength } }}</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-slide-toggle class="all-day-toggle" [formField]="entryForm.allDay" (change)="onAllDayChange($event.checked)">
+    {{ 'superAdmin.calendar.form.allDay' | translate }}
+  </mat-slide-toggle>
+
+  @if (isAllDay()) {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'superAdmin.calendar.form.startsAt' | translate }}</mat-label>
+      <input matInput class="starts-at" type="date" [formField]="entryForm.startsAt" />
+      <mat-hint>{{ 'superAdmin.calendar.form.utcHint' | translate }}</mat-hint>
+      @if (entryForm.startsAt().touched() && entryForm.startsAt().invalid()) {
+        <mat-error>{{ startsAtErrorKey() | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'superAdmin.calendar.form.endsAt' | translate }}</mat-label>
+      <input matInput class="ends-at" type="date" [formField]="entryForm.endsAt" />
+      <mat-hint>{{ 'superAdmin.calendar.form.utcHint' | translate }}</mat-hint>
+      @if (entryForm.endsAt().touched() && entryForm.endsAt().invalid()) {
+        <mat-error>{{ endsAtErrorKey() | translate }}</mat-error>
+      }
+    </mat-form-field>
+  } @else {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'superAdmin.calendar.form.startsAt' | translate }}</mat-label>
+      <input matInput class="starts-at" type="datetime-local" [formField]="entryForm.startsAt" />
+      <mat-hint>{{ 'superAdmin.calendar.form.utcHint' | translate }}</mat-hint>
+      @if (entryForm.startsAt().touched() && entryForm.startsAt().invalid()) {
+        <mat-error>{{ startsAtErrorKey() | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'superAdmin.calendar.form.endsAt' | translate }}</mat-label>
+      <input matInput class="ends-at" type="datetime-local" [formField]="entryForm.endsAt" />
+      <mat-hint>{{ 'superAdmin.calendar.form.utcHint' | translate }}</mat-hint>
+      @if (entryForm.endsAt().touched() && entryForm.endsAt().invalid()) {
+        <mat-error>{{ endsAtErrorKey() | translate }}</mat-error>
+      }
+    </mat-form-field>
+  }
+
+  <div class="form-actions">
+    <button mat-button type="button" class="cancel-button" (click)="cancelled.emit()">
+      {{ 'superAdmin.calendar.dialog.back' | translate }}
+    </button>
+    <button mat-flat-button type="submit" class="save-button" [disabled]="busy()">
+      {{ 'superAdmin.calendar.form.save' | translate }}
+    </button>
+  </div>
+</form>

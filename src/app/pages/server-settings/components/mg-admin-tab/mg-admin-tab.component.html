@@ -4,6 +4,9 @@
       <mat-spinner diameter="40" />
     </div>
   } @else {
+    <!-- Global calendar: neutral notice, no action (the super admin fills the calendar) -->
+    <app-mg-calendar-banner class="mg-banner" [state]="banner()" />
+
     <!-- Settings: rarely changed, kept first but collapsed, one Save for both blocks -->
     <mat-expansion-panel class="settings-panel">
       <mat-expansion-panel-header>

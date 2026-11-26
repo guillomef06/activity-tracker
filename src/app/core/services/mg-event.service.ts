@@ -18,6 +18,7 @@ import type { MgSlotRow } from '@shared/utils/mg-slot.util';
 import { buildSelectionPayload } from '@shared/utils/mg-selection.util';
 import { getWeekStart, getWeekEnd } from '@shared/utils/date.util';
 import type { FifoSpend } from '@shared/utils/mg-dkp.util';
+import { MG_ACTIVE_STATUSES, MG_NON_CANCELLED_STATUSES } from '@shared/constants/mg-calendar.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -26,21 +27,60 @@ export class MgEventService {
   private readonly supabase = inject(SupabaseService);
   private readonly authService = inject(AuthService);
 
+  /** Next active (not finished, not cancelled) event; `null` on error. */
   async loadCurrentEvent(serverId: string): Promise<MgEvent | null> {
+    const { data, error } = await this.queryCurrentEvent(serverId);
+    if (error) {
+      console.error('Error loading MG event:', error);
+      return null;
+    }
+    return data;
+  }
+
+  /** Same query as loadCurrentEvent, but throws so a `resource()` loader exposes its error. */
+  async loadCurrentEventStrict(serverId: string): Promise<MgEvent | null> {
+    const { data, error } = await this.queryCurrentEvent(serverId);
+    if (error) {
+      console.error('Error loading MG event:', error);
+      throw error;
+    }
+    return data;
+  }
+
+  /**
+   * Cancelled event whose week is not over yet (FR-074), used for the cancellation notice;
+   * `null` on error so the notice is simply hidden.
+   */
+  async loadRecentCancelledEvent(serverId: string): Promise<MgEvent | null> {
+    const todayUtc = new Date().toISOString().slice(0, 10);
     const { data, error } = await this.supabase
       .from('mg_events')
       .select('*')
       .eq('server_id', serverId)
-      .not('status', 'eq', 'finished')
+      .eq('status', 'cancelled')
+      .gte('end_date', todayUtc)
       .order('start_date', { ascending: false })
       .limit(1)
       .maybeSingle();
 
     if (error) {
-      console.error('Error loading MG event:', error);
+      console.error('Error loading cancelled MG event:', error);
       return null;
     }
     return data as MgEvent | null;
+  }
+
+  // Inclusion list (not `.neq('status','cancelled')`): PostgREST fails if the enum label is missing.
+  private async queryCurrentEvent(serverId: string): Promise<{ data: MgEvent | null; error: unknown }> {
+    const { data, error } = await this.supabase
+      .from('mg_events')
+      .select('*')
+      .eq('server_id', serverId)
+      .in('status', MG_ACTIVE_STATUSES)
+      .order('start_date', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    return { data: data as MgEvent | null, error };
   }
 
   /**
@@ -285,6 +325,7 @@ export class MgEventService {
       .eq('mg_events.server_id', serverId)
       .not('user_id', 'is', null)
       .not('mg_events.selection_published_at', 'is', null)
+      .in('mg_events.status', MG_NON_CANCELLED_STATUSES)
       .gte('mg_events.start_date', sinceDate.toISOString().slice(0, 10));
 
     if (error) {
