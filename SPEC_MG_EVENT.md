@@ -11,7 +11,9 @@
 
 ## Context
 
-The Mightiest Governor is a competitive event that runs every two weeks (odd weeks: 1, 3, 5…). It lasts a full week, Monday to Sunday. The activity tracker is the source of truth for player rankings, which drive automatic seat allocation.
+The Mightiest Governor is a competitive event that lasts a full week, Monday to Sunday. The activity tracker is the source of truth for player rankings, which drive automatic seat allocation.
+
+> **Scheduling (updated 27 November 2026, migration 47, spec `specs/003-mg-global-calendar`):** the "every two weeks (odd weeks), per-server reference date" model this document originally specified has been replaced. MG events are no longer scheduled per server — a **super admin manages one global calendar** (`calendar_entries`, type `mg`), and each opted-in server (a `server_mg_config` row exists) gets its own `mg_events` row created from that single shared schedule. See that spec folder for the full design (14-day minimum gap between MG starts, cascade shift of an entry and all following ones, the `cancelled` status). The rest of this document (registration, seat assignment, publication, per-event statuses `upcoming` → `finished`) is unchanged by that work.
 
 ---
 
@@ -27,9 +29,7 @@ For each MG event, the following fixed timeline applies relative to its start da
 | Monday of MG week (D) | MG event starts |
 | Sunday of MG week (D+6) | MG event ends |
 
-> **Rest week** = the even week between two MG events.
-
-**MG schedule:** computed from a configurable reference start date + a 2-week recurrence (odd weeks only).
+> **Rest week** = the week between two MG events (no longer fixed at exactly 2 weeks — see the scheduling note above).
 
 ---
 
@@ -84,16 +84,18 @@ Each server can configure:
 
 ```
 upcoming → registration_open → registration_closed → selection_published → ongoing → finished
+                                                                          ↘ cancelled (any status before `ongoing`)
 ```
 
 | Status | Trigger |
 |--------|---------|
 | `upcoming` | Event created |
-| `registration_open` | Monday of rest week (D−7) |
+| `registration_open` | Monday of rest week (D−7) — created directly in this status by `mg_create_events_from_calendar()`, migration 47; an event never actually sits in `upcoming` in practice |
 | `registration_closed` | Thursday of rest week (D−4) at midnight |
 | `selection_published` | Admin publishes (earliest D−3) |
 | `ongoing` | Monday of MG week (D) |
 | `finished` | Sunday of MG week (D+6) at end of day |
+| `cancelled` | Super admin cancels the underlying calendar entry (spec 003) before the event starts; a player-facing notice is shown, no one is otherwise notified |
 
 ---
 
@@ -111,6 +113,9 @@ upcoming → registration_open → registration_closed → selection_published �
 | `status` | enum | See statuses above |
 | `selection_published_at` | timestamp \| null | When admin published |
 | `created_at` | timestamp | |
+| `calendar_entry_id` | uuid \| null | FK → `calendar_entries` (migration 47); the global calendar entry this event was created from. `null` for events created before migration 47's backfill linked them, or by the e2e demo helpers (migration 48) |
+
+> **Client writes on `mg_events` (migration 47):** INSERT and DELETE are no longer allowed for `authenticated`/`anon` — only the super admin's calendar functions and the pg_cron jobs create/remove rows. The **only** client UPDATE still permitted is the publish transition (`registration_closed` → `selection_published`, with `selection_published_at` set and every other column unchanged); anything else is rejected by the `trg_mg_events_guard` trigger.
 
 ### `server_mg_config`
 | Column | Type | Description |
@@ -179,12 +184,12 @@ Dynamic section behavior by event status:
 
 | Job name | Expression | Action |
 |---|---|---|
-| `mg-create-events` | `0 0 * * 1` | Every Monday 00:00 UTC — creates MG events for servers where this Monday = D−7 (rest week). Inserts with `status = registration_open`. Condition: `(current_monday - reference_start_date) / 7 % 2 = 1` |
+| `mg-create-events` | `0 0 * * 1` | Every Monday 00:00 UTC — calls `mg_create_events_from_calendar()` (migration 47): for every non-cancelled `calendar_entries` row of type `mg` whose opening Monday (D−7) has arrived (and no later than the Thursday 23:58 UTC the close cron handles), creates one `mg_events` row per opted-in server (`server_mg_config` exists), with `status = registration_open` |
 | `mg-close-registrations` | `59 23 * * 4` | Every Thursday 23:59 UTC — transitions `registration_open` → `registration_closed` for events where `registration_close_at <= NOW()`. **Does not generate selections** — admins trigger that manually. |
-| `mg-start-events` | `0 0 * * 1` | Every Monday 00:00 UTC — transitions `selection_published` → `ongoing` for events where `start_date = CURRENT_DATE` |
+| `mg-start-events` | `0 0 * * 1` | Every Monday 00:00 UTC — transitions `selection_published` → `ongoing` for events where `start_date = CURRENT_DATE`; **failsafe**: an event still `registration_closed` at this point (no selection ever published) is also moved to `ongoing` with an empty selection (full FFA) |
 | `mg-end-events` | `59 23 * * 0` | Every Sunday 23:59 UTC — transitions `ongoing` → `finished` for events where `end_date = CURRENT_DATE` |
 
-> `selection_published` is always admin-triggered (not a cron). The Monday cron runs two jobs simultaneously: event creation and `ongoing` transition.
+> `selection_published` is always admin-triggered (not a cron). The Monday cron runs two jobs simultaneously: event creation (from the global calendar) and the `ongoing` transition (+ failsafe).
 
 ---
 
@@ -194,7 +199,7 @@ Dynamic section behavior by event status:
 |---|----------|
 | 1 | Registration cannot be re-opened after closing. However, admins can **manually add any server member** (registered or not) to unfilled slots at any point before `ongoing`. |
 | 2 | The selection **can be edited after publication** up to `ongoing`. Once the event is `ongoing`, the selection is **locked** — no further changes. |
-| 3 | The MG schedule is **per-server** — each server manages its own MG calendar independently. |
+| 3 | ~~The MG schedule is per-server — each server manages its own MG calendar independently.~~ **Superseded 27 November 2026 (migration 47):** the schedule is a single **global calendar** a super admin manages; a server only opts in or out (via `server_mg_config` existing or not) and otherwise has no control over the dates. |
 | 4 | **No notifications** — real-time (Supabase) and push notification systems are not yet implemented; out of scope for this feature. |
 | 5 | **History is natural** — published selections serve as the historical record of who participated in each MG. No separate history model needed. |
 | 6 | **Any admin** of the server can manage selections (generate, publish, edit) — not restricted to the server owner. |

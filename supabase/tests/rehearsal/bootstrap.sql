@@ -14,7 +14,9 @@
 --   * user_profiles triggers prevent_role_escalation / hash_recovery_answer are
 --     omitted (they need the recovery machinery); fixtures set the recovery
 --     columns directly. update_updated_at triggers are kept.
---   * invitation_tokens is a one-column stub (FK target only).
+--   * invitation_tokens is production-shaped as of migration 49 rehearsal
+--     (columns, FKs and the 4 RLS policies from 24-rename-alliance-to-server.sql);
+--     it was a one-column stub before that.
 --   * The `safeupdate` library is not preloaded by this image (see README).
 --   * The Discord job text is verbatim but dispatch_discord_scheduled_messages()
 --     does not exist here (the job would fail if it ran; it is only compared).
@@ -37,8 +39,18 @@ CREATE TYPE public.mg_selection_type AS ENUM ('selected', 'ffa', 'empty');
 -- ---------------------------------------------------------------------------
 -- Tables
 -- ---------------------------------------------------------------------------
-CREATE TABLE public.invitation_tokens (          -- stub, FK target only
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid()
+-- server_id/created_by/used_by FKs are added after servers/user_profiles exist (circular FK).
+CREATE TABLE public.invitation_tokens (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  server_id uuid,
+  token text NOT NULL,
+  expires_at timestamptz NOT NULL,
+  used_at timestamptz,
+  used_by uuid,
+  created_by uuid,
+  created_at timestamptz DEFAULT now(),
+  CONSTRAINT invitation_tokens_pkey PRIMARY KEY (id),
+  CONSTRAINT invitation_tokens_token_key UNIQUE (token)
 );
 
 CREATE TABLE public.servers (
@@ -91,6 +103,12 @@ CREATE TABLE public.user_profiles (
 CREATE INDEX idx_user_preferences ON public.user_profiles USING gin (preferences);
 CREATE INDEX idx_user_profiles_invitation_token_id ON public.user_profiles USING btree (invitation_token_id);
 CREATE INDEX idx_user_profiles_server_id ON public.user_profiles USING btree (server_id);
+
+-- invitation_tokens: the 3 FKs deferred from its CREATE TABLE above (circular with servers/user_profiles).
+ALTER TABLE public.invitation_tokens
+  ADD CONSTRAINT invitation_tokens_alliance_id_fkey FOREIGN KEY (server_id) REFERENCES public.servers(id) ON DELETE CASCADE,
+  ADD CONSTRAINT invitation_tokens_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.user_profiles(id) ON DELETE SET NULL,
+  ADD CONSTRAINT invitation_tokens_used_by_fkey FOREIGN KEY (used_by) REFERENCES public.user_profiles(id) ON DELETE SET NULL;
 
 CREATE TABLE public.server_mg_config (
   server_id uuid NOT NULL,
@@ -251,6 +269,7 @@ CREATE TRIGGER update_server_mg_slot_config_updated_at BEFORE UPDATE ON public.s
 -- ---------------------------------------------------------------------------
 ALTER TABLE public.servers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.invitation_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.server_mg_config ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.server_mg_slot_config ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.mg_events ENABLE ROW LEVEL SECURITY;
@@ -276,6 +295,16 @@ CREATE POLICY "Users can update their own profile" ON public.user_profiles FOR U
   USING (is_super_admin(( SELECT auth.uid() AS uid)) OR (id = ( SELECT auth.uid() AS uid)));
 CREATE POLICY "Users can view profiles in their server" ON public.user_profiles FOR SELECT
   USING (is_super_admin(( SELECT auth.uid() AS uid)) OR (server_id = get_user_server_id(( SELECT auth.uid() AS uid))) OR (id = ( SELECT auth.uid() AS uid)));
+
+-- invitation_tokens (production: 24-rename-alliance-to-server.sql, current state before migration 49)
+CREATE POLICY "Admins can view their server invitations" ON public.invitation_tokens FOR SELECT
+  USING (( SELECT auth.uid() AS uid) IS NULL OR is_super_admin(( SELECT auth.uid() AS uid)) OR (server_id = get_user_server_id(( SELECT auth.uid() AS uid))));
+CREATE POLICY "Admins can create invitations" ON public.invitation_tokens FOR INSERT
+  WITH CHECK (is_super_admin(( SELECT auth.uid() AS uid)) OR ((server_id = get_user_server_id(( SELECT auth.uid() AS uid))) AND is_user_admin(( SELECT auth.uid() AS uid))));
+CREATE POLICY "Admins can update their server tokens" ON public.invitation_tokens FOR UPDATE
+  USING (is_super_admin(( SELECT auth.uid() AS uid)) OR ((server_id = get_user_server_id(( SELECT auth.uid() AS uid))) AND is_user_admin(( SELECT auth.uid() AS uid))));
+CREATE POLICY "Admins can delete their server invitations" ON public.invitation_tokens FOR DELETE
+  USING (is_super_admin(( SELECT auth.uid() AS uid)) OR ((server_id = get_user_server_id(( SELECT auth.uid() AS uid))) AND is_user_admin(( SELECT auth.uid() AS uid))));
 
 -- server_mg_config
 CREATE POLICY "Admins can delete their server MG config" ON public.server_mg_config FOR DELETE
@@ -335,7 +364,7 @@ CREATE POLICY "Members can view published selections for their server" ON public
 -- ---------------------------------------------------------------------------
 GRANT ALL ON TABLE public.servers, public.user_profiles, public.server_mg_config,
   public.server_mg_slot_config, public.mg_events, public.mg_registrations,
-  public.mg_selections TO anon, authenticated, service_role;
+  public.mg_selections, public.invitation_tokens TO anon, authenticated, service_role;
 
 -- ---------------------------------------------------------------------------
 -- Role-level settings captured from production (pg_db_role_setting).
