@@ -8,7 +8,6 @@ import { openDemoSession } from './demo-session';
  * panel) and its week never ends, so it can never deduct anything from a real leaderboard.
  */
 export const SEED_EVENT_START = '2031-01-06';
-const SEED_EVENT_END = '2031-01-12';
 
 /** Players 1..6 ranked 1..6 on the "published" list; slots 7..10 are FFA. Costs = default slot costs. */
 export const SEEDED_PLAYERS = [
@@ -22,12 +21,18 @@ export const SEEDED_PLAYERS = [
 const CAPACITY = 10;
 
 /**
- * Far-future Monday used by the registration -> selection -> publication flow. Distinct from
+ * Monday used by the registration -> selection -> publication flow, distinct from
  * SEED_EVENT_START so the two specs can never touch each other's event. The event is left
- * non-finished, so while it exists it is the app's "current event" (latest start_date).
+ * non-finished, so while it exists `MgEventService.queryCurrentEvent()` (which orders
+ * `start_date ASCENDING` and takes the first active-status row) must treat it as "the"
+ * current event. Deliberately in the PAST, not the future: migration 47's global calendar
+ * now creates real, active MG events on ERA008-DEMO (it is one of the opted-in servers), and
+ * those always sort before any far-future test date in that ascending query. A date far in
+ * the past sorts before every real event instead, past or future, for as long as this app
+ * exists — the third reserved date migration 48 (e2e_mg_assert_reserved_date) already
+ * provisioned for exactly this, previously unused by this file.
  */
-export const FLOW_EVENT_START = '2031-03-03';
-const FLOW_EVENT_END = '2031-03-09';
+export const FLOW_EVENT_START = '2020-03-02';
 
 /** Writes are only allowed on the two dates reserved for e2e events, never on a real event. */
 const RESERVED_SEED_DATES: readonly string[] = [SEED_EVENT_START, FLOW_EVENT_START];
@@ -94,15 +99,40 @@ export class MgSeeder {
     await this.client.auth.signOut();
   }
 
-  /** Removes the seeded event (cascade deletes its selections/registrations). Idempotent. */
+  /**
+   * Removes the seeded event (cascade deletes its selections/registrations). Idempotent.
+   * Migration 47 (global MG calendar) removed client INSERT/DELETE on mg_events, so this
+   * goes through the e2e_mg_delete_event() RPC (migration 48) instead of a direct delete —
+   * it resolves ERA008-DEMO server-side from the caller's own admin profile and only ever
+   * accepts the reserved e2e dates (assertSeedDate below is a client-side mirror of the
+   * same guard, so a wrong date fails fast with a clearer message).
+   */
   async cleanup(startDate: string = SEED_EVENT_START): Promise<void> {
     assertSeedDate(startDate);
-    const { error } = await this.client
-      .from('mg_events')
-      .delete()
-      .eq('server_id', this.serverId)
-      .eq('start_date', startDate);
+    const { error } = await this.client.rpc('e2e_mg_delete_event', { p_start_date: startDate });
     if (error) throw new Error(`cleanup failed: ${error.message}`);
+  }
+
+  /**
+   * Creates the mg_events row at `startDate` through e2e_mg_seed_event() (the only path left
+   * since migration 47), which also deletes any pre-existing row at that date first. Returns
+   * the new event id. The RPC derives end_date/registration_open_at/registration_close_at the
+   * same way the real calendar does (start+6 / start-7 / start-4), matching the values this
+   * seeder used to hardcode.
+   */
+  private async seedEventViaRpc(
+    startDate: string,
+    status: 'registration_open' | 'registration_closed' | 'finished',
+    published: boolean
+  ): Promise<string> {
+    assertSeedDate(startDate);
+    const { data, error } = await this.client.rpc('e2e_mg_seed_event', {
+      p_start_date: startDate,
+      p_status: status,
+      p_published: published,
+    });
+    if (error || !data) throw new Error(`seed event failed: ${error?.message}`);
+    return data as string;
   }
 
   /** Number of events left on ERA008-DEMO at a given start date (used to prove cleanup). */
@@ -118,26 +148,10 @@ export class MgSeeder {
 
   /** Creates a finished event with a published selection (players 1-6 + 4 FFA). Returns the event id. */
   async seedFinishedEvent(): Promise<string> {
-    await this.cleanup();
     await this.assertDefaultSlotCosts();
 
     const idByName = await this.memberIdsByName();
-
-    const { data: event, error: eventError } = await this.client
-      .from('mg_events')
-      .insert({
-        server_id: this.serverId,
-        start_date: SEED_EVENT_START,
-        end_date: SEED_EVENT_END,
-        registration_open_at: '2030-12-30',
-        registration_close_at: '2031-01-02',
-        status: 'finished',
-        selection_published_at: new Date().toISOString(),
-      })
-      .select('id')
-      .single();
-    if (eventError || !event) throw new Error(`seed event failed: ${eventError?.message}`);
-    const eventId = event.id as string;
+    const eventId = await this.seedEventViaRpc(SEED_EVENT_START, 'finished', true);
 
     const selected = SEEDED_PLAYERS.map(p => {
       const userId = idByName.get(p.name);
@@ -169,45 +183,36 @@ export class MgSeeder {
     return eventId;
   }
 
+  /** Inserts mg_registrations rows for the named players (unaffected by migration 47: only
+   * mg_events' own INSERT/DELETE/UPDATE were restricted, registrations/selections are
+   * untouched). Admin-branch policy, so the event's current status never gates this insert. */
+  private async registerPlayers(eventId: string, options: FlowEventOptions): Promise<void> {
+    const names = options.registeredPlayers ?? [];
+    if (names.length === 0) return;
+    const idByName = await this.memberIdsByName();
+    const rows = names.map(name => {
+      const userId = idByName.get(name);
+      if (!userId) throw new Error(`Seed player "${name}" not found on ${DEMO_SERVER_NAME}`);
+      const detail = options.registrationDetails?.[name];
+      return {
+        mg_event_id: eventId,
+        user_id: userId,
+        desired_slot_order: detail?.desiredSlotOrder ?? 1,
+        comment: detail?.comment ?? null,
+      };
+    });
+    const { error } = await this.client.from('mg_registrations').insert(rows);
+    if (error) throw new Error(`seed registrations failed: ${error.message}`);
+  }
+
   /**
    * Creates a registration_open event at FLOW_EVENT_START on ERA008-DEMO, optionally with
    * some demo members already registered. Returns the event id.
    */
   async seedFlowEvent(options: FlowEventOptions = {}): Promise<string> {
-    await this.cleanup(FLOW_EVENT_START);
-    const { data: event, error } = await this.client
-      .from('mg_events')
-      .insert({
-        server_id: this.serverId,
-        start_date: FLOW_EVENT_START,
-        end_date: FLOW_EVENT_END,
-        registration_open_at: '2031-02-24',
-        registration_close_at: '2031-02-27',
-        status: 'registration_open',
-      })
-      .select('id')
-      .single();
-    if (error || !event) throw new Error(`seed flow event failed: ${error?.message}`);
-    const eventId = event.id as string;
-
+    const eventId = await this.seedEventViaRpc(FLOW_EVENT_START, 'registration_open', false);
     try {
-      const names = options.registeredPlayers ?? [];
-      if (names.length > 0) {
-        const idByName = await this.memberIdsByName();
-        const rows = names.map(name => {
-          const userId = idByName.get(name);
-          if (!userId) throw new Error(`Seed player "${name}" not found on ${DEMO_SERVER_NAME}`);
-          const detail = options.registrationDetails?.[name];
-          return {
-            mg_event_id: eventId,
-            user_id: userId,
-            desired_slot_order: detail?.desiredSlotOrder ?? 1,
-            comment: detail?.comment ?? null,
-          };
-        });
-        const { error: regError } = await this.client.from('mg_registrations').insert(rows);
-        if (regError) throw new Error(`seed registrations failed: ${regError.message}`);
-      }
+      await this.registerPlayers(eventId, options);
     } catch (e) {
       await this.cleanup(FLOW_EVENT_START);
       throw e;
@@ -218,11 +223,15 @@ export class MgSeeder {
   /**
    * Flow event (FLOW_EVENT_START only) already published: the registrants are the selected
    * players (rank order, default slot costs), the remaining slots up to capacity are FFA.
+   * Seeded directly at `registration_closed` (not via seedFlowEvent) because the final publish
+   * step below is the ONE client write migration 47 still allows on mg_events — the guard
+   * trigger only accepts the exact registration_closed -> selection_published transition.
    */
   async seedPublishedFlowEvent(options: FlowEventOptions = {}): Promise<string> {
     await this.assertDefaultSlotCosts();
-    const eventId = await this.seedFlowEvent(options);
+    const eventId = await this.seedEventViaRpc(FLOW_EVENT_START, 'registration_closed', false);
     try {
+      await this.registerPlayers(eventId, options);
       const names = options.registeredPlayers ?? [];
       const idByName = await this.memberIdsByName();
       const selected = names.map((name, i) => {
@@ -263,13 +272,19 @@ export class MgSeeder {
     return eventId;
   }
 
-  /** What the Thursday cron does: registration_open -> registration_closed. */
-  async closeRegistration(eventId: string): Promise<void> {
-    const { error } = await this.client
-      .from('mg_events')
-      .update({ status: 'registration_closed' })
-      .eq('id', eventId)
-      .eq('start_date', FLOW_EVENT_START);
+  /**
+   * What the Thursday cron does: registration_open -> registration_closed. Migration 47's guard
+   * trigger does not allow this client UPDATE any more (only registration_closed ->
+   * selection_published is left), so this goes through e2e_mg_set_status() (migration 48),
+   * which only ever accepts this one transition — same restriction, enforced server-side.
+   * `eventId` is kept for API compatibility (both call sites already have it); the RPC itself
+   * only needs the reserved start date, since it resolves ERA008-DEMO from the caller.
+   */
+  async closeRegistration(_eventId: string): Promise<void> {
+    const { error } = await this.client.rpc('e2e_mg_set_status', {
+      p_start_date: FLOW_EVENT_START,
+      p_status: 'registration_closed',
+    });
     if (error) throw new Error(`close registration failed: ${error.message}`);
   }
 
