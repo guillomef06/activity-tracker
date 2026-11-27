@@ -152,10 +152,19 @@ ORDER BY a.points DESC;
 -- script avance le statut "à la main" (au lieu d'attendre les pg_cron
 -- jobs), et il faut que la semaine de l'event soit bien terminée par
 -- rapport à NOW() pour que la déduction DKP soit visible à l'étape 8.
+--
+-- start_date DOIT être un lundi et registration_open_at/close_at DOIVENT
+-- suivre les formules start-7 / start-4 (migration 47 : contraintes
+-- ck_mg_events_start_monday / ck_mg_events_end_date / ck_mg_events_close_date
+-- / ck_mg_events_open_date) — un simple "CURRENT_DATE - N" ne tombe pas
+-- forcément sur un lundi et violerait ces CHECK selon le jour d'exécution.
+-- date_trunc('week', ...) ramène toujours au lundi de la semaine ISO.
 
 INSERT INTO mg_events (server_id, start_date, end_date, registration_open_at, registration_close_at, status)
-SELECT id, CURRENT_DATE - 24, CURRENT_DATE - 18, CURRENT_DATE - 24, CURRENT_DATE - 21, 'upcoming'
-FROM servers WHERE name = 'ERA008-DEMO';
+SELECT s.id, d.start_date, d.start_date + 6, d.start_date - 7, d.start_date - 4, 'upcoming'
+FROM servers s
+CROSS JOIN (SELECT (date_trunc('week', CURRENT_DATE - 24))::date AS start_date) d
+WHERE s.name = 'ERA008-DEMO';
 
 -- Vérification
 SELECT e.id, e.status, e.start_date, e.end_date, e.registration_open_at, e.registration_close_at
